@@ -29,10 +29,10 @@ import be.kuleuven.elcontador10.fragments.transactions.TransactionsFilter;
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navigationView;
 
-    private TextView header;
+    //private TextView header;
 
-    private FloatingActionButton buttonLeft;
-    private FloatingActionButton buttonRight;
+   // private FloatingActionButton buttonLeft;
+   // private FloatingActionButton buttonRight;
 
     private StakeholderLoggedIn loggedIn;
     private String fragmentName;
@@ -46,17 +46,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         setBottomMenu();
 
         Bundle i = this.getIntent().getExtras();
         loggedIn = (StakeholderLoggedIn) i.getParcelable("Account");
 
         //navigationView = findViewById(R.id.nav_view);
-        header = findViewById(R.id.lblToolbarHeading);
-
-        buttonLeft = findViewById(R.id.mainButtonLeft);
-        buttonRight = findViewById(R.id.mainButtonRight);
+        //header = findViewById(R.id.lblToolbarHeading);
+        //buttonLeft = findViewById(R.id.mainButtonLeft);
+        //buttonRight = findViewById(R.id.mainButtonRight);
 
         //homeButtons();
        // selectedFragment = new Home();
@@ -75,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(bottomNavigationView,navController);
     }
+
+
 
     /*
     Reads the item clicked title and then show the correct fragment
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     /*
     Show the home main buttons: Settings and new transaction
     */
-
+/*
     public void homeButtons(){
         buttonLeft.setVisibility(View.VISIBLE);
         buttonLeft.setImageResource(R.drawable.icon_settings);
@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
     /*
     * Show the other fragment buttons: delete, add, and filter
     */
+    /*
     public void viewButtons(){
         buttonLeft.setVisibility(View.VISIBLE);
         buttonLeft.setImageResource(R.drawable.icon_add);
@@ -146,12 +147,12 @@ public class MainActivity extends AppCompatActivity {
     /*
     * Hides all buttons. Used when viewing other fragments that has its own button
      */
-
+/*
     public void hideButtons(){
         buttonLeft.setVisibility(View.GONE);
         buttonRight.setVisibility(View.GONE);
     }
-
+*/
     public StakeholderLoggedIn getLoggedIn() {
         return loggedIn;
     }
@@ -169,7 +170,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_host,
                 selectedFragment, null).commit();
     }
-*/
+
+
     public void onLeftButton_Clicked(View view) {
         switch(fragmentName) {
             case "Home":
@@ -205,5 +207,5 @@ public class MainActivity extends AppCompatActivity {
        // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_host,
         //        selectedFragment, null).commit();
     }
-
+*/
 }

@@ -69,10 +69,10 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
 
         switchFrom.setOnCheckedChangeListener(this::From_onClick);
         switchTo.setOnCheckedChangeListener(this::To_onClick);
-        cancel.setOnClickListener(this::Cancel_OnClick);
-        filter.setOnClickListener(this::Filter_OnClick);
+        //cancel.setOnClickListener(this::Cancel_OnClick);
+        //filter.setOnClickListener(this::Filter_OnClick);
 
-        mainActivity.hideButtons();
+        //mainActivity.hideButtons();
 
         ArrayAdapter<CharSequence> category_adapter = ArrayAdapter.createFromResource(mainActivity, R.array.category_items, android.R.layout.simple_spinner_item);
         category_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -166,13 +166,15 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
         if (isChecked) dateTo.setEnabled(true);
         else dateTo.setEnabled(false);
     }
-
+/*
     public void Cancel_OnClick(View view) {
         FilterTransactionsParcel filter = new FilterTransactionsParcel("*", "*", "*", null, null);
         mainActivity.setSelectedFragment(new Transactions(filter), "Transactions");
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+ */
+
+  /*  @RequiresApi(api = Build.VERSION_CODES.O)
     public void Filter_OnClick(View view) {
         String name_text = name.getText().toString();
         LocalDateTime from = null;
@@ -203,4 +205,6 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
         FilterTransactionsParcel filter = new FilterTransactionsParcel(category_string, subcategory_string, name_text, from, to);
         mainActivity.setSelectedFragment(new Transactions(filter), "Transactions");
     }
+
+   */
 }

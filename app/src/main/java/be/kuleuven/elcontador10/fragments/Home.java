@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -30,9 +34,7 @@ import be.kuleuven.elcontador10.interfaces.HomepageInterface;
 public class Home extends Fragment implements HomepageInterface {
     private String firstName;
     private TextView header;
-
     private RecyclerView recyclerView;
-
     private MainActivity mainActivity;
     private HomepageManager manager;
 
@@ -52,8 +54,47 @@ public class Home extends Fragment implements HomepageInterface {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        header = getView().findViewById(R.id.lblHomeGreeting);
+       ///// Set Navigation for new Transaction button
+        final NavController navController = Navigation.findNavController(view);
+        FloatingActionButton fabAdd = view.findViewById(R.id.btn_add_Home);
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.action_home_summary_to_newTransaction);
+            }
+        });
+        FloatingActionButton fabSettings = view.findViewById(R.id.btn_settings_Home);
+        fabSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.action_home_summary_to_settings);
+            }
+        });
+        ///// End
 
+        header = getView().findViewById(R.id.lblHomeGreeting);
+        displayGreetings(); // eg. GoodMorning + name
+
+
+        recyclerView = getView().findViewById(R.id.HomeRecycler);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+               // if (newState == RecyclerView.SCROLL_STATE_DRAGGING) mainActivity.hideButtons();
+               // else mainActivity.homeButtons();
+            }
+        });
+
+        manager = HomepageManager.getInstance();
+        manager.getRecentTransactions(this);
+
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void displayGreetings(){
         //find time of the day for greeting
         LocalTime time = LocalTime.now();
         int hour = time.getHour();
@@ -66,20 +107,6 @@ public class Home extends Fragment implements HomepageInterface {
 
         String greeting = getString(R.string.homepage_title, time_greeting, firstName);
         header.setText(greeting);
-
-        recyclerView = getView().findViewById(R.id.HomeRecycler);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) mainActivity.hideButtons();
-                else mainActivity.homeButtons();
-            }
-        });
-
-        manager = HomepageManager.getInstance();
-        manager.getRecentTransactions(this);
     }
 
     // return parent activity
