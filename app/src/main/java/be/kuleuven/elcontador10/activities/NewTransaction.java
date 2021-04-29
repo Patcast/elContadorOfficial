@@ -12,6 +12,7 @@ import be.kuleuven.elcontador10.background.Transaction;
 
 public class NewTransaction extends AppCompatActivity {
     private Button ButtonSubmit;
+    //Hello World
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
