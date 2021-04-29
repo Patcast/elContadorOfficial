@@ -55,8 +55,8 @@ public class Transactions extends Fragment implements TransactionsInterface {
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) mainActivity.hideButtons();
-                else mainActivity.viewButtons();
+               // if (newState == RecyclerView.SCROLL_STATE_DRAGGING) mainActivity.hideButtons();
+               // else mainActivity.viewButtons();
             }
         });
 
