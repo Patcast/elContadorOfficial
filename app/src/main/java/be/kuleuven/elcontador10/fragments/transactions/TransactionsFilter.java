@@ -174,7 +174,7 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
 
  */
 
-  /*  @RequiresApi(api = Build.VERSION_CODES.O)
+   @RequiresApi(api = Build.VERSION_CODES.O)
     public void Filter_OnClick(View view) {
         String name_text = name.getText().toString();
         LocalDateTime from = null;
@@ -203,8 +203,7 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
         }
 
         FilterTransactionsParcel filter = new FilterTransactionsParcel(category_string, subcategory_string, name_text, from, to);
-        mainActivity.setSelectedFragment(new Transactions(filter), "Transactions");
+        //mainActivity.setSelectedFragment(new Transactions(filter), "Transactions");
     }
 
-   */
 }
