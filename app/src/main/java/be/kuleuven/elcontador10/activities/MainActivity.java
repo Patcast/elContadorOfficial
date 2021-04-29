@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     /*
     Show the home main buttons: Settings and new transaction
     */
-    /*
+
     public void homeButtons(){
         buttonLeft.setVisibility(View.VISIBLE);
         buttonLeft.setImageResource(R.drawable.icon_settings);
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
     /*
     * Show the other fragment buttons: delete, add, and filter
-    * */
+    */
     public void viewButtons(){
         buttonLeft.setVisibility(View.VISIBLE);
         buttonLeft.setImageResource(R.drawable.icon_add);

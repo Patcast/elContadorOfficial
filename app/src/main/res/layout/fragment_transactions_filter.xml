@@ -93,7 +93,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:background="@drawable/buttons"
-        android:text="@android:string/cancel"
+        android:text="Close"
         app:layout_constraintEnd_toStartOf="@+id/FilterTransFilter"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
