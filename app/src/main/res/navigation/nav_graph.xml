@@ -2,32 +2,32 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_navigation"
-    app:startDestination="@id/tab_home">
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/home_summary">
 
     <fragment
-        android:id="@+id/tab_home"
+        android:id="@+id/home_summary"
         android:name="be.kuleuven.elcontador10.fragments.Home"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
-        android:id="@+id/tab_transaction"
-        android:name="be.kuleuven.elcontador10.fragments.transactions.Transactions"
-        android:label="fragment_transactions"
-        tools:layout="@layout/fragment_transactions" />
+        android:id="@+id/employees_summary"
+        android:name="be.kuleuven.elcontador10.fragments.employees.Employees"
+        android:label="fragment_employees"
+        tools:layout="@layout/fragment_employees" />
     <fragment
-        android:id="@+id/tab_shops"
+        android:id="@+id/shops_summary"
         android:name="be.kuleuven.elcontador10.fragments.shops.Shops"
         android:label="fragment_shops"
         tools:layout="@layout/fragment_shops" />
     <fragment
-        android:id="@+id/tab_tenants"
+        android:id="@+id/tenants_summary"
         android:name="be.kuleuven.elcontador10.fragments.tenants.Tenants"
         android:label="fragment_tenants"
         tools:layout="@layout/fragment_tenants" />
     <fragment
-        android:id="@+id/tab_employees"
-        android:name="be.kuleuven.elcontador10.fragments.employees.Employees"
-        android:label="fragment_employees"
-        tools:layout="@layout/fragment_employees" />
+        android:id="@+id/transactions_summary"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.Transactions"
+        android:label="fragment_transactions"
+        tools:layout="@layout/fragment_transactions" />
 </navigation>

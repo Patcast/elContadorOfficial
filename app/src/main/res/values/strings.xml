@@ -57,4 +57,5 @@
         <item>Individual</item>
     </string-array>
     <string name="log_out">Log out</string>
+    <string name="new_transaction">new_transaction</string>
 </resources>
