@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,11 +40,12 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
     private TextView name;
     private TextView dateFrom;
     private TextView dateTo;
-    private Button filter;
-    private Button cancel;
+
 
     private String category_string = "*";
     private String subcategory_string = "*";
+    ///Object to be passed to Transaction
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,9 +56,38 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
         return inflater.inflate(R.layout.fragment_transactions_filter, container, false);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Set navigation
+
+        final NavController navController = Navigation.findNavController(view);
+
+        /// Navigate to Transaction and sent filerSent object  after pressing filter
+
+        Button filterButton = view.findViewById(R.id.btn_filter_FilterTrans);
+        filterButton.setOnClickListener((v)-> {
+            TransactionsFilterDirections.ActionTransactionsFilterToTransactionsSummary action = TransactionsFilterDirections.actionTransactionsFilterToTransactionsSummary(getFilter());
+            navController.navigate(action);
+
+        });
+
+
+
+        /// Navigate to Transaction after pressing filter
+       /*
+        Button cancelButton = view.findViewById(R.id.btn_cancel_FilterTrans);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.action_transactionsFilter_to_transactions_summary);
+            }
+        });
+
+        */
+
 
         category = getView().findViewById(R.id.FilterTransCategory);
         subcategory = getView().findViewById(R.id.FilterTransSubcategory);
@@ -64,15 +96,15 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
         name = getView().findViewById(R.id.FilterTransName);
         dateFrom = getView().findViewById(R.id.FilterTransFrom);
         dateTo = getView().findViewById(R.id.FilterTransTo);
-        filter = getView().findViewById(R.id.FilterTransFilter);
-        cancel = getView().findViewById(R.id.FilterTransCancel);
+        //btnFilter = getView().findViewById(R.id.btn_filter_FilterTrans);
+        //cancel = getView().findViewById(R.id.FilterTransCancel);
 
         switchFrom.setOnCheckedChangeListener(this::From_onClick);
         switchTo.setOnCheckedChangeListener(this::To_onClick);
-        cancel.setOnClickListener(this::Cancel_OnClick);
-        filter.setOnClickListener(this::Filter_OnClick);
+        //cancel.setOnClickListener(this::Cancel_OnClick);
+        //filter.setOnClickListener(this::Filter_OnClick);
 
-        mainActivity.hideButtons();
+        //mainActivity.hideButtons();
 
         ArrayAdapter<CharSequence> category_adapter = ArrayAdapter.createFromResource(mainActivity, R.array.category_items, android.R.layout.simple_spinner_item);
         category_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -166,14 +198,16 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
         if (isChecked) dateTo.setEnabled(true);
         else dateTo.setEnabled(false);
     }
-
+/*
     public void Cancel_OnClick(View view) {
         FilterTransactionsParcel filter = new FilterTransactionsParcel("*", "*", "*", null, null);
         mainActivity.setSelectedFragment(new Transactions(filter), "Transactions");
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void Filter_OnClick(View view) {
+ */
+/*
+   @RequiresApi(api = Build.VERSION_CODES.O)
+    public void onClick_filter (View view) {
         String name_text = name.getText().toString();
         LocalDateTime from = null;
         LocalDateTime to = null;
@@ -200,7 +234,46 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
             }
         }
 
-        FilterTransactionsParcel filter = new FilterTransactionsParcel(category_string, subcategory_string, name_text, from, to);
-        mainActivity.setSelectedFragment(new Transactions(filter), "Transactions");
+          FilterTransactionsParcel  filterParcel = new FilterTransactionsParcel(category_string, subcategory_string, name_text, from, to);
+        //mainActivity.setSelectedFragment(new Transactions(filter), "Transactions");
     }
+
+ */
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        public FilterTransactionsParcel getFilter(){
+            String name_text = name.getText().toString();
+            LocalDateTime from = null;
+            LocalDateTime to = null;
+
+            if (name_text.equals("")) name_text = "*";
+
+            if (dateFrom.isEnabled()) {
+                try {
+                    String[] date = dateFrom.getText().toString().split("/");
+
+                    from = LocalDateTime.of(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]), 0, 0 ,0);
+                } catch (Exception e) {
+                    Toast.makeText(mainActivity, "Invalid date.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            if (dateTo.isEnabled()) {
+                try {
+                    String[] date = dateTo.getText().toString().split("/");
+
+                    to = LocalDateTime.of(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]), 23, 59, 59);
+                } catch (Exception e) {
+                    Toast.makeText(mainActivity, "Invalid date.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            //mainActivity.setSelectedFragment(new Transactions(filter), "Transactions");
+            return new FilterTransactionsParcel(category_string, subcategory_string, name_text, from, to);
+        }
+
+
+
+
 }
+
+

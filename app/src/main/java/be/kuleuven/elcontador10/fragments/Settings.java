@@ -35,7 +35,7 @@ public class Settings extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mainActivity.hideButtons();
+       // mainActivity.hideButtons();
         logout = getView().findViewById(R.id.btnLogOut);
         logout.setOnClickListener(this::onLogOut_CLicked);
     }

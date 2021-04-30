@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/home_summary">
+
+    <fragment
+        android:id="@+id/home_summary"
+        android:name="be.kuleuven.elcontador10.fragments.Home"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_home_summary_to_newTransaction"
+            app:destination="@id/newTransaction" />
+        <action
+            android:id="@+id/action_home_summary_to_settings"
+            app:destination="@id/settings" />
+    </fragment>
+    <fragment
+        android:id="@+id/employees_summary"
+        android:name="be.kuleuven.elcontador10.fragments.employees.Employees"
+        android:label="fragment_employees"
+        tools:layout="@layout/fragment_employees" />
+    <fragment
+        android:id="@+id/shops_summary"
+        android:name="be.kuleuven.elcontador10.fragments.shops.Shops"
+        android:label="fragment_shops"
+        tools:layout="@layout/fragment_shops" />
+    <fragment
+        android:id="@+id/tenants_summary"
+        android:name="be.kuleuven.elcontador10.fragments.tenants.Tenants"
+        android:label="fragment_tenants"
+        tools:layout="@layout/fragment_tenants" />
+    <fragment
+        android:id="@+id/transactions_summary"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.Transactions"
+        android:label="fragment_transactions"
+        tools:layout="@layout/fragment_transactions" >
+        <action
+            android:id="@+id/action_transactions_summary_to_transactionsFilter"
+            app:destination="@id/transactionsFilter" />
+        <action
+            android:id="@+id/action_transactions_summary_to_transactionDisplay"
+            app:destination="@id/transactionDisplay" />
+        <action
+            android:id="@+id/action_transactions_summary_to_newTransaction"
+            app:destination="@id/newTransaction" />
+        <argument
+            android:name="parcelFilter"
+            app:argType="be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel"
+            app:nullable="true"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/transactionsFilter"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.TransactionsFilter"
+        android:label="fragment_transactions_filter"
+        tools:layout="@layout/fragment_transactions_filter" >
+        <action
+            android:id="@+id/action_transactionsFilter_to_transactions_summary"
+            app:destination="@id/transactions_summary" >
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/transactionDisplay"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.TransactionDisplay"
+        android:label="fragment_transaction_display"
+        tools:layout="@layout/fragment_transaction_display" />
+    <fragment
+        android:id="@+id/newTransaction"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.NewTransaction"
+        android:label="fragment_new_transaction"
+        tools:layout="@layout/fragment_new_transaction" >
+        <action
+            android:id="@+id/action_newTransaction_to_transactions_summary"
+            app:destination="@id/transactions_summary" >
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/settings"
+        android:name="be.kuleuven.elcontador10.fragments.Settings"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+</navigation>

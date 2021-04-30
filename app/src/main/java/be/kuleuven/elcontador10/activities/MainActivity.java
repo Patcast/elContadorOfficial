@@ -2,6 +2,9 @@ package be.kuleuven.elcontador10.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -26,10 +29,10 @@ import be.kuleuven.elcontador10.fragments.transactions.TransactionsFilter;
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navigationView;
 
-    private TextView header;
+    //private TextView header;
 
-    private FloatingActionButton buttonLeft;
-    private FloatingActionButton buttonRight;
+   // private FloatingActionButton buttonLeft;
+   // private FloatingActionButton buttonRight;
 
     private StakeholderLoggedIn loggedIn;
     private String fragmentName;
@@ -43,28 +46,40 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setBottomMenu();
 
         Bundle i = this.getIntent().getExtras();
         loggedIn = (StakeholderLoggedIn) i.getParcelable("Account");
 
-        navigationView = findViewById(R.id.nav_view);
-        header = findViewById(R.id.lblToolbarHeading);
+        //navigationView = findViewById(R.id.nav_view);
+        //header = findViewById(R.id.lblToolbarHeading);
+        //buttonLeft = findViewById(R.id.mainButtonLeft);
+        //buttonRight = findViewById(R.id.mainButtonRight);
 
-        buttonLeft = findViewById(R.id.mainButtonLeft);
-        buttonRight = findViewById(R.id.mainButtonRight);
-
-        homeButtons();
-        selectedFragment = new Home();
-        fragmentName = "Home";
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_host,
+        //homeButtons();
+       // selectedFragment = new Home();
+        //fragmentName = "Home";
+        /*getSupportFragmentManager().beginTransaction().replace(R.id.fragment_host,
                 selectedFragment, null).commit();
 
         navigationView.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
+
+         */
     }
+
+    ///This is all the code required for the bottom Navigation Menu
+    private void setBottomMenu(){
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu_main);
+        NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
+        NavigationUI.setupWithNavController(bottomNavigationView,navController);
+    }
+
+
 
     /*
     Reads the item clicked title and then show the correct fragment
     */
+    /*
     private boolean onNavigationItemSelected(MenuItem item) {
         String title = item.getTitle().toString();
         selectedFragment = null;
@@ -110,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
     /*
     Show the home main buttons: Settings and new transaction
     */
+/*
     public void homeButtons(){
         buttonLeft.setVisibility(View.VISIBLE);
         buttonLeft.setImageResource(R.drawable.icon_settings);
@@ -119,7 +135,8 @@ public class MainActivity extends AppCompatActivity {
 
     /*
     * Show the other fragment buttons: delete, add, and filter
-    * */
+    */
+    /*
     public void viewButtons(){
         buttonLeft.setVisibility(View.VISIBLE);
         buttonLeft.setImageResource(R.drawable.icon_add);
@@ -129,16 +146,17 @@ public class MainActivity extends AppCompatActivity {
 
     /*
     * Hides all buttons. Used when viewing other fragments that has its own button
-    * */
+     */
+/*
     public void hideButtons(){
         buttonLeft.setVisibility(View.GONE);
         buttonRight.setVisibility(View.GONE);
     }
-
+*/
     public StakeholderLoggedIn getLoggedIn() {
         return loggedIn;
     }
-
+/*
     public Fragment getSelectedFragment() { return selectedFragment; }
 
     public void setSelectedFragment(Fragment selectedFragment, String fragmentName) {
@@ -153,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment, null).commit();
     }
 
+
     public void onLeftButton_Clicked(View view) {
         switch(fragmentName) {
             case "Home":
@@ -166,8 +185,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_host,
-                selectedFragment, null).commit();
+        //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_host,
+                //selectedFragment, null).commit();
     }
 
     public void onRightButton_Clicked(View view) {
@@ -185,7 +204,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_host,
-                selectedFragment, null).commit();
+       // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_host,
+        //        selectedFragment, null).commit();
     }
+*/
 }
