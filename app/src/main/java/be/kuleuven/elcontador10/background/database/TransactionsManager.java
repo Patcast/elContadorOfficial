@@ -16,9 +16,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.background.CardFormatter;
+import be.kuleuven.elcontador10.background.Transaction;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
+import be.kuleuven.elcontador10.background.parcels.NewTransactionParcel;
 import be.kuleuven.elcontador10.interfaces.CardFormatterInterface;
 import be.kuleuven.elcontador10.interfaces.TransactionsInterface;
+import be.kuleuven.elcontador10.interfaces.TransactionsNewInterface;
 
 public class TransactionsManager {
     private final String URL = "https://studev.groept.be/api/a20sd505/getTransactions";
@@ -96,6 +99,10 @@ public class TransactionsManager {
                     transactions.error(error.toString());
                 });
         requestQueue.add(request);
+    }
+
+    public void addTransactions(TransactionsNewInterface newInterface, NewTransactionParcel parcel) {
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

@@ -198,16 +198,9 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
         if (isChecked) dateTo.setEnabled(true);
         else dateTo.setEnabled(false);
     }
-/*
-    public void Cancel_OnClick(View view) {
-        FilterTransactionsParcel filter = new FilterTransactionsParcel("*", "*", "*", null, null);
-        mainActivity.setSelectedFragment(new Transactions(filter), "Transactions");
-    }
 
- */
-/*
-   @RequiresApi(api = Build.VERSION_CODES.O)
-    public void onClick_filter (View view) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public FilterTransactionsParcel getFilter(){
         String name_text = name.getText().toString();
         LocalDateTime from = null;
         LocalDateTime to = null;
@@ -234,46 +227,9 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
             }
         }
 
-          FilterTransactionsParcel  filterParcel = new FilterTransactionsParcel(category_string, subcategory_string, name_text, from, to);
         //mainActivity.setSelectedFragment(new Transactions(filter), "Transactions");
+        return new FilterTransactionsParcel(category_string, subcategory_string, name_text, from, to);
     }
-
- */
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        public FilterTransactionsParcel getFilter(){
-            String name_text = name.getText().toString();
-            LocalDateTime from = null;
-            LocalDateTime to = null;
-
-            if (name_text.equals("")) name_text = "*";
-
-            if (dateFrom.isEnabled()) {
-                try {
-                    String[] date = dateFrom.getText().toString().split("/");
-
-                    from = LocalDateTime.of(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]), 0, 0 ,0);
-                } catch (Exception e) {
-                    Toast.makeText(mainActivity, "Invalid date.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            if (dateTo.isEnabled()) {
-                try {
-                    String[] date = dateTo.getText().toString().split("/");
-
-                    to = LocalDateTime.of(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]), 23, 59, 59);
-                } catch (Exception e) {
-                    Toast.makeText(mainActivity, "Invalid date.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            //mainActivity.setSelectedFragment(new Transactions(filter), "Transactions");
-            return new FilterTransactionsParcel(category_string, subcategory_string, name_text, from, to);
-        }
-
-
-
-
 }
 
 
