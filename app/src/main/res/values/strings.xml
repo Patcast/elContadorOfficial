@@ -65,4 +65,6 @@
     <string name="confirm">Confirm</string>
     <string name="filter">Filter</string>
     <string name="dd_mm_yyyy">DD/MM/YYYY</string>
+    <string name="pay_to">Pay to</string>
+    <string name="stakeholder">Stakeholder</string>
 </resources>

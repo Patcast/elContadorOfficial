@@ -62,11 +62,7 @@ public class Transactions extends Fragment implements TransactionsInterface {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
         //Get argument from TransactionFilter
-
-
         try {
 
             TransactionsArgs args = TransactionsArgs.fromBundle(getArguments());
