@@ -46,6 +46,11 @@
         <action
             android:id="@+id/action_transactions_summary_to_newTransaction"
             app:destination="@id/newTransaction" />
+        <argument
+            android:name="parcelFilter"
+            app:argType="be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel"
+            app:nullable="true"
+            />
     </fragment>
     <fragment
         android:id="@+id/transactionsFilter"
@@ -54,7 +59,8 @@
         tools:layout="@layout/fragment_transactions_filter" >
         <action
             android:id="@+id/action_transactionsFilter_to_transactions_summary"
-            app:destination="@id/transactions_summary" />
+            app:destination="@id/transactions_summary" >
+        </action>
     </fragment>
     <fragment
         android:id="@+id/transactionDisplay"
@@ -68,7 +74,8 @@
         tools:layout="@layout/fragment_new_transaction" >
         <action
             android:id="@+id/action_newTransaction_to_transactions_summary"
-            app:destination="@id/transactions_summary" />
+            app:destination="@id/transactions_summary" >
+        </action>
     </fragment>
     <fragment
         android:id="@+id/settings"

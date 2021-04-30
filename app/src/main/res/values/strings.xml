@@ -63,4 +63,6 @@
     <string name="edit">Edit</string>
     <string name="close">Close</string>
     <string name="confirm">Confirm</string>
+    <string name="filter">Filter</string>
+    <string name="dd_mm_yyyy">DD/MM/YYYY</string>
 </resources>

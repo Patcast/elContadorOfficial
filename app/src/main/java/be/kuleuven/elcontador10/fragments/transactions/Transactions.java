@@ -32,9 +32,10 @@ import be.kuleuven.elcontador10.interfaces.TransactionsInterface;
 public class Transactions extends Fragment implements TransactionsInterface {
     private MainActivity mainActivity;
     private RecyclerView recyclerView;
-    private FilterTransactionsParcel filter;
     private TransactionsManager manager;
+    private FilterTransactionsParcel filter;
 
+/*
     public Transactions(FilterTransactionsParcel filter) {
         this.filter = filter;
     }
@@ -44,6 +45,9 @@ public class Transactions extends Fragment implements TransactionsInterface {
                 "*", null, null);
         this.filter = filterNew;
     }
+
+ */
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,6 +61,24 @@ public class Transactions extends Fragment implements TransactionsInterface {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
+
+        //Get argument from TransactionFilter
+
+
+        try {
+
+            TransactionsArgs args = TransactionsArgs.fromBundle(getArguments());
+            filter = args.getParcelFilter();
+        }
+
+        catch (Exception e) {
+            filter = new FilterTransactionsParcel("*", "*",
+                    "*", null, null);
+        }
+
+
 
         ///// Set Navigation for Transactions buttons
         final NavController navController = Navigation.findNavController(view);

@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:enabled="false"
-        android:hint="DD/MM/YYYY"
+        android:hint="@string/dd_mm_yyyy"
         android:inputType="date"
         app:layout_constraintStart_toStartOf="@+id/FilterTransFromSwitch"
         app:layout_constraintTop_toBottomOf="@+id/FilterTransFromSwitch" />
@@ -71,32 +71,35 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:enabled="false"
-        android:hint="DD/MM/YYYY"
+        android:hint="@string/dd_mm_yyyy"
         android:inputType="date"
         app:layout_constraintStart_toStartOf="@+id/FilterTransFromSwitch"
         app:layout_constraintTop_toBottomOf="@+id/FilterTransToSwitch" />
 
     <Button
-        android:id="@+id/FilterTransFilter"
+        android:id="@+id/btn_filter_FilterTrans"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
         android:background="@drawable/buttons"
-        android:text="Filter"
+        android:text="@string/filter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/FilterTransCancel" />
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.95" />
 
     <Button
-        android:id="@+id/FilterTransCancel"
+        android:id="@+id/btn_cancel_FilterTrans"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:background="@drawable/buttons"
-        android:text="Close"
-        app:layout_constraintEnd_toStartOf="@+id/FilterTransFilter"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:text="@string/close"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintVertical_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/FilterTransFilter" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
