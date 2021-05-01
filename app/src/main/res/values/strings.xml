@@ -67,4 +67,5 @@
     <string name="dd_mm_yyyy">DD/MM/YYYY</string>
     <string name="pay_to">Pay to</string>
     <string name="stakeholder">Stakeholder</string>
+    <string name="additional_comments">Additional Comments</string>
 </resources>

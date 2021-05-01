@@ -40,11 +40,12 @@
         android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
         <RadioButton
             android:id="@+id/radio_CashIn"
@@ -56,7 +57,8 @@
             android:scaleX="1.7"
             android:scaleY="1.7"
             android:text="@string/cash_in"
-            android:translationX="24dp" />
+            android:translationX="24dp"
+            android:paddingVertical="10dp"/>
 
         <RadioButton
             android:id="@+id/radio_CashOut"
@@ -65,7 +67,8 @@
             android:scaleX="1.7"
             android:scaleY="1.7"
             android:text="@string/cash_out"
-            android:translationX="-30dp" />
+            android:translationX="-30dp"
+            android:paddingVertical="10dp"/>
 
     </RadioGroup>
 
@@ -75,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:ems="10"
@@ -89,18 +92,63 @@
         android:id="@+id/actv_stakeholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
+        android:hint="@string/stakeholder"
+        android:completionThreshold="1"
+        android:completionHint="@string/stakeholder"
+        android:dropDownHeight="200dp"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:hint="@string/stakeholder"
-        android:dropDownHeight="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ed_txt_amount"
-        android:completionThreshold="1"
-        android:completionHint="@string/stakeholder"/>
+        />
+    <Spinner
+        android:id="@+id/sp_TransCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/category_items"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/actv_stakeholder"/>
+
+    <Spinner
+        android:id="@+id/sp_TransSubcategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sp_TransCategory"/>
+
+    <EditText
+        android:id="@+id/editTextTextMultiLine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        android:hint="@string/additional_comments"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sp_TransSubcategory"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
