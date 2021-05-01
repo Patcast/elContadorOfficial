@@ -73,17 +73,17 @@
         tools:layout="@layout/fragment_stakeholder_sumary" />
     <fragment
         android:id="@+id/stakeholderDisply"
-        android:name="be.kuleuven.elcontador10.StakeholderDisply"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderDisply"
         android:label="fragment_stakeholder_disply"
         tools:layout="@layout/fragment_stakeholder_disply" />
     <fragment
         android:id="@+id/stakeholderFilter"
-        android:name="be.kuleuven.elcontador10.StakeholderFilter"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderFilter"
         android:label="fragment_stakeholder_filter"
         tools:layout="@layout/fragment_stakeholder_filter" />
     <fragment
         android:id="@+id/stakeholderNew"
-        android:name="be.kuleuven.elcontador10.StakeholderNew"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderNew"
         android:label="fragment_stakeholder_new"
         tools:layout="@layout/fragment_stakeholder_new" />
 </navigation>
