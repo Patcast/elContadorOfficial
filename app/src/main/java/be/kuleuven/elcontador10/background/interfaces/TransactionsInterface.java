@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.interfaces;
+package be.kuleuven.elcontador10.background.interfaces;
 
 import android.content.Context;
 

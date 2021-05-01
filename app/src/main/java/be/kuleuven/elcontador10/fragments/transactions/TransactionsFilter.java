@@ -21,14 +21,13 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.CategorySpinnerAdapter;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
-import be.kuleuven.elcontador10.interfaces.TransactionsFilterInterface;
+import be.kuleuven.elcontador10.background.interfaces.TransactionsFilterInterface;
 
 public class TransactionsFilter extends Fragment implements TransactionsFilterInterface {
     private MainActivity mainActivity;

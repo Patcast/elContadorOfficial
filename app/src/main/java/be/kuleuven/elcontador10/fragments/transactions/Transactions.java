@@ -27,7 +27,7 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.RecyclerViewAdapter;
 import be.kuleuven.elcontador10.background.database.TransactionsManager;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
-import be.kuleuven.elcontador10.interfaces.TransactionsInterface;
+import be.kuleuven.elcontador10.background.interfaces.TransactionsInterface;
 
 public class Transactions extends Fragment implements TransactionsInterface {
     private MainActivity mainActivity;
@@ -66,6 +66,7 @@ public class Transactions extends Fragment implements TransactionsInterface {
 
         //Get argument from TransactionFilter
         try {
+            assert getArguments() != null;
             TransactionsArgs args = TransactionsArgs.fromBundle(getArguments());
             filter = args.getParcelFilter();
         }

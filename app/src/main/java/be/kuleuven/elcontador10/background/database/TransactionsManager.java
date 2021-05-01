@@ -16,15 +16,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.background.CardFormatter;
-import be.kuleuven.elcontador10.background.Transaction;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 import be.kuleuven.elcontador10.background.parcels.NewTransactionParcel;
-import be.kuleuven.elcontador10.interfaces.CardFormatterInterface;
-import be.kuleuven.elcontador10.interfaces.TransactionsInterface;
-import be.kuleuven.elcontador10.interfaces.TransactionsNewInterface;
+import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
+import be.kuleuven.elcontador10.background.interfaces.TransactionsInterface;
+import be.kuleuven.elcontador10.background.interfaces.TransactionsNewInterface;
 
 public class TransactionsManager {
-    private final String URL = "https://studev.groept.be/api/a20sd505/getTransactions";
+    private final String all_URL = "https://studev.groept.be/api/a20sd505/getTransactions";
+    private final String single_URL = "";
 
     private static volatile TransactionsManager INSTANCE = null;
 
@@ -54,7 +54,7 @@ public class TransactionsManager {
     public void getTransactions(TransactionsInterface transactions, FilterTransactionsParcel filter) {
         RequestQueue requestQueue = Volley.newRequestQueue(transactions.getContext());
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null,
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, all_URL, null,
                 response -> {
                     try {
                         titles.clear();

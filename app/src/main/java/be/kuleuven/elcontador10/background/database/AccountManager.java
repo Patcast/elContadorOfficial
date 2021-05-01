@@ -8,7 +8,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONObject;
 
 import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
-import be.kuleuven.elcontador10.interfaces.LogInInterface;
+import be.kuleuven.elcontador10.background.interfaces.LogInInterface;
 
 public class AccountManager {
     private final String URL_LogIn = "https://studev.groept.be/api/a20sd505/LogIn/";

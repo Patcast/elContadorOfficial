@@ -12,7 +12,7 @@
             android:icon="@drawable/icon_transaction"
             android:title="@string/transactions" />
         <item
-            android:id="@+id/stakeholderSumary"
+            android:id="@+id/stakeholderSummary"
             android:icon="@drawable/icon_tenants"
             android:title="@string/stakeholder" />
 

@@ -2,7 +2,6 @@ package be.kuleuven.elcontador10.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +14,7 @@ import android.widget.Toast;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.AccountManager;
 import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
-import be.kuleuven.elcontador10.interfaces.LogInInterface;
+import be.kuleuven.elcontador10.background.interfaces.LogInInterface;
 
 public class LogIn extends AppCompatActivity implements LogInInterface {
 

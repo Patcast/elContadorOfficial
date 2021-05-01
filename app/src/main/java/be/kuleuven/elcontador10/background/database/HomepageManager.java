@@ -11,19 +11,18 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.background.CardFormatter;
-import be.kuleuven.elcontador10.interfaces.CardFormatterInterface;
-import be.kuleuven.elcontador10.interfaces.HomepageInterface;
+import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
+import be.kuleuven.elcontador10.background.interfaces.HomepageInterface;
 
 public class HomepageManager {
     private final String URL_Transactions = "https://studev.groept.be/api/a20sd505/homepageTransactions";
     private final String URL_Tenants = "https://studev.groept.be/api/a20sd505/inDebtTenants";
-    private final String URL_Contracts = "https://studev.groept.be/api/a20sd505/contractsEndingInRange/";
+ //   private final String URL_Contracts = "https://studev.groept.be/api/a20sd505/contractsEndingInRange/";
 
     private static volatile HomepageManager INSTANCE = null;
 
@@ -148,7 +147,7 @@ public class HomepageManager {
                         tenants_metadata.clear();
 
                         tenants_titles.add("WHITE#Tenants in debt");
-                        tenants_descriptions.add("Here are the tenants in debt:");
+                        tenants_descriptions.add("Here are the stakeholders in debt:");
                         tenants_status.add(" # ");
                         tenants_metadata.add("");
 
@@ -177,7 +176,7 @@ public class HomepageManager {
                             tenants_metadata.add("");
                         }
 
-                        getEndingContracts(homepageInterface);
+                        pushData(homepageInterface);
                     }
                     catch (Exception e) {
                         e.printStackTrace();
@@ -191,75 +190,78 @@ public class HomepageManager {
         requestQueue.add(request);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void getEndingContracts(HomepageInterface homepageInterface) {
-        LocalDate now = LocalDate.now();
-        LocalDate later = now.plusMonths(1);
-
-        String URL_FINAL = URL_Contracts + now.getYear() + "-" + now.getMonthValue() + "-" + now.getDayOfMonth() + "/" +
-                later.getYear() + "-" + later.getMonthValue() + "-" + later.getDayOfMonth();
-
-        RequestQueue requestQueue = Volley.newRequestQueue(homepageInterface.getContext());
-
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL_FINAL, null,
-                response -> {
-                    try {
-                        contracts_titles.clear();
-                        contracts_descriptions.clear();
-                        contracts_status.clear();
-                        contracts_metadata.clear();
-
-                        contracts_titles.add("WHITE#Contracts ending this month");
-                        contracts_descriptions.add("Here are the contracts ending this month:");
-                        contracts_status.add(" # ");
-                        contracts_metadata.add("");
-
-                        if (response.length() != 0) {
-                            for (int i = 0; i < response.length(); i++) {
-                                JSONObject object = response.getJSONObject(i);
-
-                                int idContract = object.getInt("idContracts");
-
-                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                                LocalDate startDate = LocalDate.parse(object.getString("startDate"), formatter);
-                                LocalDate endDate = LocalDate.parse(object.getString("endDate"), formatter);
-
-                                double amount = object.getDouble("amount");
-                                String firstName = object.getString("firstName");
-                                String lastName = object.getString("lastName");
-                                int idPlace = object.getInt("idPlace");
-                                String placeType = object.getString("placeType");
-                                String contractType = object.getString("idContractType");
-
-                                CardFormatterInterface cardFormatter = new CardFormatter();
-                                String[] formatted = cardFormatter.ContractFormatter(idContract, startDate, endDate, amount,
-                                        firstName, lastName, idPlace, placeType, contractType);
-
-                                contracts_titles.add(formatted[0]);
-                                contracts_descriptions.add(formatted[1]);
-                                contracts_status.add(formatted[2]);
-                                contracts_metadata.add(formatted[3]);
-                            }
-                        }
-                        else {
-                            contracts_titles.add("None");
-                            contracts_descriptions.add("");
-                            contracts_status.add(" # "); // needs to be added so that the list index are the same
-                            contracts_metadata.add("");
-                        }
-
-                        pushData(homepageInterface);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        homepageInterface.error(e.toString());
-                    }
-                },
-                error -> {
-                    error.printStackTrace();
-                    homepageInterface.error(error.toString());
-                });
-        requestQueue.add(request);
-    }
+    /*
+    Not required anymore
+     */
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    public void getEndingContracts(HomepageInterface homepageInterface) {
+//        LocalDate now = LocalDate.now();
+//        LocalDate later = now.plusMonths(1);
+//
+//        String URL_FINAL = URL_Contracts + now.getYear() + "-" + now.getMonthValue() + "-" + now.getDayOfMonth() + "/" +
+//                later.getYear() + "-" + later.getMonthValue() + "-" + later.getDayOfMonth();
+//
+//        RequestQueue requestQueue = Volley.newRequestQueue(homepageInterface.getContext());
+//
+//        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL_FINAL, null,
+//                response -> {
+//                    try {
+//                        contracts_titles.clear();
+//                        contracts_descriptions.clear();
+//                        contracts_status.clear();
+//                        contracts_metadata.clear();
+//
+//                        contracts_titles.add("WHITE#Contracts ending this month");
+//                        contracts_descriptions.add("Here are the contracts ending this month:");
+//                        contracts_status.add(" # ");
+//                        contracts_metadata.add("");
+//
+//                        if (response.length() != 0) {
+//                            for (int i = 0; i < response.length(); i++) {
+//                                JSONObject object = response.getJSONObject(i);
+//
+//                                int idContract = object.getInt("idContracts");
+//
+//                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//                                LocalDate startDate = LocalDate.parse(object.getString("startDate"), formatter);
+//                                LocalDate endDate = LocalDate.parse(object.getString("endDate"), formatter);
+//
+//                                double amount = object.getDouble("amount");
+//                                String firstName = object.getString("firstName");
+//                                String lastName = object.getString("lastName");
+//                                int idPlace = object.getInt("idPlace");
+//                                String placeType = object.getString("placeType");
+//                                String contractType = object.getString("idContractType");
+//
+//                                CardFormatterInterface cardFormatter = new CardFormatter();
+//                                String[] formatted = cardFormatter.ContractFormatter(idContract, startDate, endDate, amount,
+//                                        firstName, lastName, idPlace, placeType, contractType);
+//
+//                                contracts_titles.add(formatted[0]);
+//                                contracts_descriptions.add(formatted[1]);
+//                                contracts_status.add(formatted[2]);
+//                                contracts_metadata.add(formatted[3]);
+//                            }
+//                        }
+//                        else {
+//                            contracts_titles.add("None");
+//                            contracts_descriptions.add("");
+//                            contracts_status.add(" # "); // needs to be added so that the list index are the same
+//                            contracts_metadata.add("");
+//                        }
+//
+//                        pushData(homepageInterface);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        homepageInterface.error(e.toString());
+//                    }
+//                },
+//                error -> {
+//                    error.printStackTrace();
+//                    homepageInterface.error(error.toString());
+//                });
+//        requestQueue.add(request);
+//    }
 
     public void pushData(HomepageInterface homepageInterface) {
         // combine all arrays into one

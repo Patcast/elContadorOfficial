@@ -7,9 +7,8 @@ import androidx.annotation.RequiresApi;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
-import be.kuleuven.elcontador10.interfaces.CardFormatterInterface;
+import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
 
 public class CardFormatter implements CardFormatterInterface {
 

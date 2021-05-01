@@ -28,8 +28,7 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.RecyclerViewAdapter;
 import be.kuleuven.elcontador10.background.database.HomepageManager;
-import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
-import be.kuleuven.elcontador10.interfaces.HomepageInterface;
+import be.kuleuven.elcontador10.background.interfaces.HomepageInterface;
 
 public class Home extends Fragment implements HomepageInterface {
     private String firstName;
@@ -115,5 +114,17 @@ public class Home extends Fragment implements HomepageInterface {
     @Override
     public void error(String error) {
         Toast.makeText(mainActivity, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void displayTransaction(String id) {
+        HomeDirections.ActionHomeSummaryToTransactionDisplay action =
+                HomeDirections.actionHomeSummaryToTransactionDisplay(id);
+        navController.navigate(action);
+    }
+
+    @Override
+    public void displayStakeholder(String id) {
+
     }
 }

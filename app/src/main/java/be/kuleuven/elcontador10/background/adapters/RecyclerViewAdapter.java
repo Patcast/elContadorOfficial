@@ -1,8 +1,6 @@
 package be.kuleuven.elcontador10.background.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,20 +9,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.background.Transaction;
 import be.kuleuven.elcontador10.fragments.Home;
 import be.kuleuven.elcontador10.fragments.transactions.Transactions;
-import be.kuleuven.elcontador10.fragments.transactions.TransactionsDirections;
+import be.kuleuven.elcontador10.background.interfaces.HomepageInterface;
+import be.kuleuven.elcontador10.background.interfaces.TransactionsInterface;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private ArrayList<String> TitleArray, DescriptionArray, StatusArray, MetadataArray;
@@ -109,14 +104,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             String[] array = MetadataArray.get(position).split("#");
             switch(array[0]) {
                 case "Transactions":
-                    if (fragment instanceof Transactions) {
-                        Transactions transactions = (Transactions) fragment;
+                    if (fragment instanceof TransactionsInterface) {
+                        TransactionsInterface transactions = (Transactions) fragment;
                         transactions.displayTransaction(array[1]);
-                        Toast.makeText(context, "Transactions ID " + array[1], Toast.LENGTH_SHORT).show();
                     }
-                    else {
-                        Home home = (Home) fragment;
+                    else if (fragment instanceof HomepageInterface) {
+                        HomepageInterface home = (Home) fragment;
+                        home.displayTransaction(array[1]);
                     }
+                    Toast.makeText(context, "Transactions ID " + array[1], Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     Toast.makeText(context, "Nothing to show.", Toast.LENGTH_SHORT).show();

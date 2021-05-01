@@ -16,6 +16,15 @@
         <action
             android:id="@+id/action_home_summary_to_settings"
             app:destination="@id/settings" />
+        <action
+            android:id="@+id/action_home_summary_to_transactions_summary"
+            app:destination="@id/transactions_summary" />
+        <action
+            android:id="@+id/action_home_summary_to_stakeholderDisply"
+            app:destination="@id/stakeholderDisplay" />
+        <action
+            android:id="@+id/action_home_summary_to_transactionDisplay"
+            app:destination="@id/transactionDisplay" />
     </fragment>
     <fragment
         android:id="@+id/transactions_summary"
@@ -71,14 +80,9 @@
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
-        android:id="@+id/stakeholderSumary"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderSumary"
-        android:label="fragment_stakeholder_sumary"
-        tools:layout="@layout/fragment_stakeholder_sumary" />
-    <fragment
-        android:id="@+id/stakeholderDisply"
+        android:id="@+id/stakeholderDisplay"
         android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderDisplay"
-        android:label="fragment_stakeholder_disply"
+        android:label="fragment_stakeholder_display"
         tools:layout="@layout/fragment_stakeholder_display" />
     <fragment
         android:id="@+id/stakeholderFilter"
@@ -90,4 +94,9 @@
         android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderNew"
         android:label="fragment_stakeholder_new"
         tools:layout="@layout/fragment_stakeholder_new" />
+    <fragment
+        android:id="@+id/stakeholderSummary"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderSummary"
+        android:label="fragment_stakeholder_summary"
+        tools:layout="@layout/fragment_stakeholder_summary" />
 </navigation>
