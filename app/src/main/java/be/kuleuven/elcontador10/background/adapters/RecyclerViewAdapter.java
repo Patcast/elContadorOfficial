@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.R;
+import be.kuleuven.elcontador10.fragments.transactions.Transactions;
+import be.kuleuven.elcontador10.fragments.transactions.TransactionsDirections;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private ArrayList<String> TitleArray, DescriptionArray, StatusArray, MetadataArray;
@@ -105,7 +107,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             String[] array = MetadataArray.get(position).split("#");
             switch(array[0]) {
                 case "Transactions":
-                    //
+                    TransactionsDirections.ActionTransactionsSummaryToTransactionDisplay action =
+                            TransactionsDirections.actionTransactionsSummaryToTransactionDisplay(array[1]);
+                    controller.navigate(action);
+                    Toast.makeText(context, "Transactions ID " + array[1], Toast.LENGTH_SHORT).show();
                 default:
                     Toast.makeText(context, "Nothing to show.", Toast.LENGTH_SHORT).show();
             }

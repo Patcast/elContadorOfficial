@@ -50,7 +50,11 @@
         android:id="@+id/transactionDisplay"
         android:name="be.kuleuven.elcontador10.fragments.transactions.TransactionDisplay"
         android:label="fragment_transaction_display"
-        tools:layout="@layout/fragment_transaction_display" />
+        tools:layout="@layout/fragment_transaction_display" >
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/newTransaction"
         android:name="be.kuleuven.elcontador10.fragments.transactions.TransactionNew"
