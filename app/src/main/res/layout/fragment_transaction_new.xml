@@ -106,6 +106,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ed_txt_amount"
         />
+    <TextView
+        android:id="@+id/txtCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/select_a_category"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="start"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/actv_stakeholder"/>
     <Spinner
         android:id="@+id/sp_TransCategory"
         android:layout_width="match_parent"
@@ -113,32 +127,44 @@
         android:entries="@array/category_items"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/actv_stakeholder"/>
-
-    <Spinner
-        android:id="@+id/sp_TransSubcategory"
+        app:layout_constraintTop_toBottomOf="@+id/txtCategory"/>
+    <TextView
+        android:id="@+id/txtSubCategory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
+        android:text="@string/select_a_sub_category"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="start"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sp_TransCategory"/>
 
-    <EditText
-        android:id="@+id/editTextTextMultiLine"
+    <Spinner
+        android:id="@+id/sp_TransSubcategory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start|top"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtSubCategory"/>
+
+    <EditText
+        android:id="@+id/ed_txt_notes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:hint="@string/additional_comments"
         android:layout_marginStart="20dp"
@@ -148,7 +174,7 @@
         android:layout_marginRight="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sp_TransSubcategory"/>
-
+        app:layout_constraintTop_toBottomOf="@+id/sp_TransSubcategory"
+         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

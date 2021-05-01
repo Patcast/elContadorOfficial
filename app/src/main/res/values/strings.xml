@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">elContador 1.0</string>
     <string name="new_transaction_title">New Transaction</string>
     <string name="receive">Receive</string>
@@ -18,14 +19,14 @@
     <string name="settings">Settings</string>
     <string name="filter_transactions">Filter Transactions</string>
     <string-array name="category_items">
-        <item>Category</item>
-        <item>Rent</item>
         <item>Others</item>
+        <item>Rent</item>
         <item>Salary</item>
         <item>Toilets</item>
         <item>Purchases</item>
         <item>Deposits</item>
     </string-array>
+
     <string-array name="rent_subcategory_items">
         <item>Subcategory</item>
         <item>Rent</item>
@@ -53,8 +54,8 @@
     </string-array>
     <string-array name="deposits_subcategory_items">
         <item>Subcategory</item>
-        <item>Company</item>
-        <item>Individual</item>
+        <item>Cash from company</item>
+        <item>Cash for company</item>
     </string-array>
     <string name="log_out">Log out</string>
     <string name="new_transaction">new_transaction</string>
@@ -68,4 +69,6 @@
     <string name="pay_to">Pay to</string>
     <string name="stakeholder">Stakeholder</string>
     <string name="additional_comments">Additional Comments</string>
+    <string name="select_a_category">Select a category</string>
+    <string name="select_a_sub_category">Select a sub-Category</string>
 </resources>
