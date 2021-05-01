@@ -105,11 +105,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             switch(array[0]) {
                 case "Transactions":
                     if (fragment instanceof TransactionsInterface) {
-                        TransactionsInterface transactions = (Transactions) fragment;
+                        TransactionsInterface transactions = (TransactionsInterface) fragment;
                         transactions.displayTransaction(array[1]);
                     }
                     else if (fragment instanceof HomepageInterface) {
-                        HomepageInterface home = (Home) fragment;
+                        HomepageInterface home = (HomepageInterface) fragment;
                         home.displayTransaction(array[1]);
                     }
                     break;
