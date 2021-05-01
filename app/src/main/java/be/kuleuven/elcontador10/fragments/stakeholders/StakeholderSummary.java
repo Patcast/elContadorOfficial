@@ -12,10 +12,10 @@ import be.kuleuven.elcontador10.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link StakeholderSumary#newInstance} factory method to
+ * Use the {@link StakeholderSummary#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class StakeholderSumary extends Fragment {
+public class StakeholderSummary extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class StakeholderSumary extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public StakeholderSumary() {
+    public StakeholderSummary() {
         // Required empty public constructor
     }
 
@@ -39,8 +39,8 @@ public class StakeholderSumary extends Fragment {
      * @return A new instance of fragment StakeholderSumary.
      */
     // TODO: Rename and change types and number of parameters
-    public static StakeholderSumary newInstance(String param1, String param2) {
-        StakeholderSumary fragment = new StakeholderSumary();
+    public static StakeholderSummary newInstance(String param1, String param2) {
+        StakeholderSummary fragment = new StakeholderSummary();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class StakeholderSumary extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_stakeholder_sumary, container, false);
+        return inflater.inflate(R.layout.fragment_stakeholder_summary, container, false);
     }
 }

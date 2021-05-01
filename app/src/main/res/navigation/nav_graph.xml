@@ -68,22 +68,44 @@
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/stakeholderSumary"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderSumary"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderSummary"
         android:label="fragment_stakeholder_sumary"
-        tools:layout="@layout/fragment_stakeholder_sumary" />
+        tools:layout="@layout/fragment_stakeholder_summary" >
+        <action
+            android:id="@+id/action_stakeholderSumary_to_stakeholderDisply"
+            app:destination="@id/stakeholderDisply" />
+        <action
+            android:id="@+id/action_stakeholderSumary_to_stakeholderFilter"
+            app:destination="@id/stakeholderFilter" />
+        <action
+            android:id="@+id/action_stakeholderSumary_to_stakeholderNew"
+            app:destination="@id/stakeholderNew" />
+    </fragment>
     <fragment
         android:id="@+id/stakeholderDisply"
         android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderDisply"
         android:label="fragment_stakeholder_disply"
-        tools:layout="@layout/fragment_stakeholder_disply" />
+        tools:layout="@layout/fragment_stakeholder_disply" >
+        <action
+            android:id="@+id/action_stakeholderDisply_to_stakeholderSumary"
+            app:destination="@id/stakeholderSumary" />
+    </fragment>
     <fragment
         android:id="@+id/stakeholderFilter"
         android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderFilter"
         android:label="fragment_stakeholder_filter"
-        tools:layout="@layout/fragment_stakeholder_filter" />
+        tools:layout="@layout/fragment_stakeholder_filter" >
+        <action
+            android:id="@+id/action_stakeholderFilter_to_stakeholderSumary"
+            app:destination="@id/stakeholderSumary" />
+    </fragment>
     <fragment
         android:id="@+id/stakeholderNew"
         android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderNew"
         android:label="fragment_stakeholder_new"
-        tools:layout="@layout/fragment_stakeholder_new" />
+        tools:layout="@layout/fragment_stakeholder_new" >
+        <action
+            android:id="@+id/action_stakeholderNew_to_stakeholderSumary"
+            app:destination="@id/stakeholderSumary" />
+    </fragment>
 </navigation>
