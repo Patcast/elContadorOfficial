@@ -78,10 +78,10 @@ public class Transactions extends Fragment implements TransactionsInterface {
 
         ///// Set Navigation for Transactions buttons
         navController = Navigation.findNavController(view);
-        FloatingActionButton fabAdd = view.findViewById(R.id.btn_filter_Transaction);
-        fabAdd.setOnClickListener(v -> navController.navigate(R.id.action_transactions_summary_to_transactionsFilter));
-        FloatingActionButton fabSettings = view.findViewById(R.id.btn_add_Transaction);
-        fabSettings.setOnClickListener(v -> navController.navigate(R.id.action_transactions_summary_to_newTransaction));
+        FloatingActionButton fabFilter = view.findViewById(R.id.btn_filter_Transaction);
+        fabFilter.setOnClickListener(v -> navController.navigate(R.id.action_transactions_summary_to_transactionsFilter));
+        FloatingActionButton fabAdd = view.findViewById(R.id.btn_add_Transaction);
+        fabAdd.setOnClickListener(v -> navController.navigate(R.id.action_transactions_summary_to_newTransaction));
         ///// End
 
         recyclerView = getView().findViewById(R.id.TransactionsRecycler);
@@ -90,8 +90,14 @@ public class Transactions extends Fragment implements TransactionsInterface {
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
-               // if (newState == RecyclerView.SCROLL_STATE_DRAGGING) mainActivity.hideButtons();
-               // else mainActivity.viewButtons();
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    fabFilter.setVisibility(View.GONE);
+                    fabAdd.setVisibility(View.GONE);
+                }
+                else {
+                    fabFilter.setVisibility(View.VISIBLE);
+                    fabAdd.setVisibility(View.VISIBLE);
+                }
             }
         });
 

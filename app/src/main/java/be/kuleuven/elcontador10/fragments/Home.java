@@ -73,8 +73,14 @@ public class Home extends Fragment implements HomepageInterface {
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
-               // if (newState == RecyclerView.SCROLL_STATE_DRAGGING) mainActivity.hideButtons();
-               // else mainActivity.homeButtons();
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    fabAdd.setVisibility(View.GONE);
+                    fabSettings.setVisibility(View.GONE);
+                }
+                else {
+                    fabAdd.setVisibility(View.VISIBLE);
+                    fabSettings.setVisibility(View.VISIBLE);
+                }
             }
         });
 
