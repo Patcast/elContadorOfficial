@@ -8,10 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -21,17 +24,20 @@ import be.kuleuven.elcontador10.R;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private ArrayList<String> TitleArray, DescriptionArray, StatusArray, MetadataArray;
     private Context context;
+    private NavController controller;
 
     /*
     * Take in the arrays and context
     * */
     public RecyclerViewAdapter(ArrayList<String> titleArray, ArrayList<String> descriptionArray,
-                               ArrayList<String> statusArray, ArrayList<String> metadataArray, Context context) {
+                               ArrayList<String> statusArray, ArrayList<String> metadataArray, Context context,
+                               NavController controller) {
         TitleArray = titleArray;
         DescriptionArray = descriptionArray;
         StatusArray = statusArray;
         MetadataArray = metadataArray;
         this.context = context;
+        this.controller = controller;
     }
 
     @NonNull
@@ -95,7 +101,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     //TODO implement onclick listener
     private void onClick(View view, int position) {
-
+        if (MetadataArray.get(position).contains("#")) {
+            String[] array = MetadataArray.get(position).split("#");
+            switch(array[0]) {
+                case "Transactions":
+                    //
+                default:
+                    Toast.makeText(context, "Nothing to show.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override

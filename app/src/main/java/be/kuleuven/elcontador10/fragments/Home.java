@@ -37,6 +37,7 @@ public class Home extends Fragment implements HomepageInterface {
     private RecyclerView recyclerView;
     private MainActivity mainActivity;
     private HomepageManager manager;
+    private NavController navController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,21 +56,11 @@ public class Home extends Fragment implements HomepageInterface {
         super.onViewCreated(view, savedInstanceState);
 
        ///// Set Navigation for new Transaction button
-        final NavController navController = Navigation.findNavController(view);
+        navController = Navigation.findNavController(view);
         FloatingActionButton fabAdd = view.findViewById(R.id.btn_add_Home);
-        fabAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navController.navigate(R.id.action_home_summary_to_newTransaction);
-            }
-        });
+        fabAdd.setOnClickListener(v -> navController.navigate(R.id.action_home_summary_to_newTransaction));
         FloatingActionButton fabSettings = view.findViewById(R.id.btn_settings_Home);
-        fabSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navController.navigate(R.id.action_home_summary_to_settings);
-            }
-        });
+        fabSettings.setOnClickListener(v -> navController.navigate(R.id.action_home_summary_to_settings));
         ///// End
 
         header = getView().findViewById(R.id.lblHomeGreeting);
@@ -115,7 +106,7 @@ public class Home extends Fragment implements HomepageInterface {
 
     @Override
     public void populateRecyclerView(ArrayList<String> title, ArrayList<String> description, ArrayList<String> status, ArrayList<String> metadata) {
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(title, description, status, metadata, this.getContext());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(title, description, status, metadata, this.getContext(), navController);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }

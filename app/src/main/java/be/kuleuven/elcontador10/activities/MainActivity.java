@@ -16,15 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
-import be.kuleuven.elcontador10.fragments.Settings;
-import be.kuleuven.elcontador10.fragments.employees.Employees;
-import be.kuleuven.elcontador10.fragments.Home;
-import be.kuleuven.elcontador10.fragments.shops.Shops;
-import be.kuleuven.elcontador10.fragments.tenants.Tenants;
-import be.kuleuven.elcontador10.fragments.transactions.Transactions;
-import be.kuleuven.elcontador10.fragments.transactions.TransactionsFilter;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navigationView;

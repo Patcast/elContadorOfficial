@@ -34,6 +34,7 @@ public class Transactions extends Fragment implements TransactionsInterface {
     private RecyclerView recyclerView;
     private TransactionsManager manager;
     private FilterTransactionsParcel filter;
+    private NavController navController;
 
 /*
     public Transactions(FilterTransactionsParcel filter) {
@@ -64,7 +65,6 @@ public class Transactions extends Fragment implements TransactionsInterface {
 
         //Get argument from TransactionFilter
         try {
-
             TransactionsArgs args = TransactionsArgs.fromBundle(getArguments());
             filter = args.getParcelFilter();
         }
@@ -74,24 +74,12 @@ public class Transactions extends Fragment implements TransactionsInterface {
                     "*", null, null);
         }
 
-
-
         ///// Set Navigation for Transactions buttons
-        final NavController navController = Navigation.findNavController(view);
+        navController = Navigation.findNavController(view);
         FloatingActionButton fabAdd = view.findViewById(R.id.btn_filter_Transaction);
-        fabAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navController.navigate(R.id.action_transactions_summary_to_transactionsFilter);
-            }
-        });
+        fabAdd.setOnClickListener(v -> navController.navigate(R.id.action_transactions_summary_to_transactionsFilter));
         FloatingActionButton fabSettings = view.findViewById(R.id.btn_add_Transaction);
-        fabSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navController.navigate(R.id.action_transactions_summary_to_newTransaction);
-            }
-        });
+        fabSettings.setOnClickListener(v -> navController.navigate(R.id.action_transactions_summary_to_newTransaction));
         ///// End
 
         recyclerView = getView().findViewById(R.id.TransactionsRecycler);
@@ -116,7 +104,7 @@ public class Transactions extends Fragment implements TransactionsInterface {
 
     @Override
     public void populateRecyclerView(ArrayList<String> title, ArrayList<String> description, ArrayList<String> status, ArrayList<String> metadata) {
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(title, description, status, metadata, this.getContext());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(title, description, status, metadata, this.getContext(), navController);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }

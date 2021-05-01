@@ -73,9 +73,9 @@
         tools:layout="@layout/fragment_stakeholder_sumary" />
     <fragment
         android:id="@+id/stakeholderDisply"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderDisply"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderDisplay"
         android:label="fragment_stakeholder_disply"
-        tools:layout="@layout/fragment_stakeholder_disply" />
+        tools:layout="@layout/fragment_stakeholder_display" />
     <fragment
         android:id="@+id/stakeholderFilter"
         android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderFilter"
