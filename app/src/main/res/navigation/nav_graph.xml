@@ -18,21 +18,6 @@
             app:destination="@id/settings" />
     </fragment>
     <fragment
-        android:id="@+id/employees_summary"
-        android:name="be.kuleuven.elcontador10.fragments.employees.Employees"
-        android:label="fragment_employees"
-        tools:layout="@layout/fragment_employees" />
-    <fragment
-        android:id="@+id/shops_summary"
-        android:name="be.kuleuven.elcontador10.fragments.shops.Shops"
-        android:label="fragment_shops"
-        tools:layout="@layout/fragment_shops" />
-    <fragment
-        android:id="@+id/tenants_summary"
-        android:name="be.kuleuven.elcontador10.fragments.tenants.Tenants"
-        android:label="fragment_tenants"
-        tools:layout="@layout/fragment_tenants" />
-    <fragment
         android:id="@+id/transactions_summary"
         android:name="be.kuleuven.elcontador10.fragments.transactions.Transactions"
         android:label="fragment_transactions"
@@ -81,4 +66,24 @@
         android:name="be.kuleuven.elcontador10.fragments.Settings"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/stakeholderSumary"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderSumary"
+        android:label="fragment_stakeholder_sumary"
+        tools:layout="@layout/fragment_stakeholder_sumary" />
+    <fragment
+        android:id="@+id/stakeholderDisply"
+        android:name="be.kuleuven.elcontador10.StakeholderDisply"
+        android:label="fragment_stakeholder_disply"
+        tools:layout="@layout/fragment_stakeholder_disply" />
+    <fragment
+        android:id="@+id/stakeholderFilter"
+        android:name="be.kuleuven.elcontador10.StakeholderFilter"
+        android:label="fragment_stakeholder_filter"
+        tools:layout="@layout/fragment_stakeholder_filter" />
+    <fragment
+        android:id="@+id/stakeholderNew"
+        android:name="be.kuleuven.elcontador10.StakeholderNew"
+        android:label="fragment_stakeholder_new"
+        tools:layout="@layout/fragment_stakeholder_new" />
 </navigation>
