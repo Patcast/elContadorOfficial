@@ -52,6 +52,7 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainActivity = (MainActivity) getActivity();
+        mainActivity.setTitle("Filter Transactions");
 
         return inflater.inflate(R.layout.fragment_transactions_filter, container, false);
     }

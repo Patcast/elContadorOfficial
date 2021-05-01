@@ -55,6 +55,7 @@ public class Transactions extends Fragment implements TransactionsInterface {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainActivity = (MainActivity) getActivity();
+        mainActivity.setTitle("Transactions");
         return inflater.inflate(R.layout.fragment_transactions, container, false);
     }
 
@@ -104,7 +105,7 @@ public class Transactions extends Fragment implements TransactionsInterface {
 
     @Override
     public void populateRecyclerView(ArrayList<String> title, ArrayList<String> description, ArrayList<String> status, ArrayList<String> metadata) {
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(title, description, status, metadata, this.getContext(), navController);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(title, description, status, metadata, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
@@ -112,5 +113,12 @@ public class Transactions extends Fragment implements TransactionsInterface {
     @Override
     public void error(String error) {
         Toast.makeText(mainActivity, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void displayTransaction(String id) {
+        TransactionsDirections.ActionTransactionsSummaryToTransactionDisplay action =
+                TransactionsDirections.actionTransactionsSummaryToTransactionDisplay(id);
+        navController.navigate(action);
     }
 }

@@ -21,14 +21,14 @@ import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navigationView;
 
-    //private TextView header;
+    private TextView header;
 
    // private FloatingActionButton buttonLeft;
    // private FloatingActionButton buttonRight;
 
     private StakeholderLoggedIn loggedIn;
-    private String fragmentName;
-    private Fragment selectedFragment;
+//    private String fragmentName;
+//    private Fragment selectedFragment;
 
     /*
     When activity first made from log in, select home fragment and take in the account parcel
@@ -41,10 +41,10 @@ public class MainActivity extends AppCompatActivity {
         setBottomMenu();
 
         Bundle i = this.getIntent().getExtras();
-        loggedIn = (StakeholderLoggedIn) i.getParcelable("Account");
+        loggedIn = i.getParcelable("Account");
 
         //navigationView = findViewById(R.id.nav_view);
-        //header = findViewById(R.id.lblToolbarHeading);
+        header = findViewById(R.id.lblToolbarHeading);
         //buttonLeft = findViewById(R.id.mainButtonLeft);
         //buttonRight = findViewById(R.id.mainButtonRight);
 
@@ -66,7 +66,9 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(bottomNavigationView,navController);
     }
 
-
+    public void setTitle(String title) {
+        header.setText(title);
+    }
 
     /*
     Reads the item clicked title and then show the correct fragment

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,26 +21,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.R;
+import be.kuleuven.elcontador10.background.Transaction;
+import be.kuleuven.elcontador10.fragments.Home;
 import be.kuleuven.elcontador10.fragments.transactions.Transactions;
 import be.kuleuven.elcontador10.fragments.transactions.TransactionsDirections;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private ArrayList<String> TitleArray, DescriptionArray, StatusArray, MetadataArray;
+    private Fragment fragment;
     private Context context;
-    private NavController controller;
 
     /*
     * Take in the arrays and context
     * */
     public RecyclerViewAdapter(ArrayList<String> titleArray, ArrayList<String> descriptionArray,
-                               ArrayList<String> statusArray, ArrayList<String> metadataArray, Context context,
-                               NavController controller) {
+                               ArrayList<String> statusArray, ArrayList<String> metadataArray, Fragment fragment) {
         TitleArray = titleArray;
         DescriptionArray = descriptionArray;
         StatusArray = statusArray;
         MetadataArray = metadataArray;
-        this.context = context;
-        this.controller = controller;
+        this.fragment = fragment;
+        this.context = fragment.getContext();
     }
 
     @NonNull
@@ -107,12 +109,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             String[] array = MetadataArray.get(position).split("#");
             switch(array[0]) {
                 case "Transactions":
-                    TransactionsDirections.ActionTransactionsSummaryToTransactionDisplay action =
-                            TransactionsDirections.actionTransactionsSummaryToTransactionDisplay(array[1]);
-                    controller.navigate(action);
-                    Toast.makeText(context, "Transactions ID " + array[1], Toast.LENGTH_SHORT).show();
+                    if (fragment instanceof Transactions) {
+                        Transactions transactions = (Transactions) fragment;
+                        transactions.displayTransaction(array[1]);
+                        Toast.makeText(context, "Transactions ID " + array[1], Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Home home = (Home) fragment;
+                    }
+                    break;
                 default:
                     Toast.makeText(context, "Nothing to show.", Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
     }

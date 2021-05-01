@@ -46,6 +46,7 @@ public class Home extends Fragment implements HomepageInterface {
         // Inflate the layout for this fragment
         mainActivity = (MainActivity) getActivity(); // get parent activity
         firstName = mainActivity.getLoggedIn().getFirstName();
+        mainActivity.setTitle("Home");
 
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
@@ -106,7 +107,7 @@ public class Home extends Fragment implements HomepageInterface {
 
     @Override
     public void populateRecyclerView(ArrayList<String> title, ArrayList<String> description, ArrayList<String> status, ArrayList<String> metadata) {
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(title, description, status, metadata, this.getContext(), navController);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(title, description, status, metadata, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
