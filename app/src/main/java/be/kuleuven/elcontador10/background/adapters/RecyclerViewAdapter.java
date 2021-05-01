@@ -112,7 +112,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         HomepageInterface home = (Home) fragment;
                         home.displayTransaction(array[1]);
                     }
-                    Toast.makeText(context, "Transactions ID " + array[1], Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     Toast.makeText(context, "Nothing to show.", Toast.LENGTH_SHORT).show();

@@ -1,12 +1,14 @@
 package be.kuleuven.elcontador10.background.database;
 
 import android.os.Build;
+import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
@@ -16,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.background.CardFormatter;
+import be.kuleuven.elcontador10.background.interfaces.TransactionsDisplayInterface;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 import be.kuleuven.elcontador10.background.parcels.NewTransactionParcel;
 import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
@@ -24,7 +27,7 @@ import be.kuleuven.elcontador10.background.interfaces.TransactionsNewInterface;
 
 public class TransactionsManager {
     private final String all_URL = "https://studev.groept.be/api/a20sd505/getTransactions";
-    private final String single_URL = "";
+    private final String single_URL = "https://studev.groept.be/api/a20sd505/getTransaction/";
 
     private static volatile TransactionsManager INSTANCE = null;
 
@@ -87,7 +90,7 @@ public class TransactionsManager {
                             }
                         }
 
-                        returnData(transactions);
+                        populateRecyclerView(transactions);
                     }
                     catch (Exception e) {
                         e.printStackTrace();
@@ -103,6 +106,44 @@ public class TransactionsManager {
 
     public void addTransactions(TransactionsNewInterface newInterface, NewTransactionParcel parcel) {
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void getTransaction(TransactionsDisplayInterface displayInterface, String id) {
+        String final_URL = single_URL + id;
+        RequestQueue requestQueue = Volley.newRequestQueue(displayInterface.getContext());
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, final_URL, null,
+                response -> {
+                    try {
+                        Bundle bundle = new Bundle();
+                        JSONObject object = response.getJSONObject(0);
+
+                        bundle.putString("sender", object.getString("sender"));
+                        bundle.putString("receiver", object.getString("receiver"));
+                        bundle.putString("amount", object.getString("amount"));
+                        bundle.putString("category", object.getString("type"));
+                        bundle.putString("subcategory", object.getString("subType"));
+                        bundle.putString("notes", object.getString("notes"));
+
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                        LocalDateTime date = LocalDateTime.parse(object.getString("date"), formatter);
+                        String date_text = date.getDayOfWeek().toString() + " " + date.getDayOfMonth() + "/" + date.getMonthValue() + "/" + date.getYear() +
+                                " " + date.getHour() + ":" + date.getMinute() + ":" + date.getSecond();
+                        bundle.putString("date", date_text);
+
+                        displayInterface.display(bundle);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        displayInterface.error(e.toString());
+                    }
+                },
+                error -> {
+                    error.printStackTrace();
+                    displayInterface.error(error.toString());
+                });
+        requestQueue.add(request);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -124,7 +165,7 @@ public class TransactionsManager {
         return true;
     }
 
-    private void returnData(TransactionsInterface transactions) {
+    private void populateRecyclerView(TransactionsInterface transactions) {
         transactions.populateRecyclerView(titles, descriptions, status, metadata);
     }
 }
