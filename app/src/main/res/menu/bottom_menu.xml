@@ -11,18 +11,10 @@
             android:id="@+id/transactions_summary"
             android:icon="@drawable/icon_transaction"
             android:title="@string/transactions" />
-
         <item
-            android:id="@+id/shops_summary"
-            android:icon="@drawable/icon_shops"
-            android:title="@string/shops_storage" />
-        <item
-            android:id="@+id/tenants_summary"
+            android:id="@+id/stakeholderSumary"
             android:icon="@drawable/icon_tenants"
-            android:title="@string/tenants" />
-        <item
-            android:id="@+id/employees_summary"
-            android:icon="@drawable/icon_employees"
-            android:title="@string/employees" />
+            android:title="@string/stakeholder" />
+
 
 </menu>
