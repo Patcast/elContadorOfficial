@@ -18,7 +18,7 @@ import android.widget.Toast;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.TransactionsManager;
-import be.kuleuven.elcontador10.background.interfaces.TransactionsDisplayInterface;
+import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsDisplayInterface;
 
 public class TransactionDisplay extends Fragment implements TransactionsDisplayInterface {
     private MainActivity mainActivity;

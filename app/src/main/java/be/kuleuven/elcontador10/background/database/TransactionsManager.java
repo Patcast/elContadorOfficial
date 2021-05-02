@@ -8,7 +8,6 @@ import androidx.annotation.RequiresApi;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
@@ -18,12 +17,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.background.CardFormatter;
-import be.kuleuven.elcontador10.background.interfaces.TransactionsDisplayInterface;
+import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsDisplayInterface;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 import be.kuleuven.elcontador10.background.parcels.NewTransactionParcel;
 import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
-import be.kuleuven.elcontador10.background.interfaces.TransactionsInterface;
-import be.kuleuven.elcontador10.background.interfaces.TransactionsNewInterface;
+import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsInterface;
+import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsNewInterface;
 
 public class TransactionsManager {
     private final String all_URL = "https://studev.groept.be/api/a20sd505/getTransactions";
@@ -45,7 +44,7 @@ public class TransactionsManager {
 
     public static TransactionsManager getInstance() {
         if (INSTANCE == null) {
-            synchronized (HomepageManager.class) {
+            synchronized (TransactionsManager.class) {
                 if (INSTANCE == null) INSTANCE = new TransactionsManager();
             }
         }

@@ -21,7 +21,7 @@ public class CardFormatter implements CardFormatterInterface {
         String title = "WHITE#" + type;
         String description;
         String status = "WHITE#";
-        String metadata = "Transactions#" + id;
+        String metadata = "TransactionsSummary#" + id;
 
         if (subtype.equals("null")) {
             if (receiver.equals("null"))

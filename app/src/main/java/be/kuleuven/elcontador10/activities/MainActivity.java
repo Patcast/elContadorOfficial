@@ -83,11 +83,11 @@ public class MainActivity extends AppCompatActivity {
                 homeButtons();
                 selectedFragment = new Home();
                 break;
-            case "Transactions":
+            case "TransactionsSummary":
                 viewButtons();
                 FilterTransactionsParcel filter = new FilterTransactionsParcel("*", "*",
                         "*", null, null);
-                selectedFragment = new Transactions(filter);
+                selectedFragment = new TransactionsSummary(filter);
                 header.setText(R.string.transactions);
                 break;
             case "Stores Storage":
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
             case "Home":
                 // TODO add transactions clicked
                 break;
-            case "Transactions":
+            case "TransactionsSummary":
                 selectedFragment = new TransactionsFilter();
                 header.setText(R.string.filter_transactions);
                 fragmentName = getString(R.string.filter_transactions);

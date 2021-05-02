@@ -5,7 +5,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.interfaces.TransactionsFilterInterface;
+import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsFilterInterface;
 
 public class CategorySpinnerAdapter implements AdapterView.OnItemSelectedListener {
     private MainActivity mainActivity;

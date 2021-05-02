@@ -27,9 +27,9 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.RecyclerViewAdapter;
 import be.kuleuven.elcontador10.background.database.TransactionsManager;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
-import be.kuleuven.elcontador10.background.interfaces.TransactionsInterface;
+import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsInterface;
 
-public class Transactions extends Fragment implements TransactionsInterface {
+public class TransactionsSummary extends Fragment implements TransactionsInterface {
     private MainActivity mainActivity;
     private RecyclerView recyclerView;
     private TransactionsManager manager;
@@ -37,11 +37,11 @@ public class Transactions extends Fragment implements TransactionsInterface {
     private NavController navController;
 
 /*
-    public Transactions(FilterTransactionsParcel filter) {
+    public TransactionsSummary(FilterTransactionsParcel filter) {
         this.filter = filter;
     }
 
-    public Transactions(){
+    public TransactionsSummary(){
         FilterTransactionsParcel filterNew = new FilterTransactionsParcel("*", "*",
                 "*", null, null);
         this.filter = filterNew;
@@ -67,7 +67,7 @@ public class Transactions extends Fragment implements TransactionsInterface {
         //Get argument from TransactionFilter
         try {
             assert getArguments() != null;
-            TransactionsArgs args = TransactionsArgs.fromBundle(getArguments());
+            TransactionsSummaryArgs args = TransactionsSummaryArgs.fromBundle(getArguments());
             filter = args.getParcelFilter();
         }
 
@@ -76,7 +76,7 @@ public class Transactions extends Fragment implements TransactionsInterface {
                     "*", null, null);
         }
 
-        ///// Set Navigation for Transactions buttons
+        ///// Set Navigation for TransactionsSummary buttons
         navController = Navigation.findNavController(view);
         FloatingActionButton fabFilter = view.findViewById(R.id.btn_filter_Transaction);
         fabFilter.setOnClickListener(v -> navController.navigate(R.id.action_transactions_summary_to_transactionsFilter));
@@ -124,8 +124,8 @@ public class Transactions extends Fragment implements TransactionsInterface {
 
     @Override
     public void displayTransaction(String id) {
-        TransactionsDirections.ActionTransactionsSummaryToTransactionDisplay action =
-                TransactionsDirections.actionTransactionsSummaryToTransactionDisplay(id);
+        TransactionsSummaryDirections.ActionTransactionsSummaryToTransactionDisplay action =
+                TransactionsSummaryDirections.actionTransactionsSummaryToTransactionDisplay(id);
         navController.navigate(action);
     }
 }

@@ -27,7 +27,7 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.CategorySpinnerAdapter;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
-import be.kuleuven.elcontador10.background.interfaces.TransactionsFilterInterface;
+import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsFilterInterface;
 
 public class TransactionsFilter extends Fragment implements TransactionsFilterInterface {
     private MainActivity mainActivity;
@@ -51,7 +51,7 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainActivity = (MainActivity) getActivity();
-        mainActivity.setTitle("Filter Transactions");
+        mainActivity.setTitle("Filter TransactionsSummary");
 
         return inflater.inflate(R.layout.fragment_transactions_filter, container, false);
     }
@@ -227,7 +227,7 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
             }
         }
 
-        //mainActivity.setSelectedFragment(new Transactions(filter), "Transactions");
+        //mainActivity.setSelectedFragment(new TransactionsSummary(filter), "TransactionsSummary");
         return new FilterTransactionsParcel(category_string, subcategory_string, name_text, from, to);
     }
 }

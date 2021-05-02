@@ -16,10 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.fragments.Home;
-import be.kuleuven.elcontador10.fragments.transactions.Transactions;
 import be.kuleuven.elcontador10.background.interfaces.HomepageInterface;
-import be.kuleuven.elcontador10.background.interfaces.TransactionsInterface;
+import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsInterface;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private ArrayList<String> TitleArray, DescriptionArray, StatusArray, MetadataArray;
@@ -50,7 +48,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     /*
     * Set the text for each CardView from the array
     * */
-    //TODO change the colour of the title, status as desired
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String[] text_title; // COLOUR|TEXT
@@ -103,7 +100,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (MetadataArray.get(position).contains("#")) {
             String[] array = MetadataArray.get(position).split("#");
             switch(array[0]) {
-                case "Transactions":
+                case "TransactionsSummary":
                     if (fragment instanceof TransactionsInterface) {
                         TransactionsInterface transactions = (TransactionsInterface) fragment;
                         transactions.displayTransaction(array[1]);

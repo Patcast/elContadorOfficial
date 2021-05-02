@@ -25,10 +25,13 @@
         <action
             android:id="@+id/action_home_summary_to_transactionDisplay"
             app:destination="@id/transactionDisplay" />
+        <action
+            android:id="@+id/action_home_summary_to_stakeholderSummary"
+            app:destination="@id/stakeholderSummary" />
     </fragment>
     <fragment
         android:id="@+id/transactions_summary"
-        android:name="be.kuleuven.elcontador10.fragments.transactions.Transactions"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.TransactionsSummary"
         android:label="fragment_transactions"
         tools:layout="@layout/fragment_transactions" >
         <action
@@ -88,7 +91,11 @@
         android:id="@+id/stakeholderFilter"
         android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderFilter"
         android:label="fragment_stakeholder_filter"
-        tools:layout="@layout/fragment_stakeholder_filter" />
+        tools:layout="@layout/fragment_stakeholder_filter" >
+        <action
+            android:id="@+id/action_stakeholderFilter_to_stakeholderSummary"
+            app:destination="@id/stakeholderSummary" />
+    </fragment>
     <fragment
         android:id="@+id/stakeholderNew"
         android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderNew"
@@ -98,5 +105,19 @@
         android:id="@+id/stakeholderSummary"
         android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderSummary"
         android:label="fragment_stakeholder_summary"
-        tools:layout="@layout/fragment_stakeholder_summary" />
+        tools:layout="@layout/fragment_stakeholder_summary" >
+        <argument
+            android:name="filter"
+            app:argType="be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_stakeholderSummary_to_stakeholderFilter"
+            app:destination="@id/stakeholderFilter" />
+        <action
+            android:id="@+id/action_stakeholderSummary_to_stakeholderDisplay"
+            app:destination="@id/stakeholderDisplay" />
+        <action
+            android:id="@+id/action_stakeholderSummary_to_stakeholderNew"
+            app:destination="@id/stakeholderNew" />
+    </fragment>
 </navigation>
