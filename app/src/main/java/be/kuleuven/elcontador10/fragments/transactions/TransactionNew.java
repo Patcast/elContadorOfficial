@@ -1,26 +1,47 @@
 package be.kuleuven.elcontador10.fragments.transactions;
 
 
+
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+
+
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.Transaction;
+import be.kuleuven.elcontador10.background.parcels.TransactionType;
+
 
 public class TransactionNew extends Fragment {
 
@@ -31,6 +52,8 @@ public class TransactionNew extends Fragment {
     Spinner spCategory;
     Spinner spSubCategory;
     EditText txtNotes;
+    List<Map<String,String>> typeRecordsOrg;
+    List<TransactionType> typeRecordsNoOrg;
 
 
 
@@ -52,7 +75,8 @@ public class TransactionNew extends Fragment {
         txtAmount = view.findViewById(R.id.ed_txt_amount);
         spCategory = view.findViewById(R.id.sp_TransCategory);
         spSubCategory = view.findViewById(R.id.sp_TransSubcategory);
-        txtNotes = getActivity().findViewById(R.id.ed_txt_notes);
+        txtNotes = view.findViewById(R.id.ed_txt_notes);
+        requestTypeTrans(view);
         //Set AutocompleteText
         txtStakeHolder = view.findViewById(R.id.actv_stakeholder);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,stakeHolders);
@@ -76,6 +100,42 @@ public class TransactionNew extends Fragment {
     public boolean transCashIn(RadioGroup radioGroup){
         return radioGroup.getCheckedRadioButtonId() == R.id.radio_CashIn;
     }
+
+
+    public void requestTypeTrans(View view){
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        String requestURL = "https://studev.groept.be/api/a20sd505/getTransactionTypes";
+        JsonArrayRequest submitRequest = new JsonArrayRequest(Request.Method.GET, requestURL, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try{
+                        for(int i=0; i<response.length();i++){
+                        JSONObject recordJson = response.getJSONObject(i);
+                        typeRecordsNoOrg= new ArrayList<>();
+                        typeRecordsNoOrg.add(new TransactionType(recordJson.getString("type"),recordJson.getString("subType")));
+                        /*Map<String,String> record = new HashMap<>();
+                        record.put("Category",recordJson.getString("type"));
+                        record.put("SubCategory",recordJson.getString("subType"));
+                        allTypeRecords.add(record);
+                         */
+                        Toast.makeText(getActivity(), "successful ", Toast.LENGTH_LONG).show();
+                    }
+                }
+                catch(JSONException e){
+                    e.printStackTrace();
+                }
+
+            }
+        },new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getActivity(), "Unable upload TypesTable", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        requestQueue.add(submitRequest);
+    }
+
     private Transaction makeNewTrans(){
         boolean cashIn = transCashIn(radGroup);
         double amount = Double.parseDouble(txtAmount.getText().toString());
@@ -85,8 +145,15 @@ public class TransactionNew extends Fragment {
         String notes = txtNotes.getText().toString();
 
         return new Transaction(cashIn,amount,stakeholder,category,subCategory,notes);
-
+    }
+    /*
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private List<Map<String,String>> orgTypeList(){
+        return typeRecordsNoOrg.stream()
+                                .collect(groupingBy(TransactionType::getCategory),
+                                        mapping(TransactionType::getSubCategory,toList())));
 
     }
 
+*/
 }
