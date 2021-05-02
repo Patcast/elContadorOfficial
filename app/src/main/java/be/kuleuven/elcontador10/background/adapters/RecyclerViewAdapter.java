@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.interfaces.HomepageInterface;
-import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsInterface;
+import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsSummaryInterface;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private ArrayList<String> TitleArray, DescriptionArray, StatusArray, MetadataArray;
@@ -101,8 +101,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             String[] array = MetadataArray.get(position).split("#");
             switch(array[0]) {
                 case "TransactionsSummary":
-                    if (fragment instanceof TransactionsInterface) {
-                        TransactionsInterface transactions = (TransactionsInterface) fragment;
+                    if (fragment instanceof TransactionsSummaryInterface) {
+                        TransactionsSummaryInterface transactions = (TransactionsSummaryInterface) fragment;
                         transactions.displayTransaction(array[1]);
                     }
                     else if (fragment instanceof HomepageInterface) {

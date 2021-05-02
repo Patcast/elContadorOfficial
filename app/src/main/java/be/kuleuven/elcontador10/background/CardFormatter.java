@@ -58,9 +58,9 @@ public class CardFormatter implements CardFormatterInterface {
     }
 
     @Override
-    public String[] TenantFormatter(int id, String firstName, String lastName, double balance) {
+    public String[] StakeholderFormatter(int id, String firstName, String lastName, double balance, String role) {
         String title = "WHITE#" + firstName + " " + lastName;
-        String description = "Balance: $" + balance;
+        String description = "Role: " + role + "\n" + "Balance: $" + balance;
 
         String status;
         if (balance < 0) status = "RED#In debt";
@@ -69,20 +69,6 @@ public class CardFormatter implements CardFormatterInterface {
 
         String metadata = "Tenants#" + id;
 
-        return new String[] {title, description, status, metadata};
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public String[] ContractFormatter(int id, LocalDate startDate, LocalDate endDate, double amount, String firstName, String lastName, int idPlace, String placeType, String contractType) {
-        String title = "WHITE#" + placeType + " " + idPlace;
-        String description = "Tenant: " + firstName + " " + lastName + "\n" +
-                "Type: " + contractType + "\n" +
-                "Amount: $" + amount;
-        String start = startDate.getDayOfMonth() + "/" + startDate.getMonthValue() + "/" + startDate.getYear();
-        String end = endDate.getDayOfMonth() + "/" + endDate.getMonthValue() + "/" + endDate.getYear();
-        String status = "WHITE#" + start + " - " + end;
-        String metadata = "Contracts#" + id;
         return new String[] {title, description, status, metadata};
     }
 }

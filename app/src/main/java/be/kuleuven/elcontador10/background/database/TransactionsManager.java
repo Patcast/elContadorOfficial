@@ -18,10 +18,10 @@ import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.background.CardFormatter;
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsDisplayInterface;
+import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsSummaryInterface;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 import be.kuleuven.elcontador10.background.parcels.NewTransactionParcel;
 import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
-import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsInterface;
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsNewInterface;
 
 public class TransactionsManager {
@@ -53,7 +53,7 @@ public class TransactionsManager {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void getTransactions(TransactionsInterface transactions, FilterTransactionsParcel filter) {
+    public void getTransactions(TransactionsSummaryInterface transactions, FilterTransactionsParcel filter) {
         RequestQueue requestQueue = Volley.newRequestQueue(transactions.getContext());
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, all_URL, null,
@@ -164,7 +164,7 @@ public class TransactionsManager {
         return true;
     }
 
-    private void populateRecyclerView(TransactionsInterface transactions) {
+    private void populateRecyclerView(TransactionsSummaryInterface transactions) {
         transactions.populateRecyclerView(titles, descriptions, status, metadata);
     }
 }

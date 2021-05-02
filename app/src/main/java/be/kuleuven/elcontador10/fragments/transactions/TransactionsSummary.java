@@ -26,10 +26,10 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.RecyclerViewAdapter;
 import be.kuleuven.elcontador10.background.database.TransactionsManager;
+import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsSummaryInterface;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
-import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsInterface;
 
-public class TransactionsSummary extends Fragment implements TransactionsInterface {
+public class TransactionsSummary extends Fragment implements TransactionsSummaryInterface {
     private MainActivity mainActivity;
     private RecyclerView recyclerView;
     private TransactionsManager manager;

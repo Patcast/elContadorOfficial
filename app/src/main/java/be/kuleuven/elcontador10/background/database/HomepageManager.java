@@ -36,10 +36,10 @@ public class HomepageManager {
     private ArrayList<String> tenants_status;
     private ArrayList<String> tenants_metadata;
 
-    private ArrayList<String> contracts_titles;
-    private ArrayList<String> contracts_descriptions;
-    private ArrayList<String> contracts_status;
-    private ArrayList<String> contracts_metadata;
+//    private ArrayList<String> contracts_titles;
+//    private ArrayList<String> contracts_descriptions;
+//    private ArrayList<String> contracts_status;
+//    private ArrayList<String> contracts_metadata;
 
     private HomepageManager() {
         transactions_titles = new ArrayList<>();
@@ -52,10 +52,10 @@ public class HomepageManager {
         tenants_status = new ArrayList<>();
         tenants_metadata = new ArrayList<>();
 
-        contracts_titles = new ArrayList<>();
-        contracts_descriptions = new ArrayList<>();
-        contracts_status = new ArrayList<>();
-        contracts_metadata = new ArrayList<>();
+//        contracts_titles = new ArrayList<>();
+//        contracts_descriptions = new ArrayList<>();
+//        contracts_status = new ArrayList<>();
+//        contracts_metadata = new ArrayList<>();
     }
 
     public static HomepageManager getInstance() {
@@ -146,7 +146,7 @@ public class HomepageManager {
                         tenants_status.clear();
                         tenants_metadata.clear();
 
-                        tenants_titles.add("WHITE#Tenants in debt");
+                        tenants_titles.add("WHITE#Stakeholders in debt");
                         tenants_descriptions.add("Here are the stakeholders in debt:");
                         tenants_status.add(" # ");
                         tenants_metadata.add("");
@@ -159,9 +159,10 @@ public class HomepageManager {
                                 String firstName = object.getString("firstName");
                                 String lastName = object.getString("LastName");
                                 double balance = object.getDouble("balance");
+                                String role = object.getString("Role");
 
                                 CardFormatterInterface cardFormatter = new CardFormatter();
-                                String[] formatted = cardFormatter.TenantFormatter(id, firstName, lastName, balance);
+                                String[] formatted = cardFormatter.StakeholderFormatter(id, firstName, lastName, balance, role);
 
                                 tenants_titles.add(formatted[0]);
                                 tenants_descriptions.add(formatted[1]);
@@ -268,22 +269,22 @@ public class HomepageManager {
         ArrayList<String> titles = new ArrayList<>();
         titles.addAll(transactions_titles);
         titles.addAll(tenants_titles);
-        titles.addAll(contracts_titles);
+//        titles.addAll(contracts_titles);
         
         ArrayList<String> descriptions = new ArrayList<>();
         descriptions.addAll(transactions_descriptions);
         descriptions.addAll(tenants_descriptions);
-        descriptions.addAll(contracts_descriptions);
+//        descriptions.addAll(contracts_descriptions);
 
         ArrayList<String> status = new ArrayList<>();
         status.addAll(transactions_status);
         status.addAll(tenants_status);
-        status.addAll(contracts_status);
+//        status.addAll(contracts_status);
         
         ArrayList<String> metadata = new ArrayList<>();
         metadata.addAll(transactions_metadata);
         metadata.addAll(tenants_metadata);
-        metadata.addAll(contracts_metadata);
+//        metadata.addAll(contracts_metadata);
 
         //send back to UI
         homepageInterface.populateRecyclerView(titles, descriptions, status, metadata);

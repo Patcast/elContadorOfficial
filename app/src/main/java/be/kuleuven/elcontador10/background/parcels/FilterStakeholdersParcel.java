@@ -7,36 +7,27 @@ import android.os.Parcelable;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import java.util.ArrayList;
+
 public class FilterStakeholdersParcel implements Parcelable {
     private String name;
 
     // roles
-    private boolean employee;
-    private boolean manager;
-    private boolean owner;
-    private boolean tenant;
+    private ArrayList<String> roles;
 
     // attributes
     private boolean inDebt;
 
-    public FilterStakeholdersParcel(@Nullable String name, boolean employee, boolean manager, boolean owner, boolean tenant, boolean inDebt) {
+    public FilterStakeholdersParcel(@Nullable String name, ArrayList<String> roles, boolean inDebt) {
         this.name = name;
-        this.employee = employee;
-        this.manager = manager;
-        this.owner = owner;
-        this.tenant = tenant;
+        this.roles = roles;
         this.inDebt = inDebt;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     protected FilterStakeholdersParcel(Parcel in) {
         name = in.readString();
-
-        employee = in.readBoolean();
-        manager = in.readBoolean();
-        owner = in.readBoolean();
-        tenant = in.readBoolean();
-
+        roles = (ArrayList<String>) in.readArrayList(getClass().getClassLoader());
         inDebt = in.readBoolean();
     }
 
@@ -62,61 +53,21 @@ public class FilterStakeholdersParcel implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
-
-        dest.writeBoolean(employee);
-        dest.writeBoolean(manager);
-        dest.writeBoolean(owner);
-        dest.writeBoolean(tenant);
-
+        dest.writeList(roles);
         dest.writeBoolean(inDebt);
     }
 
     //Getters and Setters
+
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(boolean employee) {
-        this.employee = employee;
-    }
-
-    public boolean isManager() {
-        return manager;
-    }
-
-    public void setManager(boolean manager) {
-        this.manager = manager;
-    }
-
-    public boolean isOwner() {
-        return owner;
-    }
-
-    public void setOwner(boolean owner) {
-        this.owner = owner;
-    }
-
-    public boolean isTenant() {
-        return tenant;
-    }
-
-    public void setTenant(boolean tenant) {
-        this.tenant = tenant;
+    public ArrayList<String> getRoles() {
+        return roles;
     }
 
     public boolean isInDebt() {
         return inDebt;
-    }
-
-    public void setInDebt(boolean inDebt) {
-        this.inDebt = inDebt;
     }
 }

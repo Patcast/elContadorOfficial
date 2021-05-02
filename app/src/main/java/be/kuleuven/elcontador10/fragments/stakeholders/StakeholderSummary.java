@@ -2,65 +2,111 @@ package be.kuleuven.elcontador10.fragments.stakeholders;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.R;
+import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.adapters.RecyclerViewAdapter;
+import be.kuleuven.elcontador10.background.database.StakeholdersManager;
+import be.kuleuven.elcontador10.background.database.TransactionsManager;
+import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersSummaryInterface;
+import be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link StakeholderSummary#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class StakeholderSummary extends Fragment {
+public class StakeholderSummary extends Fragment implements StakeholdersSummaryInterface {
+    // private variables
+    private MainActivity mainActivity;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private RecyclerView recyclerView;
+    private FloatingActionButton fabAdd;
+    private FloatingActionButton fabFilter;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public StakeholderSummary() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment StakeholderSumary.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static StakeholderSummary newInstance(String param1, String param2) {
-        StakeholderSummary fragment = new StakeholderSummary();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private StakeholdersManager manager;
+    private FilterStakeholdersParcel filter;
+    private NavController navController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        mainActivity = (MainActivity) getActivity();
+        mainActivity.setTitle("Stakeholders");
         return inflater.inflate(R.layout.fragment_stakeholder_summary, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // set views variables
+        recyclerView = requireView().findViewById(R.id.TransactionsRecycler);
+        fabAdd = requireView().findViewById(R.id.btn_add_Transaction);
+        fabFilter = requireView().findViewById(R.id.btn_filter_Transaction);
+
+        // get arguments
+        try {
+            assert getArguments() != null;
+            StakeholderSummaryArgs args = StakeholderSummaryArgs.fromBundle(getArguments());
+            filter = args.getFilter();
+        } catch (Exception e) {
+            ArrayList<String> roles = new ArrayList<>(5);
+            roles.add("Employee");
+            roles.add("Manager");
+            roles.add("Owner");
+            roles.add("Tenant");
+            filter = new FilterStakeholdersParcel("*", roles, false);
+        }
+
+        // set up recyclerview
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    fabFilter.setVisibility(View.GONE);
+                    fabAdd.setVisibility(View.GONE);
+                }
+                else {
+                    fabFilter.setVisibility(View.VISIBLE);
+                    fabAdd.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        manager = StakeholdersManager.getInstance();
+        manager.getStakeholders(this, filter);
+    }
+
+    @Override
+    public void populateRecyclerView(ArrayList<String> title, ArrayList<String> description, ArrayList<String> status, ArrayList<String> metadata) {
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(title, description, status, metadata, this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+    }
+
+    @Override
+    public void error(String error) {
+        Toast.makeText(mainActivity, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void displayStakeholder(String id) {
+        StakeholderSummaryDirections.ActionStakeholderSummaryToStakeholderDisplay action =
+                StakeholderSummaryDirections.actionStakeholderSummaryToStakeholderDisplay(id);
+        navController.navigate(action);
     }
 }

@@ -86,7 +86,11 @@
         android:id="@+id/stakeholderDisplay"
         android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderDisplay"
         android:label="fragment_stakeholder_display"
-        tools:layout="@layout/fragment_stakeholder_display" />
+        tools:layout="@layout/fragment_stakeholder_display" >
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/stakeholderFilter"
         android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderFilter"
