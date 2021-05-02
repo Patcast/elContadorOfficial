@@ -6,25 +6,32 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+import java.util.ArrayList;
+
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel;
 
 public class StakeholderFilter extends Fragment {
     private MainActivity mainActivity;
 
     private TextView name;
-    private Chip all_roles;
-    private ChipGroup roles;
-    private Chip inDebt;
+    private CheckBox all_roles;
+    private LinearLayout chipGroup;
+    private ArrayList<CheckBox> roles;
+    private CheckBox inDebt;
     private Button cancel;
     private Button filter;
 
@@ -33,6 +40,7 @@ public class StakeholderFilter extends Fragment {
                              Bundle savedInstanceState) {
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle("Filter Stakeholder");
+        roles = new ArrayList<>();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_stakeholder_filter, container, false);
     }
@@ -44,9 +52,31 @@ public class StakeholderFilter extends Fragment {
         // set view variables
         name = requireView().findViewById(R.id.stakeholder_filter_name);
         all_roles = requireView().findViewById(R.id.stakeholder_filter_all);
-        roles = requireView().findViewById(R.id.stakeholder_filter_group);
-        inDebt = requireView().findViewById(R.id.stakeholder_filter_indebt);
+        chipGroup = requireView().findViewById(R.id.stakeholder_filter_roles);
+        inDebt = requireView().findViewById(R.id.stakeholder_filter_debt);
         cancel = requireView().findViewById(R.id.btn_cancel_FilterStakeholder);
         filter = requireView().findViewById(R.id.btn_filter_FilterStakeholder);
+
+        // initialise chip group
+        String[] roleNames = getResources().getStringArray(R.array.roles);
+        setRoles(roleNames);
+    }
+
+    private void setRoles(String[] role_names) {
+        for (String tagName : role_names) {
+            CheckBox chip = new CheckBox(getContext());
+            chip.setText(tagName);
+
+            roles.add(chip);
+            chipGroup.addView(chip);
+        }
+    }
+
+    public FilterStakeholdersParcel getFilter() {
+        String name_text = name.getText().toString();
+        ArrayList<String> categories = new ArrayList<>(5);
+        boolean debt = inDebt.isChecked();
+
+        return new FilterStakeholdersParcel(name_text, categories, debt);
     }
 }

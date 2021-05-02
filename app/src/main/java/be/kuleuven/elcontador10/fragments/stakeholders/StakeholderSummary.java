@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -89,6 +90,11 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
 
         manager = StakeholdersManager.getInstance();
         manager.getStakeholders(this, filter);
+
+        //set navigation
+        navController = Navigation.findNavController(view);
+        fabFilter.setOnClickListener(v -> navController.navigate(R.id.action_stakeholderSummary_to_stakeholderFilter));
+        fabAdd.setOnClickListener(v -> navController.navigate(R.id.action_stakeholderSummary_to_stakeholderNew));
     }
 
     @Override

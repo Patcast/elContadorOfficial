@@ -118,10 +118,10 @@
             android:id="@+id/action_stakeholderSummary_to_stakeholderFilter"
             app:destination="@id/stakeholderFilter" />
         <action
-            android:id="@+id/action_stakeholderSummary_to_stakeholderDisplay"
-            app:destination="@id/stakeholderDisplay" />
-        <action
             android:id="@+id/action_stakeholderSummary_to_stakeholderNew"
             app:destination="@id/stakeholderNew" />
+        <action
+            android:id="@+id/action_stakeholderSummary_to_stakeholderDisplay"
+            app:destination="@id/stakeholderDisplay" />
     </fragment>
 </navigation>
