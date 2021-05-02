@@ -8,9 +8,13 @@
 
     <Spinner
         android:id="@+id/FilterTransCategory"
-        android:layout_width="350dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
         android:entries="@array/category_items"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,22 +22,32 @@
 
     <Spinner
         android:id="@+id/FilterTransSubcategory"
-        android:layout_width="350dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/FilterTransCategory"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/FilterTransCategory" />
 
     <EditText
         android:id="@+id/FilterTransName"
-        android:layout_width="350dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
         android:ems="10"
         android:hint="Name"
         android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="@+id/FilterTransSubcategory"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/FilterTransSubcategory" />
 
     <Switch
@@ -47,12 +61,15 @@
 
     <EditText
         android:id="@+id/FilterTransFrom"
-        android:layout_width="350dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
         android:ems="10"
         android:enabled="false"
         android:hint="@string/dd_mm_yyyy"
         android:inputType="date"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/FilterTransFromSwitch"
         app:layout_constraintTop_toBottomOf="@+id/FilterTransFromSwitch" />
 
@@ -67,12 +84,15 @@
 
     <EditText
         android:id="@+id/FilterTransTo"
-        android:layout_width="350dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
         android:ems="10"
         android:enabled="false"
         android:hint="@string/dd_mm_yyyy"
         android:inputType="date"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/FilterTransFromSwitch"
         app:layout_constraintTop_toBottomOf="@+id/FilterTransToSwitch" />
 
@@ -80,14 +100,13 @@
         android:id="@+id/btn_filter_FilterTrans"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/buttons"
         android:text="@string/filter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.85"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn_cancel_FilterTrans" />
 
     <Button
         android:id="@+id/btn_cancel_FilterTrans"
@@ -95,11 +114,9 @@
         android:layout_height="wrap_content"
         android:background="@drawable/buttons"
         android:text="@string/close"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintVertical_bias="0.95"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="@+id/btn_filter_FilterTrans"
+        app:layout_constraintEnd_toStartOf="@+id/btn_filter_FilterTrans"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

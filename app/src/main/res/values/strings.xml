@@ -71,4 +71,10 @@
     <string name="additional_comments">Additional Comments</string>
     <string name="select_a_category">Select a category</string>
     <string name="select_a_sub_category">Select a sub-Category</string>
+    <string-array name="roles">
+        <item>Employee</item>
+        <item>Manager</item>
+        <item>Owner</item>
+        <item>Tenant</item>
+    </string-array>
 </resources>
