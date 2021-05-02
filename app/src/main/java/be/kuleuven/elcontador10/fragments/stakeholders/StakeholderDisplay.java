@@ -3,7 +3,6 @@ package be.kuleuven.elcontador10.fragments.stakeholders;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -13,10 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +31,10 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
     private MainActivity mainActivity;
     private String id;
     private String phoneNo;
+    private String emailAddress;
     private int CALL_PERMISSION = 1;
+    private Button delete;
+    private NavController navController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,8 +58,13 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
             Toast.makeText(mainActivity, "Nothing to show", Toast.LENGTH_SHORT).show();
         }
 
+        // get manager
         StakeholdersManager manager = StakeholdersManager.getInstance();
         manager.getStakeholder(this, id);
+
+        navController = Navigation.findNavController(view);
+        // buttons
+        delete = requireView().findViewById(R.id.btn_delete_DisplayStakeholder);
 
     }
 
@@ -69,29 +79,33 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         email = requireView().findViewById(R.id.txtStakeholderDisplayEmail);
         balance = requireView().findViewById(R.id.txtStakeholderDisplayBalance);
         phoneNo = bundle.getString("phone");
+        emailAddress = bundle.getString("email");
 
         // set views text
         name.setText(bundle.getString("name"));
         role.setText(bundle.getString("role"));
         phone.setText(phoneNo);
-        email.setText(bundle.getString("email"));
+        email.setText(emailAddress);
         balance.setText(String.format("$%s", bundle.getDouble("balance")));
 
         // set onClickListeners
         phone.setOnClickListener(this::onPhoneNumber_Clicked);
+        email.setOnClickListener(this::onEmail_Clicked);
     }
 
     public void onPhoneNumber_Clicked(View view) {
-        if (ActivityCompat.checkSelfPermission(mainActivity,
-                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            //call permission not granted yet
-            requestCallPermission();
-        }
-        else {
-            Intent call = new Intent(Intent.ACTION_CALL);
-            call.setData(Uri.parse("tel:" + phoneNo));
-            startActivity(call);
-        }
+        if (!phoneNo.equals("null")) {
+            if (ActivityCompat.checkSelfPermission(mainActivity,
+                    Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                //call permission not granted yet
+                requestCallPermission();
+            } else {
+                // call permission granted, goes to call number
+                Intent call = new Intent(Intent.ACTION_CALL);
+                call.setData(Uri.parse("tel:" + phoneNo));
+                startActivity(call);
+            }
+        } else error("No phone number.");
     }
 
     private void requestCallPermission() {
@@ -99,15 +113,20 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)) {
             new AlertDialog.Builder(mainActivity)
                     .setTitle("Call permission needed")
-                    .setMessage("Accept to allow phone calls from the app")
+                    .setMessage("Please accept to allow phone calls from the app.")
                     .setPositiveButton("Ok", (dialog, which) -> requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, CALL_PERMISSION))
                     .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                     .create()
                     .show();
-        }
-        else {
-            requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, CALL_PERMISSION);
-        }
+        } else requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, CALL_PERMISSION);
+    }
+
+    public void onEmail_Clicked(View view) {
+        if (!emailAddress.equals("null")) {
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("mailto:" + emailAddress));
+            startActivity(intent);
+        } else error("No email address.");
     }
 
     @Override
