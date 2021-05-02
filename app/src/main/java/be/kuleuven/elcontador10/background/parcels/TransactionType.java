@@ -12,13 +12,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class TransactionType {
-
+    int id;
     String category;
     String subCategory;
 
-    public TransactionType(String cat,String sub) {
+    public TransactionType(int id ,String cat,String sub) {
         category =cat;
         subCategory = sub;
+        this.id = id;
     }
 
     public String getCategory() {
@@ -27,5 +28,9 @@ public class TransactionType {
 
     public String getSubCategory() {
         return subCategory;
+    }
+
+    public int getId() {
+        return id;
     }
 }

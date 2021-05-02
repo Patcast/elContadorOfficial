@@ -124,7 +124,6 @@
         android:id="@+id/sp_TransCategory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/category_items"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="5dp"
