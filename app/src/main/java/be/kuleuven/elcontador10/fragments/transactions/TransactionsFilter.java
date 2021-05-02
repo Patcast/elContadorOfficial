@@ -45,13 +45,12 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
     private String subcategory_string = "*";
     ///Object to be passed to Transaction
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainActivity = (MainActivity) getActivity();
-        mainActivity.setTitle("Filter TransactionsSummary");
+        mainActivity.setTitle("Filter Transactions");
 
         return inflater.inflate(R.layout.fragment_transactions_filter, container, false);
     }

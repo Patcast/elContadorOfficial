@@ -17,6 +17,8 @@ import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.interfaces.HomepageInterface;
+import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersDisplayInterface;
+import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersSummaryInterface;
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsSummaryInterface;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
@@ -100,7 +102,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (MetadataArray.get(position).contains("#")) {
             String[] array = MetadataArray.get(position).split("#");
             switch(array[0]) {
-                case "TransactionsSummary":
+                case "Transactions":
                     if (fragment instanceof TransactionsSummaryInterface) {
                         TransactionsSummaryInterface transactions = (TransactionsSummaryInterface) fragment;
                         transactions.displayTransaction(array[1]);
@@ -108,6 +110,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     else if (fragment instanceof HomepageInterface) {
                         HomepageInterface home = (HomepageInterface) fragment;
                         home.displayTransaction(array[1]);
+                    }
+                    break;
+                case "Stakeholder":
+                    if (fragment instanceof StakeholdersSummaryInterface) {
+                        StakeholdersSummaryInterface stakeholders = (StakeholdersSummaryInterface) fragment;
+                        stakeholders.displayStakeholder(array[1]);
+                    }
+                    else if (fragment instanceof HomepageInterface) {
+                        HomepageInterface home = (HomepageInterface) fragment;
+                        home.displayStakeholder(array[1]);
                     }
                     break;
                 default:

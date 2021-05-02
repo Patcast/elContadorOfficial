@@ -64,7 +64,7 @@ public class TransactionDisplay extends Fragment implements TransactionsDisplayI
 
         sender.setText(bundle.getString("sender"));
         receiver.setText(bundle.getString("receiver"));
-        amount.setText(bundle.getString("amount"));
+        amount.setText("$" + bundle.getString("amount"));
         category.setText(bundle.getString("category"));
         subcategory.setText(bundle.getString("subcategory"));
         date.setText(bundle.getString("date"));

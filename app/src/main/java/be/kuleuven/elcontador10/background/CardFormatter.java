@@ -21,7 +21,7 @@ public class CardFormatter implements CardFormatterInterface {
         String title = "WHITE#" + type;
         String description;
         String status = "WHITE#";
-        String metadata = "TransactionsSummary#" + id;
+        String metadata = "Transactions#" + id;
 
         if (subtype.equals("null")) {
             if (receiver.equals("null"))
@@ -67,7 +67,7 @@ public class CardFormatter implements CardFormatterInterface {
         else if (balance == 0) status = "WHITE#Payment up to date";
         else status = "GREEN#Reimbursement required";
 
-        String metadata = "Tenants#" + id;
+        String metadata = "Stakeholder#" + id;
 
         return new String[] {title, description, status, metadata};
     }

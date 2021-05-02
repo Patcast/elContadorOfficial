@@ -1,5 +1,7 @@
 package be.kuleuven.elcontador10.background.database;
 
+import android.os.Bundle;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -12,12 +14,14 @@ import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.background.CardFormatter;
 import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
+import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersDisplayInterface;
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersSummaryInterface;
 import be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel;
 import be.kuleuven.elcontador10.fragments.stakeholders.StakeholderSummary;
 
 public class StakeholdersManager {
     private final String all_URL = "https://studev.groept.be/api/a20sd505/getStakeholders";
+    private final String single_URL = "https://studev.groept.be/api/a20sd505/getStakeholder/";
 
     private static volatile  StakeholdersManager INSTANCE = null;
 
@@ -97,5 +101,36 @@ public class StakeholdersManager {
         if (debt && balance >= 0) return false; // not in debt
 
         return true;
+    }
+
+    public void getStakeholder(StakeholdersDisplayInterface stakeholder, String id) {
+        String final_URL = single_URL + id;
+        RequestQueue requestQueue = Volley.newRequestQueue(stakeholder.getContext());
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, final_URL, null,
+                response ->  {
+                    try {
+                        Bundle bundle = new Bundle();
+                        JSONObject object = response.getJSONObject(0);
+
+                        bundle.putString("name", object.getString("name"));
+                        bundle.putString("role", object.getString("Role"));
+                        bundle.putString("phone", object.getString("phoneNumber"));
+                        bundle.putString("email", object.getString("email"));
+                        bundle.putDouble("balance", object.getDouble("balance"));
+
+                        stakeholder.display(bundle);
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                        stakeholder.error(e.toString());
+                    }
+                },
+                error -> {
+                    error.printStackTrace();
+                    stakeholder.error(error.toString());
+                });
+
+        requestQueue.add(request);
     }
 }
