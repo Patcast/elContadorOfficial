@@ -87,7 +87,7 @@ public class Home extends Fragment implements HomepageInterface {
 
         manager = HomepageManager.getInstance();
         manager.getRecentTransactions(this);
-
+        manager.getBudget(this);
     }
 
 
@@ -135,5 +135,13 @@ public class Home extends Fragment implements HomepageInterface {
         HomeDirections.ActionHomeSummaryToStakeholderDisply action =
                 HomeDirections.actionHomeSummaryToStakeholderDisply(id);
         navController.navigate(action);
+    }
+
+    @Override
+    public void displayBudget(double budget) {
+        TextView lblBudget = requireView().findViewById(R.id.lblBudget);
+
+        String budgetText = getString(R.string.budget, budget);
+        lblBudget.setText(budgetText);
     }
 }

@@ -10,4 +10,5 @@ public interface HomepageInterface {
     void error(String error);
     void displayTransaction(String id);
     void displayStakeholder(String id);
+    void displayBudget(double budget);
 }

@@ -9,6 +9,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.time.LocalDateTime;
@@ -287,5 +288,27 @@ public class HomepageManager {
 
         //send back to UI
         homepageInterface.populateRecyclerView(titles, descriptions, status, metadata);
+    }
+
+    public void getBudget(HomepageInterface home) {
+        final String URL_Budget = "https://studev.groept.be/api/a20sd505/getBudget";
+
+        RequestQueue requestQueue = Volley.newRequestQueue(home.getContext());
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL_Budget, null,
+                response -> {
+                    try {
+                        home.displayBudget(response.getJSONObject(0).getDouble("balance"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        home.error(e.toString());
+                    }
+                },
+                error -> {
+                    home.error(error.toString());
+                    error.printStackTrace();
+        });
+
+        requestQueue.add(request);
     }
 }
