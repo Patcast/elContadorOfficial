@@ -157,39 +157,16 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
 
     // call the phone number
     private void callNumber() {
-        if (ActivityCompat.checkSelfPermission(mainActivity,
-                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            //call permission not granted yet
-            requestCallPermission();
-        } else {
-            // call permission granted, goes to call number
-            Intent call = new Intent(Intent.ACTION_CALL);
-            call.setData(Uri.parse("tel:" + phoneNo));
-            startActivity(call);
-        }
+        Intent call = new Intent(Intent.ACTION_VIEW);
+        call.setData(Uri.parse("tel:" + phoneNo));
+        startActivity(call);
     }
 
     // message the phone number
     private void messageNumber() {
-//        if (ActivityCompat.checkSelfPermission(mainActivity,
-//                Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-//
-//        }
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + phoneNo)));
     }
 
-    private void requestCallPermission() {
-        // request permission politely
-        if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)) {
-            new AlertDialog.Builder(mainActivity)
-                    .setTitle("Call permission needed")
-                    .setMessage("Please accept to allow phone calls from the app.")
-                    .setPositiveButton("Ok", (dialog, which) -> requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, CALL_PERMISSION))
-                    .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
-                    .create()
-                    .show();
-        } else requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, CALL_PERMISSION);
-    }
 
     // TextBox email clicked
     public void onEmail_Clicked(View view) {
@@ -208,16 +185,6 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:" + emailAddress));
         startActivity(intent);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == CALL_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                error("Permission granted.");
-                callNumber();
-            } else error("Permission not granted.");
-        }
     }
 
     @Override
