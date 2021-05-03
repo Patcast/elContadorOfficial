@@ -147,6 +147,20 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         } else error("No phone number.");
     }
 
+    // TextBox email clicked
+    public void onEmail_Clicked(View view) {
+        if (!emailAddress.equals("null")) {
+            new AlertDialog.Builder(mainActivity)
+                    .setTitle("Email")
+                    .setMessage("Email or copy to clipboard?")
+                    .setPositiveButton("Email", (dialog, which) -> email())
+                    .setNegativeButton("Copy", (dialog, which) -> copyToClipboard(emailAddress))
+                    .setNeutralButton("Cancel", (dialog, which) -> dialog.dismiss())
+                    .create()
+                    .show();
+        } else error("No email address.");
+    }
+
     // copy a text to phone's keyboard
     private void copyToClipboard(String text) {
         ClipboardManager clipboardManager = (ClipboardManager) mainActivity.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -157,34 +171,35 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
 
     // call the phone number
     private void callNumber() {
-        Intent call = new Intent(Intent.ACTION_VIEW);
-        call.setData(Uri.parse("tel:" + phoneNo));
-        startActivity(call);
+        try {
+            Intent call = new Intent(Intent.ACTION_VIEW);
+            call.setData(Uri.parse("tel:" + phoneNo));
+            startActivity(call);
+        } catch (Exception e) {
+            e.printStackTrace();
+            error("Cannot open phone application.");
+        }
     }
 
     // message the phone number
     private void messageNumber() {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + phoneNo)));
-    }
-
-
-    // TextBox email clicked
-    public void onEmail_Clicked(View view) {
-        if (!emailAddress.equals("null")) {
-            new AlertDialog.Builder(mainActivity)
-                    .setTitle("Email")
-                    .setMessage("Email or copy to clipboard?")
-                    .setPositiveButton("Email", (dialog, which) -> email())
-                    .setNegativeButton("Copy", (dialog, which) -> copyToClipboard(emailAddress))
-                    .create()
-                    .show();
-        } else error("No email address.");
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + phoneNo)));
+        } catch (Exception e) {
+            e.printStackTrace();
+            error("Cannot open SMS application.");
+        }
     }
 
     private void email() {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:" + emailAddress));
-        startActivity(intent);
+        try {
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("mailto:" + emailAddress));
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            error("Cannot open mail application.");
+        }
     }
 
     @Override
