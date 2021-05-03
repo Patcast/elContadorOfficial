@@ -14,9 +14,12 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -31,8 +34,11 @@ import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
 public class Settings extends Fragment implements SettingsInterface {
     private MainActivity mainActivity;
     private StakeholderLoggedIn loggedIn;
-    private String[] nonRegisteredStakeholders;
-    SettingsManager manager;
+
+    private ArrayList<String> ids;
+    private ArrayList<String> nonRegisteredStakeholders;
+
+    private SettingsManager manager;
 
     @Nullable
     @Override
@@ -96,18 +102,19 @@ public class Settings extends Fragment implements SettingsInterface {
         builder.setPositiveButton("Ok", (dialog, which) -> {
             String passwordCurrent = checkPassword.getText().toString();
             String passwordNew = newPassword.getText().toString();
-            String passwordConfirm = newPassword.getText().toString();
+            String passwordConfirm = confirmPassword.getText().toString();
 
             if (passwordConfirm.equals("") || passwordCurrent.equals("") || passwordNew.equals("")) // empty input
-                this.feedback("Missing input.");
-            else if (passwordNew.equals(passwordConfirm)) {
+                this.feedback("Missing input!");
+            else if (passwordNew.equals(passwordConfirm))
                 manager.changePassword(this, loggedIn, passwordCurrent, passwordNew);
-            } else this.feedback("New password does not match."); })
+            else this.feedback("New password does not match."); })
 
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
-        builder.setView(layout);
-        builder.create().show();
+        // initialise
+        builder.setView(layout)
+                .create().show();
     }
 
     public void onRegister_Clicked (View view) {
@@ -116,6 +123,56 @@ public class Settings extends Fragment implements SettingsInterface {
 
         LinearLayout layout = new LinearLayout(mainActivity);
         layout.setOrientation(LinearLayout.VERTICAL);
+
+        // TextView
+        TextView text = new TextView(mainActivity);
+        text.setText(R.string.stakeholder);
+        layout.addView(text);
+
+        // Spinner
+        Spinner spinner = new Spinner(mainActivity);
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(mainActivity, android.R.layout.simple_spinner_item, nonRegisteredStakeholders);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        layout.addView(spinner);
+
+        // username
+        EditText userName = new EditText(mainActivity);
+        userName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        userName.setHint("Username");
+        layout.addView(userName);
+
+        // new password
+        EditText newPassword = new EditText(mainActivity);
+        newPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        newPassword.setHint("Password");
+        layout.addView(newPassword);
+
+        // confirm password
+        EditText confirmPassword = new EditText(mainActivity);
+        confirmPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        confirmPassword.setHint("Confirm password");
+        layout.addView(confirmPassword);
+
+        // set buttons
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            int position = spinner.getSelectedItemPosition();
+            String textName = userName.getText().toString();
+            String textPass = newPassword.getText().toString();
+            String textConfirm = confirmPassword.getText().toString();
+
+            if (textName.equals("") || textPass.equals("") || textConfirm.equals(""))
+                feedback("Missing input!");
+            else if (textPass.equals(textConfirm))
+                manager.register(this, ids.get(position), textName, textPass);
+            else feedback("Passwords does not match!"); })
+
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        // initialise
+        builder.setView(layout)
+                .create().show();
     }
 
     @Override
@@ -130,6 +187,7 @@ public class Settings extends Fragment implements SettingsInterface {
 
     @Override
     public void populateSpinner(ArrayList<String> ids, ArrayList<String> stakeholders) {
-
+        this.ids = ids;
+        this.nonRegisteredStakeholders = stakeholders;
     }
 }
