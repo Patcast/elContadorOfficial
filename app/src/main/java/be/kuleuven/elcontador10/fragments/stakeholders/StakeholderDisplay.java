@@ -46,7 +46,9 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
     private String emailAddress;
     private String full_name;
 
-    private int CALL_PERMISSION = 1;
+    private final int CALL_PERMISSION = 1;
+    private final int MESSAGE_PERMISSION = 1;
+
     private Button delete;
     private NavController navController;
 
@@ -138,7 +140,8 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
                     .setTitle("Phone number")
                     .setMessage("Call or copy number to clipboard?")
                     .setPositiveButton("Call", (dialog, which) -> callNumber())
-                    .setNegativeButton("Copy", (dialog, which) -> copyToClipboard(phoneNo))
+                    .setNegativeButton("Message", (dialog, which) -> messageNumber())
+                    .setNeutralButton("Copy", (dialog, which) -> copyToClipboard(phoneNo))
                     .create()
                     .show();
         } else error("No phone number.");
@@ -164,6 +167,15 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
             call.setData(Uri.parse("tel:" + phoneNo));
             startActivity(call);
         }
+    }
+
+    // message the phone number
+    private void messageNumber() {
+//        if (ActivityCompat.checkSelfPermission(mainActivity,
+//                Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+//
+//        }
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + phoneNo)));
     }
 
     private void requestCallPermission() {
@@ -203,7 +215,7 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         if (requestCode == CALL_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 error("Permission granted.");
-                requestCallPermission();
+                callNumber();
             } else error("Permission not granted.");
         }
     }
