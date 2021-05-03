@@ -7,4 +7,5 @@ public interface StakeholdersDisplayInterface {
     void display(Bundle bundle);
     void error(String error);
     Context getContext();
+    void delete();
 }

@@ -2,15 +2,21 @@ package be.kuleuven.elcontador10.background.database;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import be.kuleuven.elcontador10.background.CardFormatter;
 import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
@@ -22,6 +28,7 @@ import be.kuleuven.elcontador10.fragments.stakeholders.StakeholderSummary;
 public class StakeholdersManager {
     private final String all_URL = "https://studev.groept.be/api/a20sd505/getStakeholders";
     private final String single_URL = "https://studev.groept.be/api/a20sd505/getStakeholder/";
+    private final String delete_URL = "https://studev.groept.be/api/a20sd505/deleteStakeholder/";
 
     private static volatile  StakeholdersManager INSTANCE = null;
 
@@ -131,6 +138,24 @@ public class StakeholdersManager {
                     error.printStackTrace();
                     stakeholder.error(error.toString());
                 });
+
+        requestQueue.add(request);
+    }
+
+    public void deleteStakeholder(StakeholdersDisplayInterface stakeholders, String id) {
+        RequestQueue requestQueue = Volley.newRequestQueue(stakeholders.getContext());
+
+        StringRequest request = new StringRequest(Request.Method.POST, delete_URL,
+                response -> stakeholders.delete(),
+                error -> stakeholders.error("Unable to delete")) {
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("id", id);
+                return params;
+            }
+        };
 
         requestQueue.add(request);
     }

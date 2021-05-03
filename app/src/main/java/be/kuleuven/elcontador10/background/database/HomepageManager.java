@@ -22,7 +22,6 @@ import be.kuleuven.elcontador10.background.interfaces.HomepageInterface;
 public class HomepageManager {
     private final String URL_Transactions = "https://studev.groept.be/api/a20sd505/homepageTransactions";
     private final String URL_Tenants = "https://studev.groept.be/api/a20sd505/inDebtTenants";
- //   private final String URL_Contracts = "https://studev.groept.be/api/a20sd505/contractsEndingInRange/";
 
     private static volatile HomepageManager INSTANCE = null;
 

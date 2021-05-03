@@ -22,6 +22,14 @@ public class FilterTransactionsParcel implements Parcelable {
         this.to = to;
     }
 
+    public FilterTransactionsParcel() {
+        this.category = "*";
+        this.subcategory = "*";
+        this.name = "*";
+        this.from = null;
+        this.to = null;
+    }
+
     protected FilterTransactionsParcel(Parcel in) {
         category = in.readString();
         subcategory = in.readString();

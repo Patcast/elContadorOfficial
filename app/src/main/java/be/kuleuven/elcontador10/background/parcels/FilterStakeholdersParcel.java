@@ -8,6 +8,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import be.kuleuven.elcontador10.R;
 
 public class FilterStakeholdersParcel implements Parcelable {
     private String name;

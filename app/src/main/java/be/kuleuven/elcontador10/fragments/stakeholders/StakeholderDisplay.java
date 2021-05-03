@@ -28,20 +28,29 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.Base64Encoder;
 import be.kuleuven.elcontador10.background.database.StakeholdersManager;
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersDisplayInterface;
+import be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel;
 
 public class StakeholderDisplay extends Fragment implements StakeholdersDisplayInterface {
     private MainActivity mainActivity;
+
     private String id;
     private String phoneNo;
     private String emailAddress;
+    private String full_name;
+
     private int CALL_PERMISSION = 1;
     private Button delete;
     private NavController navController;
+
+    private StakeholdersManager manager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,21 +67,32 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         super.onViewCreated(view, savedInstanceState);
 
         try {
+            assert getArguments() != null;
             StakeholderDisplayArgs args = StakeholderDisplayArgs.fromBundle(getArguments());
             id = args.getId();
         }
         catch (Exception e) {
-            Toast.makeText(mainActivity, "Nothing to show", Toast.LENGTH_SHORT).show();
+            error("Nothing to show.");
         }
 
         // get manager
-        StakeholdersManager manager = StakeholdersManager.getInstance();
+        manager = StakeholdersManager.getInstance();
         manager.getStakeholder(this, id);
 
         navController = Navigation.findNavController(view);
         // buttons
         delete = requireView().findViewById(R.id.btn_delete_DisplayStakeholder);
+        delete.setOnClickListener(this::onDelete_Click);
+    }
 
+    public void onDelete_Click(View view) {
+        new AlertDialog.Builder(mainActivity)
+                .setTitle("Delete")
+                .setMessage("Are you sure you want to delete Stakeholder " + full_name + "?")
+                .setPositiveButton("Yes", (dialog, which) -> manager.deleteStakeholder(this, id))
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
     }
 
     @Override
@@ -91,9 +111,10 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         phoneNo = bundle.getString("phone");
         emailAddress = bundle.getString("email");
         String image_text = bundle.getString("image");
+        full_name = bundle.getString("name");
 
         // set views text
-        name.setText(bundle.getString("name"));
+        name.setText(full_name);
         role.setText(bundle.getString("role"));
         phone.setText(phoneNo);
         email.setText(emailAddress);
@@ -116,7 +137,7 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
             new AlertDialog.Builder(mainActivity)
                     .setTitle("Phone number")
                     .setMessage("Call or copy number to clipboard?")
-                    .setPositiveButton("Call", ((dialog, which) -> callNumber()))
+                    .setPositiveButton("Call", (dialog, which) -> callNumber())
                     .setNegativeButton("Copy", (dialog, which) -> copyToClipboard(phoneNo))
                     .create()
                     .show();
@@ -164,7 +185,7 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
             new AlertDialog.Builder(mainActivity)
                     .setTitle("Email")
                     .setMessage("Email or copy to clipboard?")
-                    .setPositiveButton("Email", ((dialog, which) -> email()))
+                    .setPositiveButton("Email", (dialog, which) -> email())
                     .setNegativeButton("Copy", (dialog, which) -> copyToClipboard(emailAddress))
                     .create()
                     .show();
@@ -196,5 +217,18 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
     @Override
     public Context getContext() {
         return mainActivity;
+    }
+
+    @Override
+    public void delete() {
+        error("Stakeholder deleted");
+
+        //TODO get roles from database
+        String[] temp_array = getResources().getStringArray(R.array.roles);
+        ArrayList<String> roles = new ArrayList<>(Arrays.asList(temp_array));
+        // navigate back to summary
+        navController.navigate(StakeholderDisplayDirections.actionStakeholderDisplayToStakeholderSummary(
+                new FilterStakeholdersParcel("*", roles, false) // default filter
+        ));
     }
 }

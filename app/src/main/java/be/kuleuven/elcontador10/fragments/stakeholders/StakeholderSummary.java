@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
@@ -63,11 +64,9 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
             StakeholderSummaryArgs args = StakeholderSummaryArgs.fromBundle(getArguments());
             filter = args.getFilter();
         } catch (Exception e) {
-            ArrayList<String> roles = new ArrayList<>(5);
-            roles.add("Employee");
-            roles.add("Manager");
-            roles.add("Owner");
-            roles.add("Tenant");
+            //TODO get roles from database
+            String[] temp_array = getResources().getStringArray(R.array.roles);
+            ArrayList<String> roles = new ArrayList<>(Arrays.asList(temp_array));
             filter = new FilterStakeholdersParcel("*", roles, false);
         }
 

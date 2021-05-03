@@ -90,6 +90,9 @@
         <argument
             android:name="id"
             app:argType="string" />
+        <action
+            android:id="@+id/action_stakeholderDisplay_to_stakeholderSummary"
+            app:destination="@id/stakeholderSummary" />
     </fragment>
     <fragment
         android:id="@+id/stakeholderFilter"
