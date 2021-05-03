@@ -118,6 +118,7 @@ public class StakeholdersManager {
                         bundle.putString("phone", object.getString("phoneNumber"));
                         bundle.putString("email", object.getString("email"));
                         bundle.putDouble("balance", object.getDouble("balance"));
+                        bundle.putString("image", object.getString("image"));
 
                         stakeholder.display(bundle);
                     }

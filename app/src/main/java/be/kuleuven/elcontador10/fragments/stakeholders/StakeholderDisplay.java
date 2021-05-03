@@ -2,9 +2,14 @@ package be.kuleuven.elcontador10.fragments.stakeholders;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -19,11 +24,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.Base64Encoder;
 import be.kuleuven.elcontador10.background.database.StakeholdersManager;
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersDisplayInterface;
 
@@ -71,6 +78,7 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
     @Override
     public void display(Bundle bundle) {
         TextView name, role, phone, email, balance;
+        ImageView image = requireView().findViewById(R.id.imgViewDisplayStakeholder);
 
         // initialise views variables
         name = requireView().findViewById(R.id.txtStakeholderDisplayName);
@@ -78,8 +86,11 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         phone = requireView().findViewById(R.id.txtStakeholderDisplayPhoneNo);
         email = requireView().findViewById(R.id.txtStakeholderDisplayEmail);
         balance = requireView().findViewById(R.id.txtStakeholderDisplayBalance);
+
+        // get bundles
         phoneNo = bundle.getString("phone");
         emailAddress = bundle.getString("email");
+        String image_text = bundle.getString("image");
 
         // set views text
         name.setText(bundle.getString("name"));
@@ -88,24 +99,50 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         email.setText(emailAddress);
         balance.setText(String.format("$%s", bundle.getDouble("balance")));
 
+        // set image
+        if (!image_text.equals("null")) {
+            Bitmap img = Base64Encoder.decodeImage(image_text);
+            image.setImageBitmap(img);
+        }
+
         // set onClickListeners
         phone.setOnClickListener(this::onPhoneNumber_Clicked);
         email.setOnClickListener(this::onEmail_Clicked);
     }
 
+    // TextBox for number clicked
     public void onPhoneNumber_Clicked(View view) {
-        if (!phoneNo.equals("null")) {
-            if (ActivityCompat.checkSelfPermission(mainActivity,
-                    Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                //call permission not granted yet
-                requestCallPermission();
-            } else {
-                // call permission granted, goes to call number
-                Intent call = new Intent(Intent.ACTION_CALL);
-                call.setData(Uri.parse("tel:" + phoneNo));
-                startActivity(call);
-            }
+        if (!phoneNo.equals("null")) { // phone number should exist
+            new AlertDialog.Builder(mainActivity)
+                    .setTitle("Phone number")
+                    .setMessage("Call or copy number to clipboard?")
+                    .setPositiveButton("Call", ((dialog, which) -> callNumber()))
+                    .setNegativeButton("Copy", (dialog, which) -> copyToClipboard(phoneNo))
+                    .create()
+                    .show();
         } else error("No phone number.");
+    }
+
+    // copy a text to phone's keyboard
+    private void copyToClipboard(String text) {
+        ClipboardManager clipboardManager = (ClipboardManager) mainActivity.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("elContador", text);
+        clipboardManager.setPrimaryClip(clip);
+        error("Copied to clipboard.");
+    }
+
+    // call the phone number
+    private void callNumber() {
+        if (ActivityCompat.checkSelfPermission(mainActivity,
+                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            //call permission not granted yet
+            requestCallPermission();
+        } else {
+            // call permission granted, goes to call number
+            Intent call = new Intent(Intent.ACTION_CALL);
+            call.setData(Uri.parse("tel:" + phoneNo));
+            startActivity(call);
+        }
     }
 
     private void requestCallPermission() {
@@ -121,12 +158,23 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         } else requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, CALL_PERMISSION);
     }
 
+    // TextBox email clicked
     public void onEmail_Clicked(View view) {
         if (!emailAddress.equals("null")) {
-            Intent intent = new Intent(Intent.ACTION_SENDTO);
-            intent.setData(Uri.parse("mailto:" + emailAddress));
-            startActivity(intent);
+            new AlertDialog.Builder(mainActivity)
+                    .setTitle("Email")
+                    .setMessage("Email or copy to clipboard?")
+                    .setPositiveButton("Email", ((dialog, which) -> email()))
+                    .setNegativeButton("Copy", (dialog, which) -> copyToClipboard(emailAddress))
+                    .create()
+                    .show();
         } else error("No email address.");
+    }
+
+    private void email() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:" + emailAddress));
+        startActivity(intent);
     }
 
     @Override

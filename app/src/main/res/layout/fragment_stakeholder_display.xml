@@ -14,6 +14,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:text="TextView"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtStakeholderDisplayEmail" />
 
@@ -25,6 +26,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:text="TextView"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtStakeholderDisplayPhoneNo" />
 
@@ -36,6 +38,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:text="TextView"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtStakeholderDisplayRole" />
 
@@ -47,6 +50,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:text="TextView"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtStakeholderDisplayName" />
 
@@ -58,6 +62,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:text="Balance:"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lblDisplayStakeholders3" />
 
@@ -69,6 +74,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:text="Email:"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lblDisplayStakeholders2" />
 
@@ -80,6 +86,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:text="Phone Number:"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lblDisplayStakeholders" />
 
@@ -91,6 +98,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:text="Role:"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lblDisplayStakeholders1" />
 
@@ -125,8 +133,9 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:text="Name:"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imgViewDisplayStakeholder" />
 
     <TextView
         android:id="@+id/txtStakeholderDisplayName"
@@ -136,6 +145,18 @@
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:text="TextView"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imgViewDisplayStakeholder" />
+
+    <ImageView
+        android:id="@+id/imgViewDisplayStakeholder"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon_stakeholder"
+        tools:src="@tools:sample/avatars" />
 </androidx.constraintlayout.widget.ConstraintLayout>
