@@ -19,6 +19,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.LogIn;
 import be.kuleuven.elcontador10.activities.MainActivity;
@@ -29,6 +31,8 @@ import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
 public class Settings extends Fragment implements SettingsInterface {
     private MainActivity mainActivity;
     private StakeholderLoggedIn loggedIn;
+    private String[] nonRegisteredStakeholders;
+    SettingsManager manager;
 
     @Nullable
     @Override
@@ -36,6 +40,7 @@ public class Settings extends Fragment implements SettingsInterface {
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle("Settings");
         loggedIn = mainActivity.getLoggedIn();
+        manager = SettingsManager.getInstance();
 
         return  inflater.inflate(R.layout.fragment_settings, container, false);
     }
@@ -44,11 +49,16 @@ public class Settings extends Fragment implements SettingsInterface {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        manager.findNonRegistered(this);
+
         Button logout = requireView().findViewById(R.id.btnLogOut);
         logout.setOnClickListener(this::onLogOut_CLicked);
 
         Button changePassword = requireView().findViewById(R.id.btnChangePassword);
         changePassword.setOnClickListener(this::onChangePassword_Clicked);
+
+        Button add_log_in = requireView().findViewById(R.id.btnRegister);
+        add_log_in.setOnClickListener(this::onRegister_Clicked);
     }
 
     public void onLogOut_CLicked(View view) {
@@ -91,7 +101,6 @@ public class Settings extends Fragment implements SettingsInterface {
             if (passwordConfirm.equals("") || passwordCurrent.equals("") || passwordNew.equals("")) // empty input
                 this.feedback("Missing input.");
             else if (passwordNew.equals(passwordConfirm)) {
-                SettingsManager manager = SettingsManager.getInstance();
                 manager.changePassword(this, loggedIn, passwordCurrent, passwordNew);
             } else this.feedback("New password does not match."); })
 
@@ -99,6 +108,14 @@ public class Settings extends Fragment implements SettingsInterface {
 
         builder.setView(layout);
         builder.create().show();
+    }
+
+    public void onRegister_Clicked (View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+        builder.setTitle("Register");
+
+        LinearLayout layout = new LinearLayout(mainActivity);
+        layout.setOrientation(LinearLayout.VERTICAL);
     }
 
     @Override
@@ -109,5 +126,10 @@ public class Settings extends Fragment implements SettingsInterface {
     @Override
     public Context getContext() {
         return mainActivity;
+    }
+
+    @Override
+    public void populateSpinner(ArrayList<String> ids, ArrayList<String> stakeholders) {
+
     }
 }

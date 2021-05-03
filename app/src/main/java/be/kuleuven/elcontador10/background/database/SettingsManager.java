@@ -6,6 +6,9 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +18,7 @@ import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
 public class SettingsManager {
     private final String URL_Check = "https://studev.groept.be/api/a20sd505/LogIn/";
     private final String URL_Change = "https://studev.groept.be/api/a20sd505/changePassword/";
+    private final String URL_NonRegistered = "https://studev.groept.be/api/a20sd505/getNonRegisteredStakeholders";
 
     private static volatile SettingsManager INSTANCE;
 
@@ -64,6 +68,38 @@ public class SettingsManager {
                 }
         );
         requestQueue.add(check);
+    }
 
+    public void findNonRegistered(SettingsInterface settings) {
+        ArrayList<String> ids = new ArrayList<>();
+        ArrayList<String> names = new ArrayList<>();
+
+        RequestQueue requestQueue = Volley.newRequestQueue(settings.getContext());
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL_NonRegistered, null,
+                response -> {
+                    try {
+                        ids.clear(); names.clear();
+
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject object = response.getJSONObject(i);
+
+                            String id = object.getString("id");
+                            String name = object.getString("name");
+
+                            ids.add(id); names.add(name);
+                        }
+
+                        settings.populateSpinner(ids, names);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        settings.feedback(e.toString());
+                    }
+                }, error -> {
+                    error.printStackTrace();
+                    settings.feedback(error.toString());
+        });
+
+        requestQueue.add(request);
     }
 }

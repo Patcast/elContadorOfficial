@@ -59,8 +59,6 @@
     </string-array>
     <string name="log_out">Log out</string>
     <string name="new_transaction">new_transaction</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="edit">Edit</string>
     <string name="close">Close</string>
     <string name="confirm">Confirm</string>
@@ -71,6 +69,8 @@
     <string name="additional_comments">Additional Comments</string>
     <string name="select_a_category">Select a category</string>
     <string name="select_a_sub_category">Select a sub-Category</string>
+    <string name="register_log_in">Register New Log In</string>
+    <string name="change_password">Change Password</string>
     <string-array name="roles">
         <item>Employee</item>
         <item>Manager</item>
