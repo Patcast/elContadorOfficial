@@ -3,16 +3,14 @@ package be.kuleuven.elcontador10.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 
 import android.text.InputType;
-import android.util.LayoutDirection;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.LogIn;
@@ -38,7 +34,7 @@ public class Settings extends Fragment implements SettingsInterface {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitle(R.string.settings);
+        mainActivity.setTitle("Settings");
         loggedIn = mainActivity.getLoggedIn();
 
         return  inflater.inflate(R.layout.fragment_settings, container, false);
@@ -93,11 +89,11 @@ public class Settings extends Fragment implements SettingsInterface {
             String passwordConfirm = newPassword.getText().toString();
 
             if (passwordConfirm.equals("") || passwordCurrent.equals("") || passwordNew.equals("")) // empty input
-                error("Missing input.");
+                this.feedback("Missing input.");
             else if (passwordNew.equals(passwordConfirm)) {
                 SettingsManager manager = SettingsManager.getInstance();
-                manager.checkPassword(this, loggedIn, passwordCurrent, passwordNew);
-            } else error("New password does not match."); })
+                manager.changePassword(this, loggedIn, passwordCurrent, passwordNew);
+            } else this.feedback("New password does not match."); })
 
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
@@ -106,16 +102,10 @@ public class Settings extends Fragment implements SettingsInterface {
     }
 
     @Override
-    public void passwordChanged() {
-
+    public void feedback(String string) {
+        Toast.makeText(mainActivity, string, Toast.LENGTH_LONG).show();
     }
 
-    @Override
-    public void error(String string) {
-        Toast.makeText(mainActivity, string, Toast.LENGTH_SHORT).show();
-    }
-
-    @Nullable
     @Override
     public Context getContext() {
         return mainActivity;
