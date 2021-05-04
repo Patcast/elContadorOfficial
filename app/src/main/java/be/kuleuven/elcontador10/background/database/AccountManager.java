@@ -71,11 +71,16 @@ public class AccountManager {
                             String phoneNumber = object.getString("phoneNumber");
                             String email = object.getString("email");
                             double balance = object.getDouble("balance");
+                            boolean deleted = object.getString("deleted").equals("1");
 
-                            StakeholderLoggedIn loggedIn = new StakeholderLoggedIn(
-                                    id, firstName, lastName, role, phoneNumber, email, balance, username);
+                            if (!deleted) {
+                                StakeholderLoggedIn loggedIn = new StakeholderLoggedIn(
+                                        id, firstName, lastName, role, phoneNumber, email, balance, username);
 
-                            manager.onLoginSucceed(username, loggedIn);
+                                manager.onLoginSucceed(username, loggedIn);
+                            } else {
+                                manager.onLoginFailed("Stakeholder has been deleted.");
+                            }
                         }
                         else {
                             manager.onLoginFailed("Stakeholder does not exist.");
