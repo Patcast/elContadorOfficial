@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import be.kuleuven.elcontador10.background.CardFormatter;
 import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersDisplayInterface;
+import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersNewInterface;
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersSummaryInterface;
 import be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel;
 import be.kuleuven.elcontador10.fragments.stakeholders.StakeholderSummary;
@@ -35,6 +36,7 @@ public class StakeholdersManager {
     private final String all_URL = "https://studev.groept.be/api/a20sd505/getStakeholders";
     private final String single_URL = "https://studev.groept.be/api/a20sd505/getStakeholder/";
     private final String delete_URL = "https://studev.groept.be/api/a20sd505/deleteStakeholder/";
+    private final String add_URL = "https://studev.groept.be/api/a20sd505/addStakeholder/";
 
     private static volatile  StakeholdersManager INSTANCE = null;
 
@@ -71,13 +73,13 @@ public class StakeholdersManager {
                             boolean deleted = object.getString("deleted").equals("1");
 
                             // run object through filter
-                            if (Filter(filter, (firstName + " " + lastName).toLowerCase(), balance, role, deleted)) {
+                            if (filter != null && Filter(filter, (firstName + " " + lastName).toLowerCase(), balance, role, deleted)) {
                                 data.add(new DataPlaceHolder(id, firstName, lastName, role, balance));
                             }
                         }
 
                         // sort
-                        data = sorter(filter, data);
+                        if (filter != null) data = sorter(filter, data);
 
                         // return data
                         returnData(summary, data);
@@ -195,6 +197,30 @@ public class StakeholdersManager {
             protected Map<String, String> getParams() {
                 Map<String,String> params = new HashMap<>();
                 params.put("id", id);
+                return params;
+            }
+        };
+
+        requestQueue.add(request);
+    }
+
+    public void addStakeholder(StakeholdersNewInterface stakeholder, String firstName, String lastName,
+                               String role, @Nullable String phoneNo, @Nullable String email, @Nullable String image) {
+        RequestQueue requestQueue = Volley.newRequestQueue(stakeholder.getContext());
+
+        StringRequest request = new StringRequest(Request.Method.POST, add_URL,
+                response -> stakeholder.addStakeholder(),
+                error -> stakeholder.feedback(error.toString())) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("fnam", firstName);
+                params.put("lnam", lastName);
+                params.put("ro", role);
+                params.put("no", phoneNo);
+                params.put("em", email);
+                params.put("img", image);
                 return params;
             }
         };

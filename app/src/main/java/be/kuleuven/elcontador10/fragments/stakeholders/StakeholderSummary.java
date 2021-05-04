@@ -1,9 +1,11 @@
 package be.kuleuven.elcontador10.fragments.stakeholders;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -49,6 +51,7 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
         return inflater.inflate(R.layout.fragment_stakeholder_summary, container, false);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -60,7 +63,6 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
 
         // get arguments
         try {
-            assert getArguments() != null;
             StakeholderSummaryArgs args = StakeholderSummaryArgs.fromBundle(getArguments());
             filter = args.getFilter();
         } catch (Exception e) {
