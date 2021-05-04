@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.google.android.material.chip.Chip;
@@ -29,6 +30,9 @@ import java.util.stream.Collectors;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel;
+
+import static be.kuleuven.elcontador10.R.id.stakeholder_filter_byDebt;
+import static be.kuleuven.elcontador10.R.id.stakeholder_filter_byRole;
 
 public class StakeholderFilter extends Fragment {
     private MainActivity mainActivity;
@@ -87,7 +91,7 @@ public class StakeholderFilter extends Fragment {
     }
 
     public void onClick_Cancel(View view) {
-        FilterStakeholdersParcel filter = new FilterStakeholdersParcel("*", roleNames, false);
+        FilterStakeholdersParcel filter = new FilterStakeholdersParcel("*", roleNames, false, false, "Name");
         StakeholderFilterDirections.ActionStakeholderFilterToStakeholderSummary action =
                 StakeholderFilterDirections.actionStakeholderFilterToStakeholderSummary(filter);
         navController.navigate(action);
@@ -129,6 +133,8 @@ public class StakeholderFilter extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public FilterStakeholdersParcel getFilter() {
         String name_text = name.getText().toString();
+        RadioGroup group = requireView().findViewById(R.id.stakeholder_filter_radioGroup);
+        String sortBy;
 
         // get the names of checked CheckBox
         ArrayList<String> categories = roles.stream()
@@ -138,7 +144,22 @@ public class StakeholderFilter extends Fragment {
         ;
 
         boolean debt = inDebt.isChecked();
+        boolean deleted = ((CheckBox) requireView().findViewById(R.id.stakeholder_filter_deleted)).isChecked();
 
-        return new FilterStakeholdersParcel(name_text, categories, debt);
+        final int byDebt = stakeholder_filter_byDebt;
+        final int byRole = stakeholder_filter_byRole;
+
+        switch(group.getCheckedRadioButtonId()) {
+            case byDebt:
+                sortBy = "Debt";
+                break;
+            case byRole:
+                sortBy = "Role";
+                break;
+            default:
+                sortBy = "Name";
+        }
+
+        return new FilterStakeholdersParcel(name_text, categories, debt, deleted, sortBy);
     }
 }

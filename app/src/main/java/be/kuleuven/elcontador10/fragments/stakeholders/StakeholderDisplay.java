@@ -222,7 +222,7 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         ArrayList<String> roles = new ArrayList<>(Arrays.asList(temp_array));
         // navigate back to summary
         navController.navigate(StakeholderDisplayDirections.actionStakeholderDisplayToStakeholderSummary(
-                new FilterStakeholdersParcel("*", roles, false) // default filter
+                new FilterStakeholdersParcel("*", roles, false, false, "Name") // default filter
         ));
     }
 }

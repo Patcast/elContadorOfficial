@@ -68,13 +68,16 @@ public class StakeholdersManager {
                         for (int i = 0; i < response.length() ; i++) {
                             JSONObject object = response.getJSONObject(i);
 
+                            // get all data
                             int id = object.getInt("idStakeholders");
                             String firstName = object.getString("firstName");
                             String lastName = object.getString("LastName");
                             double balance = object.getDouble("balance");
                             String role = object.getString("Role");
+                            boolean deleted = object.getString("deleted").equals("1");
 
-                            if (Filter(filter, (lastName + " " + balance).toLowerCase(), balance, role)) {
+                            // run object through filter
+                            if (Filter(filter, (lastName + " " + balance).toLowerCase(), balance, role, deleted)) {
                                 CardFormatterInterface cardFormatter = new CardFormatter();
                                 String[] formatted = cardFormatter.StakeholderFormatter(id, firstName, lastName, balance, role);
 
@@ -83,6 +86,8 @@ public class StakeholdersManager {
                                 status.add(formatted[2]);
                                 metadata.add(formatted[3]);
                             }
+
+                            // sorter
                         }
 
                         summary.populateRecyclerView(titles, descriptions, status, metadata);
@@ -98,16 +103,16 @@ public class StakeholdersManager {
         requestQueue.add(request);
     }
 
-    private boolean Filter(FilterStakeholdersParcel filter, String fullName, double balance, String role) {
+    private boolean Filter(FilterStakeholdersParcel filter, String fullName, double balance, String role, boolean deleted) {
         String name = filter.getName().toLowerCase();
         ArrayList<String> roles = filter.getRoles();
         boolean debt = filter.isInDebt();
+        boolean isDeleted = filter.isDeleted();
 
+        if (isDeleted == deleted) return false; // deleted not matching
         if (!name.equals("*")) if (!fullName.contains(name)) return false; // name not matching
         if (!roles.contains(role)) return false; // role not in list
-        if (debt && balance >= 0) return false; // not in debt
-
-        return true;
+        return !debt || !(balance >= 0); // not in debt
     }
 
     public void getStakeholder(StakeholdersDisplayInterface stakeholder, String id) {
@@ -148,9 +153,9 @@ public class StakeholdersManager {
         StringRequest request = new StringRequest(Request.Method.POST, delete_URL,
                 response -> stakeholders.delete(),
                 error -> stakeholders.error("Unable to delete")) {
-            @Nullable
+
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String,String> params = new HashMap<>();
                 params.put("id", id);
                 return params;

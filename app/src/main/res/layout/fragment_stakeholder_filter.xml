@@ -8,6 +8,24 @@
     tools:context=".fragments.stakeholders.StakeholderFilter">
 
     <TextView
+        android:id="@+id/lblStakeholderFilterAttributes2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Sort by"
+        app:layout_constraintStart_toStartOf="@+id/stakeholder_filter_deleted"
+        app:layout_constraintTop_toBottomOf="@+id/stakeholder_filter_deleted" />
+
+    <CheckBox
+        android:id="@+id/stakeholder_filter_deleted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Deleted"
+        app:layout_constraintStart_toStartOf="@+id/lblStakeholderFilterAttributes"
+        app:layout_constraintTop_toBottomOf="@+id/stakeholder_filter_debt" />
+
+    <TextView
         android:id="@+id/lblStakeholderFilterAttributes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -90,5 +108,32 @@
         android:text="In Debt"
         app:layout_constraintStart_toStartOf="@+id/lblStakeholderFilterAttributes"
         app:layout_constraintTop_toBottomOf="@+id/lblStakeholderFilterAttributes" />
+
+    <RadioGroup
+        android:id="@+id/stakeholder_filter_radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="@+id/lblStakeholderFilterAttributes2"
+        app:layout_constraintTop_toBottomOf="@+id/lblStakeholderFilterAttributes2">
+
+        <RadioButton
+            android:id="@+id/stakeholder_filter_byName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name" />
+
+        <RadioButton
+            android:id="@+id/stakeholder_filter_byRole"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Role" />
+
+        <RadioButton
+            android:id="@+id/stakeholder_filter_byDebt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Debt" />
+    </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

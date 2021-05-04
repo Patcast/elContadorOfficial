@@ -13,18 +13,24 @@ import java.util.Arrays;
 import be.kuleuven.elcontador10.R;
 
 public class FilterStakeholdersParcel implements Parcelable {
-    private String name;
+    private final String name;
 
     // roles
-    private ArrayList<String> roles;
+    private final ArrayList<String> roles;
 
     // attributes
-    private boolean inDebt;
+    private final boolean inDebt, deleted;
 
-    public FilterStakeholdersParcel(@Nullable String name, ArrayList<String> roles, boolean inDebt) {
+    // sort by
+    private final String sortBy;
+
+    public FilterStakeholdersParcel(@Nullable String name, ArrayList<String> roles, boolean inDebt,
+                                    boolean deleted, String sortBy) {
         this.name = name;
         this.roles = roles;
         this.inDebt = inDebt;
+        this.deleted = deleted;
+        this.sortBy = sortBy;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -32,6 +38,8 @@ public class FilterStakeholdersParcel implements Parcelable {
         name = in.readString();
         roles = (ArrayList<String>) in.readArrayList(getClass().getClassLoader());
         inDebt = in.readBoolean();
+        deleted = in.readBoolean();
+        sortBy = in.readString();
     }
 
     public static final Creator<FilterStakeholdersParcel> CREATOR = new Creator<FilterStakeholdersParcel>() {
@@ -58,6 +66,8 @@ public class FilterStakeholdersParcel implements Parcelable {
         dest.writeString(name);
         dest.writeList(roles);
         dest.writeBoolean(inDebt);
+        dest.writeBoolean(deleted);
+        dest.writeString(sortBy);
     }
 
     //Getters and Setters
@@ -72,5 +82,13 @@ public class FilterStakeholdersParcel implements Parcelable {
 
     public boolean isInDebt() {
         return inDebt;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public String getSortBy() {
+        return sortBy;
     }
 }
