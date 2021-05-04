@@ -1,8 +1,11 @@
 package be.kuleuven.elcontador10.background.database;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -15,8 +18,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.background.CardFormatter;
 import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
@@ -32,17 +38,7 @@ public class StakeholdersManager {
 
     private static volatile  StakeholdersManager INSTANCE = null;
 
-    private final ArrayList<String> titles;
-    private final ArrayList<String> descriptions;
-    private final ArrayList<String> status;
-    private final ArrayList<String> metadata;
-
-    private StakeholdersManager() {
-        titles = new ArrayList<>();
-        descriptions = new ArrayList<>();
-        status = new ArrayList<>();
-        metadata = new ArrayList<>();
-    }
+    private StakeholdersManager() { }
 
     public static StakeholdersManager getInstance() {
         if (INSTANCE == null) {
@@ -54,16 +50,14 @@ public class StakeholdersManager {
         return INSTANCE;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void getStakeholders(StakeholdersSummaryInterface summary, FilterStakeholdersParcel filter) {
         RequestQueue requestQueue = Volley.newRequestQueue(summary.getContext());
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, all_URL, null,
                 response -> {
                     try {
-                        titles.clear();
-                        descriptions.clear();
-                        status.clear();
-                        metadata.clear();
+                        List<DataPlaceHolder> data = new ArrayList<>();
 
                         for (int i = 0; i < response.length() ; i++) {
                             JSONObject object = response.getJSONObject(i);
@@ -77,20 +71,17 @@ public class StakeholdersManager {
                             boolean deleted = object.getString("deleted").equals("1");
 
                             // run object through filter
-                            if (Filter(filter, (lastName + " " + balance).toLowerCase(), balance, role, deleted)) {
-                                CardFormatterInterface cardFormatter = new CardFormatter();
-                                String[] formatted = cardFormatter.StakeholderFormatter(id, firstName, lastName, balance, role);
-
-                                titles.add(formatted[0]);
-                                descriptions.add(formatted[1]);
-                                status.add(formatted[2]);
-                                metadata.add(formatted[3]);
+                            if (Filter(filter, (firstName + " " + lastName).toLowerCase(), balance, role, deleted)) {
+                                data.add(new DataPlaceHolder(id, firstName, lastName, role, balance));
                             }
-
-                            // sorter
                         }
 
-                        summary.populateRecyclerView(titles, descriptions, status, metadata);
+                        // sort
+                        data = sorter(filter, data);
+
+                        // return data
+                        returnData(summary, data);
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                         summary.error(e.toString());
@@ -103,16 +94,62 @@ public class StakeholdersManager {
         requestQueue.add(request);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private List<DataPlaceHolder> sorter(FilterStakeholdersParcel filter, List<DataPlaceHolder> data) {
+        List<DataPlaceHolder> sorted;
+
+        switch (filter.getSortBy()) {
+            case "Debt":
+                sorted = data.stream()
+                        .sorted(Comparator.comparing(DataPlaceHolder::getBalance))
+                        .collect(Collectors.toList());
+                break;
+            case "Role":
+                sorted = data.stream()
+                        .sorted(Comparator.comparing(DataPlaceHolder::getRole))
+                        .collect(Collectors.toList());
+                break;
+            default:
+                sorted = data.stream()
+                        .sorted(Comparator.comparing(DataPlaceHolder::getLastName))
+                        .collect(Collectors.toList());
+        }
+        return sorted;
+    }
+
     private boolean Filter(FilterStakeholdersParcel filter, String fullName, double balance, String role, boolean deleted) {
         String name = filter.getName().toLowerCase();
         ArrayList<String> roles = filter.getRoles();
         boolean debt = filter.isInDebt();
         boolean isDeleted = filter.isDeleted();
 
-        if (isDeleted == deleted) return false; // deleted not matching
+        if (!isDeleted == deleted) return false; // deleted not matching
         if (!name.equals("*")) if (!fullName.contains(name)) return false; // name not matching
         if (!roles.contains(role)) return false; // role not in list
         return !debt || !(balance >= 0); // not in debt
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void returnData(StakeholdersSummaryInterface summary, List<DataPlaceHolder> data) {
+        // initialise formatter
+        ArrayList<String[]> formatted = new ArrayList<>();
+        CardFormatterInterface formatter = new CardFormatter();
+
+        // send each data to the formatter, while adding to the formatted list
+        data.forEach(t -> formatted.add(formatter.StakeholderFormatter(t.getId(), t.getFirstName(), t.getLastName(),
+                t.getBalance(), t.getRole())));
+
+        ArrayList<String> titles = new ArrayList<>(), descriptions = new ArrayList<>(), status = new ArrayList<>(), metadata = new ArrayList<>();
+
+        // add the formatted Strings to the corresponding ArrayList
+        // 0: titles, 1: descriptions, 2: status, 3: metadata
+        formatted.forEach(t -> titles.add(t[0]));
+        formatted.forEach(t -> descriptions.add(t[1]));
+        formatted.forEach(t -> status.add(t[2]));
+        formatted.forEach(t -> metadata.add(t[3]));
+
+        // send back to interface
+        summary.populateRecyclerView(titles, descriptions, status, metadata);
     }
 
     public void getStakeholder(StakeholdersDisplayInterface stakeholder, String id) {
@@ -163,5 +200,39 @@ public class StakeholdersManager {
         };
 
         requestQueue.add(request);
+    }
+
+    private static class DataPlaceHolder {
+        int id;
+        String firstName, lastName, role;
+        double balance;
+
+        public DataPlaceHolder(int id, String firstName, String lastName, String role, double balance) {
+            this.id = id;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.role = role;
+            this.balance = balance;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public String getRole() {
+            return role;
+        }
+
+        public double getBalance() {
+            return balance;
+        }
     }
 }

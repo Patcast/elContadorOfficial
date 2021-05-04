@@ -87,7 +87,7 @@ public class StakeholderFilter extends Fragment {
         filter.setOnClickListener(this::onClick_Filter);
 
         // roles CheckBox animation
-        all_roles.setOnCheckedChangeListener(this::onClick_All);
+        all_roles.setOnClickListener(this::onClick_All);
     }
 
     public void onClick_Cancel(View view) {
@@ -105,8 +105,8 @@ public class StakeholderFilter extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void onClick_All(View view, boolean checked) {
-        if (checked) roles.forEach(v -> v.setChecked(true));
+    public void onClick_All(View view) {
+        if (all_roles.isChecked()) roles.forEach(v -> v.setChecked(true));
         else roles.forEach(v -> v.setChecked(false));
     }
 
