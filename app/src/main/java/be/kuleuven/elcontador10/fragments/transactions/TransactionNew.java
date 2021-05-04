@@ -43,21 +43,25 @@ import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.Transaction;
+import be.kuleuven.elcontador10.background.database.JsonArrayRequestWithParams;
 import be.kuleuven.elcontador10.background.parcels.TransactionType;
 
 
 public class TransactionNew extends Fragment {
 
-    private static final String[] stakeHolders = new String[]{"Carlos","Mauricio","Tomas","Juan","Patricio","Alexandria","Yonathan"};
+//// input from UI
     RadioGroup radGroup;
     EditText txtAmount;
     AutoCompleteTextView txtStakeHolder;
     Spinner spCategory;
     Spinner spSubCategory;
     EditText txtNotes;
-    List<Map<String,String>> typeRecords;
+    ////// Arrays to fill input
+
+    List<TransactionType> typeFullList = new ArrayList<>();
     List<String> categories = new ArrayList<>();
-    List<TransactionType> typeList = new ArrayList<>();
+    List<List<String>>  Subcategories = new ArrayList<>();
+    List<String> stakeHolders = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,34 +71,31 @@ public class TransactionNew extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_transaction_new, container, false);
-        requestTypeTrans(v);
         return v;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        typeRecords = new ArrayList<>();
-
         radGroup = view.findViewById(R.id.radioGroup);
         txtAmount = view.findViewById(R.id.ed_txt_amount);
         spCategory = view.findViewById(R.id.sp_TransCategory);
         spSubCategory = view.findViewById(R.id.sp_TransSubcategory);
         txtNotes = view.findViewById(R.id.ed_txt_notes);
+        requestStakeHold(view);
         requestTypeTrans(view);
 
-        //Set AutocompleteText
-        txtStakeHolder = view.findViewById(R.id.actv_stakeholder);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,stakeHolders);
-        txtStakeHolder.setAdapter(adapter);
-
-        //Set sp_SubCategory
+        //Set sp_SubCategory after clicking on category
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String catChosen = spCategory.getSelectedItem().toString();
-                ArrayAdapter<String> adapterSpinner = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line, Transaction.chooseSubCat(catChosen));
+                ArrayAdapter<String> adapterSpinner = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line,
+                        typeFullList.stream()
+                                    .filter(cat->cat.getCategory().equals(catChosen))
+                                    .map(TransactionType::getSubCategory)
+                                    .distinct().collect(Collectors.toList()));
                 spSubCategory.setAdapter(adapterSpinner);
             }
             @Override
@@ -103,12 +104,9 @@ public class TransactionNew extends Fragment {
         });
     }
 
-    /// This method reads the radio groups and returns true is the cash in radio button is selected.
-    public boolean transCashIn(RadioGroup radioGroup){
-        return radioGroup.getCheckedRadioButtonId() == R.id.radio_CashIn;
-    }
+    /////////////// Get information from db *******************************************
 
-
+////  This is to create objects of the class TypeCategory for the spinners and to get the Id of trans from the db
     public void requestTypeTrans(View view){
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         String requestURL = "https://studev.groept.be/api/a20sd505/getTransactionTypes";
@@ -121,10 +119,10 @@ public class TransactionNew extends Fragment {
                         for(int i=0; i<response.length();i++){
                         JSONObject recordJson = response.getJSONObject(i);
                             TransactionType record = new TransactionType(recordJson.getInt("idTransactionType"),recordJson.getString("type"),recordJson.getString("subType"));
-                            typeList.add(record);
+                            typeFullList.add(record);
                             }
                     Toast.makeText(getActivity(), "successful ", Toast.LENGTH_LONG).show();
-                    lateSettings();
+                    setSpinners();
                 }
                 catch(JSONException e){
                     e.printStackTrace();
@@ -141,6 +139,54 @@ public class TransactionNew extends Fragment {
         requestQueue.add(submitRequest);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setSpinners(){
+        /// Set spinner for category
+        categories.clear();
+        categories.addAll(typeFullList.stream().map(TransactionType::getCategory).distinct().collect(Collectors.toList()));
+        ArrayAdapter adapterSpinnerCat = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line,categories);
+        spCategory.setAdapter(adapterSpinnerCat);
+    }
+
+    ////This is to fill up the stakeholders auto-fill with the stakeholders form the db
+    public void requestStakeHold(View view){
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        String requestURL = "https://studev.groept.be/api/a20sd505/getStakeHolderName";
+        JsonArrayRequest submitRequest = new JsonArrayRequest(Request.Method.GET, requestURL, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try{
+
+                    for(int i=0; i<response.length();i++){
+                        JSONObject recordJson = response.getJSONObject(i);
+                       stakeHolders.add(recordJson.getString("name"));
+                    }
+                    Toast.makeText(getActivity(), "names loaded ", Toast.LENGTH_LONG).show();
+                    //Set AutocompleteText
+                    txtStakeHolder = view.findViewById(R.id.actv_stakeholder);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,stakeHolders);
+                    txtStakeHolder.setAdapter(adapter);
+
+                }
+                catch(JSONException e){
+                    e.printStackTrace();
+                }
+
+            }
+        },new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getActivity(), "Unable upload TypesTable", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        requestQueue.add(submitRequest);
+    }
+
+    /// This method reads the radio groups and returns true is the cash in radio button is selected.
+    public boolean transCashIn(RadioGroup radioGroup){
+        return radioGroup.getCheckedRadioButtonId() == R.id.radio_CashIn;
+    }
     private Transaction makeNewTrans(){
         boolean cashIn = transCashIn(radGroup);
         double amount = Double.parseDouble(txtAmount.getText().toString());
@@ -152,16 +198,30 @@ public class TransactionNew extends Fragment {
         return new Transaction(cashIn,amount,stakeholder,category,subCategory,notes);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void lateSettings(){
+    ////// Posts the content from the NewTransaction to the db
+   /* public void postNewTransaction(View view){
+        JsonArrayRequestWithParams submitRequest = new JsonArrayRequestWithParams (Request.Method.POST, SUBMIT_URL, params,  new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                Toast.makeText(QueueActivity.this, "Order placed", Toast.LENGTH_SHORT).show();
+                requestQueue.add(queueRequest);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(QueueActivity.this, "Unable to place the order", Toast.LENGTH_LONG).show();
+            }
+        });
+        requestQueue.add(submitRequest);
 
-        categories.clear();
-        categories.addAll(typeList.stream().map(TransactionType::getCategory).distinct().collect(Collectors.toList()));
-        /// Set sp_Category
-        ArrayAdapter adapterSpinnerCat = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line,categories);
-        spCategory.setAdapter(adapterSpinnerCat);
+
+
+
 
     }
+
+    */
+
 
 
 }
