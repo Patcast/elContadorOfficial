@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -21,6 +22,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -38,6 +41,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -100,6 +104,21 @@ public class TransactionNew extends Fragment {
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        /// Navigate to Transaction and sent filerSent object  after pressing filter
+
+        final NavController navController = Navigation.findNavController(view);
+
+        Button confirmButton = view.findViewById(R.id.btn_confirm_NewTransaction);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.action_newTransaction_to_transactions_summary);
+                postNewTransaction(view);
+
             }
         });
     }
@@ -187,6 +206,7 @@ public class TransactionNew extends Fragment {
     public boolean transCashIn(RadioGroup radioGroup){
         return radioGroup.getCheckedRadioButtonId() == R.id.radio_CashIn;
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private Transaction makeNewTrans(){
         boolean cashIn = transCashIn(radGroup);
         double amount = Double.parseDouble(txtAmount.getText().toString());
@@ -194,33 +214,48 @@ public class TransactionNew extends Fragment {
         String category = spCategory.getSelectedItem().toString();
         String subCategory = spSubCategory.getSelectedItem().toString();
         String notes = txtNotes.getText().toString();
-
-        return new Transaction(cashIn,amount,stakeholder,category,subCategory,notes);
+        Optional<TransactionType> searchIdType = typeFullList.stream()
+                                                             .filter(cat ->cat.getCategory().equals(category))
+                                                             .filter(subCat -> subCat.getSubCategory().equals(subCategory))
+                                                             .findFirst();
+        int idType= searchIdType.get().getId();
+        return new Transaction(cashIn,amount,stakeholder,idType,notes);
     }
 
     ////// Posts the content from the NewTransaction to the db
-   /* public void postNewTransaction(View view){
-        JsonArrayRequestWithParams submitRequest = new JsonArrayRequestWithParams (Request.Method.POST, SUBMIT_URL, params,  new Response.Listener<JSONArray>() {
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void postNewTransaction(View view){
+        ///Make HashMap for params
+        Transaction newTrans = makeNewTrans();
+        Map<String,String> params = new HashMap<>();
+        params.put("amount", String.valueOf(newTrans.getAmount()));
+        params.put("notes", newTrans.getTxtComments());
+        params.put("idpays", "1");
+        params.put("idrec", "3");
+        params.put("type", "11");
+
+
+        // Make Json request
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        String RequestURL = "https://studev.groept.be/api/a20sd505/postNewTransaction/";
+        JsonArrayRequestWithParams submitRequest = new JsonArrayRequestWithParams (Request.Method.POST, RequestURL, params,  new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                Toast.makeText(QueueActivity.this, "Order placed", Toast.LENGTH_SHORT).show();
-                requestQueue.add(queueRequest);
+                Toast.makeText(getActivity(), "Transaction placed", Toast.LENGTH_SHORT).show();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(QueueActivity.this, "Unable to place the order", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Unable to place the Transaction", Toast.LENGTH_LONG).show();
             }
         });
         requestQueue.add(submitRequest);
 
-
-
-
-
     }
 
-    */
+
+
+
 
 
 
