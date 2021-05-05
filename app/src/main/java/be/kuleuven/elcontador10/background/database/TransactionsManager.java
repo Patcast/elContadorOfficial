@@ -10,6 +10,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.time.LocalDateTime;
@@ -18,15 +19,18 @@ import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.background.CardFormatter;
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsDisplayInterface;
+import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsFilterInterface;
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsSummaryInterface;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 import be.kuleuven.elcontador10.background.parcels.NewTransactionParcel;
 import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsNewInterface;
+import be.kuleuven.elcontador10.background.parcels.TransactionType;
 
 public class TransactionsManager {
     private final String all_URL = "https://studev.groept.be/api/a20sd505/getTransactions";
     private final String single_URL = "https://studev.groept.be/api/a20sd505/getTransaction/";
+    private final String type_URL = "https://studev.groept.be/api/a20sd505/getTransactionTypes";
 
     private static volatile TransactionsManager INSTANCE = null;
 
@@ -89,7 +93,7 @@ public class TransactionsManager {
                             }
                         }
 
-                        populateRecyclerView(transactions);
+                        transactions.populateRecyclerView(titles, descriptions, status, metadata);
                     }
                     catch (Exception e) {
                         e.printStackTrace();
@@ -101,6 +105,25 @@ public class TransactionsManager {
                     transactions.error(error.toString());
                 });
         requestQueue.add(request);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private boolean Filter(FilterTransactionsParcel filter, LocalDateTime timestamp, String sender, String receiver, String type, String subtype) {
+        String category = filter.getCategory();
+        String subcategory = filter.getSubcategory();
+        String name = filter.getName().toLowerCase();
+        LocalDateTime from = filter.getFrom();
+        LocalDateTime to = filter.getTo();
+
+        if (!category.equals("*") && !type.equals(category)) return false; // category doesn't match
+        if (!subcategory.equals("*") && !subtype.equals(subcategory)) return false; // subcategory doesn't match
+
+        if (!name.equals("*")) if (!sender.contains(name) && !receiver.contains(name)) return false; // name not in sender or receiver
+
+        if (from != null) if (timestamp.isBefore(from)) return  false; // transaction happened before given period
+        if (to != null) return !timestamp.isAfter(to); // transaction happened after given period
+
+        return true;
     }
 
     public void addTransactions(TransactionsNewInterface newInterface, NewTransactionParcel parcel) {
@@ -145,26 +168,24 @@ public class TransactionsManager {
         requestQueue.add(request);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private boolean Filter(FilterTransactionsParcel filter, LocalDateTime timestamp, String sender, String receiver, String type, String subtype) {
-        String category = filter.getCategory();
-        String subcategory = filter.getSubcategory();
-        String name = filter.getName().toLowerCase();
-        LocalDateTime from = filter.getFrom();
-        LocalDateTime to = filter.getTo();
+    public void getTransactionTypes(TransactionsFilterInterface filterInterface) {
+        RequestQueue requestQueue = Volley.newRequestQueue(filterInterface.getContext());
 
-        if (!category.equals("*") && !type.equals(category)) return false; // category doesn't match
-        if (!subcategory.equals("*") && !subtype.equals(subcategory)) return false; // subcategory doesn't match
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, type_URL, null,
+                response -> {
+                    try {
+                        ArrayList<TransactionType> types = new ArrayList<>();
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject object = response.getJSONObject(i);
+                            TransactionType type = new TransactionType(object.getInt("idTransactionType"),
+                                    object.getString("type"), object.getString("subType"));
+                            types.add(type);
+                        }
 
-        if (!name.equals("*")) if (!sender.contains(name) && !receiver.contains(name)) return false; // name not in sender or receiver
+                        filterInterface.setCategories(types);
+                    } catch (JSONException e) { e.printStackTrace(); }
+                }, Throwable::printStackTrace);
 
-        if (from != null) if (timestamp.isBefore(from)) return  false; // transaction happened before given period
-        if (to != null) return !timestamp.isAfter(to); // transaction happened after given period
-
-        return true;
-    }
-
-    private void populateRecyclerView(TransactionsSummaryInterface transactions) {
-        transactions.populateRecyclerView(titles, descriptions, status, metadata);
+        requestQueue.add(request);
     }
 }

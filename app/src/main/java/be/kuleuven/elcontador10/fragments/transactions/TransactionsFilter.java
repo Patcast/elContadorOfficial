@@ -1,5 +1,6 @@
 package be.kuleuven.elcontador10.fragments.transactions;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -22,12 +23,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.adapters.CategorySpinnerAdapter;
+import be.kuleuven.elcontador10.background.database.TransactionsManager;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsFilterInterface;
+import be.kuleuven.elcontador10.background.parcels.TransactionType;
 
 public class TransactionsFilter extends Fragment implements TransactionsFilterInterface {
     private MainActivity mainActivity;
@@ -40,10 +45,8 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
     private TextView dateFrom;
     private TextView dateTo;
 
-
-    private String category_string = "*";
-    private String subcategory_string = "*";
-    ///Object to be passed to Transaction
+    private List<String> categories;
+    private ArrayList<TransactionType> all_categories;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,6 +54,9 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
         // Inflate the layout for this fragment
         mainActivity = (MainActivity) getActivity();
         mainActivity.setTitle("Filter Transactions");
+
+        categories = new ArrayList<>();
+        all_categories = new ArrayList<>();
 
         return inflater.inflate(R.layout.fragment_transactions_filter, container, false);
     }
@@ -68,26 +74,26 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
 
         Button filterButton = view.findViewById(R.id.btn_filter_FilterTrans);
         filterButton.setOnClickListener((v)-> {
-            TransactionsFilterDirections.ActionTransactionsFilterToTransactionsSummary action = TransactionsFilterDirections.actionTransactionsFilterToTransactionsSummary(getFilter());
+            TransactionsFilterDirections.ActionTransactionsFilterToTransactionsSummary action =
+                    TransactionsFilterDirections.actionTransactionsFilterToTransactionsSummary(getFilter());
             navController.navigate(action);
-
         });
 
+        Button closeButton = view.findViewById(R.id.btn_cancel_FilterTrans);
+        closeButton.setOnClickListener(v -> {
+            // default filter
+            FilterTransactionsParcel parcel = new FilterTransactionsParcel("*", "*", "*", null, null);
 
-
-        /// Navigate to Transaction after pressing filter
-       /*
-        Button cancelButton = view.findViewById(R.id.btn_cancel_FilterTrans);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navController.navigate(R.id.action_transactionsFilter_to_transactions_summary);
-            }
+            TransactionsFilterDirections.ActionTransactionsFilterToTransactionsSummary action =
+                    TransactionsFilterDirections.actionTransactionsFilterToTransactionsSummary(parcel);
+            navController.navigate(action);
         });
 
-        */
+        // get transactions type from database
+        TransactionsManager manager = TransactionsManager.getInstance();
+        manager.getTransactionTypes(this);
 
-
+        // get views
         category = getView().findViewById(R.id.FilterTransCategory);
         subcategory = getView().findViewById(R.id.FilterTransSubcategory);
         switchFrom = getView().findViewById(R.id.FilterTransFromSwitch);
@@ -95,98 +101,54 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
         name = getView().findViewById(R.id.FilterTransName);
         dateFrom = getView().findViewById(R.id.FilterTransFrom);
         dateTo = getView().findViewById(R.id.FilterTransTo);
-        //btnFilter = getView().findViewById(R.id.btn_filter_FilterTrans);
-        //cancel = getView().findViewById(R.id.FilterTransCancel);
 
+        // onClickListeners
         switchFrom.setOnCheckedChangeListener(this::From_onClick);
         switchTo.setOnCheckedChangeListener(this::To_onClick);
-        //cancel.setOnClickListener(this::Cancel_OnClick);
-        //filter.setOnClickListener(this::Filter_OnClick);
+    }
 
-        //mainActivity.hideButtons();
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void setCategories(ArrayList<TransactionType> types) {
+        all_categories = types;
+        categories.clear();
+        categories.add("All");
+        categories.addAll(types.stream().map(TransactionType::getCategory).distinct().collect(Collectors.toList()));
+        ArrayAdapter adapter = new ArrayAdapter(mainActivity, android.R.layout.simple_spinner_dropdown_item, categories);
+        category.setAdapter(adapter);
 
-        ArrayAdapter<CharSequence> category_adapter = ArrayAdapter.createFromResource(mainActivity, R.array.category_items, android.R.layout.simple_spinner_item);
-        category_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        category.setAdapter(category_adapter);
-        category.setOnItemSelectedListener(new CategorySpinnerAdapter(mainActivity, this));
-
-        subcategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        // category onItemSelected listener
+        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) subcategory_string = "*";
-                else {
-                    subcategory_string =  parent.getItemAtPosition(position).toString();
-                    System.out.println(subcategory_string);
+                // select subcategory
+                if (position != 0) {
+                    String category_string = category.getSelectedItem().toString();
+                    ArrayList<String> subs = new ArrayList<>();
+                    subs.add("All");
+                    subs.addAll(all_categories.stream()
+                            .filter(cat -> cat.getCategory().equals(category_string))
+                            .map(TransactionType::getSubCategory)
+                            .distinct()
+                            .collect(Collectors.toList()));
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(mainActivity, android.R.layout.simple_spinner_dropdown_item,
+                            subs);
+                    subcategory.setAdapter(adapter);
+                } else {
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(mainActivity, android.R.layout.simple_spinner_dropdown_item,
+                            new String[]{"All"});
+                    subcategory.setAdapter(adapter);
                 }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                subcategory_string = "*";
-            }
+            public void onNothingSelected(AdapterView<?> parent) { }
         });
     }
 
     @Override
-    public void category_All() {
-        category_string = "*";
-        subcategory_string = "*";
-        subcategory.setAdapter(null);
-        subcategory.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void category_Rent() {
-        category_string = "Rent";
-        subcategory.setVisibility(View.VISIBLE);
-
-        ArrayAdapter<CharSequence> subcategory_adapter = ArrayAdapter.createFromResource(mainActivity, R.array.rent_subcategory_items, android.R.layout.simple_spinner_item);
-        subcategory.setAdapter(subcategory_adapter);
-    }
-
-    @Override
-    public void category_Others() {
-        category_string = "Others";
-        subcategory_string = "*";
-        subcategory.setAdapter(null);
-        subcategory.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void category_Salary() {
-        category_string = "Salary";
-        subcategory.setVisibility(View.VISIBLE);
-
-        ArrayAdapter<CharSequence> subcategory_adapter = ArrayAdapter.createFromResource(mainActivity, R.array.salary_subcategory_items, android.R.layout.simple_spinner_item);
-        subcategory.setAdapter(subcategory_adapter);
-    }
-
-    @Override
-    public void category_Toilets() {
-        category_string = "Toilets";
-        subcategory.setVisibility(View.VISIBLE);
-
-        ArrayAdapter<CharSequence> subcategory_adapter = ArrayAdapter.createFromResource(mainActivity, R.array.toilets_subcategory_items, android.R.layout.simple_spinner_item);
-        subcategory.setAdapter(subcategory_adapter);
-    }
-
-    @Override
-    public void category_Purchases() {
-        category_string = "Purchases";
-        subcategory.setVisibility(View.VISIBLE);
-
-        ArrayAdapter<CharSequence> subcategory_adapter = ArrayAdapter.createFromResource(mainActivity, R.array.purchases_subcategory_items, android.R.layout.simple_spinner_item);
-        subcategory.setAdapter(subcategory_adapter);
-    }
-
-    @Override
-    public void category_Deposits() {
-        category_string = "Deposits";
-        subcategory.setVisibility(View.VISIBLE);
-
-        ArrayAdapter<CharSequence> subcategory_adapter = ArrayAdapter.createFromResource(mainActivity, R.array.deposits_subcategory_items, android.R.layout.simple_spinner_item);
-        subcategory.setAdapter(subcategory_adapter);
-    }
+    public Context getContext() { return mainActivity; }
 
     private void From_onClick(View view, boolean isChecked) {
         if (isChecked) dateFrom.setEnabled(true);
@@ -200,6 +162,14 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public FilterTransactionsParcel getFilter(){
+        String category_string, subcategory_string;
+
+        if (category.getSelectedItemPosition() == 0) category_string = "*";
+        else category_string = category.getSelectedItem().toString();
+
+        if (subcategory.getSelectedItemPosition() == 0) subcategory_string = "*";
+        else subcategory_string = category.getSelectedItem().toString();
+
         String name_text = name.getText().toString();
         LocalDateTime from = null;
         LocalDateTime to = null;

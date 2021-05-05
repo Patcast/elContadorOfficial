@@ -1,11 +1,12 @@
 package be.kuleuven.elcontador10.background.interfaces.transactions;
 
+import android.content.Context;
+
+import java.util.ArrayList;
+
+import be.kuleuven.elcontador10.background.parcels.TransactionType;
+
 public interface TransactionsFilterInterface {
-    void category_All();
-    void category_Rent();
-    void category_Others();
-    void category_Salary();
-    void category_Toilets();
-    void category_Purchases();
-    void category_Deposits();
+    void setCategories(ArrayList<TransactionType> types);
+    Context getContext();
 }
