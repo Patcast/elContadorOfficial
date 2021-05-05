@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
     private Button picture;
 
     private String image;
+    private ImageView preview;
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int RESULT_LOAD_IMG = 2;
@@ -67,10 +69,11 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
 
         navController = Navigation.findNavController(view);
 
-        // set buttons
+        // set buttons and views
         Button cancel = requireView().findViewById(R.id.btn_cancel_NewTransaction);
         Button confirm = requireView().findViewById(R.id.btn_confirm_NewTransaction);
         picture = requireView().findViewById(R.id.btn_picture_NewStakeholder);
+        preview = requireView().findViewById(R.id.StakeholderNewImageView);
 
         cancel.setOnClickListener(this::onCancelClicked);
         confirm.setOnClickListener(this::onConfirmClicked);
@@ -111,9 +114,10 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
                     })
                     .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                     .setNeutralButton("Delete", (dialog, which) -> {
-                        // dete image
+                        // delete image
                         image = null;
                         picture.setText("Choose Picture");
+                        preview.setImageResource(R.drawable.icon_stakeholder);
                         dialog.dismiss();
                     })
                     .create()
@@ -167,6 +171,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
                 image = Base64Encoder.encodeImage(imageBitmap);
 
                 picture.setText("Change Picture");
+                preview.setImageBitmap(imageBitmap);
             } catch (Exception e) { feedback("Error getting image."); }
         } else if (requestCode == RESULT_LOAD_IMG) {
             try {
@@ -175,6 +180,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
                 image = Base64Encoder.encodeImage(bitmap);
 
                 picture.setText("Change Picture");
+                preview.setImageBitmap(bitmap);
             } catch (Exception e) { feedback("Error getting image."); }
         }
     }
