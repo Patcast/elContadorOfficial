@@ -1,47 +1,44 @@
 package be.kuleuven.elcontador10.background;
 
-import android.content.res.Resources;
-
-import be.kuleuven.elcontador10.R;
-
 public class Transaction {
     private boolean cashIn;
     private double amount;
     private String person;
-    private String category;
-    private String subCategory;
+    private int idType;
     private String txtComments;
 
-//    private  String[] rentArray = new String[]{"Other","Rent","Deposit","Maintenance","Reimbursement"};
-//    final String[] SalaryArray = new String[]{"Other","Weekly","Fortnightly","Commission"};
-//    final String[] purchaseArray = new String[]{"Other","Construction Materials","Supplies","Rubbish"};
-//    final String[] toiletsArray = new String[]{"Other","Entrance Fee","Paper","Towels"};
-//    final String[] DepositArray = new String[]{"Other","Cash from company","Cash for company"};
 
-    public Transaction(boolean cashIn, double amount, String person,String category, String subCategory, String txtComments){
+
+
+    ///Constructor use to make object to create submit URL
+    public Transaction(boolean cashIn, double amount, String person,int idTypeTrans, String txtComments) {
         this.cashIn = cashIn;
-        this.amount=amount;
-        this.person= person;
-        this.category= category;
-        this.subCategory= subCategory;
-        this.txtComments= txtComments;
+        this.amount = amount;
+        this.person = person;
+        this.idType = idTypeTrans;
+        this.txtComments = txtComments;
     }
 
-    public static String[] chooseSubCat(String category){
-        switch (category){
-            case  "Rent":
-                return Resources.getSystem().getStringArray(R.array.rent_subcategory_items); //String[]{"Other","Rent","Deposit","Maintenance","Reimbursement"};
-            case  "Salary":
-                return Resources.getSystem().getStringArray(R.array.salary_subcategory_items); //new String[]{"Other","Weekly","Fortnightly","Commission"};
-            case  "Toilets":
-                return Resources.getSystem().getStringArray(R.array.toilets_subcategory_items); // new String[]{"Other","Entrance Fee","Paper","Towels"};
-            case  "Purchases":
-                return Resources.getSystem().getStringArray(R.array.purchases_subcategory_items); // new String[]{"Other","Construction Materials","Supplies","Rubbish"};
-            case  "Deposits":
-                return Resources.getSystem().getStringArray(R.array.deposits_subcategory_items); // new String[]{"Other","Cash from company","Cash for company"};
-            default:
-                return null;
-        }
+    public boolean isCashIn() {
+        return cashIn;
     }
 
+    public double getAmount() {
+        return amount;
+    }
+
+    public String getPerson() {
+        return person;
+    }
+
+    public int getIdType() {
+        return idType;
+    }
+
+    public String getTxtComments() {
+        return txtComments;
+    }
 }
+
+
+
