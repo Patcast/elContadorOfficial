@@ -60,7 +60,7 @@ public class CardFormatter implements CardFormatterInterface {
     @Override
     public String[] StakeholderFormatter(int id, String firstName, String lastName, double balance, String role) {
         String title = "WHITE#" + firstName + " " + lastName;
-        String description = "Role: " + role + "\n" + "Balance: $" + balance;
+        String description = "Role: " + role;// + "\n" + "Balance: $" + balance;
 
         String status;
         if (balance < 0) status = "RED#In debt";
