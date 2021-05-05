@@ -62,10 +62,10 @@ public class CardFormatter implements CardFormatterInterface {
         String title = "WHITE#" + firstName + " " + lastName;
         String description = "Role: " + role;// + "\n" + "Balance: $" + balance;
 
-        String status;
-        if (balance < 0) status = "RED#In debt";
-        else if (balance == 0) status = "WHITE#Payment up to date";
-        else status = "GREEN#Reimbursement required";
+        String status = "";
+//        if (balance < 0) status = "RED#In debt";
+//        else if (balance == 0) status = "WHITE#Payment up to date";
+//        else status = "GREEN#Reimbursement required";
 
         String metadata = "Stakeholder#" + id;
 

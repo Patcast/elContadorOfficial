@@ -55,14 +55,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         String[] text_title; // COLOUR|TEXT
         String[] text_status;
 
-        if (TitleArray.get(position).contains("#")) {
-            text_title = TitleArray.get(position).split("#");
-            text_status = StatusArray.get(position).split("#");
-        }
-        else {
-            text_title = new String[] {"WHITE", TitleArray.get(position)};
-            text_status = new String[] {"WHITE", TitleArray.get(position)};
-        }
+        if (TitleArray.get(position).contains("#")) text_title = TitleArray.get(position).split("#");
+        else text_title = new String[]{"WHITE", TitleArray.get(position)};
+
+        if (StatusArray.get(position).contains("#")) text_status = StatusArray.get(position).split("#");
+        else text_status = new String[] {"WHITE", StatusArray.get(position)};
 
         holder.title.setText(text_title[1]);
         holder.description.setText(DescriptionArray.get(position));

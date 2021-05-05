@@ -99,7 +99,7 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
 
     @Override
     public void display(Bundle bundle) {
-        TextView name, role, phone, email, balance;
+        TextView name, role, phone, email;
         ImageView image = requireView().findViewById(R.id.imgViewDisplayStakeholder);
 
         // initialise views variables
@@ -107,7 +107,6 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         role = requireView().findViewById(R.id.txtStakeholderDisplayRole);
         phone = requireView().findViewById(R.id.txtStakeholderDisplayPhoneNo);
         email = requireView().findViewById(R.id.txtStakeholderDisplayEmail);
-        balance = requireView().findViewById(R.id.txtStakeholderDisplayBalance);
 
         // get bundles
         phoneNo = bundle.getString("phone");
@@ -120,7 +119,6 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         role.setText(bundle.getString("role"));
         phone.setText(phoneNo);
         email.setText(emailAddress);
-        balance.setText(String.format("$%s", bundle.getDouble("balance")));
 
         // set image
         if (!image_text.equals("null")) {
