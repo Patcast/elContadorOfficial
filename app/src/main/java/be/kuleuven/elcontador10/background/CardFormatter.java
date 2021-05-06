@@ -17,11 +17,12 @@ public class CardFormatter implements CardFormatterInterface {
     * */
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public String[] TransactionFormatter(int id, LocalDateTime date, double amount, String sender, String receiver, String type, String subtype) {
+    public String[] TransactionFormatter(int id, LocalDateTime date, double amount, String sender, String receiver, String type, String subtype,
+                                         boolean deleted) {
         String title = "WHITE#" + type;
         String description;
         String status = "WHITE#";
-        String metadata = "Transactions#" + id;
+        String metadata = (deleted ? "deleted" : "Transactions#" + id);
 
         if (subtype.equals("null")) {
             if (receiver.equals("null"))
@@ -45,13 +46,17 @@ public class CardFormatter implements CardFormatterInterface {
                 if (duration.toMinutes() < 1) status += "Few moments ago";
                 else status += duration.toMinutes() + " minutes ago";
             }
-            else status += date.getHour() + ":" + date.getMinute();
+            else status += (date.getHour() < 10? "0" : "") + date.getHour() + ":" +
+                    (date.getMinute() < 10? "0" : "") + date.getMinute();
         }
         else if (now.getDayOfYear() - 1 == date.getDayOfYear()) { // transaction happened yesterday
-            status += "Yesterday";
+            status += "Yesterday at " + (date.getHour() < 10? "0" : "") + date.getHour() + ":"
+                    + (date.getMinute() < 10? "0" : "") + date.getMinute();;
         }
         else { // transaction happened days before
-            status += date.getDayOfMonth() + "/" + date.getMonthValue() + "/" + date.getYear();
+            status += (date.getDayOfMonth() < 10? "0" : "") + date.getDayOfMonth() + "/" +
+                    (date.getMonthValue() < 10? "0" : "") + date.getMonthValue() + "/" +
+                    date.getYear();
         }
 
         return new String[] {title, description, status, metadata};

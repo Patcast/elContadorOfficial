@@ -87,10 +87,11 @@ public class TransactionsManager {
                             String receiver = object.getString("receiver");
                             String type = object.getString("type");
                             String subtype = object.getString("subType");
+                            boolean deleted = object.getString("deleted").equals("1");
 
                             if (Filter(filter, date, sender.toLowerCase(), receiver.toLowerCase(), type, subtype)) {
                                 CardFormatterInterface cardFormatter = new CardFormatter();
-                                String[] formatted = cardFormatter.TransactionFormatter(id, date, amount, sender, receiver, type, subtype);
+                                String[] formatted = cardFormatter.TransactionFormatter(id, date, amount, sender, receiver, type, subtype, deleted);
 
                                 titles.add(formatted[0]);
                                 descriptions.add(formatted[1]);

@@ -83,14 +83,17 @@ public class HomepageManager {
                                 String receiver = object.getString("receiver");
                                 String type = object.getString("type");
                                 String subtype = object.getString("subType");
+                                boolean deleted = object.getString("deleted").equals("1");
 
-                                CardFormatterInterface cardFormatter = new CardFormatter();
-                                String[] formatted = cardFormatter.TransactionFormatter(id, date, amount, sender, receiver, type, subtype);
+                                if (!deleted) { // don't want deleted transactions on the home screen
+                                    CardFormatterInterface cardFormatter = new CardFormatter();
+                                    String[] formatted = cardFormatter.TransactionFormatter(id, date, amount, sender, receiver, type, subtype, false);
 
-                                titles.add(formatted[0]);
-                                descriptions.add(formatted[1]);
-                                status.add(formatted[2]);
-                                metadata.add(formatted[3]);
+                                    titles.add(formatted[0]);
+                                    descriptions.add(formatted[1]);
+                                    status.add(formatted[2]);
+                                    metadata.add(formatted[3]);
+                                }
                             }
                         }
                         else {

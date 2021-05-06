@@ -1,6 +1,7 @@
 package be.kuleuven.elcontador10.background.adapters;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,11 +87,31 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 holder.status.setTextColor(context.getResources().getColor(R.color.white));
         }
 
-        if (!MetadataArray.get(position).equals("")) {
-            holder.layout.setOnClickListener(v -> onClick(v, position));
-        } else {
+        if (MetadataArray.get(position).equals("")) { // title CardView
             holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.contador_bg));
             holder.divider.setVisibility(View.INVISIBLE);
+        }
+        else if (MetadataArray.get(position).equals("deleted")) { // strikethrough all TextViews when deleted
+            holder.title.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.status.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.description.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+
+            holder.title.setTextColor(context.getResources().getColor(R.color.contador_red));
+            holder.status.setTextColor(context.getResources().getColor(R.color.contador_red));
+            holder.description.setTextColor(context.getResources().getColor(R.color.contador_red));
+
+            holder.layout.setOnClickListener(v -> Toast.makeText(context, "This record has been deleted.", Toast.LENGTH_SHORT).show());
+        }
+        else {
+            holder.title.setPaintFlags(0);
+            holder.status.setPaintFlags(0);
+            holder.description.setPaintFlags(0);
+
+            holder.title.setTextColor(context.getResources().getColor(R.color.white));
+            holder.status.setTextColor(context.getResources().getColor(R.color.white));
+            holder.description.setTextColor(context.getResources().getColor(R.color.white));
+
+            holder.layout.setOnClickListener(v -> onClick(v, position));
         }
     }
 
