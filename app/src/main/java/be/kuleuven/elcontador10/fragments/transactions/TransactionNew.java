@@ -65,7 +65,7 @@ public class TransactionNew extends Fragment {
     List<TransactionType> typeFullList = new ArrayList<>();
     List<String> categories = new ArrayList<>();
     List<List<String>>  Subcategories = new ArrayList<>();
-    List<String> stakeHolders = new ArrayList<>();
+    ArrayList<String> stakeHolders = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,10 +107,8 @@ public class TransactionNew extends Fragment {
             }
         });
 
-        /// Navigate to Transaction and sent filerSent object  after pressing filter
-
+        /// Navigates to  All Transaction and sends New transaction to db
         final NavController navController = Navigation.findNavController(view);
-
         Button confirmButton = view.findViewById(R.id.btn_confirm_NewTransaction);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -158,16 +156,17 @@ public class TransactionNew extends Fragment {
         requestQueue.add(submitRequest);
     }
 
+/// Set spinner for category
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void setSpinners(){
-        /// Set spinner for category
+
         categories.clear();
         categories.addAll(typeFullList.stream().map(TransactionType::getCategory).distinct().collect(Collectors.toList()));
         ArrayAdapter adapterSpinnerCat = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line,categories);
         spCategory.setAdapter(adapterSpinnerCat);
     }
 
-    ////This is to fill up the stakeholders auto-fill with the stakeholders form the db
+/////////This is to fill up the stakeholders auto-fill with the stakeholders form the db
     public void requestStakeHold(View view){
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         String requestURL = "https://studev.groept.be/api/a20sd505/getStakeHolderName";
@@ -180,7 +179,6 @@ public class TransactionNew extends Fragment {
                         JSONObject recordJson = response.getJSONObject(i);
                        stakeHolders.add(recordJson.getString("name"));
                     }
-                    Toast.makeText(getActivity(), "names loaded ", Toast.LENGTH_LONG).show();
                     //Set AutocompleteText
                     txtStakeHolder = view.findViewById(R.id.actv_stakeholder);
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,stakeHolders);
@@ -210,6 +208,8 @@ public class TransactionNew extends Fragment {
     private Transaction makeNewTrans(){
         boolean cashIn = transCashIn(radGroup);
         double amount = Double.parseDouble(txtAmount.getText().toString());
+        //char [] stakeholder =  txtStakeHolder.getText().toString().toCharArray();
+        //int idStake = stakeholder[0];
         String stakeholder =  txtStakeHolder.getText().toString();
         String category = spCategory.getSelectedItem().toString();
         String subCategory = spSubCategory.getSelectedItem().toString();
@@ -219,7 +219,7 @@ public class TransactionNew extends Fragment {
                                                              .filter(subCat -> subCat.getSubCategory().equals(subCategory))
                                                              .findFirst();
         int idType= searchIdType.get().getId();
-        return new Transaction(cashIn,amount,stakeholder,idType,notes);
+        return new Transaction(cashIn,amount,Character.getNumericValue(stakeholder.charAt(0)),idType,notes);
     }
 
     ////// Posts the content from the NewTransaction to the db
@@ -230,9 +230,9 @@ public class TransactionNew extends Fragment {
         Map<String,String> params = new HashMap<>();
         params.put("amount", String.valueOf(newTrans.getAmount()));
         params.put("notes", newTrans.getTxtComments());
-        params.put("idpays", "1");
-        params.put("idrec", "3");
-        params.put("type", "11");
+        params.put("idpays", newTrans.getStakePays());
+        params.put("idrec", newTrans.getStakeReceives());
+        params.put("type", newTrans.getIdType());
 
 
         // Make Json request
