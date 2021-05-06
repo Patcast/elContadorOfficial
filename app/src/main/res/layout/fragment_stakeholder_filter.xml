@@ -23,7 +23,7 @@
         android:layout_marginTop="5dp"
         android:text="Deleted"
         app:layout_constraintStart_toStartOf="@+id/lblStakeholderFilterAttributes"
-        app:layout_constraintTop_toBottomOf="@+id/stakeholder_filter_debt" />
+        app:layout_constraintTop_toBottomOf="@+id/lblStakeholderFilterAttributes" />
 
     <TextView
         android:id="@+id/lblStakeholderFilterAttributes"
@@ -99,15 +99,6 @@
         android:text="Roles"
         app:layout_constraintStart_toStartOf="@+id/stakeholder_filter_name"
         app:layout_constraintTop_toBottomOf="@+id/stakeholder_filter_name" />
-
-    <CheckBox
-        android:id="@+id/stakeholder_filter_debt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="In Debt"
-        app:layout_constraintStart_toStartOf="@+id/lblStakeholderFilterAttributes"
-        app:layout_constraintTop_toBottomOf="@+id/lblStakeholderFilterAttributes" />
 
     <RadioGroup
         android:id="@+id/stakeholder_filter_radioGroup"

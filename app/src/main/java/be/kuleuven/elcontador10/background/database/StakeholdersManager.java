@@ -74,7 +74,7 @@ public class StakeholdersManager {
 
                             // run object through filter
                             if (filter != null && Filter(filter, (firstName + " " + lastName).toLowerCase(), balance, role, deleted)) {
-                                data.add(new DataPlaceHolder(id, firstName, lastName, role, balance));
+                                data.add(new DataPlaceHolder(id, firstName, lastName, role, balance, deleted));
                             }
                         }
 
@@ -139,7 +139,7 @@ public class StakeholdersManager {
 
         // send each data to the formatter, while adding to the formatted list
         data.forEach(t -> formatted.add(formatter.StakeholderFormatter(t.getId(), t.getFirstName(), t.getLastName(),
-                t.getBalance(), t.getRole())));
+                t.getBalance(), t.getRole(), t.isDeleted())));
 
         ArrayList<String> titles = new ArrayList<>(), descriptions = new ArrayList<>(), status = new ArrayList<>(), metadata = new ArrayList<>();
 
@@ -232,13 +232,15 @@ public class StakeholdersManager {
         int id;
         String firstName, lastName, role;
         double balance;
+        boolean deleted;
 
-        public DataPlaceHolder(int id, String firstName, String lastName, String role, double balance) {
+        public DataPlaceHolder(int id, String firstName, String lastName, String role, double balance, boolean deleted) {
             this.id = id;
             this.firstName = firstName;
             this.lastName = lastName;
             this.role = role;
             this.balance = balance;
+            this.deleted = deleted;
         }
 
         public int getId() {
@@ -259,6 +261,10 @@ public class StakeholdersManager {
 
         public double getBalance() {
             return balance;
+        }
+
+        public boolean isDeleted() {
+            return deleted;
         }
     }
 }

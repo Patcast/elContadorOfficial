@@ -10,4 +10,5 @@
     <color name="contador_red">#CC0303</color>
     <color name="contador_bg">#36393F</color>
     <color name="green">#00FF00</color>
+    <color name="dark_grey">#696969</color>
 </resources>

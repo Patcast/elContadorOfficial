@@ -63,7 +63,7 @@ public class CardFormatter implements CardFormatterInterface {
     }
 
     @Override
-    public String[] StakeholderFormatter(int id, String firstName, String lastName, double balance, String role) {
+    public String[] StakeholderFormatter(int id, String firstName, String lastName, double balance, String role, boolean deleted) {
         String title = "WHITE#" + firstName + " " + lastName;
         String description = "Role: " + role;// + "\n" + "Balance: $" + balance;
 
@@ -72,7 +72,7 @@ public class CardFormatter implements CardFormatterInterface {
 //        else if (balance == 0) status = "WHITE#Payment up to date";
 //        else status = "GREEN#Reimbursement required";
 
-        String metadata = "Stakeholder#" + id;
+        String metadata = (deleted? "deleted" : "Stakeholder#" + id);
 
         return new String[] {title, description, status, metadata};
     }

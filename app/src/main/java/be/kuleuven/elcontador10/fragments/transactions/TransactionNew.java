@@ -46,6 +46,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
+import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.Transaction;
 import be.kuleuven.elcontador10.background.database.JsonArrayRequestWithParams;
 import be.kuleuven.elcontador10.background.parcels.TransactionType;
@@ -74,6 +75,9 @@ public class TransactionNew extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity.setTitle("New Transaction");
+
         View v = inflater.inflate(R.layout.fragment_transaction_new, container, false);
         return v;
     }

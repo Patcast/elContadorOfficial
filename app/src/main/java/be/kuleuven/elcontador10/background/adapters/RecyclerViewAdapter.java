@@ -96,9 +96,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.status.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             holder.description.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
-            holder.title.setTextColor(context.getResources().getColor(R.color.contador_red));
-            holder.status.setTextColor(context.getResources().getColor(R.color.contador_red));
-            holder.description.setTextColor(context.getResources().getColor(R.color.contador_red));
+            holder.title.setTextColor(context.getResources().getColor(R.color.dark_grey));
+            holder.status.setTextColor(context.getResources().getColor(R.color.dark_grey));
+            holder.description.setTextColor(context.getResources().getColor(R.color.dark_grey));
 
             holder.layout.setOnClickListener(v -> Toast.makeText(context, "This record has been deleted.", Toast.LENGTH_SHORT).show());
         }

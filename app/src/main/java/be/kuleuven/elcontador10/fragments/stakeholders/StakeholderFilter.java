@@ -71,7 +71,6 @@ public class StakeholderFilter extends Fragment {
         name = requireView().findViewById(R.id.stakeholder_filter_name);
         all_roles = requireView().findViewById(R.id.stakeholder_filter_all);
         chipGroup = requireView().findViewById(R.id.stakeholder_filter_roles);
-        inDebt = requireView().findViewById(R.id.stakeholder_filter_debt);
         cancel = requireView().findViewById(R.id.btn_cancel_FilterStakeholder);
         filter = requireView().findViewById(R.id.btn_filter_FilterStakeholder);
 
@@ -141,9 +140,7 @@ public class StakeholderFilter extends Fragment {
                 .filter(CheckBox::isChecked)
                 .map(v -> v.getText().toString())
                 .collect(Collectors.toCollection(ArrayList::new));
-        ;
 
-        boolean debt = inDebt.isChecked();
         boolean deleted = ((CheckBox) requireView().findViewById(R.id.stakeholder_filter_deleted)).isChecked();
 
         final int byDebt = stakeholder_filter_byDebt;
@@ -160,6 +157,6 @@ public class StakeholderFilter extends Fragment {
                 sortBy = "Name";
         }
 
-        return new FilterStakeholdersParcel(name_text, categories, debt, deleted, sortBy);
+        return new FilterStakeholdersParcel(name_text, categories, false, deleted, sortBy);
     }
 }
