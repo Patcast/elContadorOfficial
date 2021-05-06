@@ -3,11 +3,14 @@ package be.kuleuven.elcontador10.background.database;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
@@ -16,6 +19,8 @@ import org.json.JSONObject;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import be.kuleuven.elcontador10.background.CardFormatter;
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsDisplayInterface;
@@ -31,6 +36,7 @@ public class TransactionsManager {
     private final String all_URL = "https://studev.groept.be/api/a20sd505/getTransactions";
     private final String single_URL = "https://studev.groept.be/api/a20sd505/getTransaction/";
     private final String type_URL = "https://studev.groept.be/api/a20sd505/getTransactionTypes";
+    private final String delete_URL = "https://studev.groept.be/api/a20sd505/deleteTransaction/";
 
     private static volatile TransactionsManager INSTANCE = null;
 
@@ -185,6 +191,24 @@ public class TransactionsManager {
                         filterInterface.setCategories(types);
                     } catch (JSONException e) { e.printStackTrace(); }
                 }, Throwable::printStackTrace);
+
+        requestQueue.add(request);
+    }
+
+    public void deleteTransaction(TransactionsDisplayInterface display, String id) {
+        RequestQueue requestQueue = Volley.newRequestQueue(display.getContext());
+
+        StringRequest request = new StringRequest(Request.Method.POST, delete_URL,
+                response -> display.error("Transaction has been deleted"),
+                error -> display.error(error.toString())) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("id", id);
+                return params;
+            }
+        };
 
         requestQueue.add(request);
     }
