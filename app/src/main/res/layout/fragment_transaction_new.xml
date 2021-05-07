@@ -14,9 +14,6 @@
     android:id="@+id/frameLayout2"
     android:paddingBottom="20dp"
     >
-
-
-
             <RadioGroup
                 android:id="@+id/radioGroup"
                 android:layout_width="wrap_content"
@@ -27,7 +24,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 >
-
                 <RadioButton
                     android:id="@+id/radio_CashIn"
                     android:layout_width="wrap_content"

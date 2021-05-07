@@ -5,7 +5,7 @@ public class Transaction {
     private double amount;
     private int idUser;
 
-    private int idStakeholder;
+    private String stakeHolder;
     private int idType;
     private String txtComments;
 
@@ -16,27 +16,41 @@ public class Transaction {
 
 
     ///Constructor use to make object to create submit URL
-    public Transaction(boolean cashIn, double amount, int idUser, int idStake, int idTypeTrans, String txtComments) {
-        this.cashIn = cashIn;
+    public Transaction(boolean cashIn, double amount, int idUser, String stake, int idTypeTrans, String txtComments) {
         this.amount = amount;
+        this.cashIn = cashIn;
         this.idUser = idUser;
-        this.idStakeholder = idStake;
+        this.stakeHolder = stake;
         this.idType = idTypeTrans;
         this.txtComments = txtComments;
     }
 
     public double getAmount() {
-        if(cashIn){ return amount; }
-        return amount*-1;
+        double fixAmount;
+        if(cashIn){
+            if (amount>0){fixAmount = amount;}
+            else{fixAmount = -1*amount;}
+        }
+        else{ //this represents cash out.
+            if (amount>0){fixAmount = -1*amount;}
+            else{fixAmount = amount;}
+        }
+        return fixAmount;
     }
 
     public int getIdUser() {
         return idUser;
     }
 
-    public int getIdStakeholder() {
+    public String  getIdStakeholder() {
 
-        return idStakeholder;
+        if(stakeHolder.isEmpty()){
+            return "1";
+        }
+        else {
+
+            return  stakeHolder.split("-")[1];
+        }
     }
 
     public String getIdType() {
