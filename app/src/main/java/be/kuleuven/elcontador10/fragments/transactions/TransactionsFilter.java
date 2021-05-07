@@ -168,7 +168,7 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
         else category_string = category.getSelectedItem().toString();
 
         if (subcategory.getSelectedItemPosition() == 0) subcategory_string = "*";
-        else subcategory_string = category.getSelectedItem().toString();
+        else subcategory_string = subcategory.getSelectedItem().toString();
 
         String name_text = name.getText().toString();
         LocalDateTime from = null;

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -111,10 +112,15 @@ public class TransactionsSummary extends Fragment implements TransactionsSummary
     }
 
     @Override
-    public void populateRecyclerView(ArrayList<String> title, ArrayList<String> description, ArrayList<String> status, ArrayList<String> metadata) {
+    public void populateRecyclerView(ArrayList<String> title, ArrayList<String> description, ArrayList<String> status,
+                                     ArrayList<String> metadata, double subtotal) {
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(title, description, status, metadata, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
+        TextView subtotal_text = requireView().findViewById(R.id.lblSubtotal);
+        String subtotalString = getString(R.string.subtotal, subtotal);
+        subtotal_text.setText(subtotalString);
     }
 
     @Override

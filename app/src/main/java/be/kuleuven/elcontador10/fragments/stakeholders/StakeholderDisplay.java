@@ -121,7 +121,7 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         email.setText(emailAddress);
 
         // set image
-        if (!image_text.equals("null")) {
+        if (!image_text.equals("null") && !image_text.equals("")) {
             Bitmap img = Base64Encoder.decodeImage(image_text);
             image.setImageBitmap(img);
         }

@@ -73,6 +73,7 @@ public class TransactionsManager {
                         descriptions.clear();
                         status.clear();
                         metadata.clear();
+                        double subtotal = 0;
 
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject object = response.getJSONObject(i);
@@ -97,10 +98,12 @@ public class TransactionsManager {
                                 descriptions.add(formatted[1]);
                                 status.add(formatted[2]);
                                 metadata.add(formatted[3]);
+
+                                if (!deleted) subtotal += amount;
                             }
                         }
 
-                        transactions.populateRecyclerView(titles, descriptions, status, metadata);
+                        transactions.populateRecyclerView(titles, descriptions, status, metadata, subtotal);
                     }
                     catch (Exception e) {
                         e.printStackTrace();

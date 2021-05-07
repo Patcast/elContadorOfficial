@@ -9,6 +9,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,14 +22,12 @@ import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
 import be.kuleuven.elcontador10.background.interfaces.HomepageInterface;
 
 public class HomepageManager {
-    private final String URL_Transactions = "https://studev.groept.be/api/a20sd505/getTransactions";
-
     private static volatile HomepageManager INSTANCE = null;
 
-    private ArrayList<String> titles;
-    private ArrayList<String> descriptions;
-    private ArrayList<String> status;
-    private ArrayList<String> metadata;
+    private final ArrayList<String> titles;
+    private final ArrayList<String> descriptions;
+    private final ArrayList<String> status;
+    private final ArrayList<String> metadata;
 
     private HomepageManager() {
         titles = new ArrayList<>();
@@ -50,7 +49,8 @@ public class HomepageManager {
 
     // get data from the server
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void getRecentTransactions(HomepageInterface homepageInterface) {
+    public void getRecentTransactions(@NotNull HomepageInterface homepageInterface) {
+        String URL_Transactions = "https://studev.groept.be/api/a20sd505/getHomepageTransactions";
         RequestQueue requestQueue = Volley.newRequestQueue(homepageInterface.getContext());
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL_Transactions, null,
@@ -70,8 +70,6 @@ public class HomepageManager {
 
                         if (response.length() != 0) {
                             for (int i = 0; i < response.length(); i++) {
-                                if (i == 5) break; // limit to 5
-
                                 JSONObject object = response.getJSONObject(i);
 
                                 int id = object.getInt("idTransactions");
@@ -84,17 +82,14 @@ public class HomepageManager {
                                 String stakeholder = object.getString("stakeholderName");
                                 String type = object.getString("type");
                                 String subtype = object.getString("subType");
-                                boolean deleted = object.getString("deleted").equals("1");
 
-                                if (!deleted) { // don't want deleted transactions on the home screen
-                                    CardFormatterInterface cardFormatter = new CardFormatter();
-                                    String[] formatted = cardFormatter.TransactionFormatter(id, date, amount, user, stakeholder, type, subtype, false);
+                                CardFormatterInterface cardFormatter = new CardFormatter();
+                                String[] formatted = cardFormatter.TransactionFormatter(id, date, amount, user, stakeholder, type, subtype, false);
 
-                                    titles.add(formatted[0]);
-                                    descriptions.add(formatted[1]);
-                                    status.add(formatted[2]);
-                                    metadata.add(formatted[3]);
-                                }
+                                titles.add(formatted[0]);
+                                descriptions.add(formatted[1]);
+                                status.add(formatted[2]);
+                                metadata.add(formatted[3]);
                             }
                         }
                         else {
@@ -118,12 +113,12 @@ public class HomepageManager {
         requestQueue.add(request);
     }
 
-    public void pushData(HomepageInterface homepageInterface) {
+    public void pushData(@NotNull HomepageInterface homepageInterface) {
         //send back to UI
         homepageInterface.populateRecyclerView(titles, descriptions, status, metadata);
     }
 
-    public void getBudget(HomepageInterface home) {
+    public void getBudget(@NotNull HomepageInterface home) {
         final String URL_Budget = "https://studev.groept.be/api/a20sd505/getBudget";
 
         RequestQueue requestQueue = Volley.newRequestQueue(home.getContext());

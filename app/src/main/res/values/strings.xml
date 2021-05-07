@@ -71,7 +71,8 @@
     <string name="select_a_sub_category">Select a sub-Category</string>
     <string name="register_log_in">Register New Log In</string>
     <string name="change_password">Change Password</string>
-    <string name="budget">Budget: $ %1$.2f</string>
+    <string name="budget">Budget: $%1$.2f</string>
+    <string name="subtotal">Subtotal: $%1$.2f</string>
     <string name="zero_amount">Pleas, fill in the desired amount.</string>
     <string-array name="roles">
         <item>Employee</item>

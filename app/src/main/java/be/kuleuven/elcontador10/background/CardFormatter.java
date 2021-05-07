@@ -20,10 +20,10 @@ public class CardFormatter implements CardFormatterInterface {
                                          boolean deleted) {
         String title = (amount > 0 ? "GREEN#IN" : "RED#OUT");
         String description = user +
-                (amount > 0 ? " has deposited " : " has paid ") + " $" + Math.abs(amount) + " for " + // maker + amount
+                (amount > 0 ? " has deposited " : " has paid ") + "$" + Math.abs(amount) + " for " + // maker + amount
                 (stakeholder.equals("Not Specified") ? "" : stakeholder + "'s ") + // stakeholder
                 subtype.toLowerCase() + // type
-                (type.equals(subtype) ? "" : " " + type.toLowerCase()) + "."; // remove repeating
+                (type.equals(subtype) ? "" : " " + type.toLowerCase()) + "."; // remove repeating types and subtypes
         String status = "WHITE#";
         String metadata = (deleted ? "deleted" : "Transactions#" + id);
 
