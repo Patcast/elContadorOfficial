@@ -45,7 +45,7 @@ public class Transaction {
     public String  getIdStakeholder() {
 
         if(stakeHolder.isEmpty()){
-            return "1";
+            return "0";
         }
         else {
 

@@ -120,8 +120,8 @@ public class TransactionNew extends Fragment {
             @Override
             public void onClick(View v) {
                 // here we check that the user added a certain amount.
-                double amount =  Double.parseDouble(txtAmount.getText().toString());
-                if (amount != 0) {
+                String amount =  txtAmount.getText().toString();
+                if (Double.parseDouble(amount) != 0 || !amount.isEmpty()) {
                     navController.navigate(R.id.action_newTransaction_to_transactions_summary);
                     postNewTransaction(view);
                 }
