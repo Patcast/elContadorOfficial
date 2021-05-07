@@ -119,8 +119,15 @@ public class TransactionNew extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
-                navController.navigate(R.id.action_newTransaction_to_transactions_summary);
-                postNewTransaction(view);
+                // here we check that the user added a certain amount.
+                double amount =  Double.parseDouble(txtAmount.getText().toString());
+                if (amount != 0) {
+                    navController.navigate(R.id.action_newTransaction_to_transactions_summary);
+                    postNewTransaction(view);
+                }
+                else{
+                    Toast.makeText(getActivity(), R.string.zero_amount, Toast.LENGTH_LONG).show();
+                }
 
             }
         });
@@ -224,7 +231,7 @@ public class TransactionNew extends Fragment {
                                                              .findFirst();
         int idType= searchIdType.get().getId();
 
-        return new Transaction(cashIn,amount,idUser,Character.getNumericValue(stakeholder.charAt(0)),idType,notes);
+        return new Transaction(cashIn,amount,idUser,stakeholder,idType,notes);
     }
 
     ////// Posts the content from the NewTransaction to the db
@@ -236,7 +243,7 @@ public class TransactionNew extends Fragment {
         params.put("amount", String.valueOf(newTrans.getAmount()));
         params.put("notes", newTrans.getTxtComments());
         params.put("iduser", String.valueOf(newTrans.getIdUser()));
-        params.put("idstakeholder", String.valueOf(newTrans.getIdStakeholder()));
+        params.put("idstakeholder", newTrans.getIdStakeholder());
         params.put("type", newTrans.getIdType());
 
 
