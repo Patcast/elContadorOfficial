@@ -5,7 +5,6 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
@@ -42,7 +41,7 @@ public class CardFormatter implements CardFormatterInterface {
         }
         else if (now.getDayOfYear() - 1 == date.getDayOfYear()) { // transaction happened yesterday
             status += "Yesterday at " + (date.getHour() < 10? "0" : "") + date.getHour() + ":"
-                    + (date.getMinute() < 10? "0" : "") + date.getMinute();;
+                    + (date.getMinute() < 10? "0" : "") + date.getMinute();
         }
         else { // transaction happened days before
             status += (date.getDayOfMonth() < 10? "0" : "") + date.getDayOfMonth() + "/" +
