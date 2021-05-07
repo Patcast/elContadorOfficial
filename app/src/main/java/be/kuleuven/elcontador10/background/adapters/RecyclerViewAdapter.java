@@ -118,7 +118,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    //TODO implement onclick listener
     private void onClick(View view, int position) {
         if (MetadataArray.get(position).contains("#")) {
             String[] array = MetadataArray.get(position).split("#");

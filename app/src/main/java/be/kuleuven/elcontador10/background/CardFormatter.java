@@ -20,8 +20,11 @@ public class CardFormatter implements CardFormatterInterface {
     public String[] TransactionFormatter(int id, LocalDateTime date, double amount, String user, String stakeholder, String type, String subtype,
                                          boolean deleted) {
         String title = (amount > 0 ? "GREEN#IN" : "RED#OUT");
-        String description = user + (amount > 0 ? " has deposited $" : " has paid $") + Math.abs(amount) +
-                " for " + stakeholder + "'s " + subtype + " " + type;
+        String description = user +
+                (amount > 0 ? " has deposited " : " has paid ") + " $" + Math.abs(amount) + " for " + // maker + amount
+                (stakeholder.equals("Not Specified") ? "" : stakeholder + "'s ") + // stakeholder
+                subtype.toLowerCase() + // type
+                (type.equals(subtype) ? "" : " " + type.toLowerCase()) + "."; // remove repeating
         String status = "WHITE#";
         String metadata = (deleted ? "deleted" : "Transactions#" + id);
 
