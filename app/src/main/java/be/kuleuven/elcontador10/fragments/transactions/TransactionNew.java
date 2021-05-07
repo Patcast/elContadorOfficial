@@ -121,14 +121,18 @@ public class TransactionNew extends Fragment {
             public void onClick(View v) {
                 // here we check that the user added a certain amount.
                 String amount =  txtAmount.getText().toString();
-                if (Double.parseDouble(amount) != 0 || !amount.isEmpty()) {
-                    navController.navigate(R.id.action_newTransaction_to_transactions_summary);
-                    postNewTransaction(view);
-                }
-                else{
+                if ( amount.isEmpty()) {
                     Toast.makeText(getActivity(), R.string.zero_amount, Toast.LENGTH_LONG).show();
                 }
-
+                else{
+                    if ( Double.parseDouble(amount) == 0 ) {
+                        Toast.makeText(getActivity(), R.string.zero_amount, Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        navController.navigate(R.id.action_newTransaction_to_transactions_summary);
+                        postNewTransaction(view);
+                    }
+                }
             }
         });
     }
