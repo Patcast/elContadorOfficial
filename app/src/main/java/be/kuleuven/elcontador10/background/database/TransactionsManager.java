@@ -83,15 +83,15 @@ public class TransactionsManager {
                             LocalDateTime date = LocalDateTime.parse(object.getString("date"), formatter);
 
                             double amount = object.getDouble("amount");
-                            String sender = object.getString("sender");
-                            String receiver = object.getString("receiver");
+                            String user = object.getString("userName");
+                            String stakeholder = object.getString("stakeholderName");
                             String type = object.getString("type");
                             String subtype = object.getString("subType");
                             boolean deleted = object.getString("deleted").equals("1");
 
-                            if (Filter(filter, date, sender.toLowerCase(), receiver.toLowerCase(), type, subtype)) {
+                            if (Filter(filter, date, user.toLowerCase(), stakeholder.toLowerCase(), type, subtype)) {
                                 CardFormatterInterface cardFormatter = new CardFormatter();
-                                String[] formatted = cardFormatter.TransactionFormatter(id, date, amount, sender, receiver, type, subtype, deleted);
+                                String[] formatted = cardFormatter.TransactionFormatter(id, date, amount, user, stakeholder, type, subtype, deleted);
 
                                 titles.add(formatted[0]);
                                 descriptions.add(formatted[1]);
@@ -115,7 +115,7 @@ public class TransactionsManager {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private boolean Filter(FilterTransactionsParcel filter, LocalDateTime timestamp, String sender, String receiver, String type, String subtype) {
+    private boolean Filter(FilterTransactionsParcel filter, LocalDateTime timestamp, String maker, String stakeholder, String type, String subtype) {
         String category = filter.getCategory();
         String subcategory = filter.getSubcategory();
         String name = filter.getName().toLowerCase();
@@ -125,7 +125,7 @@ public class TransactionsManager {
         if (!category.equals("*") && !type.equals(category)) return false; // category doesn't match
         if (!subcategory.equals("*") && !subtype.equals(subcategory)) return false; // subcategory doesn't match
 
-        if (!name.equals("*")) if (!sender.contains(name) && !receiver.contains(name)) return false; // name not in sender or receiver
+        if (!name.equals("*")) if (!maker.contains(name) && !stakeholder.contains(name)) return false; // name not in maker or stakeholder
 
         if (from != null) if (timestamp.isBefore(from)) return  false; // transaction happened before given period
         if (to != null) return !timestamp.isAfter(to); // transaction happened after given period
@@ -148,9 +148,9 @@ public class TransactionsManager {
                         Bundle bundle = new Bundle();
                         JSONObject object = response.getJSONObject(0);
 
-                        bundle.putString("sender", object.getString("sender"));
-                        bundle.putString("receiver", object.getString("receiver"));
-                        bundle.putString("amount", object.getString("amount"));
+                        bundle.putString("user", object.getString("userName"));
+                        bundle.putString("stakeholder", object.getString("stakeholderName"));
+                        bundle.putDouble("amount", object.getDouble("amount"));
                         bundle.putString("category", object.getString("type"));
                         bundle.putString("subcategory", object.getString("subType"));
                         bundle.putString("notes", object.getString("notes"));

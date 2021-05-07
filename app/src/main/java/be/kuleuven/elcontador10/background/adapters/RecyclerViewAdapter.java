@@ -67,26 +67,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.status.setText(text_status[1]);
         holder.metadata.setText(MetadataArray.get(position));
 
-        //TODO add more colours
-        //for title colour
-        switch (text_title[0]) {
-            default:
-                holder.title.setTextColor(context.getResources().getColor(R.color.white));
-                break;
-        }
-
-        //for status colour
-        switch (text_status[0]) {
-            case "RED":
-                holder.status.setTextColor(context.getResources().getColor(R.color.contador_red));
-                break;
-            case "GREEN":
-                holder.status.setTextColor(context.getResources().getColor(R.color.green));
-                break;
-            default:
-                holder.status.setTextColor(context.getResources().getColor(R.color.white));
-        }
-
         if (MetadataArray.get(position).equals("")) { // title CardView
             holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.contador_bg));
             holder.divider.setVisibility(View.INVISIBLE);
@@ -107,8 +87,31 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.status.setPaintFlags(0);
             holder.description.setPaintFlags(0);
 
-            holder.title.setTextColor(context.getResources().getColor(R.color.white));
-            holder.status.setTextColor(context.getResources().getColor(R.color.white));
+            //for title colour
+            switch (text_title[0]) {
+                case "RED":
+                    holder.title.setTextColor(context.getResources().getColor(R.color.contador_red));
+                    break;
+                case "GREEN":
+                    holder.title.setTextColor(context.getResources().getColor(R.color.green));
+                    break;
+                default:
+                    holder.title.setTextColor(context.getResources().getColor(R.color.white));
+                    break;
+            }
+
+            //for status colour
+            switch (text_status[0]) {
+                case "RED":
+                    holder.status.setTextColor(context.getResources().getColor(R.color.contador_red));
+                    break;
+                case "GREEN":
+                    holder.status.setTextColor(context.getResources().getColor(R.color.green));
+                    break;
+                default:
+                    holder.status.setTextColor(context.getResources().getColor(R.color.white));
+            }
+
             holder.description.setTextColor(context.getResources().getColor(R.color.white));
 
             holder.layout.setOnClickListener(v -> onClick(v, position));

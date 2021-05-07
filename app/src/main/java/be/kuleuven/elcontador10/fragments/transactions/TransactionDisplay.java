@@ -84,13 +84,19 @@ public class TransactionDisplay extends Fragment implements TransactionsDisplayI
         date = getView().findViewById(R.id.txtTransactionDisplayDate);
         notes = getView().findViewById(R.id.txtTransactionDisplayNotes);
 
-        sender.setText(bundle.getString("sender"));
-        receiver.setText(bundle.getString("receiver"));
-        amount.setText("$" + bundle.getString("amount"));
+        sender.setText(bundle.getString("user"));
+        receiver.setText(bundle.getString("stakeholder"));
+
         category.setText(bundle.getString("category"));
         subcategory.setText(bundle.getString("subcategory"));
         date.setText(bundle.getString("date"));
         notes.setText(bundle.getString("notes"));
+
+        // for amount
+        double sum = bundle.getDouble("amount");
+        String amount_text = (sum > 0 ? "IN" : "OUT") + " $" + Math.abs(sum);
+        amount.setText(amount_text);
+
     }
 
     @Override
