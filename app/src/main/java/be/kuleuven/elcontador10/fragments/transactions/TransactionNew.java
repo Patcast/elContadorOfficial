@@ -61,6 +61,7 @@ public class TransactionNew extends Fragment {
     Spinner spCategory;
     Spinner spSubCategory;
     EditText txtNotes;
+    MainActivity mainActivity;
     ////// Arrays to fill input
 
     List<TransactionType> typeFullList = new ArrayList<>();
@@ -75,7 +76,7 @@ public class TransactionNew extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle("New Transaction");
 
         View v = inflater.inflate(R.layout.fragment_transaction_new, container, false);
@@ -212,8 +213,7 @@ public class TransactionNew extends Fragment {
     private Transaction makeNewTrans(){
         boolean cashIn = transCashIn(radGroup);
         double amount = Double.parseDouble(txtAmount.getText().toString());
-        //char [] stakeholder =  txtStakeHolder.getText().toString().toCharArray();
-        //int idStake = stakeholder[0];
+        int idUser = (mainActivity.getLoggedIn().getId());
         String stakeholder =  txtStakeHolder.getText().toString();
         String category = spCategory.getSelectedItem().toString();
         String subCategory = spSubCategory.getSelectedItem().toString();
@@ -223,7 +223,8 @@ public class TransactionNew extends Fragment {
                                                              .filter(subCat -> subCat.getSubCategory().equals(subCategory))
                                                              .findFirst();
         int idType= searchIdType.get().getId();
-        return new Transaction(cashIn,amount,Character.getNumericValue(stakeholder.charAt(0)),idType,notes);
+
+        return new Transaction(cashIn,amount,idUser,Character.getNumericValue(stakeholder.charAt(0)),idType,notes);
     }
 
     ////// Posts the content from the NewTransaction to the db
@@ -234,8 +235,8 @@ public class TransactionNew extends Fragment {
         Map<String,String> params = new HashMap<>();
         params.put("amount", String.valueOf(newTrans.getAmount()));
         params.put("notes", newTrans.getTxtComments());
-        params.put("idpays", newTrans.getStakePays());
-        params.put("idrec", newTrans.getStakeReceives());
+        params.put("iduser", String.valueOf(newTrans.getIdUser()));
+        params.put("idstakeholder", String.valueOf(newTrans.getIdStakeholder()));
         params.put("type", newTrans.getIdType());
 
 
@@ -254,7 +255,6 @@ public class TransactionNew extends Fragment {
             }
         });
         requestQueue.add(submitRequest);
-
     }
 
 

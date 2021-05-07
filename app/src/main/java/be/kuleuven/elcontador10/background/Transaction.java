@@ -3,6 +3,8 @@ package be.kuleuven.elcontador10.background;
 public class Transaction {
     private boolean cashIn;
     private double amount;
+    private int idUser;
+
     private int idStakeholder;
     private int idType;
     private String txtComments;
@@ -14,19 +16,26 @@ public class Transaction {
 
 
     ///Constructor use to make object to create submit URL
-    public Transaction(boolean cashIn, double amount, int idStake,int idTypeTrans, String txtComments) {
+    public Transaction(boolean cashIn, double amount, int idUser, int idStake, int idTypeTrans, String txtComments) {
         this.cashIn = cashIn;
         this.amount = amount;
+        this.idUser = idUser;
         this.idStakeholder = idStake;
         this.idType = idTypeTrans;
         this.txtComments = txtComments;
     }
 
     public double getAmount() {
-        return amount;
+        if(cashIn){ return amount; }
+        return amount*-1;
+    }
+
+    public int getIdUser() {
+        return idUser;
     }
 
     public int getIdStakeholder() {
+
         return idStakeholder;
     }
 
@@ -38,15 +47,6 @@ public class Transaction {
         return txtComments;
     }
 
-    public String getStakePays() {
-        if(cashIn){ return String.valueOf(idStakeholder); }
-        return idOfBudget;
-    }
-
-    public String getStakeReceives() {
-        if(cashIn){ return String.valueOf(idOfBudget); }
-        return String.valueOf(idStakeholder);
-    }
 }
 
 
