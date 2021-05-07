@@ -1,29 +1,25 @@
 package be.kuleuven.elcontador10.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
 
 public class MainActivity extends AppCompatActivity {
-    private BottomNavigationView navigationView;
-
     private TextView header;
 
     private StakeholderLoggedIn loggedIn;
+    private ArrayList<String> roles;
 
     /*
     When activity first made from log in, select home fragment and take in the account parcel
@@ -37,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         Bundle i = this.getIntent().getExtras();
         loggedIn = i.getParcelable("Account");
+        roles = i.getStringArrayList("Roles");
 
         header = findViewById(R.id.lblToolbarHeading);
     }
@@ -54,5 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
     public StakeholderLoggedIn getLoggedIn() {
         return loggedIn;
+    }
+
+    public ArrayList<String> getRoles() {
+        return roles;
     }
 }

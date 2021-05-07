@@ -22,6 +22,7 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -49,6 +50,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
 
     private String image;
     private ImageView preview;
+    private Spinner roles;
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int RESULT_LOAD_IMG = 2;
@@ -74,16 +76,21 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
         Button confirm = requireView().findViewById(R.id.btn_confirm_NewTransaction);
         picture = requireView().findViewById(R.id.btn_picture_NewStakeholder);
         preview = requireView().findViewById(R.id.StakeholderNewImageView);
+        roles = requireView().findViewById(R.id.StakeholderNewRoles);
 
+        // onClick listeners
         cancel.setOnClickListener(this::onCancelClicked);
         confirm.setOnClickListener(this::onConfirmClicked);
         picture.setOnClickListener(this::onPictureClicked);
+
+        // set up spinner
+        ArrayList<String> roles_array = mainActivity.getRoles();
+        ArrayAdapter adapter = new ArrayAdapter(mainActivity, android.R.layout.simple_spinner_dropdown_item, roles_array);
+        roles.setAdapter(adapter);
     }
 
     public void onCancelClicked(View view) {
-        //TODO get roles from database
-        String[] temp_array = getResources().getStringArray(R.array.roles);
-        ArrayList<String> roles = new ArrayList<>(Arrays.asList(temp_array));
+        ArrayList<String> roles = mainActivity.getRoles();
         FilterStakeholdersParcel filter = new FilterStakeholdersParcel("*", roles, false, "Name");
 
         StakeholderNewDirections.ActionStakeholderNewToStakeholderSummary action =
@@ -116,7 +123,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
                     .setNeutralButton("Delete", (dialog, which) -> {
                         // delete image
                         image = null;
-                        picture.setText("Choose Picture");
+                        picture.setText(R.string.choose_picture);
                         preview.setImageResource(R.drawable.icon_stakeholder);
                         dialog.dismiss();
                     })
@@ -129,7 +136,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
     public void onConfirmClicked(View view) {
         String firstName = ((TextView) requireView().findViewById(R.id.StakeholderNewFirstName)).getText().toString();
         String lastName = ((TextView) requireView().findViewById(R.id.StakeholderNewLastName)).getText().toString();
-        String role = ((Spinner) requireView().findViewById(R.id.StakeholderNewRoles)).getSelectedItem().toString();
+        String role = roles.getSelectedItem().toString();
         String phoneNo = ((TextView) requireView().findViewById(R.id.StakeholderNewPhoneNumber)).getText().toString();
         String email = ((TextView) requireView().findViewById(R.id.StakeholderNewEmail)).getText().toString();
 

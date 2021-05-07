@@ -66,9 +66,7 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
             StakeholderSummaryArgs args = StakeholderSummaryArgs.fromBundle(getArguments());
             filter = args.getFilter();
         } catch (Exception e) {
-            //TODO get roles from database
-            String[] temp_array = getResources().getStringArray(R.array.roles);
-            ArrayList<String> roles = new ArrayList<>(Arrays.asList(temp_array));
+            ArrayList<String> roles = mainActivity.getRoles();
             filter = new FilterStakeholdersParcel("*", roles, false, "Name");
         }
 

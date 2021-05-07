@@ -7,6 +7,8 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
 import be.kuleuven.elcontador10.background.interfaces.LogInInterface;
 
@@ -76,7 +78,7 @@ public class AccountManager {
                                 StakeholderLoggedIn loggedIn = new StakeholderLoggedIn(
                                         id, firstName, lastName, role, phoneNumber, email, username);
 
-                                manager.onLoginSucceed(username, loggedIn);
+                                getStakeholderRoles(manager, username, loggedIn);
                             } else {
                                 manager.onLoginFailed("Stakeholder has been deleted.");
                             }
@@ -95,6 +97,30 @@ public class AccountManager {
                     manager.onLoginFailed("Error connecting to server!");
                 }
                 );
+        requestQueue.add(request);
+    }
+
+    public void getStakeholderRoles(LogInInterface manager, String username, StakeholderLoggedIn loggedIn) {
+        String URL = "https://studev.groept.be/api/a20sd505/getStakeholderRoles";
+
+        RequestQueue requestQueue = Volley.newRequestQueue(manager.getContext());
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null,
+                response -> {
+                    try {
+                        ArrayList<String> roles = new ArrayList<>();
+
+                        for (int i = 0; i < response.length(); i++) {
+                            roles.add(response.getJSONObject(i).getString("Role"));
+                        }
+
+                        manager.onLoginSucceed(username, loggedIn, roles);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        manager.onLoginFailed(e.toString());
+                    }
+                }, error -> manager.onLoginFailed(error.toString()));
+
         requestQueue.add(request);
     }
 }

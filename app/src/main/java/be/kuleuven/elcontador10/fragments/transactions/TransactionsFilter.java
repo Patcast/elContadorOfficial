@@ -52,7 +52,7 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mainActivity = (MainActivity) getActivity();
+        mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle("Filter Transactions");
 
         categories = new ArrayList<>();

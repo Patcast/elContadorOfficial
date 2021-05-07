@@ -74,6 +74,7 @@
     <string name="budget">Budget: $%1$.2f</string>
     <string name="subtotal">Subtotal: $%1$.2f</string>
     <string name="zero_amount">Pleas, fill in the desired amount.</string>
+    <string name="choose_picture">Choose Picture</string>
     <string-array name="roles">
         <item>Employee</item>
         <item>Manager</item>

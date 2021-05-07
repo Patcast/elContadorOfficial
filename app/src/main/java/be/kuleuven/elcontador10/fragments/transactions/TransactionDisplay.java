@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +84,7 @@ public class TransactionDisplay extends Fragment implements TransactionsDisplayI
         subcategory = getView().findViewById(R.id.txtTransactionDisplaySubcategory);
         date = getView().findViewById(R.id.txtTransactionDisplayDate);
         notes = getView().findViewById(R.id.txtTransactionDisplayNotes);
+        notes.setMovementMethod(new ScrollingMovementMethod());
 
         sender.setText(bundle.getString("user"));
         receiver.setText(bundle.getString("stakeholder"));

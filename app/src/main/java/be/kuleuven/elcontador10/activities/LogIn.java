@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.AccountManager;
 import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
@@ -59,10 +62,11 @@ public class LogIn extends AppCompatActivity implements LogInInterface {
     public Context getContext() { return this; }
 
     @Override
-    public void onLoginSucceed(String username, StakeholderLoggedIn loggedIn) {
+    public void onLoginSucceed(String username, StakeholderLoggedIn loggedIn, ArrayList<String> roles) {
         showToast("Welcome " + username + "!");
         Intent i = new Intent(this, MainActivity.class);
         i.putExtra("Account", loggedIn);
+        i.putExtra("Roles", roles);
         startActivity(i);
         finish();
     }

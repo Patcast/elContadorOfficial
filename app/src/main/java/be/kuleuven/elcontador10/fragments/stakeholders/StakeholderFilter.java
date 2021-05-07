@@ -67,9 +67,7 @@ public class StakeholderFilter extends Fragment {
         Button filter = requireView().findViewById(R.id.btn_filter_FilterStakeholder);
 
         // initialise chip group
-        // TODO get roles from database instead of local
-        String[] temp_array = getResources().getStringArray(R.array.roles);
-        roleNames.addAll(Arrays.asList(temp_array));
+        roleNames = mainActivity.getRoles();
         setRoles(roleNames);
 
         // set navigation

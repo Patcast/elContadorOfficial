@@ -215,9 +215,7 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
     public void delete() {
         error("Stakeholder deleted");
 
-        //TODO get roles from database
-        String[] temp_array = getResources().getStringArray(R.array.roles);
-        ArrayList<String> roles = new ArrayList<>(Arrays.asList(temp_array));
+        ArrayList<String> roles = mainActivity.getRoles();
         // navigate back to summary
         navController.navigate(StakeholderDisplayDirections.actionStakeholderDisplayToStakeholderSummary(
                 new FilterStakeholdersParcel("*", roles, false, "Name") // default filter
