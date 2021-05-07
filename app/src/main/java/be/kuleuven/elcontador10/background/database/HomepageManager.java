@@ -21,8 +21,7 @@ import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
 import be.kuleuven.elcontador10.background.interfaces.HomepageInterface;
 
 public class HomepageManager {
-    private final String URL_Transactions = "https://studev.groept.be/api/a20sd505/homepageTransactions";
-    private final String URL_Tenants = "https://studev.groept.be/api/a20sd505/inDebtTenants";
+    private final String URL_Transactions = "https://studev.groept.be/api/a20sd505/getTransactions";
 
     private static volatile HomepageManager INSTANCE = null;
 
@@ -66,11 +65,13 @@ public class HomepageManager {
                         titles.add("WHITE#Recent transactions");
                         descriptions.add("Here are the 5 most recent transactions:");
                         status.add(" # "); // needs to be added so that the list index are the same
-                                                        // empty status needs to be " # " for the colour formatter
+                                           // empty status needs to be " # " for the colour formatter
                         metadata.add("");
 
                         if (response.length() != 0) {
                             for (int i = 0; i < response.length(); i++) {
+                                if (i == 5) break; // limit to 5
+
                                 JSONObject object = response.getJSONObject(i);
 
                                 int id = object.getInt("idTransactions");
@@ -79,15 +80,15 @@ public class HomepageManager {
                                 LocalDateTime date = LocalDateTime.parse(object.getString("date"), formatter);
 
                                 double amount = object.getDouble("amount");
-                                String sender = object.getString("sender");
-                                String receiver = object.getString("receiver");
+                                String user = object.getString("userName");
+                                String stakeholder = object.getString("stakeholderName");
                                 String type = object.getString("type");
                                 String subtype = object.getString("subType");
                                 boolean deleted = object.getString("deleted").equals("1");
 
                                 if (!deleted) { // don't want deleted transactions on the home screen
                                     CardFormatterInterface cardFormatter = new CardFormatter();
-                                    String[] formatted = cardFormatter.TransactionFormatter(id, date, amount, sender, receiver, type, subtype, false);
+                                    String[] formatted = cardFormatter.TransactionFormatter(id, date, amount, user, stakeholder, type, subtype, false);
 
                                     titles.add(formatted[0]);
                                     descriptions.add(formatted[1]);
@@ -130,7 +131,7 @@ public class HomepageManager {
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL_Budget, null,
                 response -> {
                     try {
-                        home.displayBudget(response.getJSONObject(0).getDouble("balance"));
+                        home.displayBudget(response.getJSONObject(0).getDouble("budget"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                         home.error(e.toString());

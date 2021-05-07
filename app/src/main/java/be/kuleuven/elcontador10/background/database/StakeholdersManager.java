@@ -68,13 +68,12 @@ public class StakeholdersManager {
                             int id = object.getInt("idStakeholders");
                             String firstName = object.getString("firstName");
                             String lastName = object.getString("LastName");
-                            double balance = object.getDouble("balance");
                             String role = object.getString("Role");
                             boolean deleted = object.getString("deleted").equals("1");
 
                             // run object through filter
-                            if (filter != null && Filter(filter, (firstName + " " + lastName).toLowerCase(), balance, role, deleted)) {
-                                data.add(new DataPlaceHolder(id, firstName, lastName, role, balance, deleted));
+                            if (filter != null && Filter(filter, (firstName + " " + lastName).toLowerCase(), role, deleted)) {
+                                data.add(new DataPlaceHolder(id, firstName, lastName, role, deleted));
                             }
                         }
 
@@ -100,35 +99,26 @@ public class StakeholdersManager {
     private List<DataPlaceHolder> sorter(FilterStakeholdersParcel filter, List<DataPlaceHolder> data) {
         List<DataPlaceHolder> sorted;
 
-        switch (filter.getSortBy()) {
-            case "Debt":
-                sorted = data.stream()
-                        .sorted(Comparator.comparing(DataPlaceHolder::getBalance))
-                        .collect(Collectors.toList());
-                break;
-            case "Role":
-                sorted = data.stream()
-                        .sorted(Comparator.comparing(DataPlaceHolder::getRole))
-                        .collect(Collectors.toList());
-                break;
-            default:
-                sorted = data.stream()
-                        .sorted(Comparator.comparing(DataPlaceHolder::getLastName))
-                        .collect(Collectors.toList());
+        if ("Role".equals(filter.getSortBy())) {
+            sorted = data.stream()
+                    .sorted(Comparator.comparing(DataPlaceHolder::getRole))
+                    .collect(Collectors.toList());
+        } else {
+            sorted = data.stream()
+                    .sorted(Comparator.comparing(DataPlaceHolder::getLastName))
+                    .collect(Collectors.toList());
         }
         return sorted;
     }
 
-    private boolean Filter(FilterStakeholdersParcel filter, String fullName, double balance, String role, boolean deleted) {
+    private boolean Filter(FilterStakeholdersParcel filter, String fullName, String role, boolean deleted) {
         String name = filter.getName().toLowerCase();
         ArrayList<String> roles = filter.getRoles();
-        boolean debt = filter.isInDebt();
         boolean isDeleted = filter.isDeleted();
 
         if (!isDeleted == deleted) return false; // deleted not matching
         if (!name.equals("*")) if (!fullName.contains(name)) return false; // name not matching
-        if (!roles.contains(role)) return false; // role not in list
-        return !debt || !(balance >= 0); // not in debt
+        return roles.contains(role); // role not in list
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -139,7 +129,7 @@ public class StakeholdersManager {
 
         // send each data to the formatter, while adding to the formatted list
         data.forEach(t -> formatted.add(formatter.StakeholderFormatter(t.getId(), t.getFirstName(), t.getLastName(),
-                t.getBalance(), t.getRole(), t.isDeleted())));
+                t.getRole(), t.isDeleted())));
 
         ArrayList<String> titles = new ArrayList<>(), descriptions = new ArrayList<>(), status = new ArrayList<>(), metadata = new ArrayList<>();
 
@@ -168,7 +158,6 @@ public class StakeholdersManager {
                         bundle.putString("role", object.getString("Role"));
                         bundle.putString("phone", object.getString("phoneNumber"));
                         bundle.putString("email", object.getString("email"));
-                        bundle.putDouble("balance", object.getDouble("balance"));
                         bundle.putString("image", object.getString("image"));
 
                         stakeholder.display(bundle);
@@ -231,15 +220,13 @@ public class StakeholdersManager {
     private static class DataPlaceHolder {
         int id;
         String firstName, lastName, role;
-        double balance;
         boolean deleted;
 
-        public DataPlaceHolder(int id, String firstName, String lastName, String role, double balance, boolean deleted) {
+        public DataPlaceHolder(int id, String firstName, String lastName, String role,boolean deleted) {
             this.id = id;
             this.firstName = firstName;
             this.lastName = lastName;
             this.role = role;
-            this.balance = balance;
             this.deleted = deleted;
         }
 
@@ -257,10 +244,6 @@ public class StakeholdersManager {
 
         public String getRole() {
             return role;
-        }
-
-        public double getBalance() {
-            return balance;
         }
 
         public boolean isDeleted() {

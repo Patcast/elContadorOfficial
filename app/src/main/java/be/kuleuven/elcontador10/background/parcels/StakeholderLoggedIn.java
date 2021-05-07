@@ -10,7 +10,6 @@ public class StakeholderLoggedIn implements Parcelable {
     private String role;
     private String phoneNumber;
     private String email;
-    private double balance;
     private String username;
 
     public static final Parcelable.Creator<StakeholderLoggedIn> CREATOR = new Creator<StakeholderLoggedIn>() {
@@ -18,7 +17,7 @@ public class StakeholderLoggedIn implements Parcelable {
         public StakeholderLoggedIn createFromParcel(Parcel source) {
             return new StakeholderLoggedIn(
                     source.readInt(), source.readString(), source.readString(), source.readString(),
-                    source.readString(), source.readString(), source.readDouble(), source.readString());
+                    source.readString(), source.readString(), source.readString());
         }
 
         @Override
@@ -28,14 +27,13 @@ public class StakeholderLoggedIn implements Parcelable {
     };
 
     public StakeholderLoggedIn(int id, String firstName, String lastName, String role,
-                               String phoneNumber, String email, double balance, String username) {
+                               String phoneNumber, String email, String username) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.balance = balance;
         this.username = username;
     }
 
@@ -52,7 +50,6 @@ public class StakeholderLoggedIn implements Parcelable {
         dest.writeString(role);
         dest.writeString(phoneNumber);
         dest.writeString(email);
-        dest.writeDouble(balance);
         dest.writeString(username);
     }
 
@@ -78,10 +75,6 @@ public class StakeholderLoggedIn implements Parcelable {
 
     public String getEmail() {
         return email;
-    }
-
-    public double getBalance() {
-        return balance;
     }
 
     public String getUsername() {

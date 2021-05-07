@@ -84,7 +84,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
         //TODO get roles from database
         String[] temp_array = getResources().getStringArray(R.array.roles);
         ArrayList<String> roles = new ArrayList<>(Arrays.asList(temp_array));
-        FilterStakeholdersParcel filter = new FilterStakeholdersParcel("*", roles, false, false, "Name");
+        FilterStakeholdersParcel filter = new FilterStakeholdersParcel("*", roles, false, "Name");
 
         StakeholderNewDirections.ActionStakeholderNewToStakeholderSummary action =
                 StakeholderNewDirections.actionStakeholderNewToStakeholderSummary(filter);
@@ -135,9 +135,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
 
         if (firstName.equals("") || lastName.equals("")) feedback("Missing input!");
         else {
-            if (phoneNo.equals("")) phoneNo = null;
-            if (email.equals("")) email = null;
-
+            if (image == null) image = "";
             StakeholdersManager manager = StakeholdersManager.getInstance();
             manager.addStakeholder(this, firstName, lastName, role, phoneNo, email, image);
         }

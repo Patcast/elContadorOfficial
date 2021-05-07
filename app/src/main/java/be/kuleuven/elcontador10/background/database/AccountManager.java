@@ -70,12 +70,11 @@ public class AccountManager {
                             String role = object.getString("Role");
                             String phoneNumber = object.getString("phoneNumber");
                             String email = object.getString("email");
-                            double balance = object.getDouble("balance");
                             boolean deleted = object.getString("deleted").equals("1");
 
                             if (!deleted) {
                                 StakeholderLoggedIn loggedIn = new StakeholderLoggedIn(
-                                        id, firstName, lastName, role, phoneNumber, email, balance, username);
+                                        id, firstName, lastName, role, phoneNumber, email, username);
 
                                 manager.onLoginSucceed(username, loggedIn);
                             } else {

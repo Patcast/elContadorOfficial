@@ -17,25 +17,13 @@ public class CardFormatter implements CardFormatterInterface {
     * */
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public String[] TransactionFormatter(int id, LocalDateTime date, double amount, String sender, String receiver, String type, String subtype,
+    public String[] TransactionFormatter(int id, LocalDateTime date, double amount, String user, String stakeholder, String type, String subtype,
                                          boolean deleted) {
-        String title = "WHITE#" + type;
-        String description;
+        String title = (amount > 0 ? "GREEN#IN" : "RED#OUT");
+        String description = user + (amount > 0 ? " has deposited $" : " has paid $") + Math.abs(amount) +
+                " for " + stakeholder + "'s " + subtype + " " + type;
         String status = "WHITE#";
         String metadata = (deleted ? "deleted" : "Transactions#" + id);
-
-        if (subtype.equals("null")) {
-            if (receiver.equals("null"))
-                description = sender + " has paid $" + amount + " for " + type + ".";
-            else
-                description = sender + " has sent $" + amount + " to " + receiver + " for " + type + ".";
-        }
-        else {
-            if (receiver.equals("null"))
-                description = sender + " has paid $" + amount + " for " + subtype + ".";
-            else
-                description = sender + " has paid $" + amount + " to " + receiver + " for " + subtype + ".";
-        }
 
         LocalDateTime now = LocalDateTime.now();
 
@@ -63,14 +51,11 @@ public class CardFormatter implements CardFormatterInterface {
     }
 
     @Override
-    public String[] StakeholderFormatter(int id, String firstName, String lastName, double balance, String role, boolean deleted) {
+    public String[] StakeholderFormatter(int id, String firstName, String lastName, String role, boolean deleted) {
         String title = "WHITE#" + firstName + " " + lastName;
         String description = "Role: " + role;// + "\n" + "Balance: $" + balance;
 
         String status = "";
-//        if (balance < 0) status = "RED#In debt";
-//        else if (balance == 0) status = "WHITE#Payment up to date";
-//        else status = "GREEN#Reimbursement required";
 
         String metadata = (deleted? "deleted" : "Stakeholder#" + id);
 

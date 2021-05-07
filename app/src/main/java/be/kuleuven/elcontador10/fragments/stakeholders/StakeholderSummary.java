@@ -69,7 +69,7 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
             //TODO get roles from database
             String[] temp_array = getResources().getStringArray(R.array.roles);
             ArrayList<String> roles = new ArrayList<>(Arrays.asList(temp_array));
-            filter = new FilterStakeholdersParcel("*", roles, false, false, "Name");
+            filter = new FilterStakeholdersParcel("*", roles, false, "Name");
         }
 
         // set up recyclerview

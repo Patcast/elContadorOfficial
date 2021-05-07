@@ -17,7 +17,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
-            android:text="Sender:"
+            android:text="Made by:"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Receiver:"
+            android:text="Concerning:"
             app:layout_constraintStart_toStartOf="@+id/lblTransactionDisplay1"
             app:layout_constraintTop_toBottomOf="@+id/lblTransactionDisplay1" />
 

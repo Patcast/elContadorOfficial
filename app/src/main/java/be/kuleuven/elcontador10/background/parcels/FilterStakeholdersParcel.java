@@ -19,16 +19,15 @@ public class FilterStakeholdersParcel implements Parcelable {
     private final ArrayList<String> roles;
 
     // attributes
-    private final boolean inDebt, deleted;
+    private final boolean deleted;
 
     // sort by
     private final String sortBy;
 
-    public FilterStakeholdersParcel(@Nullable String name, ArrayList<String> roles, boolean inDebt,
+    public FilterStakeholdersParcel(@Nullable String name, ArrayList<String> roles,
                                     boolean deleted, String sortBy) {
         this.name = name;
         this.roles = roles;
-        this.inDebt = inDebt;
         this.deleted = deleted;
         this.sortBy = sortBy;
     }
@@ -37,7 +36,6 @@ public class FilterStakeholdersParcel implements Parcelable {
     protected FilterStakeholdersParcel(Parcel in) {
         name = in.readString();
         roles = (ArrayList<String>) in.readArrayList(getClass().getClassLoader());
-        inDebt = in.readBoolean();
         deleted = in.readBoolean();
         sortBy = in.readString();
     }
@@ -65,7 +63,6 @@ public class FilterStakeholdersParcel implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeList(roles);
-        dest.writeBoolean(inDebt);
         dest.writeBoolean(deleted);
         dest.writeString(sortBy);
     }
@@ -78,10 +75,6 @@ public class FilterStakeholdersParcel implements Parcelable {
 
     public ArrayList<String> getRoles() {
         return roles;
-    }
-
-    public boolean isInDebt() {
-        return inDebt;
     }
 
     public boolean isDeleted() {
