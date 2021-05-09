@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.background.parcels;
+package be.kuleuven.elcontador10.model;
 
 import android.widget.Toast;
 
