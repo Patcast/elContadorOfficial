@@ -13,12 +13,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.AccountManager;
-import be.kuleuven.elcontador10.background.database.Cashing;
 import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
 import be.kuleuven.elcontador10.background.interfaces.LogInInterface;
 

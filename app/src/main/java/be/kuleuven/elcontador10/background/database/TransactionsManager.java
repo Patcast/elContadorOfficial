@@ -3,10 +3,8 @@ package be.kuleuven.elcontador10.background.database;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -31,7 +29,7 @@ import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 import be.kuleuven.elcontador10.background.parcels.NewTransactionParcel;
 import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsNewInterface;
-import be.kuleuven.elcontador10.model.TransactionType;
+import be.kuleuven.elcontador10.background.model.TransactionType;
 
 
 public class TransactionsManager {

@@ -3,7 +3,6 @@ package be.kuleuven.elcontador10.background.database;
 import android.content.Context;
 import android.os.Build;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -22,23 +21,18 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.LogIn;
-import be.kuleuven.elcontador10.background.interfaces.CashingObserver;
-import be.kuleuven.elcontador10.background.interfaces.LogInInterface;
-import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
-import be.kuleuven.elcontador10.fragments.transactions.TransactionNew;
-import be.kuleuven.elcontador10.model.StakeHolder;
-import be.kuleuven.elcontador10.model.TransactionType;
+import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
+import be.kuleuven.elcontador10.background.model.StakeHolder;
+import be.kuleuven.elcontador10.background.model.TransactionType;
 
-public enum Cashing {
+public enum Caching {
     INSTANCE;
     ////*********Data
     private List <StakeHolder> stakeHolders = new ArrayList<>();
     private List <TransactionType>  transTypes = new ArrayList<>();
     private List <String> roles = new ArrayList<>();
     ///********** Observers List
-    private List <CashingObserver> observers = new ArrayList<>();
+    private List <CachingObserver> observers = new ArrayList<>();
     ///********** Variables
      View view;
      Context context;
@@ -46,7 +40,7 @@ public enum Cashing {
 
     ///Attach method
 
-    public void attachChasing(CashingObserver newObserver){
+    public void attachCaching(CachingObserver newObserver){
         observers.add(newObserver);
         newObserver.notifyStakeHolders(stakeHolders);
         newObserver.notifyCategories(transTypes);
@@ -100,42 +94,29 @@ public enum Cashing {
                 }
 
             }
-        },new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Unable upload TypesTable", Toast.LENGTH_LONG).show();
-            }
-        });
+        }, error -> Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show());
 
         requestQueue.add(submitRequest);
     }
     public void requestStakeHold(){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-        JsonArrayRequest submitRequest = new JsonArrayRequest(Request.Method.GET, DataBaseURL.INSTANCE.getStakeHolder, null, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                try{
-                    stakeHolders.clear();
-                    for(int i=0; i<response.length();i++){
-                        JSONObject recordJson = response.getJSONObject(i);
-                        StakeHolder record = new StakeHolder(recordJson.getInt("idStakeholders")
-                                                            ,recordJson.getString("firstName")
-                                                            ,recordJson.getString("LastName")
-                                                            ,recordJson.getString("Role")
-                                                            ,(recordJson.getInt("deleted"))>= 1);
-                        stakeHolders.add(record);
-                    }
-                }
-                catch(JSONException e){
-                    e.printStackTrace();
+        JsonArrayRequest submitRequest = new JsonArrayRequest(Request.Method.GET, DataBaseURL.INSTANCE.getStakeHolder, null, response -> {
+            try{
+                stakeHolders.clear();
+                for(int i=0; i<response.length();i++){
+                    JSONObject recordJson = response.getJSONObject(i);
+                    StakeHolder record = new StakeHolder(recordJson.getInt("idStakeholders")
+                                                        ,recordJson.getString("firstName")
+                                                        ,recordJson.getString("LastName")
+                                                        ,recordJson.getString("Role")
+                                                        ,(recordJson.getInt("deleted"))>= 1);
+                    stakeHolders.add(record);
                 }
             }
-        },new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Unable upload StakeHolderTable", Toast.LENGTH_LONG).show();
+            catch(JSONException e){
+                e.printStackTrace();
             }
-        });
+        }, error -> Toast.makeText(context, "Unable upload StakeHolderTable", Toast.LENGTH_LONG).show());
         requestQueue.add(submitRequest);
     }
     public void requestRoles() {
@@ -148,15 +129,11 @@ public enum Cashing {
                             JSONObject recordJson = response.getJSONObject(i);
                             roles.add(recordJson.getString("Role"));
                         }
-
-                       // manager.onLoginSucceed(username, loggedIn, roles);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        //manager.onLoginFailed(e.toString());
                     }
                 },
-                //error -> manager.onLoginFailed(error.toString()));
-                error -> Toast.makeText(context, "Unable upload StakeHolderTable", Toast.LENGTH_LONG).show());
+                error -> Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show());
 
         requestQueue.add(request);
     }

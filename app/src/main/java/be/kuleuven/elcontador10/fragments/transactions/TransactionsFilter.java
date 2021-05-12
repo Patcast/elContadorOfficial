@@ -30,15 +30,13 @@ import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.database.Cashing;
-import be.kuleuven.elcontador10.background.database.TransactionsManager;
-import be.kuleuven.elcontador10.background.interfaces.CashingObserver;
+import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
-import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsFilterInterface;
-import be.kuleuven.elcontador10.model.StakeHolder;
-import be.kuleuven.elcontador10.model.TransactionType;
+import be.kuleuven.elcontador10.background.model.StakeHolder;
+import be.kuleuven.elcontador10.background.model.TransactionType;
 
-public class TransactionsFilter extends Fragment implements CashingObserver {
+public class TransactionsFilter extends Fragment implements CachingObserver {
     private MainActivity mainActivity;
 
     private Spinner spCategory;
@@ -55,7 +53,7 @@ public class TransactionsFilter extends Fragment implements CashingObserver {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Cashing.INSTANCE.attachChasing(this); //Adds Transaction new to the list of observers of Cashing
+        Caching.INSTANCE.attachCaching(this); //Adds Transaction new to the list of observers of Caching
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,20 +69,16 @@ public class TransactionsFilter extends Fragment implements CashingObserver {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // get transactions type from database
-//        TransactionsManager manager = TransactionsManager.getInstance();
-//        manager.getTransactionTypes(this);
-
         // get views
-        spCategory = getView().findViewById(R.id.FilterTransCategory);
-        spSubCategory = getView().findViewById(R.id.FilterTransSubcategory);
-        switchFrom = getView().findViewById(R.id.FilterTransFromSwitch);
-        switchTo = getView().findViewById(R.id.FilterTransToSwitch);
-        txtStakeHolder = getView().findViewById(R.id.FilterTransName);
-        dateFrom = getView().findViewById(R.id.FilterTransFrom);
-        dateTo = getView().findViewById(R.id.FilterTransTo);
+        spCategory = requireView().findViewById(R.id.FilterTransCategory);
+        spSubCategory = requireView().findViewById(R.id.FilterTransSubcategory);
+        switchFrom = requireView().findViewById(R.id.FilterTransFromSwitch);
+        switchTo = requireView().findViewById(R.id.FilterTransToSwitch);
+        txtStakeHolder = requireView().findViewById(R.id.FilterTransName);
+        dateFrom = requireView().findViewById(R.id.FilterTransFrom);
+        dateTo = requireView().findViewById(R.id.FilterTransTo);
 
-        setWidgets(view);
+        setWidgets();
 
         // onClickListeners
         switchFrom.setOnCheckedChangeListener(this::From_onClick);
@@ -96,13 +90,12 @@ public class TransactionsFilter extends Fragment implements CashingObserver {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String catChosen = spCategory.getSelectedItem().toString();
                 List<String> subCategories = new ArrayList<>();
-                subCategories.clear();
                 subCategories.add("All");
                 subCategories.addAll( transTypes.stream()
                                                  .filter(cat->cat.getCategory().equals(catChosen))
                                                 .map(TransactionType::getSubCategory)
                                                 .distinct().collect(Collectors.toList()));
-                ArrayAdapter<String> adapterSpinner = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line,subCategories );
+                ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(getActivity(),android.R.layout.simple_dropdown_item_1line,subCategories );
                 spSubCategory.setAdapter(adapterSpinner);
             }
             @Override
@@ -174,20 +167,20 @@ public class TransactionsFilter extends Fragment implements CashingObserver {
 
     /// Set spinner for category & Autofill for Stakeholders
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setWidgets(View view){
+    public void setWidgets(){
 
         // Implement Categories spinner **********
         List<String> categories = new ArrayList<>();
-        categories.clear();
         categories.add("All");
         categories.addAll(transTypes.stream()
                                     .map(TransactionType::getCategory)
+                                    .distinct()
                                     .collect(Collectors.toList()));
-        ArrayAdapter adapterSpinnerCat = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line,categories);
+        ArrayAdapter adapterSpinnerCat = new ArrayAdapter<>(getActivity(),android.R.layout.simple_dropdown_item_1line,categories);
         spCategory.setAdapter(adapterSpinnerCat);
 
         //Implements auto-fill stakeholder *********
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1,
                 stakeHolds.stream()
                         .map(StakeHolder::getName)
                         .distinct()
@@ -198,13 +191,11 @@ public class TransactionsFilter extends Fragment implements CashingObserver {
     public Context getContext() { return mainActivity; }
 
     private void From_onClick(View view, boolean isChecked) {
-        if (isChecked) dateFrom.setEnabled(true);
-        else dateFrom.setEnabled(false);
+        dateFrom.setEnabled(isChecked);
     }
 
     private void To_onClick(View view, boolean isChecked) {
-        if (isChecked) dateTo.setEnabled(true);
-        else dateTo.setEnabled(false);
+        dateTo.setEnabled(isChecked);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

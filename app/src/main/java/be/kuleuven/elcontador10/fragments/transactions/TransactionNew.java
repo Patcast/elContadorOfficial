@@ -27,14 +27,7 @@ import androidx.navigation.Navigation;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,16 +38,15 @@ import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.database.Cashing;
-import be.kuleuven.elcontador10.background.database.DataBaseURL;
-import be.kuleuven.elcontador10.background.interfaces.CashingObserver;
-import be.kuleuven.elcontador10.model.StakeHolder;
-import be.kuleuven.elcontador10.model.Transaction;
+import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
+import be.kuleuven.elcontador10.background.model.StakeHolder;
+import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.database.JsonArrayRequestWithParams;
-import be.kuleuven.elcontador10.model.TransactionType;
+import be.kuleuven.elcontador10.background.model.TransactionType;
 
 
-public class TransactionNew extends Fragment implements CashingObserver {
+public class TransactionNew extends Fragment implements CachingObserver {
 
 //// input from UI
     RadioGroup radGroup;
@@ -73,15 +65,14 @@ public class TransactionNew extends Fragment implements CashingObserver {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Cashing.INSTANCE.attachChasing(this); //Adds Transaction new to the list of observers of Cashing
+        Caching.INSTANCE.attachCaching(this); //Adds Transaction new to the list of observers of Caching
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle("New Transaction");
-        View v = inflater.inflate(R.layout.fragment_transaction_new, container, false);
-        return v;
+        return inflater.inflate(R.layout.fragment_transaction_new, container, false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -94,7 +85,7 @@ public class TransactionNew extends Fragment implements CashingObserver {
         spCategory = view.findViewById(R.id.sp_TransCategory);
         spSubCategory = view.findViewById(R.id.sp_TransSubcategory);
         txtNotes = view.findViewById(R.id.ed_txt_notes);
-        setWidgets(view);
+        setWidgets();
 
         //Set sp_SubCategory after clicking on category
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -102,7 +93,7 @@ public class TransactionNew extends Fragment implements CashingObserver {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String catChosen = spCategory.getSelectedItem().toString();
-                ArrayAdapter<String> adapterSpinner = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line,
+                ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(getActivity(),android.R.layout.simple_dropdown_item_1line,
                           transTypes.stream()
                                     .filter(cat->cat.getCategory().equals(catChosen))
                                     .map(TransactionType::getSubCategory)
@@ -117,35 +108,30 @@ public class TransactionNew extends Fragment implements CashingObserver {
         /// Navigates to  All Transaction and sends New transaction to db ******
         final NavController navController = Navigation.findNavController(view);
         Button confirmButton = view.findViewById(R.id.btn_confirm_NewTransaction);
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onClick(View v) {
-                // here we check that the user added a certain amount.
-                String amount =  txtAmount.getText().toString();
-                if ( amount.isEmpty()) {
+        confirmButton.setOnClickListener(v -> {
+            // here we check that the user added a certain amount.
+            String amount =  txtAmount.getText().toString();
+            if ( amount.isEmpty()) {
+                Toast.makeText(getActivity(), R.string.zero_amount, Toast.LENGTH_LONG).show();
+            }
+            else{
+                if ( Double.parseDouble(amount) == 0 ) {
                     Toast.makeText(getActivity(), R.string.zero_amount, Toast.LENGTH_LONG).show();
                 }
                 else{
-                    if ( Double.parseDouble(amount) == 0 ) {
-                        Toast.makeText(getActivity(), R.string.zero_amount, Toast.LENGTH_LONG).show();
-                    }
-                    else{
-                        navController.navigate(R.id.action_newTransaction_to_transactions_summary);
-                        postNewTransaction(view);
-                    }
+                    navController.navigate(R.id.action_newTransaction_to_transactions_summary);
+                    postNewTransaction();
                 }
             }
-
         });
     }
 /// Set spinner for category & Autofill for Stakeholders
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setWidgets(View view){
+    public void setWidgets(){
         //categories.addAll(typeFullList.stream().map(TransactionType::getCategory).distinct().collect(Collectors.toList()));
 
         // Implement Categories spinner **********
-        ArrayAdapter adapterSpinnerCat = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line,
+        ArrayAdapter adapterSpinnerCat = new ArrayAdapter<>(getActivity(),android.R.layout.simple_dropdown_item_1line,
                 transTypes.stream()
                           .map(TransactionType::getCategory)
                           .distinct()
@@ -153,7 +139,7 @@ public class TransactionNew extends Fragment implements CashingObserver {
         spCategory.setAdapter(adapterSpinnerCat);
 
         //Implements auto-fill stakeholder *********
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1,
                 stakeHolds.stream()
                           .map(StakeHolder::getFullNameId)
                           .distinct()
@@ -185,7 +171,7 @@ public class TransactionNew extends Fragment implements CashingObserver {
 
     ////// Posts the content from the NewTransaction to the db
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void postNewTransaction(View view){
+    public void postNewTransaction(){
         ///Make HashMap for params
         Transaction newTrans = makeNewTrans();
         Map<String,String> params = new HashMap<>();
@@ -195,21 +181,14 @@ public class TransactionNew extends Fragment implements CashingObserver {
         params.put("idstakeholder", newTrans.getIdStakeholder());
         params.put("type", newTrans.getIdType());
 
+        //TODO move to TransactionsManager
 
         // Make Json request
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        RequestQueue requestQueue = Volley.newRequestQueue(requireActivity());
         String RequestURL = "https://studev.groept.be/api/a20sd505/postNewTransaction/";
-        JsonArrayRequestWithParams submitRequest = new JsonArrayRequestWithParams (Request.Method.POST, RequestURL, params,  new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                Toast.makeText(getActivity(), "Transaction placed", Toast.LENGTH_SHORT).show();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(), "Unable to place the Transaction", Toast.LENGTH_LONG).show();
-            }
-        });
+        JsonArrayRequestWithParams submitRequest = new JsonArrayRequestWithParams (Request.Method.POST, RequestURL, params,
+                response -> Toast.makeText(getActivity(), "Transaction placed", Toast.LENGTH_SHORT).show(),
+                error -> Toast.makeText(getActivity(), error.toString(), Toast.LENGTH_LONG).show());
         requestQueue.add(submitRequest);
     }
 

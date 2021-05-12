@@ -5,7 +5,7 @@ import android.content.Context;
 import java.util.List;
 
 
-import be.kuleuven.elcontador10.model.TransactionType;
+import be.kuleuven.elcontador10.background.model.TransactionType;
 
 public interface TransactionsFilterInterface {
     void setCategories(List<TransactionType> types);

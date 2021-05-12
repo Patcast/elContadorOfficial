@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.model;
+package be.kuleuven.elcontador10.background.model;
 
 public class TransactionType {
     int id;
