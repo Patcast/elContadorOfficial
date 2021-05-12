@@ -47,10 +47,7 @@ public class Transaction {
         if(stakeHolder.isEmpty()){
             return "0";
         }
-        else {
-
-            return  stakeHolder.split("-")[1];
-        }
+        else { return  stakeHolder.split("-")[1]; }
     }
 
     public String getIdType() {

@@ -28,8 +28,12 @@ public class StakeHolder {
         return role;
     }
     public String getFullNameId(){return ("-"+id+"-"+" "+name+" "+familyName);}
-    public boolean isDeleted() {
-        return deleted;
+    public boolean isDeleted() { return deleted; }
+    public String  getIdStakeholder(String stakeHolder) {
+        if(stakeHolder.isEmpty()){
+            return "0";
+        }
+        else { return  stakeHolder.split("-")[1]; }
     }
 
 }

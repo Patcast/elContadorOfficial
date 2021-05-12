@@ -95,11 +95,14 @@ public class TransactionsFilter extends Fragment implements CashingObserver {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String catChosen = spCategory.getSelectedItem().toString();
-                ArrayAdapter<String> adapterSpinner = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line,
-                        transTypes.stream()
-                                .filter(cat->cat.getCategory().equals(catChosen))
-                                .map(TransactionType::getSubCategory)
-                                .distinct().collect(Collectors.toList()));
+                List<String> subCategories = new ArrayList<>();
+                subCategories.clear();
+                subCategories.add("All");
+                subCategories.addAll( transTypes.stream()
+                                                 .filter(cat->cat.getCategory().equals(catChosen))
+                                                .map(TransactionType::getSubCategory)
+                                                .distinct().collect(Collectors.toList()));
+                ArrayAdapter<String> adapterSpinner = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line,subCategories );
                 spSubCategory.setAdapter(adapterSpinner);
             }
             @Override
@@ -174,17 +177,19 @@ public class TransactionsFilter extends Fragment implements CashingObserver {
     public void setWidgets(View view){
 
         // Implement Categories spinner **********
-        ArrayAdapter adapterSpinnerCat = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line,
-                transTypes.stream()
-                        .map(TransactionType::getCategory)
-                        .distinct()
-                        .collect(Collectors.toList()));
+        List<String> categories = new ArrayList<>();
+        categories.clear();
+        categories.add("All");
+        categories.addAll(transTypes.stream()
+                                    .map(TransactionType::getCategory)
+                                    .collect(Collectors.toList()));
+        ArrayAdapter adapterSpinnerCat = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line,categories);
         spCategory.setAdapter(adapterSpinnerCat);
 
         //Implements auto-fill stakeholder *********
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,
                 stakeHolds.stream()
-                        .map(StakeHolder::getFullNameId)
+                        .map(StakeHolder::getName)
                         .distinct()
                         .collect(Collectors.toList()));
         txtStakeHolder.setAdapter(adapter);
