@@ -13,8 +13,7 @@ import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
 import be.kuleuven.elcontador10.background.interfaces.LogInInterface;
 
 public class AccountManager {
-    private final String URL_LogIn = "https://studev.groept.be/api/a20sd505/LogIn/";
-    private final String URL_findStakeholderUsername = "https://studev.groept.be/api/a20sd505/findStakeholderUsername/";
+
     private static  volatile AccountManager INSTANCE = null;
 
     private AccountManager() {}
@@ -30,7 +29,7 @@ public class AccountManager {
     }
 
     public void Authenticate(LogInInterface manager, String username, String password) {
-        String URL = URL_LogIn + username + "/" + password;
+        String URL = DataBaseURL.INSTANCE.checkLogIn + username + "/" + password;
         RequestQueue requestQueue = Volley.newRequestQueue(manager.getContext());
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null,
@@ -58,7 +57,7 @@ public class AccountManager {
     }
 
     public void findStakeHolderUsername(LogInInterface manager, String username) {
-        String URL = URL_findStakeholderUsername + username;
+        String URL = DataBaseURL.INSTANCE.URL_findStakeholderUsername + username;
         RequestQueue requestQueue = Volley.newRequestQueue(manager.getContext());
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null,
@@ -78,7 +77,8 @@ public class AccountManager {
                                 StakeholderLoggedIn loggedIn = new StakeholderLoggedIn(
                                         id, firstName, lastName, role, phoneNumber, email, username);
 
-                                getStakeholderRoles(manager, username, loggedIn);
+                               // getStakeholderRoles(manager, username, loggedIn);
+                                manager.onLoginSucceed(username, loggedIn);
                             } else {
                                 manager.onLoginFailed("Stakeholder has been deleted.");
                             }
@@ -100,7 +100,7 @@ public class AccountManager {
         requestQueue.add(request);
     }
 
-    public void getStakeholderRoles(LogInInterface manager, String username, StakeholderLoggedIn loggedIn) {
+    /*public void getStakeholderRoles(LogInInterface manager, String username, StakeholderLoggedIn loggedIn) {
         String URL = "https://studev.groept.be/api/a20sd505/getStakeholderRoles";
 
         RequestQueue requestQueue = Volley.newRequestQueue(manager.getContext());
@@ -122,5 +122,5 @@ public class AccountManager {
                 }, error -> manager.onLoginFailed(error.toString()));
 
         requestQueue.add(request);
-    }
+    }*/
 }

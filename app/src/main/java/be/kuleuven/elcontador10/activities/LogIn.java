@@ -1,9 +1,11 @@
 package be.kuleuven.elcontador10.activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.AccountManager;
+import be.kuleuven.elcontador10.background.database.Cashing;
 import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
 import be.kuleuven.elcontador10.background.interfaces.LogInInterface;
 
@@ -25,15 +28,15 @@ public class LogIn extends AppCompatActivity implements LogInInterface {
     private TextView password;
     private Button login;
 
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
-
         username = findViewById(R.id.txtbxLogInUsername);
         password = findViewById(R.id.txtbxLogInPassword);
         login = findViewById(R.id.btnLogIn);
-
         password.setOnKeyListener(this::onKey);
     }
 
@@ -62,11 +65,10 @@ public class LogIn extends AppCompatActivity implements LogInInterface {
     public Context getContext() { return this; }
 
     @Override
-    public void onLoginSucceed(String username, StakeholderLoggedIn loggedIn, ArrayList<String> roles) {
+    public void onLoginSucceed(String username, StakeholderLoggedIn loggedIn) {
         showToast("Welcome " + username + "!");
         Intent i = new Intent(this, MainActivity.class);
         i.putExtra("Account", loggedIn);
-        i.putExtra("Roles", roles);
         startActivity(i);
         finish();
     }

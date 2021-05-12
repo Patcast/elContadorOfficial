@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.background;
+package be.kuleuven.elcontador10.model;
 
 public class Transaction {
     private boolean cashIn;

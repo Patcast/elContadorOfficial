@@ -32,7 +32,7 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.TransactionsManager;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsFilterInterface;
-import be.kuleuven.elcontador10.background.parcels.TransactionType;
+import be.kuleuven.elcontador10.model.TransactionType;
 
 public class TransactionsFilter extends Fragment implements TransactionsFilterInterface {
     private MainActivity mainActivity;
@@ -46,7 +46,7 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
     private TextView dateTo;
 
     private List<String> categories;
-    private ArrayList<TransactionType> all_categories;
+    private List<TransactionType> all_categories;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -109,7 +109,7 @@ public class TransactionsFilter extends Fragment implements TransactionsFilterIn
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    public void setCategories(ArrayList<TransactionType> types) {
+    public void setCategories( List<TransactionType> types) {
         all_categories = types;
         categories.clear();
         categories.add("All");

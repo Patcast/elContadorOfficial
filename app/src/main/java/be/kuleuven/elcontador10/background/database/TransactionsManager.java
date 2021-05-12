@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import be.kuleuven.elcontador10.background.CardFormatter;
@@ -30,7 +31,8 @@ import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 import be.kuleuven.elcontador10.background.parcels.NewTransactionParcel;
 import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsNewInterface;
-import be.kuleuven.elcontador10.background.parcels.TransactionType;
+import be.kuleuven.elcontador10.model.TransactionType;
+
 
 public class TransactionsManager {
     private final String all_URL = "https://studev.groept.be/api/a20sd505/getTransactions";
@@ -183,8 +185,9 @@ public class TransactionsManager {
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, type_URL, null,
                 response -> {
+                    List<TransactionType> types = new ArrayList<>();
                     try {
-                        ArrayList<TransactionType> types = new ArrayList<>();
+
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject object = response.getJSONObject(i);
                             TransactionType type = new TransactionType(object.getInt("idTransactionType"),
