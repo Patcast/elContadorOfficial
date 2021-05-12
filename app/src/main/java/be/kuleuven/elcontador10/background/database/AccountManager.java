@@ -100,27 +100,4 @@ public class AccountManager {
         requestQueue.add(request);
     }
 
-    /*public void getStakeholderRoles(LogInInterface manager, String username, StakeholderLoggedIn loggedIn) {
-        String URL = "https://studev.groept.be/api/a20sd505/getStakeholderRoles";
-
-        RequestQueue requestQueue = Volley.newRequestQueue(manager.getContext());
-
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null,
-                response -> {
-                    try {
-                        ArrayList<String> roles = new ArrayList<>();
-
-                        for (int i = 0; i < response.length(); i++) {
-                            roles.add(response.getJSONObject(i).getString("Role"));
-                        }
-
-                        manager.onLoginSucceed(username, loggedIn, roles);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        manager.onLoginFailed(e.toString());
-                    }
-                }, error -> manager.onLoginFailed(error.toString()));
-
-        requestQueue.add(request);
-    }*/
 }
