@@ -136,10 +136,10 @@ public class TransactionNew extends Fragment implements CashingObserver {
                     }
                 }
             }
-            //*********************
+
         });
     }
-/// Set spinner for category
+/// Set spinner for category & Autofill for Stakeholders
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void setWidgets(View view){
         //categories.addAll(typeFullList.stream().map(TransactionType::getCategory).distinct().collect(Collectors.toList()));
