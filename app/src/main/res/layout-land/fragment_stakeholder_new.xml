@@ -16,7 +16,7 @@
 
         <EditText
             android:id="@+id/StakeholderNewLastName"
-            android:layout_width="wrap_content"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
 
             android:layout_marginTop="20dp"
@@ -27,7 +27,7 @@
 
         <EditText
             android:id="@+id/StakeholderNewFirstName"
-            android:layout_width="wrap_content"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:hint="First Name"
@@ -37,7 +37,7 @@
 
         <Spinner
             android:id="@+id/StakeholderNewRoles"
-            android:layout_width="wrap_content"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:entries="@array/roles"
@@ -56,7 +56,7 @@
 
         <EditText
             android:id="@+id/StakeholderNewPhoneNumber"
-            android:layout_width="wrap_content"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:hint="Phone Number"
@@ -66,7 +66,7 @@
 
         <EditText
             android:id="@+id/StakeholderNewEmail"
-            android:layout_width="wrap_content"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:ems="10"
