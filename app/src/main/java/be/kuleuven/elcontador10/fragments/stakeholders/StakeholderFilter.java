@@ -80,6 +80,7 @@ public class StakeholderFilter extends Fragment {
         all_roles.setOnClickListener(this::onClick_All);
     }
 
+
     public void onClick_Cancel(View view) {
         FilterStakeholdersParcel filter = new FilterStakeholdersParcel("*", roleNames, false, "Name");
         StakeholderFilterDirections.ActionStakeholderFilterToStakeholderSummary action =

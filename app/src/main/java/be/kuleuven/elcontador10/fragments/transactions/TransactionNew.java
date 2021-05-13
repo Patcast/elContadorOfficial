@@ -38,16 +38,18 @@ import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.adapters.WidgetsCreation;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.database.TransactionsManager;
 import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
+import be.kuleuven.elcontador10.background.interfaces.CreateWidgets;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.database.JsonArrayRequestWithParams;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 
 
-public class TransactionNew extends Fragment implements CachingObserver {
+public class TransactionNew extends Fragment implements CachingObserver, CreateWidgets {
 
 //// input from UI
     RadioGroup radGroup;
@@ -60,7 +62,6 @@ public class TransactionNew extends Fragment implements CachingObserver {
 
     ////// Arrays to fill input
     List<TransactionType> transTypes = new ArrayList<>();
-    List<StakeHolder> stakeHolds = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,20 +86,16 @@ public class TransactionNew extends Fragment implements CachingObserver {
         spCategory = view.findViewById(R.id.sp_TransCategory);
         spSubCategory = view.findViewById(R.id.sp_TransSubcategory);
         txtNotes = view.findViewById(R.id.ed_txt_notes);
-        setWidgets();
+        /// Set spinner for category & Autofill for Stakeholders
+        addSpinnerCat();
+        addAutoStake();
 
         //Set sp_SubCategory after clicking on category
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String catChosen = spCategory.getSelectedItem().toString();
-                ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(getActivity(),android.R.layout.simple_dropdown_item_1line,
-                          transTypes.stream()
-                                    .filter(cat->cat.getCategory().equals(catChosen))
-                                    .map(TransactionType::getSubCategory)
-                                    .distinct().collect(Collectors.toList()));
-                spSubCategory.setAdapter(adapterSpinner);
+                addSpinnerSubCat(spCategory.getSelectedItem().toString());
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -126,35 +123,10 @@ public class TransactionNew extends Fragment implements CachingObserver {
             }
         });
     }
-/// Set spinner for category & Autofill for Stakeholders
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setWidgets(){
-        //categories.addAll(typeFullList.stream().map(TransactionType::getCategory).distinct().collect(Collectors.toList()));
 
-        // Implement Categories spinner **********
-        ArrayAdapter adapterSpinnerCat = new ArrayAdapter<>(getActivity(),android.R.layout.simple_dropdown_item_1line,
-                transTypes.stream()
-                          .map(TransactionType::getCategory)
-                          .distinct()
-                          .collect(Collectors.toList()));
-        spCategory.setAdapter(adapterSpinnerCat);
-
-        //Implements auto-fill stakeholder *********
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1,
-                stakeHolds.stream()
-                          .map(StakeHolder::getFullNameId)
-                          .distinct()
-                          .collect(Collectors.toList()));
-        txtStakeHolder.setAdapter(adapter);
-    }
-
-    /// This method reads the radio groups and returns true is the cash in radio button is selected.
-    public boolean transCashIn(RadioGroup radioGroup){
-        return radioGroup.getCheckedRadioButtonId() == R.id.radio_CashIn;
-    }
     @RequiresApi(api = Build.VERSION_CODES.N)
     private Transaction makeNewTrans(){
-        boolean cashIn = transCashIn(radGroup);
+        boolean cashIn = radGroup.getCheckedRadioButtonId() == R.id.radio_CashIn;
         double amount = Double.parseDouble(txtAmount.getText().toString());
         int idUser = (mainActivity.getLoggedIn().getId());
         String stakeholder =  txtStakeHolder.getText().toString();
@@ -170,7 +142,12 @@ public class TransactionNew extends Fragment implements CachingObserver {
         return new Transaction(cashIn,amount,idUser,stakeholder,idType,notes);
     }
 
-    @Override
+
+
+   //IMPLEMENTATION of INTERFACES **********
+
+
+     @Override
     public void notifyRoles(List<String> roles) {
     }
 
@@ -181,7 +158,26 @@ public class TransactionNew extends Fragment implements CachingObserver {
     }
     @Override
     public void notifyStakeHolders(List<StakeHolder> stakeHolders) {
-        stakeHolds.clear();
-        stakeHolds.addAll(stakeHolders);
+
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void addSpinnerCat() {
+        WidgetsCreation.INSTANCE.makeSpinnerCat(mainActivity,spCategory);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void addSpinnerSubCat(String catChosen) {
+        WidgetsCreation.INSTANCE.makeSpinnerSubCat(mainActivity,spSubCategory,catChosen);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void addAutoStake() {
+        WidgetsCreation.INSTANCE.makeAutoStake(mainActivity,txtStakeHolder);
+
     }
 }
