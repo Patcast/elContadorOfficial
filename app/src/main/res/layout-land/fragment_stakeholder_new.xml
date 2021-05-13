@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
+        tools:context=".fragments.stakeholders.StakeholderNew">
+
+
+        <EditText
+            android:id="@+id/StakeholderNewLastName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="20dp"
+            android:hint="Last Name"
+            android:inputType="textPersonName"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toBottomOf="@+id/StakeholderNewFirstName" />
+
+        <EditText
+            android:id="@+id/StakeholderNewFirstName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="First Name"
+            android:inputType="textPersonName"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/StakeholderNewRoles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:entries="@array/roles"
+            android:spinnerMode="dialog"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toBottomOf="@+id/StakeholderNewRoleLabel" />
+
+        <TextView
+            android:id="@+id/StakeholderNewRoleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Roles"
+            app:layout_constraintStart_toStartOf="@+id/StakeholderNewLastName"
+            app:layout_constraintTop_toBottomOf="@+id/StakeholderNewLastName" />
+
+        <EditText
+            android:id="@+id/StakeholderNewPhoneNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Phone Number"
+            android:inputType="phone"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toBottomOf="@+id/StakeholderNewRoles" />
+
+        <EditText
+            android:id="@+id/StakeholderNewEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="Email"
+            android:inputType="textWebEmailAddress"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toBottomOf="@+id/StakeholderNewPhoneNumber" />
+
+        <ImageView
+            android:id="@+id/StakeholderNewImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="230dp"
+            android:layout_marginRight="230dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/icon_stakeholder"
+            tools:srcCompat="@drawable/icon_stakeholder" />
+
+        <Button
+            android:id="@+id/btn_cancel_NewTransaction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/buttons"
+            android:text="@string/close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.15"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/StakeholderNewEmail" />
+
+        <Button
+            android:id="@+id/btn_confirm_NewTransaction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buttons"
+            android:text="@string/confirm"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_cancel_NewTransaction"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.85"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_cancel_NewTransaction" />
+
+        <Button
+            android:id="@+id/btn_picture_NewStakeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/buttons"
+            android:text="Choose Picture"
+            app:layout_constraintEnd_toEndOf="@+id/StakeholderNewImageView"
+            app:layout_constraintStart_toStartOf="@+id/StakeholderNewImageView"
+            app:layout_constraintTop_toBottomOf="@+id/StakeholderNewImageView" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="28dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
