@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -26,14 +27,16 @@ import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.adapters.WidgetsCreation;
+import be.kuleuven.elcontador10.background.interfaces.CreateWidgets;
 import be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel;
 
 import static be.kuleuven.elcontador10.R.id.stakeholder_filter_byRole;
 
-public class StakeholderFilter extends Fragment {
+public class StakeholderFilter extends Fragment implements CreateWidgets {
     private MainActivity mainActivity;
 
-    private TextView name;
+    private AutoCompleteTextView txtStakeHolder;
 
     private CheckBox all_roles;
     private LinearLayout chipGroup;
@@ -61,7 +64,7 @@ public class StakeholderFilter extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // set view variables
-        name = requireView().findViewById(R.id.stakeholder_filter_name);
+        txtStakeHolder = requireView().findViewById(R.id.stakeholder_filter_name);
         all_roles = requireView().findViewById(R.id.stakeholder_filter_all);
         chipGroup = requireView().findViewById(R.id.stakeholder_filter_roles);
         Button cancel = requireView().findViewById(R.id.btn_cancel_FilterStakeholder);
@@ -78,6 +81,8 @@ public class StakeholderFilter extends Fragment {
 
         // roles CheckBox animation
         all_roles.setOnClickListener(this::onClick_All);
+
+        addAutoStake();
     }
 
 
@@ -123,7 +128,9 @@ public class StakeholderFilter extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public FilterStakeholdersParcel getFilter() {
-        String name_text = name.getText().toString();
+        String name_text = txtStakeHolder.getText().toString();
+        name_text = name_text.split("-")[2];
+        name_text = name_text.split(" ")[1];
         String sortBy;
 
         // get the names of checked CheckBox
@@ -143,5 +150,22 @@ public class StakeholderFilter extends Fragment {
         }
 
         return new FilterStakeholdersParcel(name_text, categories, deleted, sortBy);
+    }
+
+    @Override
+    public void addSpinnerCat() {
+
+    }
+
+    @Override
+    public void addSpinnerSubCat(String catChosen) {
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void addAutoStake() {
+        WidgetsCreation.INSTANCE.makeAutoStake(mainActivity,txtStakeHolder,false);
+
     }
 }

@@ -57,7 +57,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btn_cancel_FilterStakeholder" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/stakeholder_filter_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
