@@ -19,13 +19,6 @@ import be.kuleuven.elcontador10.background.interfaces.SettingsInterface;
 import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
 
 public class SettingsManager {
-    private final String URL_CheckLogIn = "https://studev.groept.be/api/a20sd505/LogIn/";
-    private final String URL_Change = "https://studev.groept.be/api/a20sd505/changePassword/";
-    private final String URL_NonRegistered = "https://studev.groept.be/api/a20sd505/getNonRegisteredStakeholders";
-    private final String URL_CheckUsernameList = "https://studev.groept.be/api/a20sd505/checkUsernameList/";
-    private final String URL_Register = "https://studev.groept.be/api/a20sd505/registerUsername/";
-    private final String URL_Update = "https://studev.groept.be/api/a20sd505/updateUsername/";
-
     private static volatile SettingsManager INSTANCE;
 
     private SettingsManager() {}
@@ -38,10 +31,10 @@ public class SettingsManager {
 
     public void changePassword(SettingsInterface settings, StakeholderLoggedIn loggedIn, String currentPassword, String newPassword) {
         String username = loggedIn.getUsername();
-        String checkURL = URL_CheckLogIn + username + "/" + currentPassword;
+        String checkURL = DatabaseURL.INSTANCE.checkLogIn + username + "/" + currentPassword;
 
         RequestQueue requestQueue = Volley.newRequestQueue(settings.getContext());
-        StringRequest change = new StringRequest(Request.Method.POST, URL_Change,
+        StringRequest change = new StringRequest(Request.Method.POST, DatabaseURL.INSTANCE.changePassword,
                 response -> settings.feedback("Password changed."),
                 error -> {
                     error.printStackTrace();
@@ -82,7 +75,7 @@ public class SettingsManager {
 
         RequestQueue requestQueue = Volley.newRequestQueue(settings.getContext());
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL_NonRegistered, null,
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, DatabaseURL.INSTANCE.getNonRegistered, null,
                 response -> {
                     try {
                         ids.clear(); names.clear();
@@ -111,9 +104,9 @@ public class SettingsManager {
 
     public void register(SettingsInterface settings, String id, String username, String password) {
         RequestQueue requestQueue = Volley.newRequestQueue(settings.getContext());
-        String checkURL = URL_CheckUsernameList + username;
+        String checkURL = DatabaseURL.INSTANCE.checkUsernameList + username;
 
-        StringRequest update = new StringRequest(Request.Method.POST, URL_Update,
+        StringRequest update = new StringRequest(Request.Method.POST, DatabaseURL.INSTANCE.updateUsername,
                 response -> settings.feedback("User added"),
                 error -> {
                     error.printStackTrace();
@@ -129,7 +122,7 @@ public class SettingsManager {
             }
         };
 
-        StringRequest add = new StringRequest(Request.Method.POST, URL_Register,
+        StringRequest add = new StringRequest(Request.Method.POST, DatabaseURL.INSTANCE.registerUsername,
                 response -> requestQueue.add(update),
                 error -> {
                    error.printStackTrace();

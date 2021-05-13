@@ -214,8 +214,12 @@ public class TransactionsFilter extends Fragment implements CachingObserver, Cre
         else subcategory_string = spSubCategory.getSelectedItem().toString();
 
         String name_text = txtStakeHolder.getText().toString();
-        name_text = name_text.split("-")[2];
-        name_text = name_text.split(" ")[1];
+
+        if (!name_text.equals("") && name_text.contains("-") && name_text.contains(" ")) {
+            name_text = name_text.split("-")[2];
+            name_text = name_text.split(" ")[1];
+        }
+
         LocalDateTime from = null;
         LocalDateTime to = null;
 

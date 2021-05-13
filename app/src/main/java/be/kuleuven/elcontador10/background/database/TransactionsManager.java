@@ -5,14 +5,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,11 +38,6 @@ import be.kuleuven.elcontador10.background.model.TransactionType;
 
 
 public class TransactionsManager {
-    private final String all_URL = "https://studev.groept.be/api/a20sd505/getTransactions";
-    private final String single_URL = "https://studev.groept.be/api/a20sd505/getTransaction/";
-    private final String type_URL = "https://studev.groept.be/api/a20sd505/getTransactionTypes";
-    private final String delete_URL = "https://studev.groept.be/api/a20sd505/deleteTransaction/";
-
     private static volatile TransactionsManager INSTANCE = null;
 
     private final ArrayList<String> titles;
@@ -67,7 +66,7 @@ public class TransactionsManager {
     public void getTransactions(TransactionsSummaryInterface transactions, FilterTransactionsParcel filter) {
         RequestQueue requestQueue = Volley.newRequestQueue(transactions.getContext());
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, all_URL, null,
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, DatabaseURL.INSTANCE.getTransactions, null,
                 response -> {
                     try {
                         titles.clear();
@@ -139,7 +138,7 @@ public class TransactionsManager {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void getTransaction(TransactionsDisplayInterface displayInterface, String id) {
-        String final_URL = single_URL + id;
+        String final_URL = DatabaseURL.INSTANCE.getTransaction + id;
         RequestQueue requestQueue = Volley.newRequestQueue(displayInterface.getContext());
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, final_URL, null,
@@ -175,32 +174,10 @@ public class TransactionsManager {
         requestQueue.add(request);
     }
 
-    public void getTransactionTypes(TransactionsFilterInterface filterInterface) {
-        RequestQueue requestQueue = Volley.newRequestQueue(filterInterface.getContext());
-
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, type_URL, null,
-                response -> {
-                    List<TransactionType> types = new ArrayList<>();
-                    try {
-
-                        for (int i = 0; i < response.length(); i++) {
-                            JSONObject object = response.getJSONObject(i);
-                            TransactionType type = new TransactionType(object.getInt("idTransactionType"),
-                                    object.getString("type"), object.getString("subType"));
-                            types.add(type);
-                        }
-
-                        filterInterface.setCategories(types);
-                    } catch (JSONException e) { e.printStackTrace(); }
-                }, Throwable::printStackTrace);
-
-        requestQueue.add(request);
-    }
-
     public void deleteTransaction(TransactionsDisplayInterface display, String id) {
         RequestQueue requestQueue = Volley.newRequestQueue(display.getContext());
 
-        StringRequest request = new StringRequest(Request.Method.POST, delete_URL,
+        StringRequest request = new StringRequest(Request.Method.POST, DatabaseURL.INSTANCE.deleteTransaction,
                 response -> display.error("Transaction has been deleted"),
                 error -> display.error(error.toString())) {
 
@@ -225,12 +202,52 @@ public class TransactionsManager {
             params.put("type", newTrans.getIdType());
             // Make Json request
             RequestQueue requestQueue = Volley.newRequestQueue(useContext);
-            String RequestURL = "https://studev.groept.be/api/a20sd505/postNewTransaction/";
-            JsonArrayRequestWithParams submitRequest = new JsonArrayRequestWithParams (Request.Method.POST, RequestURL, params,
+            JsonArrayRequestWithParams submitRequest = new JsonArrayRequestWithParams (Request.Method.POST, DatabaseURL.INSTANCE.addTransaction, params,
                     response -> Toast.makeText(useContext, "Transaction placed", Toast.LENGTH_SHORT).show(),
                     error -> Toast.makeText(useContext, error.toString(), Toast.LENGTH_LONG).show());
             requestQueue.add(submitRequest);
 
+    }
+
+    private class JsonArrayRequestWithParams extends JsonArrayRequest {
+        private Map<String, String> params;
+        public JsonArrayRequestWithParams(String url, Response.Listener<JSONArray> listener, @Nullable Response.ErrorListener errorListener) {
+            super(url, listener, errorListener);
+        }
+
+        public JsonArrayRequestWithParams(int method, String url, @Nullable JSONArray jsonRequest, Response.Listener<JSONArray> listener, @Nullable Response.ErrorListener errorListener) {
+            super(method, url, jsonRequest, listener, errorListener);
+        }
+
+        public JsonArrayRequestWithParams(int method, String url, @Nullable Map<String, String> params, Response.Listener<JSONArray> listener, @Nullable Response.ErrorListener errorListener) {
+            super(method, url, null, listener, errorListener);
+            this.params = params;
+        }
+
+        @Override
+        protected Map<String, String> getParams() throws AuthFailureError {
+            return this.params;
+        }
+
+        @Override
+        public byte[] getBody() {
+            StringBuilder stringBodyBuilder = new StringBuilder();
+            for (String key : params.keySet()) {
+                if (params.get(key) != null) {
+                    stringBodyBuilder.append("\r\n" + "--98379387434"+ "\r\n");
+                    stringBodyBuilder.append("Content-Disposition: form-data; name=\"" + key + "\"" + "\r\n\r\n");
+                    stringBodyBuilder.append(params.get(key));
+                }
+            }
+            return stringBodyBuilder.toString().getBytes();
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            final Map<String, String> headers = new HashMap<>();
+            headers.put("Content-Type", "multipart/form-data;boundary=98379387434");
+            return headers;
+        }
     }
 
 }

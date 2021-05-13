@@ -50,10 +50,9 @@ public class HomepageManager {
     // get data from the server
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void getRecentTransactions(@NotNull HomepageInterface homepageInterface) {
-        String URL_Transactions = "https://studev.groept.be/api/a20sd505/getHomepageTransactions";
         RequestQueue requestQueue = Volley.newRequestQueue(homepageInterface.getContext());
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL_Transactions, null,
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, DatabaseURL.INSTANCE.homepageTransaction, null,
                 response -> {
                     try {
                         // clear everything first
@@ -99,7 +98,7 @@ public class HomepageManager {
                             metadata.add("");
                         }
 
-                        pushData(homepageInterface);
+                        homepageInterface.populateRecyclerView(titles, descriptions, status, metadata);
                     }
                     catch (Exception e) {
                         e.printStackTrace();
@@ -113,17 +112,10 @@ public class HomepageManager {
         requestQueue.add(request);
     }
 
-    public void pushData(@NotNull HomepageInterface homepageInterface) {
-        //send back to UI
-        homepageInterface.populateRecyclerView(titles, descriptions, status, metadata);
-    }
-
     public void getBudget(@NotNull HomepageInterface home) {
-        final String URL_Budget = "https://studev.groept.be/api/a20sd505/getBudget";
-
         RequestQueue requestQueue = Volley.newRequestQueue(home.getContext());
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL_Budget, null,
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, DatabaseURL.INSTANCE.getBudget, null,
                 response -> {
                     try {
                         home.displayBudget(response.getJSONObject(0).getDouble("budget"));

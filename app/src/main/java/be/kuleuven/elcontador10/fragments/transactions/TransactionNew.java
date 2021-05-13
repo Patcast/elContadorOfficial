@@ -1,7 +1,5 @@
 package be.kuleuven.elcontador10.fragments.transactions;
 
-
-
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +8,6 @@ import android.view.ViewGroup;
 
 
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,16 +22,9 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
@@ -45,9 +35,7 @@ import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
 import be.kuleuven.elcontador10.background.interfaces.CreateWidgets;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
-import be.kuleuven.elcontador10.background.database.JsonArrayRequestWithParams;
 import be.kuleuven.elcontador10.background.model.TransactionType;
-
 
 public class TransactionNew extends Fragment implements CachingObserver, CreateWidgets {
 
