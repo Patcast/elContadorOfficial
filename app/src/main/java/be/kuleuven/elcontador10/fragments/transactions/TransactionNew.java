@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.database.TransactionsManager;
 import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
@@ -58,7 +59,6 @@ public class TransactionNew extends Fragment implements CachingObserver {
     MainActivity mainActivity;
 
     ////// Arrays to fill input
-
     List<TransactionType> transTypes = new ArrayList<>();
     List<StakeHolder> stakeHolds = new ArrayList<>();
 
@@ -120,7 +120,8 @@ public class TransactionNew extends Fragment implements CachingObserver {
                 }
                 else{
                     navController.navigate(R.id.action_newTransaction_to_transactions_summary);
-                    postNewTransaction();
+                    TransactionsManager manager = TransactionsManager.getInstance();
+                    manager.addNewTransaction(makeNewTrans(),mainActivity);
                 }
             }
         });
@@ -169,33 +170,8 @@ public class TransactionNew extends Fragment implements CachingObserver {
         return new Transaction(cashIn,amount,idUser,stakeholder,idType,notes);
     }
 
-    ////// Posts the content from the NewTransaction to the db
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void postNewTransaction(){
-        ///Make HashMap for params
-        Transaction newTrans = makeNewTrans();
-        Map<String,String> params = new HashMap<>();
-        params.put("amount", String.valueOf(newTrans.getAmount()));
-        params.put("notes", newTrans.getTxtComments());
-        params.put("iduser", String.valueOf(newTrans.getIdUser()));
-        params.put("idstakeholder", newTrans.getIdStakeholder());
-        params.put("type", newTrans.getIdType());
-
-        //TODO move to TransactionsManager
-
-        // Make Json request
-        RequestQueue requestQueue = Volley.newRequestQueue(requireActivity());
-        String RequestURL = "https://studev.groept.be/api/a20sd505/postNewTransaction/";
-        JsonArrayRequestWithParams submitRequest = new JsonArrayRequestWithParams (Request.Method.POST, RequestURL, params,
-                response -> Toast.makeText(getActivity(), "Transaction placed", Toast.LENGTH_SHORT).show(),
-                error -> Toast.makeText(getActivity(), error.toString(), Toast.LENGTH_LONG).show());
-        requestQueue.add(submitRequest);
-    }
-
-
     @Override
     public void notifyRoles(List<String> roles) {
-
     }
 
     @Override

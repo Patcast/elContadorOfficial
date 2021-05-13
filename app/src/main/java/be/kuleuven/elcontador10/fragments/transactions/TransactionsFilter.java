@@ -238,6 +238,8 @@ public class TransactionsFilter extends Fragment implements CachingObserver {
         return new FilterTransactionsParcel(category_string, subcategory_string, name_text, from, to);
     }
 
+    ///Implementation of CashingObserver
+
     @Override
     public void notifyRoles(List<String> roles) {
 

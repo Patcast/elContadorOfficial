@@ -10,10 +10,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.Session2Command;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -65,6 +67,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
         return inflater.inflate(R.layout.fragment_stakeholder_new, container, false);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -89,6 +92,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
         roles.setAdapter(adapter);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void onCancelClicked(View view) {
         ArrayList<String> roles = mainActivity.getRoles();
         FilterStakeholdersParcel filter = new FilterStakeholdersParcel("*", roles, false, "Name");
@@ -190,6 +194,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void addStakeholder() {
         feedback("Stakeholder created.");

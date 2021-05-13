@@ -1,7 +1,9 @@
 package be.kuleuven.elcontador10.background.database;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -25,6 +27,7 @@ import be.kuleuven.elcontador10.background.CardFormatter;
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsDisplayInterface;
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsFilterInterface;
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsSummaryInterface;
+import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 import be.kuleuven.elcontador10.background.parcels.NewTransactionParcel;
 import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
@@ -136,10 +139,6 @@ public class TransactionsManager {
         return true;
     }
 
-    public void addTransactions(TransactionsNewInterface newInterface, NewTransactionParcel parcel) {
-
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void getTransaction(TransactionsDisplayInterface displayInterface, String id) {
         String final_URL = single_URL + id;
@@ -217,4 +216,23 @@ public class TransactionsManager {
 
         requestQueue.add(request);
     }
+
+    public void addNewTransaction(Transaction newTrans, Context useContext){
+            ///Make HashMap for params
+            Map<String,String> params = new HashMap<>();
+            params.put("amount", String.valueOf(newTrans.getAmount()));
+            params.put("notes", newTrans.getTxtComments());
+            params.put("iduser", String.valueOf(newTrans.getIdUser()));
+            params.put("idstakeholder", newTrans.getIdStakeholder());
+            params.put("type", newTrans.getIdType());
+            // Make Json request
+            RequestQueue requestQueue = Volley.newRequestQueue(useContext);
+            String RequestURL = "https://studev.groept.be/api/a20sd505/postNewTransaction/";
+            JsonArrayRequestWithParams submitRequest = new JsonArrayRequestWithParams (Request.Method.POST, RequestURL, params,
+                    response -> Toast.makeText(useContext, "Transaction placed", Toast.LENGTH_SHORT).show(),
+                    error -> Toast.makeText(useContext, error.toString(), Toast.LENGTH_LONG).show());
+            requestQueue.add(submitRequest);
+
+    }
+
 }
