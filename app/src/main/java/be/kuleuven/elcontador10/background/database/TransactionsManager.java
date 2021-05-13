@@ -29,9 +29,7 @@ import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsF
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsSummaryInterface;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
-import be.kuleuven.elcontador10.background.parcels.NewTransactionParcel;
 import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
-import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsNewInterface;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 
 

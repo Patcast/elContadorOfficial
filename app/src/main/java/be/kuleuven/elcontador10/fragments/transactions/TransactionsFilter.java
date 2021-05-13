@@ -30,13 +30,15 @@ import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.adapters.WidgetsCreation;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
+import be.kuleuven.elcontador10.background.interfaces.CreateWidgets;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 
-public class TransactionsFilter extends Fragment implements CachingObserver {
+public class TransactionsFilter extends Fragment implements CachingObserver, CreateWidgets {
     private MainActivity mainActivity;
 
     private Spinner spCategory;
@@ -77,8 +79,10 @@ public class TransactionsFilter extends Fragment implements CachingObserver {
         txtStakeHolder = requireView().findViewById(R.id.FilterTransName);
         dateFrom = requireView().findViewById(R.id.FilterTransFrom);
         dateTo = requireView().findViewById(R.id.FilterTransTo);
+        addAutoStake();
+        addSpinnerCat();
 
-        setWidgets();
+        //setWidgets();
 
         // onClickListeners
         switchFrom.setOnCheckedChangeListener(this::From_onClick);
@@ -89,14 +93,15 @@ public class TransactionsFilter extends Fragment implements CachingObserver {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String catChosen = spCategory.getSelectedItem().toString();
-                List<String> subCategories = new ArrayList<>();
+                addSpinnerSubCat(catChosen);
+                /*List<String> subCategories = new ArrayList<>();
                 subCategories.add("All");
                 subCategories.addAll( transTypes.stream()
                                                  .filter(cat->cat.getCategory().equals(catChosen))
                                                 .map(TransactionType::getSubCategory)
                                                 .distinct().collect(Collectors.toList()));
                 ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(getActivity(),android.R.layout.simple_dropdown_item_1line,subCategories );
-                spSubCategory.setAdapter(adapterSpinner);
+                spSubCategory.setAdapter(adapterSpinner);*/
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -164,7 +169,7 @@ public class TransactionsFilter extends Fragment implements CachingObserver {
         });
     }*/
 
-
+/*
     /// Set spinner for category & Autofill for Stakeholders
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void setWidgets(){
@@ -186,7 +191,7 @@ public class TransactionsFilter extends Fragment implements CachingObserver {
                         .distinct()
                         .collect(Collectors.toList()));
         txtStakeHolder.setAdapter(adapter);
-    }
+    }*/
     @Override
     public Context getContext() { return mainActivity; }
 
@@ -209,6 +214,8 @@ public class TransactionsFilter extends Fragment implements CachingObserver {
         else subcategory_string = spSubCategory.getSelectedItem().toString();
 
         String name_text = txtStakeHolder.getText().toString();
+        name_text = name_text.split("-")[2];
+        name_text = name_text.split(" ")[1];
         LocalDateTime from = null;
         LocalDateTime to = null;
 
@@ -254,6 +261,25 @@ public class TransactionsFilter extends Fragment implements CachingObserver {
     public void notifyStakeHolders(List<StakeHolder> stakeHolders) {
         stakeHolds.clear();
         stakeHolds.addAll(stakeHolders);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void addSpinnerCat() {
+        WidgetsCreation.INSTANCE.makeSpinnerCat(mainActivity,spCategory,true);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void addSpinnerSubCat(String catChosen) {
+        WidgetsCreation.INSTANCE.makeSpinnerSubCat(mainActivity,spSubCategory,catChosen,true);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void addAutoStake() {
+        WidgetsCreation.INSTANCE.makeAutoStake(mainActivity,txtStakeHolder,true);
+
     }
 }
 

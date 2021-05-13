@@ -29,34 +29,40 @@ public enum WidgetsCreation implements CachingObserver {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void makeSpinnerCat(Context useContext, Spinner useSpin){
-        ArrayAdapter adapterSpinnerCat = new ArrayAdapter<>(useContext,android.R.layout.simple_dropdown_item_1line,
-                transTypes.stream()
-                        .map(TransactionType::getCategory)
-                        .distinct()
-                        .collect(Collectors.toList()));
+    public void makeSpinnerCat(Context useContext, Spinner useSpin,boolean filter){
+        List<String> categories = new ArrayList<>();
+        if(filter) categories.add("All");
+        categories.addAll(transTypes.stream()
+                .map(TransactionType::getCategory)
+                .distinct()
+                .collect(Collectors.toList()));
+        ArrayAdapter adapterSpinnerCat = new ArrayAdapter<>(useContext,android.R.layout.simple_dropdown_item_1line,categories);
         useSpin.setAdapter(adapterSpinnerCat);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void makeAutoStake(Context useContext, AutoCompleteTextView autoText){
-        //Implements auto-fill stakeholder *********
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(useContext,android.R.layout.simple_list_item_1,
-                stakeHolds.stream()
-                        .map(StakeHolder::getFullNameId)
-                        .distinct()
-                        .collect(Collectors.toList()));
-        autoText.setAdapter(adapter);
+    public void makeSpinnerSubCat(Context useContext, Spinner useSpin, String chosenCat,boolean filter){
+        List<String> subCategories = new ArrayList<>();
+        if(filter) subCategories.add("All");
+        subCategories.addAll( transTypes.stream()
+                .filter(cat->cat.getCategory().equals(chosenCat))
+                .map(TransactionType::getSubCategory)
+                .distinct().collect(Collectors.toList()));
+        ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(useContext,android.R.layout.simple_dropdown_item_1line,subCategories );
+        useSpin.setAdapter(adapterSpinner);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void makeSpinnerSubCat(Context useContext, Spinner useSpin, String chosenCat){
-        ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(useContext,android.R.layout.simple_dropdown_item_1line,
-                transTypes.stream()
-                        .filter(cat->cat.getCategory().equals(chosenCat))
-                        .map(TransactionType::getSubCategory)
-                        .distinct().collect(Collectors.toList()));
-        useSpin.setAdapter(adapterSpinner);
+    public void makeAutoStake(Context useContext, AutoCompleteTextView autoText, boolean filter){
+        //Implements auto-fill stakeholder *********
+      List <String> autoStake = new ArrayList<>();
+      if(filter) autoStake.add("All");
+          autoStake.addAll( stakeHolds.stream()
+                                      .map(StakeHolder::getFullNameId)
+                                      .distinct()
+                                      .collect(Collectors.toList()));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(useContext,android.R.layout.simple_list_item_1,autoStake);
+        autoText.setAdapter(adapter);
     }
 
 

@@ -165,19 +165,19 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void addSpinnerCat() {
-        WidgetsCreation.INSTANCE.makeSpinnerCat(mainActivity,spCategory);
+        WidgetsCreation.INSTANCE.makeSpinnerCat(mainActivity,spCategory,false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void addSpinnerSubCat(String catChosen) {
-        WidgetsCreation.INSTANCE.makeSpinnerSubCat(mainActivity,spSubCategory,catChosen);
+        WidgetsCreation.INSTANCE.makeSpinnerSubCat(mainActivity,spSubCategory,catChosen,false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void addAutoStake() {
-        WidgetsCreation.INSTANCE.makeAutoStake(mainActivity,txtStakeHolder);
+        WidgetsCreation.INSTANCE.makeAutoStake(mainActivity,txtStakeHolder,false);
 
     }
 }
