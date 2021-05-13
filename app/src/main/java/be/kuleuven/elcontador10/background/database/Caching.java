@@ -10,7 +10,6 @@ import androidx.annotation.RequiresApi;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -76,7 +75,7 @@ public enum Caching {
     public void requestTypeTrans(){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
-        JsonArrayRequest submitRequest = new JsonArrayRequest(Request.Method.GET, DataBaseURL.INSTANCE.getTranType, null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest submitRequest = new JsonArrayRequest(Request.Method.GET, DatabaseURL.INSTANCE.getTranType, null, new Response.Listener<JSONArray>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(JSONArray response) {
@@ -100,7 +99,7 @@ public enum Caching {
     }
     public void requestStakeHold(){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-        JsonArrayRequest submitRequest = new JsonArrayRequest(Request.Method.GET, DataBaseURL.INSTANCE.getStakeHolder, null, response -> {
+        JsonArrayRequest submitRequest = new JsonArrayRequest(Request.Method.GET, DatabaseURL.INSTANCE.getStakeHolders, null, response -> {
             try{
                 stakeHolders.clear();
                 for(int i=0; i<response.length();i++){
@@ -121,7 +120,7 @@ public enum Caching {
     }
     public void requestRoles() {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, DataBaseURL.INSTANCE.getRoles, null,
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, DatabaseURL.INSTANCE.getRoles, null,
                 response -> {
                     try {
                         roles.clear();

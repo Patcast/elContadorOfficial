@@ -7,8 +7,6 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
 import be.kuleuven.elcontador10.background.interfaces.LogInInterface;
 
@@ -29,7 +27,7 @@ public class AccountManager {
     }
 
     public void Authenticate(LogInInterface manager, String username, String password) {
-        String URL = DataBaseURL.INSTANCE.checkLogIn + username + "/" + password;
+        String URL = DatabaseURL.INSTANCE.checkLogIn + username + "/" + password;
         RequestQueue requestQueue = Volley.newRequestQueue(manager.getContext());
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null,
@@ -57,7 +55,7 @@ public class AccountManager {
     }
 
     public void findStakeHolderUsername(LogInInterface manager, String username) {
-        String URL = DataBaseURL.INSTANCE.URL_findStakeholderUsername + username;
+        String URL = DatabaseURL.INSTANCE.URL_findStakeholderUsername + username;
         RequestQueue requestQueue = Volley.newRequestQueue(manager.getContext());
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null,

@@ -11,10 +11,12 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -36,6 +38,7 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.Base64Encoder;
 import be.kuleuven.elcontador10.background.database.StakeholdersManager;
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersDisplayInterface;
+import be.kuleuven.elcontador10.background.parcels.EditStakeholderParcel;
 import be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel;
 
 public class StakeholderDisplay extends Fragment implements StakeholdersDisplayInterface {
@@ -45,14 +48,14 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
     private String phoneNo;
     private String emailAddress;
     private String full_name;
+    private String role;
+    private String image_text;
 
-    private final int CALL_PERMISSION = 1;
-    private final int MESSAGE_PERMISSION = 1;
-
-    private Button delete;
     private NavController navController;
 
     private StakeholdersManager manager;
+
+    private Bitmap img = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,8 +86,11 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
 
         navController = Navigation.findNavController(view);
         // buttons
-        delete = requireView().findViewById(R.id.btn_delete_DisplayStakeholder);
+        Button delete = requireView().findViewById(R.id.btn_delete_DisplayStakeholder);
         delete.setOnClickListener(this::onDelete_Click);
+
+        Button edit = requireView().findViewById(R.id.btn_edit_DisplayStakeholder);
+        edit.setOnClickListener(this::onEdit_Clicked);
     }
 
     public void onDelete_Click(View view) {
@@ -99,30 +105,31 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
 
     @Override
     public void display(Bundle bundle) {
-        TextView name, role, phone, email;
+        TextView name, roleView, phone, email;
         ImageView image = requireView().findViewById(R.id.imgViewDisplayStakeholder);
 
         // initialise views variables
         name = requireView().findViewById(R.id.txtStakeholderDisplayName);
-        role = requireView().findViewById(R.id.txtStakeholderDisplayRole);
+        roleView = requireView().findViewById(R.id.txtStakeholderDisplayRole);
         phone = requireView().findViewById(R.id.txtStakeholderDisplayPhoneNo);
         email = requireView().findViewById(R.id.txtStakeholderDisplayEmail);
 
         // get bundles
         phoneNo = bundle.getString("phone");
         emailAddress = bundle.getString("email");
-        String image_text = bundle.getString("image");
+        image_text = bundle.getString("image");
         full_name = bundle.getString("name");
+        role = bundle.getString("role");
 
         // set views text
         name.setText(full_name);
-        role.setText(bundle.getString("role"));
+        roleView.setText(role);
         phone.setText(phoneNo);
         email.setText(emailAddress);
 
         // set image
         if (!image_text.equals("null") && !image_text.equals("")) {
-            Bitmap img = Base64Encoder.decodeImage(image_text);
+            img = Base64Encoder.decodeImage(image_text);
             image.setImageBitmap(img);
         }
 
@@ -200,6 +207,14 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         }
     }
 
+    public void onEdit_Clicked(View view) {
+        EditStakeholderParcel parcel = new EditStakeholderParcel(id, full_name, role, phoneNo, emailAddress, img, image_text);
+        StakeholderDisplayDirections.ActionStakeholderDisplayToStakeholderNew action =
+                StakeholderDisplayDirections.actionStakeholderDisplayToStakeholderNew();
+        action.setEditStakeholder(parcel);
+        navController.navigate(action);
+    }
+
     @Override
     public void error(String error) {
         Toast.makeText(mainActivity, error, Toast.LENGTH_SHORT).show();
@@ -211,6 +226,7 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         return mainActivity;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void delete() {
         error("Stakeholder deleted");

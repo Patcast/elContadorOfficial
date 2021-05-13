@@ -42,6 +42,7 @@ import be.kuleuven.elcontador10.background.Base64Encoder;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.database.StakeholdersManager;
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersNewInterface;
+import be.kuleuven.elcontador10.background.parcels.EditStakeholderParcel;
 import be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel;
 
 public class StakeholderNew extends Fragment implements StakeholdersNewInterface {
@@ -52,16 +53,20 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
     private String image;
     private ImageView preview;
     private Spinner roles;
+    private TextView firstName, lastName, phoneNo, email;
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int RESULT_LOAD_IMG = 2;
+
+    private ArrayList<String> roles_array;
+    private String id;
+    private boolean edit;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitle("New Stakeholder");
 
         return inflater.inflate(R.layout.fragment_stakeholder_new, container, false);
     }
@@ -79,6 +84,10 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
         picture = requireView().findViewById(R.id.btn_picture_NewStakeholder);
         preview = requireView().findViewById(R.id.StakeholderNewImageView);
         roles = requireView().findViewById(R.id.StakeholderNewRoles);
+        firstName = requireView().findViewById(R.id.StakeholderNewFirstName);
+        lastName = requireView().findViewById(R.id.StakeholderNewLastName);
+        phoneNo = requireView().findViewById(R.id.StakeholderNewPhoneNumber);
+        email = requireView().findViewById(R.id.StakeholderNewEmail);
 
         // onClick listeners
         cancel.setOnClickListener(this::onCancelClicked);
@@ -86,19 +95,56 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
         picture.setOnClickListener(this::onPictureClicked);
 
         // set up spinner
-        ArrayList<String> roles_array = mainActivity.getRoles();
+        roles_array = mainActivity.getRoles();
         ArrayAdapter adapter = new ArrayAdapter(mainActivity, android.R.layout.simple_spinner_dropdown_item, roles_array);
         roles.setAdapter(adapter);
+
+        // set up arguments
+        EditStakeholderParcel parcel = StakeholderNewArgs.fromBundle(getArguments()).getEditStakeholder();
+
+        if (parcel != null) {
+            mainActivity.setTitle("Edit Stakeholder");
+            edit = true;
+
+            displayEditValues(parcel);
+        }
+        else {
+            mainActivity.setTitle("New Stakeholder");
+            edit = false;
+        }
+    }
+
+    public void displayEditValues(EditStakeholderParcel parcel) {
+        id = parcel.getId();
+        String[] full_name = parcel.getName().split(" ", 2);
+        firstName.setText(full_name[0]);
+        lastName.setText(full_name[1]);
+        int position = roles_array.indexOf(parcel.getRole());
+        roles.setSelection(position);
+        phoneNo.setText(parcel.getPhoneNo());
+        email.setText(parcel.getEmail());
+
+        if (parcel.getImage() != null) {
+            preview.setImageBitmap(parcel.getImage());
+            image = parcel.getImage_string();
+            picture.setText(R.string.change_pic);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onCancelClicked(View view) {
-        ArrayList<String> roles = mainActivity.getRoles();
-        FilterStakeholdersParcel filter = new FilterStakeholdersParcel("*", roles, false, "Name");
+        if (!edit) { // go back to stakeholder summary
+            ArrayList<String> roles = mainActivity.getRoles();
+            FilterStakeholdersParcel filter = new FilterStakeholdersParcel("*", roles, false, "Name");
 
-        StakeholderNewDirections.ActionStakeholderNewToStakeholderSummary action =
-                StakeholderNewDirections.actionStakeholderNewToStakeholderSummary(filter);
-        navController.navigate(action);
+            StakeholderNewDirections.ActionStakeholderNewToStakeholderSummary action =
+                    StakeholderNewDirections.actionStakeholderNewToStakeholderSummary(filter);
+            navController.navigate(action);
+        } else { // go back to the stakeholder that was edited
+            StakeholderNewDirections.ActionStakeholderNewToStakeholderDisplay action =
+                    StakeholderNewDirections.actionStakeholderNewToStakeholderDisplay(id);
+            navController.navigate(action);
+        }
     }
 
     public void onPictureClicked(View view) {
@@ -138,17 +184,20 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
     // confirm button clicked
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onConfirmClicked(View view) {
-        String firstName = ((TextView) requireView().findViewById(R.id.StakeholderNewFirstName)).getText().toString();
-        String lastName = ((TextView) requireView().findViewById(R.id.StakeholderNewLastName)).getText().toString();
+        String first_Name = firstName.getText().toString();
+        String last_Name = lastName.getText().toString();
         String role = roles.getSelectedItem().toString();
-        String phoneNo = ((TextView) requireView().findViewById(R.id.StakeholderNewPhoneNumber)).getText().toString();
-        String email = ((TextView) requireView().findViewById(R.id.StakeholderNewEmail)).getText().toString();
+        String phone_No = phoneNo.getText().toString();
+        String emailString = email.getText().toString();
+        if (image == null) image = "";
+        StakeholdersManager manager = StakeholdersManager.getInstance();
 
-        if (firstName.equals("") || lastName.equals("")) feedback("Missing input!");
+        if (first_Name.equals("") || last_Name.equals("")) feedback("Missing input!");
         else {
-            if (image == null) image = "";
-            StakeholdersManager manager = StakeholdersManager.getInstance();
-            manager.addStakeholder(this, firstName, lastName, role, phoneNo, email, image,mainActivity);
+            if (edit)
+                manager.editStakeholder(this, id, first_Name, last_Name, role, phone_No, emailString, image);
+            else
+                manager.addStakeholder(this, first_Name, last_Name, role, phone_No, emailString, image);
         }
     }
 
@@ -179,7 +228,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
                 image = Base64Encoder.encodeImage(imageBitmap);
 
-                picture.setText("Change Picture");
+                picture.setText(R.string.change_pic);
                 preview.setImageBitmap(imageBitmap);
             } catch (Exception e) { feedback("Error getting image."); }
         } else if (requestCode == RESULT_LOAD_IMG) {
@@ -188,7 +237,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(mainActivity.getContentResolver(), selectedImage);
                 image = Base64Encoder.encodeImage(bitmap);
 
-                picture.setText("Change Picture");
+                picture.setText(R.string.change_pic);
                 preview.setImageBitmap(bitmap);
             } catch (Exception e) { feedback("Error getting image."); }
         }
@@ -198,6 +247,13 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
     @Override
     public void addStakeholder() {
         feedback("Stakeholder created.");
+        onCancelClicked(getView());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void editStakeholder() {
+        feedback("Stakeholder edited.");
         onCancelClicked(getView());
     }
 

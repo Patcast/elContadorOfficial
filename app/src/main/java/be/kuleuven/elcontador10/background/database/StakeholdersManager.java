@@ -1,9 +1,7 @@
 package be.kuleuven.elcontador10.background.database;
 
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -31,13 +29,8 @@ import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersD
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersNewInterface;
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersSummaryInterface;
 import be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel;
-import be.kuleuven.elcontador10.fragments.stakeholders.StakeholderSummary;
 
 public class StakeholdersManager {
-    private final String all_URL = "https://studev.groept.be/api/a20sd505/getStakeholders";
-    private final String single_URL = "https://studev.groept.be/api/a20sd505/getStakeholder/";
-    private final String delete_URL = "https://studev.groept.be/api/a20sd505/deleteStakeholder/";
-    private final String add_URL = "https://studev.groept.be/api/a20sd505/addStakeholder/";
 
     private static volatile  StakeholdersManager INSTANCE = null;
 
@@ -57,7 +50,7 @@ public class StakeholdersManager {
     public void getStakeholders(StakeholdersSummaryInterface summary, FilterStakeholdersParcel filter) {
         RequestQueue requestQueue = Volley.newRequestQueue(summary.getContext());
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, all_URL, null,
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, DatabaseURL.INSTANCE.getStakeHolders, null,
                 response -> {
                     try {
                         List<DataPlaceHolder> data = new ArrayList<>();
@@ -146,7 +139,7 @@ public class StakeholdersManager {
     }
 
     public void getStakeholder(StakeholdersDisplayInterface stakeholder, String id) {
-        String final_URL = single_URL + id;
+        String final_URL = DatabaseURL.INSTANCE.getStakeholder + id;
         RequestQueue requestQueue = Volley.newRequestQueue(stakeholder.getContext());
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, final_URL, null,
@@ -179,7 +172,7 @@ public class StakeholdersManager {
     public void deleteStakeholder(StakeholdersDisplayInterface stakeholders, String id) {
         RequestQueue requestQueue = Volley.newRequestQueue(stakeholders.getContext());
 
-        StringRequest request = new StringRequest(Request.Method.POST, delete_URL,
+        StringRequest request = new StringRequest(Request.Method.POST, DatabaseURL.INSTANCE.deleteStakeholder,
                 response -> stakeholders.delete(),
                 error -> stakeholders.error("Unable to delete")) {
 
@@ -196,10 +189,10 @@ public class StakeholdersManager {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void addStakeholder(StakeholdersNewInterface stakeholder, String firstName, String lastName,
-                               String role, @Nullable String phoneNo, @Nullable String email, @Nullable String image, Context useContext) {
+                               String role, @Nullable String phoneNo, @Nullable String email, @Nullable String image) {
         RequestQueue requestQueue = Volley.newRequestQueue(stakeholder.getContext());
 
-        StringRequest request = new StringRequest(Request.Method.POST, add_URL,
+        StringRequest request = new StringRequest(Request.Method.POST, DatabaseURL.INSTANCE.addStakeholder,
                 response -> {
                     stakeholder.addStakeholder();
                     Caching.INSTANCE.setStakeHolders();
@@ -215,6 +208,37 @@ public class StakeholdersManager {
                 params.put("no", phoneNo);
                 params.put("em", email);
                 params.put("img", image);
+                return params;
+            }
+        };
+
+        requestQueue.add(request);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void editStakeholder(StakeholdersNewInterface stakeholder, String id, String firstName, String lastName,
+                                String role, @Nullable String phoneNo, @Nullable String email, @Nullable String image) {
+        RequestQueue requestQueue = Volley.newRequestQueue(stakeholder.getContext());
+
+        StringRequest request = new StringRequest(Request.Method.POST, DatabaseURL.INSTANCE.editStakeholder,
+                response -> {
+                    stakeholder.editStakeholder();
+                    Caching.INSTANCE.setStakeHolders();
+                },
+                error -> stakeholder.feedback(error.toString())) {
+            @Nullable
+            @org.jetbrains.annotations.Nullable
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("fnam", firstName);
+                params.put("lnam", lastName);
+                params.put("ro", role);
+                params.put("no", phoneNo);
+                params.put("em", email);
+                params.put("img", image);
+                params.put("id", id);
+
                 return params;
             }
         };

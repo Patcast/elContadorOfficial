@@ -4,6 +4,7 @@ import android.content.Context;
 
 public interface StakeholdersNewInterface {
     void addStakeholder();
+    void editStakeholder();
     void feedback(String feedback);
     Context getContext();
 }

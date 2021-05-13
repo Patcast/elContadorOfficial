@@ -129,8 +129,10 @@ public class StakeholderFilter extends Fragment implements CreateWidgets {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public FilterStakeholdersParcel getFilter() {
         String name_text = txtStakeHolder.getText().toString();
-        name_text = name_text.split("-")[2];
-        name_text = name_text.split(" ")[1];
+        if (!name_text.equals("") && name_text.contains("-") && name_text.contains(" ")) {
+            name_text = name_text.split("-")[2];
+            name_text = name_text.split(" ")[1];
+        }
         String sortBy;
 
         // get the names of checked CheckBox
@@ -143,11 +145,8 @@ public class StakeholderFilter extends Fragment implements CreateWidgets {
 
         RadioButton byRole = requireView().findViewById(stakeholder_filter_byRole);
 
-        if (byRole.isChecked()) {
-            sortBy = "Role";
-        } else {
-            sortBy = "Name";
-        }
+        if (byRole.isChecked()) sortBy = "Role";
+        else sortBy = "Name";
 
         return new FilterStakeholdersParcel(name_text, categories, deleted, sortBy);
     }

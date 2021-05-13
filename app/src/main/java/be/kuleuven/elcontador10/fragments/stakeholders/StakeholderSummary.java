@@ -38,8 +38,6 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
     private FloatingActionButton fabAdd;
     private FloatingActionButton fabFilter;
 
-    private StakeholdersManager manager;
-    private FilterStakeholdersParcel filter;
     private NavController navController;
 
     @Override
@@ -62,6 +60,7 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
         fabFilter = requireView().findViewById(R.id.btn_filter_Transaction);
 
         // get arguments
+        FilterStakeholdersParcel filter;
         try {
             StakeholderSummaryArgs args = StakeholderSummaryArgs.fromBundle(getArguments());
             filter = args.getFilter();
@@ -87,7 +86,7 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
             }
         });
 
-        manager = StakeholdersManager.getInstance();
+        StakeholdersManager manager = StakeholdersManager.getInstance();
         manager.getStakeholders(this, filter);
 
         //set navigation
