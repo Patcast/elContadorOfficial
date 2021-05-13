@@ -39,6 +39,7 @@ import java.util.Arrays;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.Base64Encoder;
+import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.database.StakeholdersManager;
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersNewInterface;
 import be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel;
@@ -47,9 +48,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
 
     private MainActivity mainActivity;
     private NavController navController;
-
     private Button picture;
-
     private String image;
     private ImageView preview;
     private Spinner roles;
@@ -137,6 +136,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
     }
 
     // confirm button clicked
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void onConfirmClicked(View view) {
         String firstName = ((TextView) requireView().findViewById(R.id.StakeholderNewFirstName)).getText().toString();
         String lastName = ((TextView) requireView().findViewById(R.id.StakeholderNewLastName)).getText().toString();
@@ -148,7 +148,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
         else {
             if (image == null) image = "";
             StakeholdersManager manager = StakeholdersManager.getInstance();
-            manager.addStakeholder(this, firstName, lastName, role, phoneNo, email, image);
+            manager.addStakeholder(this, firstName, lastName, role, phoneNo, email, image,mainActivity);
         }
     }
 

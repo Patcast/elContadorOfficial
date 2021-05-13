@@ -1,5 +1,6 @@
 package be.kuleuven.elcontador10.background.database;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -193,12 +194,16 @@ public class StakeholdersManager {
         requestQueue.add(request);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void addStakeholder(StakeholdersNewInterface stakeholder, String firstName, String lastName,
-                               String role, @Nullable String phoneNo, @Nullable String email, @Nullable String image) {
+                               String role, @Nullable String phoneNo, @Nullable String email, @Nullable String image, Context useContext) {
         RequestQueue requestQueue = Volley.newRequestQueue(stakeholder.getContext());
 
         StringRequest request = new StringRequest(Request.Method.POST, add_URL,
-                response -> stakeholder.addStakeholder(),
+                response -> {
+                    stakeholder.addStakeholder();
+                    Caching.INSTANCE.setStakeHolders();
+                },
                 error -> stakeholder.feedback(error.toString())) {
 
             @Override
