@@ -44,13 +44,18 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
     private FloatingActionButton fabFilter;
 
     private NavController navController;
+    private ArrayList<String> roles;
+    private RecyclerViewAdapter recyclerViewAdapter;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle("Stakeholders");
+        roles = mainActivity.getRoles();
+        Caching.INSTANCE.attachCaching(this);
         return inflater.inflate(R.layout.fragment_stakeholder_summary, container, false);
     }
 
@@ -64,17 +69,10 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
         fabAdd = requireView().findViewById(R.id.btn_add_Transaction);
         fabFilter = requireView().findViewById(R.id.btn_filter_Transaction);
 
-        // get arguments
-        FilterStakeholdersParcel filter;
-        try {
-            StakeholderSummaryArgs args = StakeholderSummaryArgs.fromBundle(getArguments());
-            filter = args.getFilter();
-        } catch (Exception e) {
-            ArrayList<String> roles = mainActivity.getRoles();
-            filter = new FilterStakeholdersParcel("*", roles, false, "Name");
-        }
-
         // set up recyclerview
+        recyclerView.setAdapter(recyclerViewAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -91,9 +89,6 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
             }
         });
 
-        StakeholdersManager manager = StakeholdersManager.getInstance();
-        manager.getStakeholders(this, filter);
-
         //set navigation
         navController = Navigation.findNavController(view);
         fabFilter.setOnClickListener(v -> navController.navigate(R.id.action_stakeholderSummary_to_stakeholderFilter));
@@ -102,9 +97,7 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
 
     @Override
     public void populateRecyclerView(ArrayList<String> title, ArrayList<String> description, ArrayList<String> status, ArrayList<String> metadata) {
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(title, description, status, metadata, this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        recyclerViewAdapter = new RecyclerViewAdapter(title, description, status, metadata, this);
     }
 
     @Override
@@ -129,8 +122,19 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void notifyStakeHolders(List<StakeHolder> stakeHolders) {
+        // get arguments
+        FilterStakeholdersParcel filter;
+        try {
+            StakeholderSummaryArgs args = StakeholderSummaryArgs.fromBundle(getArguments());
+            filter = args.getFilter();
+        } catch (Exception e) {
+            filter = new FilterStakeholdersParcel("*", roles, false, "Name");
+        }
 
+        StakeholdersManager manager = StakeholdersManager.getInstance();
+        manager.getStakeholders(this, stakeHolders, filter);
     }
 }

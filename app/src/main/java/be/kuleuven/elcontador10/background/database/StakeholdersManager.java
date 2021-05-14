@@ -28,6 +28,7 @@ import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersDisplayInterface;
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersNewInterface;
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersSummaryInterface;
+import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel;
 
 public class StakeholdersManager {
@@ -47,46 +48,66 @@ public class StakeholdersManager {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void getStakeholders(StakeholdersSummaryInterface summary, FilterStakeholdersParcel filter) {
-        RequestQueue requestQueue = Volley.newRequestQueue(summary.getContext());
+    public void getStakeholders(StakeholdersSummaryInterface summary, List<StakeHolder> stakeHolders, FilterStakeholdersParcel filter) {
+//        RequestQueue requestQueue = Volley.newRequestQueue(summary.getContext());
+        List<DataPlaceHolder> data = new ArrayList<>();
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, DatabaseURL.INSTANCE.getStakeHolders, null,
-                response -> {
-                    try {
-                        List<DataPlaceHolder> data = new ArrayList<>();
+        for (StakeHolder stakeholder : stakeHolders) {
+            int id = stakeholder.getId();
+            String firstName = stakeholder.getName();
+            String lastName = stakeholder.getFamilyName();
+            String role = stakeholder.getRole();
+            boolean deleted = stakeholder.isDeleted();
 
-                        for (int i = 0; i < response.length() ; i++) {
-                            JSONObject object = response.getJSONObject(i);
+            // run object through filter
+            if (filter != null && Filter(filter, (firstName + " " + lastName).toLowerCase(), role, deleted)) {
+                data.add(new DataPlaceHolder(id, firstName, lastName, role, deleted));
+            }
+        }
 
-                            // get all data
-                            int id = object.getInt("idStakeholders");
-                            String firstName = object.getString("firstName");
-                            String lastName = object.getString("LastName");
-                            String role = object.getString("Role");
-                            boolean deleted = object.getString("deleted").equals("1");
+        // sort
+        if (filter != null) data = sorter(filter, data);
 
-                            // run object through filter
-                            if (filter != null && Filter(filter, (firstName + " " + lastName).toLowerCase(), role, deleted)) {
-                                data.add(new DataPlaceHolder(id, firstName, lastName, role, deleted));
-                            }
-                        }
+        // return data
+        returnData(summary, data);
 
-                        // sort
-                        if (filter != null) data = sorter(filter, data);
-
-                        // return data
-                        returnData(summary, data);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        summary.error(e.toString());
-                    }
-                },
-                error -> {
-                    error.printStackTrace();
-                    summary.error(error.toString());
-                });
-        requestQueue.add(request);
+//        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, DatabaseURL.INSTANCE.getStakeHolders, null,
+//                response -> {
+//                    try {
+//                        List<DataPlaceHolder> data = new ArrayList<>();
+//
+//                        for (int i = 0; i < response.length() ; i++) {
+//                            JSONObject object = response.getJSONObject(i);
+//
+//                            // get all data
+//                            int id = object.getInt("idStakeholders");
+//                            String firstName = object.getString("firstName");
+//                            String lastName = object.getString("LastName");
+//                            String role = object.getString("Role");
+//                            boolean deleted = object.getString("deleted").equals("1");
+//
+//                            // run object through filter
+//                            if (filter != null && Filter(filter, (firstName + " " + lastName).toLowerCase(), role, deleted)) {
+//                                data.add(new DataPlaceHolder(id, firstName, lastName, role, deleted));
+//                            }
+//                        }
+//
+//                        // sort
+//                        if (filter != null) data = sorter(filter, data);
+//
+//                        // return data
+//                        returnData(summary, data);
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                        summary.error(e.toString());
+//                    }
+//                },
+//                error -> {
+//                    error.printStackTrace();
+//                    summary.error(error.toString());
+//                });
+//        requestQueue.add(request);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -169,11 +190,15 @@ public class StakeholdersManager {
         requestQueue.add(request);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void deleteStakeholder(StakeholdersDisplayInterface stakeholders, String id) {
         RequestQueue requestQueue = Volley.newRequestQueue(stakeholders.getContext());
 
         StringRequest request = new StringRequest(Request.Method.POST, DatabaseURL.INSTANCE.deleteStakeholder,
-                response -> stakeholders.delete(),
+                response -> {
+                    stakeholders.delete();
+                    Caching.INSTANCE.setStakeHolders();
+                },
                 error -> stakeholders.error("Unable to delete")) {
 
             @Override

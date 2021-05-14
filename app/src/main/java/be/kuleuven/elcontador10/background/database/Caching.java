@@ -60,9 +60,9 @@ public enum Caching {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void notifyAllObservers(){
+        observers.forEach(o ->o.notifyRoles(roles));
         observers.forEach(o ->o.notifyStakeHolders(stakeHolders) );
         observers.forEach(o ->o.notifyCategories(transTypes) );
-        observers.forEach(o ->o.notifyRoles(roles));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

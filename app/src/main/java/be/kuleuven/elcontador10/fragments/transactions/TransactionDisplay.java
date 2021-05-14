@@ -77,13 +77,13 @@ public class TransactionDisplay extends Fragment implements TransactionsDisplayI
     public void display(Bundle bundle) {
         TextView sender, receiver, amount, category, subcategory, date, notes;
 
-        sender = getView().findViewById(R.id.txtTransactionDisplaySender);
-        receiver = getView().findViewById(R.id.txtTransactionDisplayReceiver);
-        amount = getView().findViewById(R.id.txtTransactionDisplayAmount);
-        category = getView().findViewById(R.id.txtTransactionDisplayCatgeory);
-        subcategory = getView().findViewById(R.id.txtTransactionDisplaySubcategory);
-        date = getView().findViewById(R.id.txtTransactionDisplayDate);
-        notes = getView().findViewById(R.id.txtTransactionDisplayNotes);
+        sender = requireView().findViewById(R.id.txtTransactionDisplaySender);
+        receiver = requireView().findViewById(R.id.txtTransactionDisplayReceiver);
+        amount = requireView().findViewById(R.id.txtTransactionDisplayAmount);
+        category = requireView().findViewById(R.id.txtTransactionDisplayCatgeory);
+        subcategory = requireView().findViewById(R.id.txtTransactionDisplaySubcategory);
+        date = requireView().findViewById(R.id.txtTransactionDisplayDate);
+        notes = requireView().findViewById(R.id.txtTransactionDisplayNotes);
         notes.setMovementMethod(new ScrollingMovementMethod());
 
         sender.setText(bundle.getString("user"));
