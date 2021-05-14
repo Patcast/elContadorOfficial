@@ -58,7 +58,9 @@ public enum WidgetsCreation implements CachingObserver {
       List <String> autoStake = new ArrayList<>();
       if(filter) autoStake.add("All");
           autoStake.addAll( stakeHolds.stream()
+                                      .filter(v -> !v.isDeleted())
                                       .map(StakeHolder::getFullNameId)
+                                      .filter(v -> !v.equals("-0- Not Specified"))
                                       .distinct()
                                       .collect(Collectors.toList()));
         ArrayAdapter<String> adapter = new ArrayAdapter<>(useContext,android.R.layout.simple_list_item_1,autoStake);

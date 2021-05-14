@@ -21,16 +21,21 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.RecyclerViewAdapter;
+import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.database.StakeholdersManager;
 import be.kuleuven.elcontador10.background.database.TransactionsManager;
+import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersSummaryInterface;
+import be.kuleuven.elcontador10.background.model.StakeHolder;
+import be.kuleuven.elcontador10.background.model.TransactionType;
 import be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel;
 
-public class StakeholderSummary extends Fragment implements StakeholdersSummaryInterface {
+public class StakeholderSummary extends Fragment implements StakeholdersSummaryInterface, CachingObserver {
     // private variables
     private MainActivity mainActivity;
 
@@ -44,7 +49,7 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mainActivity = (MainActivity) getActivity();
+        mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle("Stakeholders");
         return inflater.inflate(R.layout.fragment_stakeholder_summary, container, false);
     }
@@ -112,5 +117,20 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
         StakeholderSummaryDirections.ActionStakeholderSummaryToStakeholderDisplay action =
                 StakeholderSummaryDirections.actionStakeholderSummaryToStakeholderDisplay(id);
         navController.navigate(action);
+    }
+
+    @Override
+    public void notifyRoles(List<String> roles) {
+
+    }
+
+    @Override
+    public void notifyCategories(List<TransactionType> transTypes) {
+
+    }
+
+    @Override
+    public void notifyStakeHolders(List<StakeHolder> stakeHolders) {
+
     }
 }

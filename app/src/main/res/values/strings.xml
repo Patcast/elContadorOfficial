@@ -73,7 +73,7 @@
     <string name="change_password">Change Password</string>
     <string name="budget">Budget: $%1$.2f</string>
     <string name="subtotal">Subtotal: $%1$.2f</string>
-    <string name="zero_amount">Pleas, fill in the desired amount.</string>
+    <string name="zero_amount">Please, fill in the desired amount.</string>
     <string name="choose_picture">Choose Picture</string>
     <string name="delete">Delete</string>
     <string name="change_pic">Change Picture</string>
