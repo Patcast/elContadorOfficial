@@ -2,13 +2,11 @@ package be.kuleuven.elcontador10.fragments.stakeholders;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Session2Command;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,12 +32,10 @@ import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.Base64Encoder;
-import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.database.StakeholdersManager;
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersNewInterface;
 import be.kuleuven.elcontador10.background.parcels.EditStakeholderParcel;
@@ -49,15 +45,15 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
 
     private MainActivity mainActivity;
     private NavController navController;
-    private Button picture;
-    private String image;
-    private ImageView preview;
+    private Button image_button;
+    private ImageView image_preview;
     private Spinner roles;
     private TextView firstName, lastName, phoneNo, email;
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int RESULT_LOAD_IMG = 2;
 
+    private String image_string;
     private ArrayList<String> roles_array;
     private String id;
     private boolean edit;
@@ -81,8 +77,8 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
         // set buttons and views
         Button cancel = requireView().findViewById(R.id.btn_cancel_NewTransaction);
         Button confirm = requireView().findViewById(R.id.btn_confirm_NewTransaction);
-        picture = requireView().findViewById(R.id.btn_picture_NewStakeholder);
-        preview = requireView().findViewById(R.id.StakeholderNewImageView);
+        image_button = requireView().findViewById(R.id.btn_picture_NewStakeholder);
+        image_preview = requireView().findViewById(R.id.StakeholderNewImageView);
         roles = requireView().findViewById(R.id.StakeholderNewRoles);
         firstName = requireView().findViewById(R.id.StakeholderNewFirstName);
         lastName = requireView().findViewById(R.id.StakeholderNewLastName);
@@ -92,7 +88,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
         // onClick listeners
         cancel.setOnClickListener(this::onCancelClicked);
         confirm.setOnClickListener(this::onConfirmClicked);
-        picture.setOnClickListener(this::onPictureClicked);
+        image_button.setOnClickListener(this::onPictureClicked);
 
         // set up spinner
         roles_array = mainActivity.getRoles();
@@ -125,9 +121,9 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
         email.setText(parcel.getEmail());
 
         if (parcel.getImage() != null) {
-            preview.setImageBitmap(parcel.getImage());
-            image = parcel.getImage_string();
-            picture.setText(R.string.change_pic);
+            image_preview.setImageBitmap(parcel.getImage());
+            image_string = parcel.getImage_string();
+            image_button.setText(R.string.change_pic);
         }
     }
 
@@ -150,7 +146,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
     public void onPictureClicked(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
 
-        if (image == null) {
+        if (image_string == null) {
             // add image
             builder.setTitle("Add photo")
                     .setMessage("Get a photo from camera or gallery?")
@@ -165,15 +161,15 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
                     .setMessage("Do you want to change the photo?")
                     .setPositiveButton("Yes", (dialog, which) -> {
                         // change image
-                        image = null;
+                        image_string = null;
                         onPictureClicked(view);
                     })
                     .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                     .setNeutralButton("Delete", (dialog, which) -> {
                         // delete image
-                        image = null;
-                        picture.setText(R.string.choose_picture);
-                        preview.setImageResource(R.drawable.icon_stakeholder);
+                        image_string = null;
+                        image_button.setText(R.string.choose_picture);
+                        image_preview.setImageResource(R.drawable.icon_stakeholder);
                         dialog.dismiss();
                     })
                     .create()
@@ -189,15 +185,15 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
         String role = roles.getSelectedItem().toString();
         String phone_No = phoneNo.getText().toString();
         String emailString = email.getText().toString();
-        if (image == null) image = "";
+        if (image_string == null) image_string = "";
         StakeholdersManager manager = StakeholdersManager.getInstance();
 
         if (first_Name.equals("") || last_Name.equals("")) feedback("Missing input!");
         else {
             if (edit)
-                manager.editStakeholder(this, id, first_Name, last_Name, role, phone_No, emailString, image);
+                manager.editStakeholder(this, id, first_Name, last_Name, role, phone_No, emailString, image_string);
             else
-                manager.addStakeholder(this, first_Name, last_Name, role, phone_No, emailString, image);
+                manager.addStakeholder(this, first_Name, last_Name, role, phone_No, emailString, image_string);
         }
     }
 
@@ -226,19 +222,19 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
             try {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
-                image = Base64Encoder.encodeImage(imageBitmap);
+                image_string = Base64Encoder.encodeImage(imageBitmap);
 
-                picture.setText(R.string.change_pic);
-                preview.setImageBitmap(imageBitmap);
+                image_button.setText(R.string.change_pic);
+                image_preview.setImageBitmap(imageBitmap);
             } catch (Exception e) { feedback("Error getting image."); }
         } else if (requestCode == RESULT_LOAD_IMG) {
             try {
                 Uri selectedImage = data.getData();
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(mainActivity.getContentResolver(), selectedImage);
-                image = Base64Encoder.encodeImage(bitmap);
+                image_string = Base64Encoder.encodeImage(bitmap);
 
-                picture.setText(R.string.change_pic);
-                preview.setImageBitmap(bitmap);
+                image_button.setText(R.string.change_pic);
+                image_preview.setImageBitmap(bitmap);
             } catch (Exception e) { feedback("Error getting image."); }
         }
     }
