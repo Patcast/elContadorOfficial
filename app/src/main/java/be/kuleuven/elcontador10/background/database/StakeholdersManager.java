@@ -70,44 +70,6 @@ public class StakeholdersManager {
 
         // return data
         returnData(summary, data);
-
-//        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, DatabaseURL.INSTANCE.getStakeHolders, null,
-//                response -> {
-//                    try {
-//                        List<DataPlaceHolder> data = new ArrayList<>();
-//
-//                        for (int i = 0; i < response.length() ; i++) {
-//                            JSONObject object = response.getJSONObject(i);
-//
-//                            // get all data
-//                            int id = object.getInt("idStakeholders");
-//                            String firstName = object.getString("firstName");
-//                            String lastName = object.getString("LastName");
-//                            String role = object.getString("Role");
-//                            boolean deleted = object.getString("deleted").equals("1");
-//
-//                            // run object through filter
-//                            if (filter != null && Filter(filter, (firstName + " " + lastName).toLowerCase(), role, deleted)) {
-//                                data.add(new DataPlaceHolder(id, firstName, lastName, role, deleted));
-//                            }
-//                        }
-//
-//                        // sort
-//                        if (filter != null) data = sorter(filter, data);
-//
-//                        // return data
-//                        returnData(summary, data);
-//
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                        summary.error(e.toString());
-//                    }
-//                },
-//                error -> {
-//                    error.printStackTrace();
-//                    summary.error(error.toString());
-//                });
-//        requestQueue.add(request);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -250,9 +212,11 @@ public class StakeholdersManager {
                     stakeholder.editStakeholder();
                     Caching.INSTANCE.setStakeHolders();
                 },
-                error -> stakeholder.feedback(error.toString())) {
-            @Nullable
-            @org.jetbrains.annotations.Nullable
+                error -> {
+                    stakeholder.feedback(error.toString());
+                    error.printStackTrace();
+            }) {
+
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();

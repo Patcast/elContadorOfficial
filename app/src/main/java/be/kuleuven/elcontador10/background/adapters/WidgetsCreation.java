@@ -78,45 +78,41 @@ public enum WidgetsCreation implements CachingObserver {
     public void makeCalendarFrom(Context useContext, TextView selectedText){
         /// implementation of calendar
         Calendar calendar = Calendar.getInstance();
-        final int year = calendar.get(Calendar.YEAR);
-        final int month = calendar.get(Calendar.MONTH);
-        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+        final int year_int = calendar.get(Calendar.YEAR);
+        final int month_int = calendar.get(Calendar.MONTH);
+        final int day_int = calendar.get(Calendar.DAY_OF_MONTH);
 
         selectedText.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    useContext,android.R.style.Theme_Holo_Dialog_MinWidth,setListenerFrom,year,month,day);
+                    useContext, android.R.style.Theme_Holo_Dialog_MinWidth, setListenerFrom, year_int, month_int, day_int);
             datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             datePickerDialog.show();
         });
-        setListenerFrom = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month = month +1;
-                String date = dayOfMonth+"/"+month+"/"+year;
-                selectedText.setText(date);
-            }
+
+        setListenerFrom = (view, year, month, dayOfMonth) -> {
+            month += 1;
+            String date = dayOfMonth + "/" + month + "/" + year;
+            selectedText.setText(date);
         };
     }
     public void makeCalendarTo(Context useContext, TextView selectedText) {
         /// implementation of calendar
         Calendar calendar = Calendar.getInstance();
-        final int year = calendar.get(Calendar.YEAR);
-        final int month = calendar.get(Calendar.MONTH);
-        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+        final int year_int = calendar.get(Calendar.YEAR);
+        final int month_int = calendar.get(Calendar.MONTH);
+        final int day_int = calendar.get(Calendar.DAY_OF_MONTH);
 
         selectedText.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    useContext,android.R.style.Theme_Holo_Dialog_MinWidth,setListenerTo,year,month,day);
+                    useContext,android.R.style.Theme_Holo_Dialog_MinWidth,setListenerTo, year_int, month_int, day_int);
             datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             datePickerDialog.show();
         });
-        setListenerTo = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month = month +1;
-                String date = dayOfMonth +"/"+month+"/"+year;
-                selectedText.setText(date);
-            }
+
+        setListenerTo = (view, year, month, dayOfMonth) -> {
+            month += 1;
+            String date = dayOfMonth + "/" + month + "/" + year;
+            selectedText.setText(date);
         };
     }
 

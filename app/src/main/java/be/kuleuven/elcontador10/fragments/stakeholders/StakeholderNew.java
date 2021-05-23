@@ -210,9 +210,10 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
 
     // request gallery activity
     private void Gallery(DialogInterface dialog, int which) {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), RESULT_LOAD_IMG);
     }
 
     // get images either from gallery or camera
@@ -227,7 +228,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
                 image_button.setText(R.string.change_pic);
                 image_preview.setImageBitmap(imageBitmap);
             } catch (Exception e) { feedback("Error getting image."); }
-        } else if (requestCode == RESULT_LOAD_IMG) {
+        } else if (requestCode == RESULT_LOAD_IMG && resultCode == Activity.RESULT_OK) {
             try {
                 Uri selectedImage = data.getData();
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(mainActivity.getContentResolver(), selectedImage);

@@ -219,8 +219,8 @@ public class TransactionsFilter extends Fragment implements CachingObserver, Cre
 
     @Override
     public void addCalendar() {
-        WidgetsCreation.INSTANCE.makeCalendarFrom(mainActivity,dateFrom);
-        WidgetsCreation.INSTANCE.makeCalendarTo(mainActivity,dateTo);
+        WidgetsCreation.INSTANCE.makeCalendarFrom(mainActivity, dateFrom);
+        WidgetsCreation.INSTANCE.makeCalendarTo(mainActivity, dateTo);
 
     }
 }
