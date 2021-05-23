@@ -121,6 +121,7 @@ public class TransactionsFilter extends Fragment implements CachingObserver, Cre
             navController.navigate(action);
         });
 
+
     }
 
     @Override

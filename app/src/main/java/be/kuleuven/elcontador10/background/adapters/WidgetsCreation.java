@@ -29,7 +29,8 @@ public enum WidgetsCreation implements CachingObserver {
     INSTANCE;
     List<TransactionType> transTypes = new ArrayList<>();
     List<StakeHolder> stakeHolds = new ArrayList<>();
-
+    DatePickerDialog.OnDateSetListener setListenerFrom;
+    DatePickerDialog.OnDateSetListener setListenerTo;
 
     WidgetsCreation(){
         Caching.INSTANCE.attachCaching(this);
@@ -83,19 +84,18 @@ public enum WidgetsCreation implements CachingObserver {
 
         selectedText.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    useContext,android.R.style.Theme_Holo_Dialog_MinWidth,new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    month = month +1;
-                    String date = day+"/"+month+"/"+year;
-                    selectedText.setText(date);
-                }
-            },year,month,day);
+                    useContext,android.R.style.Theme_Holo_Dialog_MinWidth,setListenerFrom,year,month,day);
             datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             datePickerDialog.show();
         });
-
-
+        setListenerFrom = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month = month +1;
+                String date = dayOfMonth+"/"+month+"/"+year;
+                selectedText.setText(date);
+            }
+        };
     }
     public void makeCalendarTo(Context useContext, TextView selectedText) {
         /// implementation of calendar
@@ -106,18 +106,18 @@ public enum WidgetsCreation implements CachingObserver {
 
         selectedText.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    useContext, android.R.style.Theme_Holo_Dialog_MinWidth, new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    month = month + 1;
-                    String date = day + "/" + month + "/" + year;
-                    selectedText.setText(date);
-                }
-            }, year, month, day);
+                    useContext,android.R.style.Theme_Holo_Dialog_MinWidth,setListenerTo,year,month,day);
             datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             datePickerDialog.show();
         });
-
+        setListenerTo = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month = month +1;
+                String date = dayOfMonth +"/"+month+"/"+year;
+                selectedText.setText(date);
+            }
+        };
     }
 
     @Override
