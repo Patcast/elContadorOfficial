@@ -1,14 +1,20 @@
 package be.kuleuven.elcontador10.background.adapters;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.DatePicker;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +29,8 @@ public enum WidgetsCreation implements CachingObserver {
     INSTANCE;
     List<TransactionType> transTypes = new ArrayList<>();
     List<StakeHolder> stakeHolds = new ArrayList<>();
+    DatePickerDialog.OnDateSetListener setListenerFrom;
+    DatePickerDialog.OnDateSetListener setListenerTo;
 
     WidgetsCreation(){
         Caching.INSTANCE.attachCaching(this);
@@ -67,8 +75,50 @@ public enum WidgetsCreation implements CachingObserver {
         autoText.setAdapter(adapter);
     }
 
+    public void makeCalendarFrom(Context useContext, TextView selectedText){
+        /// implementation of calendar
+        Calendar calendar = Calendar.getInstance();
+        final int year = calendar.get(Calendar.YEAR);
+        final int month = calendar.get(Calendar.MONTH);
+        final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
+        selectedText.setOnClickListener(v -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    useContext,android.R.style.Theme_Holo_Dialog_MinWidth,setListenerFrom,year,month,day);
+            datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            datePickerDialog.show();
+        });
+        setListenerFrom = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month = month +1;
+                String date = dayOfMonth+"/"+month+"/"+year;
+                selectedText.setText(date);
+            }
+        };
+    }
+    public void makeCalendarTo(Context useContext, TextView selectedText) {
+        /// implementation of calendar
+        Calendar calendar = Calendar.getInstance();
+        final int year = calendar.get(Calendar.YEAR);
+        final int month = calendar.get(Calendar.MONTH);
+        final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
+        selectedText.setOnClickListener(v -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    useContext,android.R.style.Theme_Holo_Dialog_MinWidth,setListenerTo,year,month,day);
+            datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            datePickerDialog.show();
+        });
+        setListenerTo = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month = month +1;
+                String date = dayOfMonth +"/"+month+"/"+year;
+                selectedText.setText(date);
+            }
+        };
+    }
 
     @Override
     public void notifyRoles(List<String> roles) {

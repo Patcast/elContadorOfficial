@@ -4,5 +4,6 @@ public interface CreateWidgets {
     void addSpinnerCat();
     void addSpinnerSubCat(String catChosen);
     void addAutoStake();
+    void addCalendar();
 
 }

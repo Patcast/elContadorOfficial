@@ -36,8 +36,11 @@ public enum Caching {
      View view;
      Context context;
 
+    public List<TransactionType> getTransTypes() {
+        return transTypes;
+    }
 
-    ///Attach method
+///Attach method
 
     public void attachCaching(CachingObserver newObserver){
         observers.add(newObserver);
@@ -135,5 +138,10 @@ public enum Caching {
                 error -> Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show());
 
         requestQueue.add(request);
+    }
+
+    public void detach(CachingObserver observer){
+        observers.remove(observer);
+
     }
 }

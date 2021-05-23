@@ -1,6 +1,9 @@
 package be.kuleuven.elcontador10.fragments.transactions;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -18,15 +21,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
@@ -48,6 +50,7 @@ public class TransactionsFilter extends Fragment implements CachingObserver, Cre
     private AutoCompleteTextView txtStakeHolder;
     private TextView dateFrom;
     private TextView dateTo;
+
 
     List<TransactionType> transTypes = new ArrayList<>();
     List<StakeHolder> stakeHolds = new ArrayList<>();
@@ -81,8 +84,7 @@ public class TransactionsFilter extends Fragment implements CachingObserver, Cre
         dateTo = requireView().findViewById(R.id.FilterTransTo);
         addAutoStake();
         addSpinnerCat();
-
-        //setWidgets();
+        addCalendar();
 
         // onClickListeners
         switchFrom.setOnCheckedChangeListener(this::From_onClick);
@@ -94,14 +96,6 @@ public class TransactionsFilter extends Fragment implements CachingObserver, Cre
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String catChosen = spCategory.getSelectedItem().toString();
                 addSpinnerSubCat(catChosen);
-                /*List<String> subCategories = new ArrayList<>();
-                subCategories.add("All");
-                subCategories.addAll( transTypes.stream()
-                                                 .filter(cat->cat.getCategory().equals(catChosen))
-                                                .map(TransactionType::getSubCategory)
-                                                .distinct().collect(Collectors.toList()));
-                ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(getActivity(),android.R.layout.simple_dropdown_item_1line,subCategories );
-                spSubCategory.setAdapter(adapterSpinner);*/
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -126,72 +120,10 @@ public class TransactionsFilter extends Fragment implements CachingObserver, Cre
                     TransactionsFilterDirections.actionTransactionsFilterToTransactionsSummary(parcel);
             navController.navigate(action);
         });
+
+
     }
 
-   /* @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void setCategories( List<TransactionType> types) {
-
-        all_categories = types;
-        categories.clear();
-        categories.add("All");
-        categories.addAll(types.stream().map(TransactionType::getCategory).distinct().collect(Collectors.toList()));
-        ArrayAdapter adapter = new ArrayAdapter(mainActivity, android.R.layout.simple_spinner_dropdown_item, categories);
-        category.setAdapter(adapter);
-
-        // category onItemSelected listener
-        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // select subcategory
-                if (position != 0) {
-                    String category_string = category.getSelectedItem().toString();
-                    ArrayList<String> subs = new ArrayList<>();
-                    subs.add("All");
-                    subs.addAll(all_categories.stream()
-                            .filter(cat -> cat.getCategory().equals(category_string))
-                            .map(TransactionType::getSubCategory)
-                            .distinct()
-                            .collect(Collectors.toList()));
-
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(mainActivity, android.R.layout.simple_spinner_dropdown_item,
-                            subs);
-                    subcategory.setAdapter(adapter);
-                } else {
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(mainActivity, android.R.layout.simple_spinner_dropdown_item,
-                            new String[]{"All"});
-                    subcategory.setAdapter(adapter);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
-    }*/
-
-/*
-    /// Set spinner for category & Autofill for Stakeholders
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setWidgets(){
-
-        // Implement Categories spinner **********
-        List<String> categories = new ArrayList<>();
-        categories.add("All");
-        categories.addAll(transTypes.stream()
-                                    .map(TransactionType::getCategory)
-                                    .distinct()
-                                    .collect(Collectors.toList()));
-        ArrayAdapter adapterSpinnerCat = new ArrayAdapter<>(getActivity(),android.R.layout.simple_dropdown_item_1line,categories);
-        spCategory.setAdapter(adapterSpinnerCat);
-
-        //Implements auto-fill stakeholder *********
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1,
-                stakeHolds.stream()
-                        .map(StakeHolder::getName)
-                        .distinct()
-                        .collect(Collectors.toList()));
-        txtStakeHolder.setAdapter(adapter);
-    }*/
     @Override
     public Context getContext() { return mainActivity; }
 
@@ -253,7 +185,6 @@ public class TransactionsFilter extends Fragment implements CachingObserver, Cre
 
     @Override
     public void notifyRoles(List<String> roles) {
-
     }
 
     @Override
@@ -266,7 +197,7 @@ public class TransactionsFilter extends Fragment implements CachingObserver, Cre
         stakeHolds.clear();
         stakeHolds.addAll(stakeHolders);
     }
-
+    ///Implementation of CashingObserver
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void addSpinnerCat() {
@@ -283,6 +214,13 @@ public class TransactionsFilter extends Fragment implements CachingObserver, Cre
     @Override
     public void addAutoStake() {
         WidgetsCreation.INSTANCE.makeAutoStake(mainActivity,txtStakeHolder,true);
+
+    }
+
+    @Override
+    public void addCalendar() {
+        WidgetsCreation.INSTANCE.makeCalendarFrom(mainActivity,dateFrom);
+        WidgetsCreation.INSTANCE.makeCalendarTo(mainActivity,dateTo);
 
     }
 }

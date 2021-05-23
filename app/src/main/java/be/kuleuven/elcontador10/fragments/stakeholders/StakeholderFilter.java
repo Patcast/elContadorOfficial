@@ -167,4 +167,9 @@ public class StakeholderFilter extends Fragment implements CreateWidgets {
         WidgetsCreation.INSTANCE.makeAutoStake(mainActivity,txtStakeHolder,false);
 
     }
+
+    @Override
+    public void addCalendar() {
+
+    }
 }
