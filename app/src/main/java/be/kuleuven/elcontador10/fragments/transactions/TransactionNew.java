@@ -51,10 +51,13 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
     ////// Arrays to fill input
     List<TransactionType> transTypes = new ArrayList<>();
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Caching.INSTANCE.attachCaching(this); //Adds Transaction new to the list of observers of Caching
+        //Caching.INSTANCE.attachCaching(this); //Adds Transaction new to the list of observers of Caching
+        transTypes = Caching.INSTANCE.getTransTypes();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,6 +92,9 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+
+
 
         /// Navigates to  All Transaction and sends New transaction to db ******
         final NavController navController = Navigation.findNavController(view);
@@ -130,9 +136,13 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
         return new Transaction(cashIn,amount,idUser,stakeholder,idType,notes);
     }
 
+   /* @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Caching.INSTANCE.detach(this);
+    }*/
 
-
-   //IMPLEMENTATION of INTERFACES **********
+    //IMPLEMENTATION of INTERFACES **********
 
 
      @Override
@@ -166,6 +176,11 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
     @Override
     public void addAutoStake() {
         WidgetsCreation.INSTANCE.makeAutoStake(mainActivity,txtStakeHolder,false);
+
+    }
+
+    @Override
+    public void addCalendar() {
 
     }
 }
