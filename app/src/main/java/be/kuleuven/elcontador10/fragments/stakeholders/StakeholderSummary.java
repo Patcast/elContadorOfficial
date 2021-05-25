@@ -113,6 +113,12 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Caching.INSTANCE.detach(this);
+    }
+//// Implementation of the Interfaces
+    @Override
     public void notifyRoles(List<String> roles) {
 
     }

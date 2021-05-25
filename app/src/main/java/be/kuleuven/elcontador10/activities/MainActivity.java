@@ -69,6 +69,12 @@ public class MainActivity extends AppCompatActivity implements CachingObserver {
         return roles;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Caching.INSTANCE.detach(this);
+    }
+
     /// Implementation of CachingObserver *********
     @Override
     public void notifyRoles(List<String> roles) {

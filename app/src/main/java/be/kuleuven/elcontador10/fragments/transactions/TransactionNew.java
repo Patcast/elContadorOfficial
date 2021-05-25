@@ -136,11 +136,11 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
         return new Transaction(cashIn,amount,idUser,stakeholder,idType,notes);
     }
 
-   /* @Override
+    @Override
     public void onDestroy() {
         super.onDestroy();
         Caching.INSTANCE.detach(this);
-    }*/
+    }
 
     //IMPLEMENTATION of INTERFACES **********
 

@@ -9,4 +9,5 @@ public interface CachingObserver {
     void notifyRoles( List <String> roles);
     void notifyCategories( List <TransactionType>  transTypes);
     void notifyStakeHolders(List<StakeHolder> stakeHolders );
+
 }

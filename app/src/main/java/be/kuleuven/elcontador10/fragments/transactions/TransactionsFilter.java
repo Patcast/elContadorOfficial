@@ -181,6 +181,12 @@ public class TransactionsFilter extends Fragment implements CachingObserver, Cre
         return new FilterTransactionsParcel(category_string, subcategory_string, name_text, from, to);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Caching.INSTANCE.detach(this);
+    }
+
     ///Implementation of CashingObserver
 
     @Override

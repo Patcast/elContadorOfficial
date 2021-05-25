@@ -75,7 +75,7 @@ public enum WidgetsCreation implements CachingObserver {
         autoText.setAdapter(adapter);
     }
 
-    public void makeCalendarFrom(Context useContext, TextView selectedText){
+    public void makeCalendarFrom (Context useContext, TextView selectedText){
         /// implementation of calendar
         Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
