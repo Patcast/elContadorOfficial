@@ -1,11 +1,11 @@
 package be.kuleuven.elcontador10.background.model;
 
 public class StakeHolder {
-    int id;
-    String name;
-    String familyName;
-    String role;
-    boolean deleted;
+    private int id;
+    private String name;
+    private String familyName;
+    private String role;
+    private boolean deleted;
 
     public StakeHolder(int id, String name, String familyName, String role, boolean deleted) {
         this.id = id;
