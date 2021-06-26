@@ -1,5 +1,6 @@
 <resources>
-
+    <string name="has_withdrawn"> has withdrawn </string>
+    <string name="has_deposited"> has deposited </string>
     <string name="Transaction_new">New Transaction</string>
     <string name="Transaction_filter">Transaction Filter</string>
     <string name="app_name">elContador </string>
@@ -101,6 +102,12 @@
     <string name="to_date">To</string>
     <string name="From_date">From</string>
     <string name="clear">Clear</string>
+    <string name="from_display">\" from \"</string>
+    <string name="for_display">\" for \"</string>
+    <string name="few_moments_ago">Few moments ago</string>
+    <string name="minutes_ago">\" minutes ago\"</string>
+    <string name="yesterday_at">\"Yesterday at \"</string>
+    <string name="role_display">\"Role: \"</string>
     <string-array name="roles">
         <item>Empleado</item>
         <item>Administrador</item>

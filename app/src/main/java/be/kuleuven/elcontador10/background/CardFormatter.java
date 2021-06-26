@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.interfaces.CardFormatterInterface;
 
 public class CardFormatter implements CardFormatterInterface {
@@ -21,7 +22,7 @@ public class CardFormatter implements CardFormatterInterface {
         String title = (amount > 0 ? "GREEN#IN" : "RED#OUT");
         String description = user +
                 (amount > 0 ? " has deposited " : " has withdrawn ") + "$" + Math.abs(amount) +
-                (amount > 0 ? " from " : " for ") + // maker + amount
+                (amount > 0 ? R.string.from_display : R.string.for_display) + // maker + amount
                 (stakeholder.equals("Not Specified") ? "" : stakeholder + "'s ") + // stakeholder
                 subtype.toLowerCase() + // type
                 (type.equals(subtype) ? "" : " " + type.toLowerCase()) + "."; // remove repeating types and subtypes
@@ -34,14 +35,14 @@ public class CardFormatter implements CardFormatterInterface {
             Duration duration = Duration.between(date, now);
 
             if (duration.toHours() < 1) {
-                if (duration.toMinutes() < 1) status += "Few moments ago";
-                else status += duration.toMinutes() + " minutes ago";
+                if (duration.toMinutes() < 1) status += R.string.few_moments_ago;
+                else status += duration.toMinutes() + R.string.minutes_ago;
             }
             else status += (date.getHour() < 10? "0" : "") + date.getHour() + ":" +
                     (date.getMinute() < 10? "0" : "") + date.getMinute();
         }
         else if (now.getDayOfYear() - 1 == date.getDayOfYear()) { // transaction happened yesterday
-            status += "Yesterday at " + (date.getHour() < 10? "0" : "") + date.getHour() + ":"
+            status += R.string.yesterday_at + (date.getHour() < 10? "0" : "") + date.getHour() + ":"
                     + (date.getMinute() < 10? "0" : "") + date.getMinute();
         }
         else { // transaction happened days before
@@ -56,7 +57,7 @@ public class CardFormatter implements CardFormatterInterface {
     @Override
     public String[] StakeholderFormatter(int id, String firstName, String lastName, String role, boolean deleted) {
         String title = "WHITE#" + firstName + " " + lastName;
-        String description = "Role: " + role;// + "\n" + "Balance: $" + balance;
+        String description = R.string.role_display + role;// + "\n" + "Balance: $" + balance;
 
         String status = "";
 
