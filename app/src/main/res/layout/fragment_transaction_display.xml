@@ -22,7 +22,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
-            android:text="Made by:"
+            android:text="@string/made_by"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Concerning:"
+            android:text="@string/concerning"
             app:layout_constraintStart_toStartOf="@+id/lblTransactionDisplay1"
             app:layout_constraintTop_toBottomOf="@+id/lblTransactionDisplay1" />
 
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Amount:"
+            android:text="@string/amount"
             app:layout_constraintStart_toStartOf="@+id/lblTransactionDisplay2"
             app:layout_constraintTop_toBottomOf="@+id/lblTransactionDisplay2" />
 
@@ -79,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Category:"
+            android:text="@string/category"
             app:layout_constraintStart_toStartOf="@+id/lblTransactionDisplay3"
             app:layout_constraintTop_toBottomOf="@+id/lblTransactionDisplay3" />
 
@@ -98,7 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Subcategory:"
+            android:text="@string/subcategory"
             app:layout_constraintStart_toStartOf="@+id/lblTransactionDisplay4"
             app:layout_constraintTop_toBottomOf="@+id/lblTransactionDisplay4" />
 
@@ -117,7 +117,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Date and Time:"
+            android:text="@string/date_and_time"
             app:layout_constraintStart_toStartOf="@+id/lblTransactionDisplay6"
             app:layout_constraintTop_toBottomOf="@+id/lblTransactionDisplay6" />
 
@@ -136,7 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Notes:"
+            android:text="@string/notes"
             app:layout_constraintStart_toStartOf="@+id/lblTransactionDisplay5"
             app:layout_constraintTop_toBottomOf="@+id/lblTransactionDisplay5" />
 
@@ -161,7 +161,7 @@
                     android:layout_marginTop="50dp"
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/buttons"
-                    android:text="Delete"
+                    android:text="@string/delete"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

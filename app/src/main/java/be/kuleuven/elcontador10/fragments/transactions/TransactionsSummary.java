@@ -37,26 +37,13 @@ public class TransactionsSummary extends Fragment implements TransactionsSummary
     private FilterTransactionsParcel filter;
     private NavController navController;
 
-/*
-    public TransactionsSummary(FilterTransactionsParcel filter) {
-        this.filter = filter;
-    }
-
-    public TransactionsSummary(){
-        FilterTransactionsParcel filterNew = new FilterTransactionsParcel("*", "*",
-                "*", null, null);
-        this.filter = filterNew;
-    }
-
- */
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainActivity = (MainActivity) getActivity();
-        mainActivity.setTitle("Transactions");
+        mainActivity.setTitle(R.string.transactions);
         return inflater.inflate(R.layout.fragment_transactions, container, false);
     }
 

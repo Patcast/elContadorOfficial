@@ -37,7 +37,7 @@ public class TransactionDisplay extends Fragment implements TransactionsDisplayI
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitle("Transaction");
+        mainActivity.setTitle(R.string.transactions);
         manager = TransactionsManager.getInstance();
 
         return inflater.inflate(R.layout.fragment_transaction_display, container, false);

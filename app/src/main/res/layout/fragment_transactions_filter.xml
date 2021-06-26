@@ -102,9 +102,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="From"
+        android:text="@string/From_date"
         app:layout_constraintStart_toStartOf="@+id/FilterTransName"
-        app:layout_constraintTop_toBottomOf="@+id/FilterTransName" />
+        app:layout_constraintTop_toBottomOf="@+id/FilterTransName"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <TextView
         android:id="@+id/FilterTransFrom"
@@ -124,9 +125,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="To"
+        android:text="@string/to_date"
         app:layout_constraintStart_toStartOf="@+id/FilterTransFrom"
-        app:layout_constraintTop_toBottomOf="@+id/FilterTransFrom" />
+        app:layout_constraintTop_toBottomOf="@+id/FilterTransFrom"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <TextView
         android:id="@+id/FilterTransTo"
@@ -159,7 +161,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:background="@drawable/buttons"
-        android:text="Clear"
+        android:text="@string/clear"
         android:layout_marginTop="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.15"

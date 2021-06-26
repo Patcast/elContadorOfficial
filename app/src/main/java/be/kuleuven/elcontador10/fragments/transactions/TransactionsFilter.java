@@ -65,7 +65,7 @@ public class TransactionsFilter extends Fragment implements CachingObserver, Cre
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitle("Filter Transactions");
+        mainActivity.setTitle(R.string.filter_transactions);
         return inflater.inflate(R.layout.fragment_transactions_filter, container, false);
     }
 

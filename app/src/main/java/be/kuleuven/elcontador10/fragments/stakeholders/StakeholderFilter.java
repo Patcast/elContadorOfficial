@@ -50,7 +50,7 @@ public class StakeholderFilter extends Fragment implements CreateWidgets {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitle("Filter Stakeholder");
+        mainActivity.setTitle(R.string.filter);
         roles = new ArrayList<>();
         roleNames = new ArrayList<>();
         noOfChecked = 0;

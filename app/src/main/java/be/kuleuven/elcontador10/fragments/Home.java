@@ -46,7 +46,7 @@ public class Home extends Fragment implements HomepageInterface {
         // Inflate the layout for this fragment
         mainActivity = (MainActivity) getActivity(); // get parent activity
         firstName = mainActivity.getLoggedIn().getFirstName();
-        mainActivity.setTitle("Home");
+        mainActivity.setTitle(R.string.home);
 
         return inflater.inflate(R.layout.fragment_home, container, false);
     }

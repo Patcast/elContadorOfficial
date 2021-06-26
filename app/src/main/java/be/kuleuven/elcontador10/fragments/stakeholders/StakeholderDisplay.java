@@ -61,7 +61,7 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainActivity = (MainActivity) getActivity();
-        mainActivity.setTitle("Stakeholder");
+        mainActivity.setTitle(R.string.stakeholder);
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_stakeholder_display, container, false);
@@ -93,6 +93,7 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
         edit.setOnClickListener(this::onEdit_Clicked);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void onDelete_Click(View view) {
         new AlertDialog.Builder(mainActivity)
                 .setTitle("Delete")

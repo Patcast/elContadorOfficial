@@ -44,7 +44,7 @@ public class Settings extends Fragment implements SettingsInterface {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitle("Settings");
+        mainActivity.setTitle(R.string.settings);
         loggedIn = mainActivity.getLoggedIn();
         manager = SettingsManager.getInstance();
 

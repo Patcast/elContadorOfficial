@@ -13,7 +13,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:text="TextView"
+        android:text="@string/textview"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtStakeholderDisplayPhoneNo" />
@@ -49,7 +49,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        android:text="Email:"
+        android:text="@string/email"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lblDisplayStakeholders2" />
@@ -61,7 +61,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        android:text="Phone Number:"
+        android:text="@string/phone_number"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lblDisplayStakeholders" />
@@ -73,7 +73,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        android:text="Role:"
+        android:text="@string/role"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lblDisplayStakeholders1" />
@@ -83,7 +83,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:background="@drawable/buttons"
-        android:text="Delete"
+        android:text="@string/delete"
         app:layout_constraintEnd_toStartOf="@+id/btn_edit_DisplayStakeholder"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -108,7 +108,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        android:text="Name:"
+        android:text="@string/name"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgViewDisplayStakeholder" />
