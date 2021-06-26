@@ -27,7 +27,7 @@ public class CardFormatter  implements CardFormatterInterface {
                 (amount > 0 ? " ha depositado " : " ha retirado ") + "$" + Math.abs(amount) +
                 (amount > 0 ? " de " : " para ") + // maker + amount
                 (stakeholder.equals("Not Specified") ? "" : stakeholder + "'s ") + // stakeholder
-                ". Concepto:  " +
+                ".\nConcepto:  " +
                 subtype.toLowerCase() + // type
                 (type.equals(subtype) ? "" : " " + type.toLowerCase()) + "."; // remove repeating types and subtypes
         String status = "WHITE#";
