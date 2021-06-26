@@ -53,7 +53,7 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitle(R.string.stakeholder);
+        mainActivity.setTitle(getString(R.string.stakeholder));
         roles = mainActivity.getRoles();
         Caching.INSTANCE.attachCaching(this);
         return inflater.inflate(R.layout.fragment_stakeholder_summary, container, false);

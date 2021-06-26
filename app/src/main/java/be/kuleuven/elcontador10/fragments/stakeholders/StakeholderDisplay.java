@@ -61,7 +61,7 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainActivity = (MainActivity) getActivity();
-        mainActivity.setTitle(R.string.stakeholder);
+        mainActivity.setTitle(getString(R.string.stakeholder));
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_stakeholder_display, container, false);

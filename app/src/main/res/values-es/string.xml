@@ -1,20 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="has_withdrawn"> has withdrawn </string>
-    <string name="has_deposited"> has deposited </string>
-    <string name="Transaction_new">New Transaction</string>
-    <string name="Transaction_filter">Transaction Filter</string>
-    <string name="app_name">elContador </string>
-    <string name="new_transaction_title">New Transaction</string>
-    <string name="receive">Receive</string>
-    <string name="amount">Amount</string>
-    <string name="paid_by">Paid by</string>
-    <string name="comments">Comments</string>
-    <string name="comments_hint">Comments</string>
-    <string name="submit">Submit</string>
-    <string name="cash_out">Cash out</string>
-    <string name="cash_in">Cash in</string>
-    <string name="tenants">Tenants</string>
-    <string name="employees">Employees</string>
+
+    <string name="Transaction_new">Nueva Transacción</string>
+    <string name="Transaction_filter"> Filtro de Transacciones </string>
+    <string name="app_name"> elContador </string>
+    <string name="new_transaction_title">Nueva Transacción</string>
+    <string name="receive">Recibe</string>
+    <string name="amount">Cantidad</string>
+    <string name="paid_by"> Pagado por</string>
+    <string name="comments">Notas</string>
+    <string name="comments_hint">Notas</string>
+    <string name="submit">Ingresar</string>
+    <string name="cash_out">Egreso</string>
+    <string name="cash_in">Ingreso</string>
+    <string name="tenants">Arrendatorios</string>
+    <string name="employees">Empleados</string>
     <string name="shops_storage">Stores Storage</string>
     <string name="home">Home</string>
     <string name="transactions">Transactions</string>
@@ -61,7 +61,7 @@
         <item>Cash for company</item>
     </string-array>
     <string name="log_out">Log out</string>
-    <string name="new_transaction">new_transaction</string>
+    <string name="new_transaction">Nueva Transacción</string>
     <string name="edit">Edit</string>
     <string name="close">Close</string>
     <string name="confirm">Confirm</string>

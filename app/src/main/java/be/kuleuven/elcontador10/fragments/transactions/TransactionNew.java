@@ -63,7 +63,7 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitle("New Transaction");
+        mainActivity.setTitle(getString(R.string.new_transaction));                                                                                 
         return inflater.inflate(R.layout.fragment_transaction_new, container, false);
     }
 

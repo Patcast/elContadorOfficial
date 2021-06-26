@@ -43,7 +43,7 @@ public class TransactionsSummary extends Fragment implements TransactionsSummary
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainActivity = (MainActivity) getActivity();
-        mainActivity.setTitle(R.string.transactions);
+        mainActivity.setTitle(getString(R.string.transactions));
         return inflater.inflate(R.layout.fragment_transactions, container, false);
     }
 
