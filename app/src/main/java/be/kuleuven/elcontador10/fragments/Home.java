@@ -46,7 +46,7 @@ public class Home extends Fragment implements HomepageInterface {
         // Inflate the layout for this fragment
         mainActivity = (MainActivity) getActivity(); // get parent activity
         firstName = mainActivity.getLoggedIn().getFirstName();
-        mainActivity.setTitle(R.string.home);
+        mainActivity.setTitle(getString(R.string.home));
 
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
@@ -98,10 +98,10 @@ public class Home extends Fragment implements HomepageInterface {
         int hour = time.getHour();
         String time_greeting;
 
-        if (hour < 6) time_greeting = "Hello";
-        else if (hour < 12) time_greeting = "Good morning";
-        else if (hour < 18) time_greeting = "Good afternoon";
-        else time_greeting = "Good evening";
+        if (hour < 6) time_greeting = "Hola";
+        else if (hour < 12) time_greeting = "Buenos días";
+        else if (hour < 18) time_greeting = "Buenas Tardes";
+        else time_greeting = "Buenas Noches";
 
         String greeting = getString(R.string.homepage_title, time_greeting, firstName);
         header.setText(greeting);

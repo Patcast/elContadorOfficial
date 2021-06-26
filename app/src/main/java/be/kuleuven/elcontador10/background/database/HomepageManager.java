@@ -61,8 +61,8 @@ public class HomepageManager {
                         status.clear();
                         metadata.clear();
 
-                        titles.add("WHITE#Recent transactions");
-                        descriptions.add("Here are the 5 most recent transactions:");
+                        titles.add("WHITE#Transacciones recientes");
+                        descriptions.add("Las 5 transacciones mas recientes:");
                         status.add(" # "); // needs to be added so that the list index are the same
                                            // empty status needs to be " # " for the colour formatter
                         metadata.add("");

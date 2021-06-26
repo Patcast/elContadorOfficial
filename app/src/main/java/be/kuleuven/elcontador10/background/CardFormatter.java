@@ -22,7 +22,7 @@ public class CardFormatter  implements CardFormatterInterface {
     @Override
     public String[] TransactionFormatter(int id, LocalDateTime date, double amount, String user, String stakeholder, String type, String subtype,
                                          boolean deleted) {
-        String title = (amount > 0 ? "GREEN#IN" : "RED#OUT");
+        String title = (amount > 0 ? "GREEN#Ingreso" : "RED#Egreso");
         String description = user +
                 (amount > 0 ? " ha depositado " : " ha retirado ") + "$" + Math.abs(amount) +
                 (amount > 0 ? " de " : " para ") + // maker + amount

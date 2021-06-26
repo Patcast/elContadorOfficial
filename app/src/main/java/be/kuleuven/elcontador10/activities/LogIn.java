@@ -62,7 +62,7 @@ public class LogIn extends AppCompatActivity implements LogInInterface {
 
     @Override
     public void onLoginSucceed(String username, StakeholderLoggedIn loggedIn) {
-        showToast("Welcome " + username + "!");
+        showToast("Bienvenido " + username + "!");
         Intent i = new Intent(this, MainActivity.class);
         i.putExtra("Account", loggedIn);
         startActivity(i);

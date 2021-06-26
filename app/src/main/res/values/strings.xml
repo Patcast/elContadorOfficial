@@ -1,6 +1,5 @@
 <resources>
-    <string name="has_withdrawn"> has withdrawn </string>
-    <string name="has_deposited"> has deposited </string>
+
     <string name="Transaction_new">New Transaction</string>
     <string name="Transaction_filter">Transaction Filter</string>
     <string name="app_name">elContador </string>
