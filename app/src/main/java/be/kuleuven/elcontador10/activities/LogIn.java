@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -58,9 +56,9 @@ public class LogIn extends AppCompatActivity {
         signInButton = findViewById(R.id.btn_sign_in_google);
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setOnClickListener(v -> signIn());
-        logOutButton = findViewById(R.id.btn_sign_out);
-        logOutButton.setOnClickListener(v -> signOut());
-        logOutButton.setVisibility(View.INVISIBLE);
+//        logOutButton = findViewById(R.id.btn_sign_out);
+//        logOutButton.setOnClickListener(v -> signOut());
+//        logOutButton.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -117,7 +115,7 @@ public class LogIn extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            checkIfUserRegistered(user, MainActivity.this);
+                            checkIfUserRegistered(user, LogIn.this);
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -130,12 +128,7 @@ public class LogIn extends AppCompatActivity {
 
     private void updateAfterSignedIn(FirebaseUser account) {
         if (account != null) {
-            signInButton.setVisibility(View.INVISIBLE);
-            StringBuilder logInMessage = new StringBuilder("You are logged in with : ");
-            logInMessage.append(account.getDisplayName());
-            statusText.setText(logInMessage);
-            statusText.setTextSize(10);
-            logOutButton.setVisibility(View.VISIBLE);
+
 
         }
     }
@@ -148,9 +141,7 @@ public class LogIn extends AppCompatActivity {
     private void updateAfterLogOut() {
         FirebaseAuth.getInstance().signOut();
         signInButton.setVisibility(View.VISIBLE);
-        statusText.setText("Welcome to Lalaland");
-        statusText.setTextSize(40);
-        logOutButton.setVisibility(View.INVISIBLE);
+
     }
 
     ///// validate for registration and authorization ///////////////
