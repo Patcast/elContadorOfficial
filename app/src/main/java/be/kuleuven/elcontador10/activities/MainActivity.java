@@ -1,7 +1,7 @@
 package be.kuleuven.elcontador10.activities;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -22,7 +22,7 @@ import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 
-public class MainActivity extends AppCompatActivity implements CachingObserver {
+public class MainActivity extends FragmentActivity implements CachingObserver {
     private TextView header;
 
     private StakeholderLoggedIn loggedIn;
