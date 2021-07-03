@@ -29,7 +29,7 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.RecyclerViewAdapter;
 import be.kuleuven.elcontador10.background.database.HomepageManager;
 import be.kuleuven.elcontador10.background.interfaces.HomepageInterface;
-import be.kuleuven.elcontador10.fragments.stakeholders.StakeholderSummaryDirections;
+
 
 public class Home extends Fragment implements HomepageInterface {
     private String firstName;

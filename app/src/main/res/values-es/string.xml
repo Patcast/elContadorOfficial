@@ -115,4 +115,8 @@
         <item>Jefe</item>
         <item>Arrendador</item>
     </string-array>
+    <string name="server_client_id">"120734524059-rh8lqcu7pttkflkno0feit0num873jk7.apps.googleusercontent.com"</string>
+    <string name="succesful_registration">El usuario ha sido registrado, contacte al administrador para poder accesar</string>
+    <string name="unsuccesful_registration">No se ha podido registrar al usuario</string>
+    <string name="Access_denied">Acceso denegado para </string>
 </resources>
