@@ -128,8 +128,10 @@ public class LogIn extends AppCompatActivity {
 
     private void updateAfterSignedIn(FirebaseUser account) {
         if (account != null) {
-
-
+            Toast.makeText(this,"Welcome Back King",Toast.LENGTH_SHORT);
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+            finish();
         }
     }
 
