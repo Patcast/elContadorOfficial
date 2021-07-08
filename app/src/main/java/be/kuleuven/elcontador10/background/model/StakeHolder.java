@@ -1,39 +1,59 @@
 package be.kuleuven.elcontador10.background.model;
 
 public class StakeHolder {
-    private int id;
+    private String id;
     private String name;
-    private String familyName;
     private String role;
     private boolean deleted;
+    private String email;
+    private int phoneNumber;
 
-    public StakeHolder(int id, String name, String familyName, String role, boolean deleted) {
+
+
+    public StakeHolder(String id, String name, String role, boolean deleted, String email, int phoneNumber) {
         this.id = id;
         this.name = name;
-        this.familyName = familyName;
         this.role = role;
         this.deleted = deleted;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 
-    public int getId() {
+    public StakeHolder(String name, String role, boolean deleted, String email, int phoneNumber) {
+        this.name = name;
+        this.role = role;
+        this.deleted = deleted;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public StakeHolder() {
+    }
+
+    public String getId() {
         return id;
     }
+
     public String getName() {
         return name;
     }
-    public String getFamilyName() {
-        return familyName;
-    }
+
     public String getRole() {
         return role;
     }
-    public String getFullNameId(){return ("-"+id+"-"+" "+name+" "+familyName);}
-    public boolean isDeleted() { return deleted; }
-    public String  getIdStakeholder(String stakeHolder) {
-        if(stakeHolder.isEmpty()){
-            return "0";
-        }
-        else { return  stakeHolder.split("-")[1]; }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public int getPhoneNumber() {
+        return phoneNumber;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
 }

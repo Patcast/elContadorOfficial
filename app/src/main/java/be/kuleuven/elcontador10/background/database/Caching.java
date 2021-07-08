@@ -21,6 +21,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,9 +34,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
+import be.kuleuven.elcontador10.background.model.Account;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
+import be.kuleuven.elcontador10.fragments.Accounts;
 
 public enum Caching {
     INSTANCE;
@@ -45,6 +49,7 @@ public enum Caching {
     ///********** Observers List
     private List <CachingObserver> observers = new ArrayList<>();
     private List <Transaction> transactions = new ArrayList<>();
+    private List <Account> accounts = new ArrayList<>();
     ///********** Variables
      View view;
      Context context;
@@ -52,6 +57,7 @@ public enum Caching {
     private static final String TAG = "Caching";
     public GoogleSignInClient mGoogleSignInClient;
     public FirebaseAuth mAuth;
+    private final String globalAccountId = "IhsNw7w9mkz6bsf6TfZd";
 
 ///Attach method
 
@@ -67,7 +73,7 @@ public enum Caching {
     public void setAllData(Context context){
         this.context = context;
         requestStaticData();
-        requestStakeHold();
+        requestStakeHolder();
         observers.forEach(o ->o.notifyStakeHolders(stakeHolders) );
         observers.forEach(o ->o.notifyCategories(transTypes) );
         observers.forEach(o ->o.notifyRoles(roles));
@@ -82,14 +88,14 @@ public enum Caching {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void setStakeHolders (){
-        requestStakeHold();
+        requestStakeHolder();
         observers.forEach(o-> o.notifyStakeHolders(stakeHolders));
     }
 
     //////// DATA BASE ****************
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestStaticData(){
-        final DocumentReference docRef = db.document("/globalAccounts/IhsNw7w9mkz6bsf6TfZd/accounts/xI4douRpfSbTs8Ofepee/datos/staticData");
+        final DocumentReference docRef = db.document("/globalAccounts/"+globalAccountId+"/accounts/xI4douRpfSbTs8Ofepee/datos/staticData");
         docRef.addSnapshotListener((snapshot, e) -> {
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e);
@@ -113,9 +119,68 @@ public enum Caching {
         }
     }
 
-    public void requestStakeHold(){
+    public void requestStakeHolder(){
+        db.collection("/globalAccounts/"+globalAccountId+"/accounts/xI4douRpfSbTs8Ofepee/stakeHolders")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e);
+                            return;
+                        }
+                        for (QueryDocumentSnapshot doc : value) {
+                            StakeHolder myStakeHolder =  doc.toObject(StakeHolder.class);
+                            myStakeHolder.setId( doc.getId());
+                            stakeHolders.add(myStakeHolder);
+                        }
+                    }
+                });
+    }
+
+    private void requestAllTransactions(){
+
+        db.collection("/globalAccounts/"+globalAccountId+"/accounts/xI4douRpfSbTs8Ofepee/transactions")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e);
+                            return;
+                        }
+                        for (QueryDocumentSnapshot doc : value) {
+                            Transaction myTransaction =  doc.toObject(Transaction.class);
+                            myTransaction.setId( doc.getId());
+                            transactions.add(myTransaction);
+                        }
+                    }
+                });
+
+
 
     }
+    private void requestAllAccounts(String globalAccountId){
+
+        db.collection("/globalAccounts/"+globalAccountId+"/accounts")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e);
+                            return;
+                        }
+                        for (QueryDocumentSnapshot doc : value) {
+                            Account myAccount =  doc.toObject(Account.class);
+                            myAccount.setId( doc.getId());
+                            accounts.add(myAccount);
+                        }
+                    }
+                });
+
+    }
+
 
 
     public void detach(CachingObserver observer){

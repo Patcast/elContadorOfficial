@@ -1,63 +1,90 @@
 package be.kuleuven.elcontador10.background.model;
 
+import com.google.type.DateTime;
+
 public class Transaction {
-    private boolean cashIn;
     private double amount;
-    private int idUser;
-
+    private String registeredBy;
     private String stakeHolder;
-    private int idType;
     private String txtComments;
+    private DateTime date;
+    private boolean deleted;
+    private String notes;
+    private String category;
+    private String subCategory;
+    private String id;
 
+    public Transaction() {
+    }
 
-    private final String idOfBudget = "8";
-
-
-
-
-    ///Constructor use to make object to create submit URL
-    public Transaction(boolean cashIn, double amount, int idUser, String stake, int idTypeTrans, String txtComments) {
+    public Transaction(double amount, String registeredBy, String stakeHolder, String txtComments, DateTime date, boolean deleted, String notes, String category, String subCategory, String id) {
         this.amount = amount;
-        this.cashIn = cashIn;
-        this.idUser = idUser;
-        this.stakeHolder = stake;
-        this.idType = idTypeTrans;
+        this.registeredBy = registeredBy;
+        this.stakeHolder = stakeHolder;
         this.txtComments = txtComments;
+        this.date = date;
+        this.deleted = deleted;
+        this.notes = notes;
+        this.category = category;
+        this.subCategory = subCategory;
+        this.id = id;
+    }
+
+    public Transaction(double amount, String registeredBy, String stakeHolder, String txtComments, DateTime date, boolean deleted, String notes, String category, String subCategory) {
+        this.amount = amount;
+        this.registeredBy = registeredBy;
+        this.stakeHolder = stakeHolder;
+        this.txtComments = txtComments;
+        this.date = date;
+        this.deleted = deleted;
+        this.notes = notes;
+        this.category = category;
+        this.subCategory = subCategory;
     }
 
     public double getAmount() {
-        double fixAmount;
-        if(cashIn){
-            if (amount>0){fixAmount = amount;}
-            else{fixAmount = -1*amount;}
-        }
-        else{ //this represents cash out.
-            if (amount>0){fixAmount = -1*amount;}
-            else{fixAmount = amount;}
-        }
-        return fixAmount;
+        return amount;
     }
 
-    public int getIdUser() {
-        return idUser;
+    public String getRegisteredBy() {
+        return registeredBy;
     }
 
-    public String  getIdStakeholder() {
-
-        if(stakeHolder.isEmpty()){
-            return "0";
-        }
-        else { return  stakeHolder.split("-")[1]; }
-    }
-
-    public String getIdType() {
-        return String.valueOf(idType);
+    public String getStakeHolder() {
+        return stakeHolder;
     }
 
     public String getTxtComments() {
         return txtComments;
     }
 
+    public DateTime getDate() {
+        return date;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getSubCategory() {
+        return subCategory;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }
 
 
