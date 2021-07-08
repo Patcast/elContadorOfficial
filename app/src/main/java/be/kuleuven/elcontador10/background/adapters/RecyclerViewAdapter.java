@@ -51,6 +51,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     /*
     * Set the text for each CardView from the array
     * */
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String[] text_title; // COLOUR|TEXT

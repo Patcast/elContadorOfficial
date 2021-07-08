@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/home_summary">
+    app:startDestination="@id/signIn">
 
     <fragment
         android:id="@+id/home_summary"
@@ -144,5 +144,15 @@
         <action
             android:id="@+id/action_stakeholderSummary_to_stakeholderDisplay"
             app:destination="@id/stakeholderDisplay" />
+    </fragment>
+    <fragment
+        android:id="@+id/signIn"
+        android:name="be.kuleuven.elcontador10.fragments.SignIn"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in"
+        app:startDestination="@id/action_signIn_to_home_summary">
+        <action
+            android:id="@+id/action_signIn_to_home_summary"
+            app:destination="@id/home_summary" />
     </fragment>
 </navigation>
