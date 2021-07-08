@@ -37,12 +37,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import be.kuleuven.elcontador10.R;
+import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.database.Caching;
 
 
 public class SignIn extends Fragment {
 
     private SignInButton signInButton;
-    private TextView statusText;
     private final int RC_SIGN_IN = 9001;
     private final String TAG = "SignInActivity";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -53,7 +54,7 @@ public class SignIn extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SignInGoogle.INSTANCE.mAuth = FirebaseAuth.getInstance();
+        Caching.INSTANCE.mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.
                 Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
                 requestIdToken(getString(R.string.server_client_id)).
@@ -61,7 +62,7 @@ public class SignIn extends Fragment {
                 build();
 
 
-        SignInGoogle.INSTANCE.mGoogleSignInClient =  GoogleSignIn.getClient(getContext(), gso);
+        Caching.INSTANCE.mGoogleSignInClient =  GoogleSignIn.getClient(getContext(), gso);
 
     }
 
@@ -69,16 +70,15 @@ public class SignIn extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        MainActivity activity = (MainActivity) getActivity();
-        activity.hideLogOut(true);
-        return inflater.inflate(R.layout.fragment_log_in, container, false);
+        MainActivity holderActivity = (MainActivity)getActivity();
+        holderActivity.displayBottomMenu(false);
+        return inflater.inflate(R.layout.fragment_sign_in, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ///Buttons
-        statusText = view.findViewById(R.id.text_signIn);
         signInButton= view.findViewById(R.id.btn_sign_in_google);
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setOnClickListener(v->signIn());
@@ -87,7 +87,7 @@ public class SignIn extends Fragment {
 
     ///// Sign in process///////////////
     private void signIn() {
-        Intent signInIntent =  SignInGoogle.INSTANCE.mGoogleSignInClient.getSignInIntent();
+        Intent signInIntent =  Caching.INSTANCE.mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
     @Override
@@ -118,14 +118,14 @@ public class SignIn extends Fragment {
 
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        SignInGoogle.INSTANCE.mAuth.signInWithCredential(credential)
+        Caching.INSTANCE.mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user =  SignInGoogle.INSTANCE.mAuth.getCurrentUser();
+                            FirebaseUser user =  Caching.INSTANCE.mAuth.getCurrentUser();
                             checkIfUserRegistered(user, getContext());
 
                         } else {
@@ -139,12 +139,12 @@ public class SignIn extends Fragment {
 
     private void updateAfterSignedIn(FirebaseUser account){
         if (account !=null ){
-            navController.navigate(R.id.action_logIn_to_displayAllGreetings);
+            navController.navigate(R.id.action_signIn_to_home_summary);
         }
     }
     ///// Sign out process///////////////
     private void signOut() {
-        navController.navigate(R.id.logIn);
+        navController.navigate(R.id.signIn);
         FirebaseAuth.getInstance().signOut();
     }
 

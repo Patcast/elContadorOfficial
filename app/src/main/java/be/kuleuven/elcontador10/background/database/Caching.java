@@ -2,9 +2,11 @@ package be.kuleuven.elcontador10.background.database;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.android.volley.Request;
@@ -12,16 +14,26 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
+import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 
 public enum Caching {
@@ -32,13 +44,14 @@ public enum Caching {
     private List <String> roles = new ArrayList<>();
     ///********** Observers List
     private List <CachingObserver> observers = new ArrayList<>();
+    private List <Transaction> transactions = new ArrayList<>();
     ///********** Variables
      View view;
      Context context;
-
-    public List<TransactionType> getTransTypes() {
-        return transTypes;
-    }
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static final String TAG = "Caching";
+    public GoogleSignInClient mGoogleSignInClient;
+    public FirebaseAuth mAuth;
 
 ///Attach method
 
@@ -53,9 +66,8 @@ public enum Caching {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void setAllData(Context context){
         this.context = context;
-        requestTypeTrans();
+        requestStaticData();
         requestStakeHold();
-        requestRoles();
         observers.forEach(o ->o.notifyStakeHolders(stakeHolders) );
         observers.forEach(o ->o.notifyCategories(transTypes) );
         observers.forEach(o ->o.notifyRoles(roles));
@@ -75,73 +87,42 @@ public enum Caching {
     }
 
     //////// DATA BASE ****************
-    public void requestTypeTrans(){
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-
-        JsonArrayRequest submitRequest = new JsonArrayRequest(Request.Method.GET, DatabaseURL.INSTANCE.getTranType, null, new Response.Listener<JSONArray>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onResponse(JSONArray response) {
-                try{
-                    transTypes.clear();
-                    for(int i=0; i<response.length();i++){
-                        JSONObject recordJson = response.getJSONObject(i);
-                        TransactionType record = new TransactionType(recordJson.getInt("idTransactionType"),recordJson.getString("type"),recordJson.getString("subType"));
-                        transTypes.add(record);
-                    }
-                   // setSpinners();
-                }
-                catch(JSONException e){
-                    e.printStackTrace();
-                }
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void requestStaticData(){
+        final DocumentReference docRef = db.document("/globalAccounts/IhsNw7w9mkz6bsf6TfZd/accounts/xI4douRpfSbTs8Ofepee/datos/staticData");
+        docRef.addSnapshotListener((snapshot, e) -> {
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e);
+                return;
             }
-        }, error -> Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show());
 
-        requestQueue.add(submitRequest);
+            if (snapshot != null && snapshot.exists()) {
+                (( HashMap<String,String[]> )snapshot.getData().get("categories")).forEach(this::makeTransactionTypes);
+                roles.add((String)snapshot.get("roles"));
+            } else {
+                Log.d(TAG, "Current data: null");
+            }
+        });
+
     }
+
+    private void makeTransactionTypes(String k, String[] v) {
+        for(String subCat: v){
+            TransactionType typeOfTransactions1 = new TransactionType(k,subCat);
+            transTypes.add(typeOfTransactions1);
+        }
+    }
+
     public void requestStakeHold(){
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        JsonArrayRequest submitRequest = new JsonArrayRequest(Request.Method.GET, DatabaseURL.INSTANCE.getStakeHolders, null, response -> {
-            try{
-                stakeHolders.clear();
-                for(int i=0; i<response.length();i++){
-                    JSONObject recordJson = response.getJSONObject(i);
-                    StakeHolder record = new StakeHolder(recordJson.getInt("idStakeholders")
-                                                        ,recordJson.getString("firstName")
-                                                        ,recordJson.getString("LastName")
-                                                        ,recordJson.getString("Role")
-                                                        ,(recordJson.getInt("deleted"))>= 1);
-                    stakeHolders.add(record);
-                }
-            }
-            catch(JSONException e){
-                e.printStackTrace();
-            }
-        }, error -> Toast.makeText(context, "Unable upload StakeHolderTable", Toast.LENGTH_LONG).show());
-        requestQueue.add(submitRequest);
-    }
-    public void requestRoles() {
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, DatabaseURL.INSTANCE.getRoles, null,
-                response -> {
-                    try {
-                        roles.clear();
-                        for (int i = 0; i < response.length(); i++) {
-                            JSONObject recordJson = response.getJSONObject(i);
-                            roles.add(recordJson.getString("Role"));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                },
-                error -> Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show());
 
-        requestQueue.add(request);
     }
+
 
     public void detach(CachingObserver observer){
         observers.remove(observer);
 
+    }
+    public List<TransactionType> getTransTypes() {
+        return transTypes;
     }
 }

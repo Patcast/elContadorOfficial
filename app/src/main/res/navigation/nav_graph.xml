@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/home_summary"
-        android:name="be.kuleuven.elcontador10.fragments.Home"
+        android:name="be.kuleuven.elcontador10.fragments.Accounts"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -19,12 +19,6 @@
         <action
             android:id="@+id/action_home_summary_to_transactions_summary"
             app:destination="@id/transactions_summary" />
-        <action
-            android:id="@+id/action_home_summary_to_stakeholderDisply"
-            app:destination="@id/stakeholderDisplay" />
-        <action
-            android:id="@+id/action_home_summary_to_transactionDisplay"
-            app:destination="@id/transactionDisplay" />
         <action
             android:id="@+id/action_home_summary_to_stakeholderSummary"
             app:destination="@id/stakeholderSummary" />

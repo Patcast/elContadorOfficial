@@ -1,15 +1,16 @@
 package be.kuleuven.elcontador10.background.model;
 
 public class TransactionType {
-    private int id;
+
     private String category;
     private String subCategory;
 
-    public TransactionType(int id ,String cat,String sub) {
-        category =cat;
-        subCategory = sub;
-        this.id = id;
+
+    public TransactionType(String category, String subCategory) {
+        this.category = category;
+        this.subCategory = subCategory;
     }
+
     public String getCategory() {
         return category;
     }
@@ -18,7 +19,4 @@ public class TransactionType {
         return subCategory;
     }
 
-    public int getId() {
-        return id;
-    }
 }
