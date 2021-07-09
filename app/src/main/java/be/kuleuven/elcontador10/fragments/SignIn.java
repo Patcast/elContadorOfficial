@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,11 +40,11 @@ import java.util.Map;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
 
 
 public class SignIn extends Fragment {
-
-    private SignInButton signInButton;
+    private EditText edTextIdCompany;
     private final int RC_SIGN_IN = 9001;
     private final String TAG = "SignInActivity";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -70,16 +71,18 @@ public class SignIn extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        MainActivity holderActivity = (MainActivity)getActivity();
-        holderActivity.displayBottomMenu(false);
+
         return inflater.inflate(R.layout.fragment_sign_in, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    /*    MainActivity holderActivity = (MainActivity)getActivity();
+        holderActivity.displayBottomMenu(false);*/
         ///Buttons
-        signInButton= view.findViewById(R.id.btn_sign_in_google);
+        edTextIdCompany = view.findViewById(R.id.editTextIdCompany);
+        SignInButton signInButton = view.findViewById(R.id.btn_sign_in_google);
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setOnClickListener(v->signIn());
         navController = Navigation.findNavController(view);
@@ -137,8 +140,10 @@ public class SignIn extends Fragment {
                 });
     }
 
-    private void updateAfterSignedIn(FirebaseUser account){
+    private void updateAfterSignedIn(FirebaseUser account,String userId,String idCompany){
         if (account !=null ){
+            Caching.INSTANCE.setGlobalAccountId(idCompany);
+            Caching.INSTANCE.setLogInUserId(userId);
             navController.navigate(R.id.action_signIn_to_home_summary);
         }
     }
@@ -149,9 +154,8 @@ public class SignIn extends Fragment {
     }
 
     ///// validate for registration and authorization ///////////////
-    private void regInFireStore(FirebaseUser currentUser){
+    private void regInFireStore(FirebaseUser currentUser,String idCompany){
         if (currentUser !=null ) {
-            DocumentReference docRef = db.collection("stakeholders").document(currentUser.getUid());
             Map<String, Object> stakeholder = new HashMap<>();
             if (currentUser.getDisplayName() != (null))
                 stakeholder.put("name", currentUser.getDisplayName());
@@ -159,9 +163,10 @@ public class SignIn extends Fragment {
                 stakeholder.put("phone", currentUser.getPhoneNumber());
             stakeholder.put("email", currentUser.getEmail());
             stakeholder.put("authorized", false);
+            stakeholder.put("idOfGlobalAccount",idCompany);
 
 
-            db.collection("stakeholders").document(currentUser.getUid())
+            db.collection("/globalAccounts/"+idCompany+"/stakeHolders").document(currentUser.getUid())
                     .set(stakeholder)
                     .addOnSuccessListener(success -> Toast.makeText(getContext(), getText(R.string.succesful_registration), Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(noSuccess -> Toast.makeText(getContext(), getText(R.string.unsuccesful_registration), Toast.LENGTH_SHORT).show());
@@ -169,7 +174,8 @@ public class SignIn extends Fragment {
     }
 
     private void checkIfUserRegistered(FirebaseUser currentUser, Context currentContext){
-        DocumentReference docRef =  db.collection("stakeholders").document(currentUser.getUid());
+        String idCompany =edTextIdCompany.getText().toString();
+        DocumentReference docRef =  db.collection("/globalAccounts/"+idCompany+"/stakeHolders").document(currentUser.getEmail());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -177,7 +183,7 @@ public class SignIn extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         if(document.get("authorized")!=null && (boolean)document.get("authorized")) {
-                            updateAfterSignedIn(currentUser);
+                            updateAfterSignedIn(currentUser,document.getId(),idCompany);
                         }
                         else{
                             signOut();
@@ -185,13 +191,15 @@ public class SignIn extends Fragment {
                         }
                     }
                     else {
-                        regInFireStore(currentUser);
-                        //signOut();
+                        regInFireStore(currentUser,idCompany);
+                        signOut();
+                        Toast.makeText(currentContext, getText(R.string.askForPermission), Toast.LENGTH_LONG).show();
                     }
                 }
                 else {
                     Log.d(TAG, "get failed with ", task.getException());
-                    //signOut();
+                    Toast.makeText(currentContext,   getText(R.string.askForValidCompanyId)+" "+currentUser.getEmail(), Toast.LENGTH_LONG).show();
+                    signOut();
                 }
             }
         });

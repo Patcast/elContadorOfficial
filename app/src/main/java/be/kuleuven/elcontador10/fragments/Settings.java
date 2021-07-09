@@ -25,13 +25,14 @@ import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.database.SettingsManager;
 import be.kuleuven.elcontador10.background.interfaces.SettingsInterface;
 import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
 
-public class Settings extends Fragment implements SettingsInterface {
+public class Settings extends Fragment  {
     private MainActivity mainActivity;
-    private StakeholderLoggedIn loggedIn;
+    private String loggedIn;
 
     private ArrayList<String> ids;
     private ArrayList<String> nonRegisteredStakeholders;
@@ -43,7 +44,7 @@ public class Settings extends Fragment implements SettingsInterface {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle(R.string.settings);
-        loggedIn = mainActivity.getLoggedIn();
+        loggedIn = Caching.INSTANCE.getLogInUserId();
         manager = SettingsManager.getInstance();
 
         return  inflater.inflate(R.layout.fragment_settings, container, false);
@@ -53,24 +54,22 @@ public class Settings extends Fragment implements SettingsInterface {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        manager.findNonRegistered(this);
+        //manager.findNonRegistered(this);
 
         Button logout = requireView().findViewById(R.id.btnLogOut);
         logout.setOnClickListener(this::onLogOut_CLicked);
 
-        Button changePassword = requireView().findViewById(R.id.btnChangePassword);
+       /* Button changePassword = requireView().findViewById(R.id.btnChangePassword);
         changePassword.setOnClickListener(this::onChangePassword_Clicked);
 
         Button add_log_in = requireView().findViewById(R.id.btnRegister);
-        add_log_in.setOnClickListener(this::onRegister_Clicked);
+        add_log_in.setOnClickListener(this::onRegister_Clicked);*/
     }
 
     public void onLogOut_CLicked(View view) {
-        Toast.makeText(mainActivity, "Logging out", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(mainActivity, LogIn.class));
-        mainActivity.finish();
-    }
 
+    }
+/*
     public void onChangePassword_Clicked(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
         builder.setTitle("Change password");
@@ -105,8 +104,8 @@ public class Settings extends Fragment implements SettingsInterface {
             if (passwordConfirm.equals("") || passwordCurrent.equals("") || passwordNew.equals("")) // empty input
                 this.feedback("Missing input!");
             else if (passwordNew.equals(passwordConfirm))
-                manager.changePassword(this, loggedIn, passwordCurrent, passwordNew);
-            else this.feedback("New password does not match."); })
+                //manager.changePassword(this, loggedIn, passwordCurrent, passwordNew);
+            //else this.feedback("New password does not match."); })
 
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
@@ -187,5 +186,5 @@ public class Settings extends Fragment implements SettingsInterface {
     public void populateSpinner(ArrayList<String> ids, ArrayList<String> stakeholders) {
         this.ids = ids;
         this.nonRegisteredStakeholders = stakeholders;
-    }
+    }*/
 }

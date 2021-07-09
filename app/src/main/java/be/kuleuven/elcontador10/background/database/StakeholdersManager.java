@@ -53,15 +53,14 @@ public class StakeholdersManager {
         List<DataPlaceHolder> data = new ArrayList<>();
 
         for (StakeHolder stakeholder : stakeHolders) {
-            int id = stakeholder.getId();
+            String id = stakeholder.getId();
             String firstName = stakeholder.getName();
-            String lastName = stakeholder.getFamilyName();
             String role = stakeholder.getRole();
             boolean deleted = stakeholder.isDeleted();
 
             // run object through filter
-            if (filter != null && Filter(filter, (firstName + " " + lastName).toLowerCase(), role, deleted)) {
-                data.add(new DataPlaceHolder(id, firstName, lastName, role, deleted));
+            if (filter != null && Filter(filter, (firstName ).toLowerCase(), role, deleted)) {
+                //data.add(new DataPlaceHolder(id, firstName, role, deleted));
             }
         }
 
@@ -159,7 +158,7 @@ public class StakeholdersManager {
         StringRequest request = new StringRequest(Request.Method.POST, DatabaseURL.INSTANCE.deleteStakeholder,
                 response -> {
                     stakeholders.delete();
-                    Caching.INSTANCE.setStakeHolders();
+                    //Caching.INSTANCE.setStakeHolders();
                 },
                 error -> stakeholders.error("Unable to delete")) {
 
@@ -182,7 +181,7 @@ public class StakeholdersManager {
         StringRequest request = new StringRequest(Request.Method.POST, DatabaseURL.INSTANCE.addStakeholder,
                 response -> {
                     stakeholder.addStakeholder();
-                    Caching.INSTANCE.setStakeHolders();
+                    //Caching.INSTANCE.setStakeHolders();
                 },
                 error -> stakeholder.feedback(error.toString())) {
 
@@ -210,7 +209,7 @@ public class StakeholdersManager {
         StringRequest request = new StringRequest(Request.Method.POST, DatabaseURL.INSTANCE.editStakeholder,
                 response -> {
                     stakeholder.editStakeholder();
-                    Caching.INSTANCE.setStakeHolders();
+                    ///Caching.INSTANCE.setStakeHolders();
                 },
                 error -> {
                     stakeholder.feedback(error.toString());

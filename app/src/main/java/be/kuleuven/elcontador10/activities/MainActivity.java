@@ -33,10 +33,10 @@ public class MainActivity extends FragmentActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         header = findViewById(R.id.lblToolbarHeading);
-        setBottomMenu();
+       // setBottomMenu();
     }
 
-    ///This is all the code required for the bottom Navigation Menu
+/*    ///This is all the code required for the bottom Navigation Menu
     private void setBottomMenu(){
         bottomNavigationView = findViewById(R.id.bottom_navigation_menu_main);
         NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
@@ -45,7 +45,7 @@ public class MainActivity extends FragmentActivity  {
     public void displayBottomMenu(Boolean display){
         int visibility = (display)? View.VISIBLE :View.INVISIBLE;
         bottomNavigationView.setVisibility(visibility);
-    }
+    }*/
 
     public void setTitle(String title) {
         header.setText(title);

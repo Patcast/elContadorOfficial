@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.Base64Encoder;
+import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.database.StakeholdersManager;
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersNewInterface;
 import be.kuleuven.elcontador10.background.parcels.EditStakeholderParcel;
@@ -54,7 +55,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
     private static final int RESULT_LOAD_IMG = 2;
 
     private String image_string;
-    private ArrayList<String> roles_array;
+    private ArrayList<String> roles_array= new ArrayList<>();
     private String id;
     private boolean edit;
 
@@ -91,7 +92,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
         image_button.setOnClickListener(this::onPictureClicked);
 
         // set up spinner
-        roles_array = mainActivity.getRoles();
+        roles_array.addAll(Caching.INSTANCE.roles);
         ArrayAdapter adapter = new ArrayAdapter(mainActivity, android.R.layout.simple_spinner_dropdown_item, roles_array);
         roles.setAdapter(adapter);
 
@@ -130,7 +131,7 @@ public class StakeholderNew extends Fragment implements StakeholdersNewInterface
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onCancelClicked(View view) {
         if (!edit) { // go back to stakeholder summary
-            ArrayList<String> roles = mainActivity.getRoles();
+            ArrayList<String> roles = new ArrayList<>(Caching.INSTANCE.roles);
             FilterStakeholdersParcel filter = new FilterStakeholdersParcel("*", roles, false, "Name");
 
             StakeholderNewDirections.ActionStakeholderNewToStakeholderSummary action =

@@ -7,27 +7,27 @@ public class StakeHolder {
     private boolean deleted;
     private String email;
     private int phoneNumber;
+    private String idOfGlobalAccount;
+    private boolean authorized;
 
-
-
-    public StakeHolder(String id, String name, String role, boolean deleted, String email, int phoneNumber) {
-        this.id = id;
+    public StakeHolder(String name, String role, boolean deleted, String email, int phoneNumber, String idOfGlobalAccount, boolean authorized) {
         this.name = name;
         this.role = role;
         this.deleted = deleted;
         this.email = email;
         this.phoneNumber = phoneNumber;
-    }
-
-    public StakeHolder(String name, String role, boolean deleted, String email, int phoneNumber) {
-        this.name = name;
-        this.role = role;
-        this.deleted = deleted;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
+        this.idOfGlobalAccount = idOfGlobalAccount;
+        this.authorized = authorized;
     }
 
     public StakeHolder() {
+    }
+    public String getIdOfGlobalAccount() {
+        return idOfGlobalAccount;
+    }
+
+    public boolean isAuthorized() {
+        return authorized;
     }
 
     public String getId() {

@@ -44,7 +44,7 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
     private FloatingActionButton fabFilter;
 
     private NavController navController;
-    private ArrayList<String> roles;
+    private ArrayList<String> roles= new ArrayList<>();
     private RecyclerViewAdapter recyclerViewAdapter;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -54,7 +54,7 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
         // Inflate the layout for this fragment
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle(getString(R.string.stakeholder));
-        roles = mainActivity.getRoles();
+        roles.addAll(Caching.INSTANCE.roles);
         Caching.INSTANCE.attachCaching(this);
         return inflater.inflate(R.layout.fragment_stakeholder_summary, container, false);
     }

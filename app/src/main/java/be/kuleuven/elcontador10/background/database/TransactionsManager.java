@@ -197,9 +197,9 @@ public class TransactionsManager {
             Map<String,String> params = new HashMap<>();
             params.put("amount", String.valueOf(newTrans.getAmount()));
             params.put("notes", newTrans.getTxtComments());
-            params.put("iduser", String.valueOf(newTrans.getIdUser()));
-            params.put("idstakeholder", newTrans.getIdStakeholder());
-            params.put("type", newTrans.getIdType());
+            params.put("iduser", String.valueOf(newTrans.getRegisteredBy()));
+            params.put("idstakeholder", newTrans.getStakeHolder());
+            params.put("type", newTrans.getCategory());
             // Make Json request
             RequestQueue requestQueue = Volley.newRequestQueue(useContext);
             JsonArrayRequestWithParams submitRequest = new JsonArrayRequestWithParams (Request.Method.POST, DatabaseURL.INSTANCE.addTransaction, params,

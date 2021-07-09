@@ -42,9 +42,9 @@ public class TransactionsSummary extends Fragment implements TransactionsSummary
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mainActivity = (MainActivity) getActivity();
+  /*      mainActivity = (MainActivity) getActivity();
         mainActivity.displayBottomMenu(true);
-        mainActivity.setTitle(getString(R.string.transactions));
+        mainActivity.setTitle(getString(R.string.transactions));*/
         return inflater.inflate(R.layout.fragment_transactions, container, false);
     }
 

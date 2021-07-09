@@ -43,59 +43,69 @@ import be.kuleuven.elcontador10.fragments.Accounts;
 public enum Caching {
     INSTANCE;
     ////*********Data
-    private List <StakeHolder> stakeHolders = new ArrayList<>();
-    private List <TransactionType>  transTypes = new ArrayList<>();
-    private List <String> roles = new ArrayList<>();
+    public List <StakeHolder> stakeHolders = new ArrayList<>();
+    public List <TransactionType>  transTypes = new ArrayList<>();
+    public List <String> roles = new ArrayList<>();
     ///********** Observers List
     private List <CachingObserver> observers = new ArrayList<>();
-    private List <Transaction> transactions = new ArrayList<>();
+    public List <Transaction> transactions = new ArrayList<>();
     private List <Account> accounts = new ArrayList<>();
     ///********** Variables
      View view;
      Context context;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "Caching";
+    /// ******** Authentication
     public GoogleSignInClient mGoogleSignInClient;
     public FirebaseAuth mAuth;
-    private final String globalAccountId = "IhsNw7w9mkz6bsf6TfZd";
+    private  String globalAccountId;
+    private String chosenAccountId;
+    private String logInUserId;
 
 ///Attach method
 
     public void attachCaching(CachingObserver newObserver){
-        observers.add(newObserver);
-        newObserver.notifyStakeHolders(stakeHolders);
-        newObserver.notifyCategories(transTypes);
-        newObserver.notifyRoles(roles);
 
     }
-    /// Set Data
+    //// Request data
+
+    //this goes on the click Listener of the account RecView
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setAllData(Context context){
-        this.context = context;
-        requestStaticData();
-        requestStakeHolder();
-        observers.forEach(o ->o.notifyStakeHolders(stakeHolders) );
-        observers.forEach(o ->o.notifyCategories(transTypes) );
-        observers.forEach(o ->o.notifyRoles(roles));
+    public void openAccount(String chosenAccountId){
+        requestStaticData(chosenAccountId);
+        requestAllTransactions(chosenAccountId);
+        requestStakeHolder(chosenAccountId);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void notifyAllObservers(){
-        observers.forEach(o ->o.notifyRoles(roles));
-        observers.forEach(o ->o.notifyStakeHolders(stakeHolders) );
-        observers.forEach(o ->o.notifyCategories(transTypes) );
-    }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setStakeHolders (){
-        requestStakeHolder();
-        observers.forEach(o-> o.notifyStakeHolders(stakeHolders));
-    }
 
     //////// DATA BASE ****************
+
+    //OnClick Listener on signIn
+    public void requestAllAccounts(String globalAccountId){
+
+        db.collection("/globalAccounts/"+globalAccountId+"/accounts")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e);
+                            return;
+                        }
+                        for (QueryDocumentSnapshot doc : value) {
+                            Account myAccount =  doc.toObject(Account.class);
+                            myAccount.setId( doc.getId());
+                            accounts.add(myAccount);
+                        }
+                    }
+                });
+
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void requestStaticData(){
-        final DocumentReference docRef = db.document("/globalAccounts/"+globalAccountId+"/accounts/xI4douRpfSbTs8Ofepee/datos/staticData");
+    public void requestStaticData(String chosenAccountId){
+        final DocumentReference docRef = db.document("/globalAccounts/"+globalAccountId+"/accounts/"+chosenAccountId+"/datos/staticData");
         docRef.addSnapshotListener((snapshot, e) -> {
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e);
@@ -119,8 +129,8 @@ public enum Caching {
         }
     }
 
-    public void requestStakeHolder(){
-        db.collection("/globalAccounts/"+globalAccountId+"/accounts/xI4douRpfSbTs8Ofepee/stakeHolders")
+    public void requestStakeHolder(String chosenAccountId){
+        db.collection("/globalAccounts/"+globalAccountId+"/accounts/"+chosenAccountId+"/stakeHolders")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value,
@@ -138,9 +148,9 @@ public enum Caching {
                 });
     }
 
-    private void requestAllTransactions(){
+    private void requestAllTransactions(String chosenAccountId){
 
-        db.collection("/globalAccounts/"+globalAccountId+"/accounts/xI4douRpfSbTs8Ofepee/transactions")
+        db.collection("/globalAccounts/"+globalAccountId+"/accounts/"+chosenAccountId+"/transactions")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value,
@@ -160,28 +170,8 @@ public enum Caching {
 
 
     }
-    private void requestAllAccounts(String globalAccountId){
 
-        db.collection("/globalAccounts/"+globalAccountId+"/accounts")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(TAG, "Listen failed.", e);
-                            return;
-                        }
-                        for (QueryDocumentSnapshot doc : value) {
-                            Account myAccount =  doc.toObject(Account.class);
-                            myAccount.setId( doc.getId());
-                            accounts.add(myAccount);
-                        }
-                    }
-                });
-
-    }
-
-
+//////************** end of db
 
     public void detach(CachingObserver observer){
         observers.remove(observer);
@@ -189,5 +179,29 @@ public enum Caching {
     }
     public List<TransactionType> getTransTypes() {
         return transTypes;
+    }
+
+    public void setChosenAccountId(String chosenAccountId) {
+        this.chosenAccountId = chosenAccountId;
+    }
+
+    public String getChosenAccountId() {
+        return chosenAccountId;
+    }
+
+    public String getLogInUserId() {
+        return logInUserId;
+    }
+
+    public void setLogInUserId(String logInUserId) {
+        this.logInUserId = logInUserId;
+    }
+
+    public String getGlobalAccountId() {
+        return globalAccountId;
+    }
+
+    public void setGlobalAccountId(String globalAccountId) {
+        this.globalAccountId = globalAccountId;
     }
 }

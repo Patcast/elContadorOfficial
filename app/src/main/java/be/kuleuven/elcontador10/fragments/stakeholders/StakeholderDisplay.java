@@ -36,6 +36,7 @@ import java.util.Arrays;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.Base64Encoder;
+import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.database.StakeholdersManager;
 import be.kuleuven.elcontador10.background.interfaces.stakeholders.StakeholdersDisplayInterface;
 import be.kuleuven.elcontador10.background.parcels.EditStakeholderParcel;
@@ -232,7 +233,7 @@ public class StakeholderDisplay extends Fragment implements StakeholdersDisplayI
     public void delete() {
         error("Stakeholder deleted");
 
-        ArrayList<String> roles = mainActivity.getRoles();
+        ArrayList<String> roles = new ArrayList<>(Caching.INSTANCE.roles);
         // navigate back to summary
         navController.navigate(StakeholderDisplayDirections.actionStakeholderDisplayToStakeholderSummary(
                 new FilterStakeholdersParcel("*", roles, false, "Name") // default filter

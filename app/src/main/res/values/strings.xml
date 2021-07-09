@@ -120,5 +120,7 @@
     <string name="Access_denied">Access denied for </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="askForPermission">Please ask for authorization to access</string>
+    <string name="askForValidCompanyId">Please insert a valid Companie\'s Id</string>
 
 </resources>

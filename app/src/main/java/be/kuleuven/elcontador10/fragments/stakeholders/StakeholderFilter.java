@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.WidgetsCreation;
+import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.interfaces.CreateWidgets;
 import be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel;
 
@@ -41,7 +42,7 @@ public class StakeholderFilter extends Fragment implements CreateWidgets {
     private CheckBox all_roles;
     private LinearLayout chipGroup;
     private ArrayList<CheckBox> roles;
-    private ArrayList<String> roleNames;
+    private ArrayList<String> roleNames=new ArrayList<>();
     private int noOfChecked;
 
     private NavController navController;
@@ -71,7 +72,7 @@ public class StakeholderFilter extends Fragment implements CreateWidgets {
         Button filter = requireView().findViewById(R.id.btn_filter_FilterStakeholder);
 
         // initialise chip group
-        roleNames = mainActivity.getRoles();
+        roleNames.addAll(Caching.INSTANCE.roles);
         setRoles(roleNames);
 
         // set navigation

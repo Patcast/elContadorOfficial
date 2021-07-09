@@ -122,7 +122,6 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
     private Transaction makeNewTrans(){
         boolean cashIn = radGroup.getCheckedRadioButtonId() == R.id.radio_CashIn;
         double amount = Double.parseDouble(txtAmount.getText().toString());
-        int idUser = (mainActivity.getLoggedIn().getId());
         String stakeholder =  txtStakeHolder.getText().toString();
         String category = spCategory.getSelectedItem().toString();
         String subCategory = spSubCategory.getSelectedItem().toString();
@@ -131,9 +130,8 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
                                                              .filter(cat ->cat.getCategory().equals(category))
                                                              .filter(subCat -> subCat.getSubCategory().equals(subCategory))
                                                              .findFirst();
-        int idType= searchIdType.get().getId();
 
-        return new Transaction(cashIn,amount,idUser,stakeholder,idType,notes);
+        return new Transaction();
     }
 
     @Override

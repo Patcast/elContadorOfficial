@@ -67,7 +67,7 @@ public enum WidgetsCreation implements CachingObserver {
       if(filter) autoStake.add("All");
           autoStake.addAll( stakeHolds.stream()
                                       .filter(v -> !v.isDeleted())
-                                      .map(StakeHolder::getFullNameId)
+                                      .map(StakeHolder::getName)
                                       .filter(v -> !v.equals("-0- Not Specified"))
                                       .distinct()
                                       .collect(Collectors.toList()));
