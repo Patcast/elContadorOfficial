@@ -33,6 +33,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +56,6 @@ public class SignIn extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Caching.INSTANCE.mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.
                 Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
@@ -78,14 +79,13 @@ public class SignIn extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-    /*    MainActivity holderActivity = (MainActivity)getActivity();
-        holderActivity.displayBottomMenu(false);*/
         ///Buttons
         edTextIdCompany = view.findViewById(R.id.editTextIdCompany);
         SignInButton signInButton = view.findViewById(R.id.btn_sign_in_google);
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setOnClickListener(v->signIn());
         navController = Navigation.findNavController(view);
+
     }
 
     ///// Sign in process///////////////
@@ -173,35 +173,47 @@ public class SignIn extends Fragment {
         }
     }
 
-    private void checkIfUserRegistered(FirebaseUser currentUser, Context currentContext){
-        String idCompany =edTextIdCompany.getText().toString();
-        DocumentReference docRef =  db.collection("/globalAccounts/"+idCompany+"/stakeHolders").document(currentUser.getEmail());
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        if(document.get("authorized")!=null && (boolean)document.get("authorized")) {
-                            updateAfterSignedIn(currentUser,document.getId(),idCompany);
+    private void checkIfUserRegistered(FirebaseUser currentUser, Context currentContext) {
+        String idCompany = edTextIdCompany.getText().toString();
+        if (idCompany.isEmpty()) {
+            Toast.makeText(currentContext, getText(R.string.noCompanyIdTyped) + " " + currentUser.getEmail(), Toast.LENGTH_LONG).show();
+
+        }
+        else {
+            String url ="/globalAccounts/" + idCompany + "/stakeHolders";
+            db.collection(url)
+                    .whereEqualTo("email", currentUser.getEmail())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful() ) {
+                                if(!(task.getResult().getDocuments().isEmpty())){
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                            if (document.get("authorized") != null && (boolean) document.get("authorized")) {
+                                                updateAfterSignedIn(currentUser, document.getId(), idCompany);
+                                            }
+                                            else {
+                                                signOut();
+                                                Toast.makeText(currentContext, getText(R.string.Access_denied) + " " + currentUser.getEmail(), Toast.LENGTH_LONG).show();
+                                            }
+                                    }
+                                }
+                                else{
+                                    regInFireStore(currentUser, idCompany);
+                                    signOut();
+                                    Toast.makeText(currentContext, getText(R.string.askForPermission), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                            else {
+                                Log.d(TAG, "Error getting documents: ", task.getException());
+                                Toast.makeText(currentContext, getText(R.string.askForValidCompanyId) + " " + currentUser.getEmail(), Toast.LENGTH_LONG).show();
+                                signOut();
+                            }
                         }
-                        else{
-                            signOut();
-                            Toast.makeText(currentContext,   getText(R.string.Access_denied)+" "+currentUser.getEmail(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                    else {
-                        regInFireStore(currentUser,idCompany);
-                        signOut();
-                        Toast.makeText(currentContext, getText(R.string.askForPermission), Toast.LENGTH_LONG).show();
-                    }
-                }
-                else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                    Toast.makeText(currentContext,   getText(R.string.askForValidCompanyId)+" "+currentUser.getEmail(), Toast.LENGTH_LONG).show();
-                    signOut();
-                }
-            }
+
         });
+        }
     }
 }

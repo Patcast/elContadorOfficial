@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textWebPassword"
+        android:inputType="text"
         android:hint="id de la compañía"
         app:layout_constraintBottom_toTopOf="@+id/btn_sign_in_google"
         app:layout_constraintEnd_toEndOf="parent"

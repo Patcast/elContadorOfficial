@@ -17,8 +17,8 @@ public class Accounts extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.setTitle(getString(R.string.home));
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity.setTitle(getString(R.string.accounts));
 
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
