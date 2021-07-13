@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.EventListener;
@@ -46,13 +47,13 @@ public class Accounts extends Fragment  {
         super.onViewCreated(view, savedInstanceState);
         recyclerAccounts = view.findViewById(R.id.recyclerAccounts);
         AccountsRecViewAdapter adapter = new AccountsRecViewAdapter(view);
-        getAccounts( adapter);
-
+        recyclerAccounts.setAdapter(getAccounts(adapter));
+        recyclerAccounts.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
 
     }
 
-    private void getAccounts(AccountsRecViewAdapter adapter) {
+    private AccountsRecViewAdapter getAccounts(AccountsRecViewAdapter adapter) {
 
         db.collection("/globalAccounts/"+ Caching.INSTANCE.getGlobalAccountId() +"/accounts")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -65,12 +66,13 @@ public class Accounts extends Fragment  {
                         }
 
                         for (QueryDocumentSnapshot doc : value) {
-                            Account myAccount =  new Account((int)doc.get("balance"),(String)doc.get("name"), doc.getId());
+                            Account myAccount =  new Account((long)doc.get("balance"),(String)doc.get("name"), doc.getId());
                             accounts.add(myAccount);
                         }
                         adapter.setGreetings(accounts);
                     }
                 });
+        return adapter;
     }
 
 
