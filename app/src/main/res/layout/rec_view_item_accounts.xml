@@ -11,10 +11,9 @@
         android:layout_width="0dp"
         android:id="@+id/RecView_ChooseAc"
         android:layout_height="match_parent"
-        app:layout_constraintEnd_toStartOf="@+id/button"
+        app:layout_constraintEnd_toStartOf="@+id/button_AccountNewTrans"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:paddingHorizontal="40dp"
         android:paddingVertical="10dp">
 
         <TextView

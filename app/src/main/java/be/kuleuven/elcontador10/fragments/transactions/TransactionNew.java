@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,10 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.savedstate.SavedStateRegistry;
+import androidx.savedstate.SavedStateRegistryOwner;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,35 +42,33 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 
-public class TransactionNew extends Fragment implements CachingObserver, CreateWidgets {
-
+public class TransactionNew extends Fragment implements CachingObserver, CreateWidgets, ChooseStakeHolderDialog.OnStakeHolderSelected {
+    private static final String TAG = "TransactionNew";
 //// input from UI
     RadioGroup radGroup;
     EditText txtAmount;
-    AutoCompleteTextView txtStakeHolder;
+    TextView txtStakeHolder;
     Spinner spCategory;
     Spinner spSubCategory;
     EditText txtNotes;
     MainActivity mainActivity;
-
+    StakeHolder chosenStakeHolder;
+    NavController navController;
     ////// Arrays to fill input
     List<TransactionType> transTypes = new ArrayList<>();
-
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Caching.INSTANCE.attachCaching(this); //Adds Transaction new to the list of observers of Caching
-        transTypes = Caching.INSTANCE.getTransTypes();
+
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitle(getString(R.string.new_transaction));                                                                                 
+        mainActivity.setTitle(getString(R.string.new_transaction_title));
         return inflater.inflate(R.layout.fragment_transaction_new, container, false);
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -73,7 +76,7 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
         super.onViewCreated(view, savedInstanceState);
         radGroup = view.findViewById(R.id.radioGroup);
         txtAmount = view.findViewById(R.id.ed_txt_amount);
-        txtStakeHolder = view.findViewById(R.id.actv_stakeholder);
+        txtStakeHolder = view.findViewById(R.id.text_stakeholderSelected);
         spCategory = view.findViewById(R.id.sp_TransCategory);
         spSubCategory = view.findViewById(R.id.sp_TransSubcategory);
         txtNotes = view.findViewById(R.id.ed_txt_notes);
@@ -97,7 +100,10 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
 
 
         /// Navigates to  All Transaction and sends New transaction to db ******
-        final NavController navController = Navigation.findNavController(view);
+        navController = Navigation.findNavController(view);
+        txtStakeHolder.setOnClickListener(v -> {
+            navController.navigate(R.id.action_newTransaction_to_chooseStakeHolderDialog);
+        });
         Button confirmButton = view.findViewById(R.id.btn_confirm_NewTransaction);
         confirmButton.setOnClickListener(v -> {
             // here we check that the user added a certain amount.
@@ -118,6 +124,8 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
         });
     }
 
+
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     private Transaction makeNewTrans(){
         boolean cashIn = radGroup.getCheckedRadioButtonId() == R.id.radio_CashIn;
@@ -134,11 +142,6 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
         return new Transaction();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Caching.INSTANCE.detach(this);
-    }
 
     //IMPLEMENTATION of INTERFACES **********
 
@@ -158,6 +161,7 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
     }
 
 
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void addSpinnerCat() {
@@ -173,12 +177,20 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void addAutoStake() {
-        WidgetsCreation.INSTANCE.makeAutoStake(mainActivity,txtStakeHolder,false);
+        //WidgetsCreation.INSTANCE.makeAutoStake(mainActivity,txtStakeHolder,false);
 
     }
 
     @Override
     public void addCalendar() {
+
+    }
+
+
+    @Override
+    public void sendInput(StakeHolder input) {
+        chosenStakeHolder = input;
+        txtStakeHolder.setText(input.getName());
 
     }
 }

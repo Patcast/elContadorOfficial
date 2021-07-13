@@ -142,7 +142,7 @@ public class SignIn extends Fragment {
 
     private void updateAfterSignedIn(FirebaseUser account,String userId,String idCompany){
         if (account !=null ){
-            Caching.INSTANCE.setGlobalAccountId(idCompany);
+            Caching.INSTANCE.startApp(idCompany);
             Caching.INSTANCE.setLogInUserId(userId);
             navController.navigate(R.id.action_signIn_to_home_summary);
         }

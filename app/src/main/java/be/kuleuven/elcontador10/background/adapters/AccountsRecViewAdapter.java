@@ -1,5 +1,6 @@
 package be.kuleuven.elcontador10.background.adapters;
 
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,12 +8,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
@@ -21,7 +24,7 @@ import be.kuleuven.elcontador10.background.model.Account;
 
 public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecViewAdapter.ViewHolder> {
 
-    private ArrayList<Account> accounts = new ArrayList<>();
+    private List<Account> accounts = new ArrayList<>();
     private final View viewFromHostingClass;
     NavController navController;
 
@@ -39,17 +42,20 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
         return new ViewHolder(viewParent);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull  AccountsRecViewAdapter.ViewHolder holder, int position) {
         holder.textName.setText(accounts.get(position).getName());
         holder.textBalance.setText(String.valueOf(accounts.get(position).getBalance()));
         holder.parent.setOnClickListener(v -> {
-            Caching.INSTANCE.setChosenAccountId(accounts.get(position).getId());
-                navController.navigate(R.id.action_home_summary_to_transactions_summary);
+            String chosenAccount = accounts.get(position).getId();
+            Caching.INSTANCE.openAccount(chosenAccount);
+            navController.navigate(R.id.action_home_summary_to_transactions_summary);
             }
         );
         holder.buttonNewTransaction.setOnClickListener(v->{
-            Caching.INSTANCE.setChosenAccountId(accounts.get(position).getId());
+            String chosenAccount = accounts.get(position).getId();
+            Caching.INSTANCE.openAccount(chosenAccount);
             navController.navigate(R.id.action_home_summary_to_newTransaction);
         });
 
@@ -78,7 +84,7 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
         }
     }
 
-    public void setGreetings(ArrayList<Account> greetings) {
+    public void setAccounts(List<Account> greetings) {
         this.accounts = greetings;
         notifyDataSetChanged();
     }

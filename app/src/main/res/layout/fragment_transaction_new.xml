@@ -13,6 +13,7 @@
     android:paddingBottom="20dp"
     android:id="@+id/frameLayout2"
     tools:context=".fragments.transactions.TransactionNew"
+    android:paddingHorizontal="20dp"
     >
             <RadioGroup
                 android:id="@+id/radioGroup"
@@ -53,71 +54,61 @@
                 android:id="@+id/ed_txt_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
+
                 android:layout_marginTop="30dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
-                android:ems="10"
                 android:hint="@string/amount"
-                android:inputType="numberDecimal"
+                android:inputType="number"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
-            <AutoCompleteTextView
+            <TextView
                 android:id="@+id/actv_stakeholder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/stakeholder"
-                android:completionThreshold="1"
-                android:completionHint="@string/stakeholder"
-                android:dropDownHeight="200dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
+                android:text="@string/stakeholder"
                 android:layout_marginTop="30dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ed_txt_amount"
                 />
-            <TextView
+
+    <TextView
+        android:id="@+id/text_stakeholderSelected"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/select_an_stakeholder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/actv_stakeholder" />
+
+    <TextView
                 android:id="@+id/txtCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/select_a_category"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
+
                 android:layout_marginTop="30dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
+
                 app:layout_constraintEnd_toEndOf="parent"
                 android:gravity="start"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/actv_stakeholder"/>
+                app:layout_constraintTop_toBottomOf="@+id/text_stakeholderSelected"/>
             <Spinner
                 android:id="@+id/sp_TransCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txtCategory"/>
-            <TextView
+    <TextView
                 android:id="@+id/txtSubCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/select_a_sub_category"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:gravity="start"
                 app:layout_constraintStart_toStartOf="parent"
@@ -127,26 +118,18 @@
                 android:id="@+id/sp_TransSubcategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txtSubCategory"/>
 
-            <EditText
+    <EditText
                 android:id="@+id/ed_txt_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
                 android:hint="@string/additional_comments"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sp_TransSubcategory"
@@ -159,8 +142,6 @@
         android:background="@drawable/buttons"
         android:text="@string/confirm"
         android:layout_marginTop="50dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ed_txt_notes" />

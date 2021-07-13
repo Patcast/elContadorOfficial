@@ -46,6 +46,7 @@ public enum Caching {
     public List <StakeHolder> stakeHolders = new ArrayList<>();
     public List <TransactionType>  transTypes = new ArrayList<>();
     public List <String> roles = new ArrayList<>();
+    public StakeHolder stakeHolderOnTransaction;
     ///********** Observers List
     private List <CachingObserver> observers = new ArrayList<>();
     public List <Transaction> transactions = new ArrayList<>();
@@ -64,6 +65,10 @@ public enum Caching {
 
 ///Attach method
 
+    public void startApp(String globalAccountId){
+        requestAllAccounts(globalAccountId);
+        setGlobalAccountId(globalAccountId);
+    }
     public void attachCaching(CachingObserver newObserver){
 
     }
@@ -72,6 +77,7 @@ public enum Caching {
     //this goes on the click Listener of the account RecView
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void openAccount(String chosenAccountId){
+        setChosenAccountId(chosenAccountId);
         requestStaticData(chosenAccountId);
         requestAllTransactions(chosenAccountId);
         requestStakeHolder(chosenAccountId);
@@ -130,7 +136,7 @@ public enum Caching {
     }
 
     public void requestStakeHolder(String chosenAccountId){
-        db.collection("/globalAccounts/"+globalAccountId+"/accounts/"+chosenAccountId+"/stakeHolders")
+        db.collection("/globalAccounts/"+globalAccountId+"/stakeHolders")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value,
@@ -205,4 +211,23 @@ public enum Caching {
         this.globalAccountId = globalAccountId;
     }
 
+    public List<StakeHolder> getStakeHolders() {
+        return stakeHolders;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public StakeHolder getStakeHolderOnTransaction() {
+        return stakeHolderOnTransaction;
+    }
+
+    public void setStakeHolderOnTransaction(StakeHolder stakeHolderOnTransaction) {
+        this.stakeHolderOnTransaction = stakeHolderOnTransaction;
+    }
 }

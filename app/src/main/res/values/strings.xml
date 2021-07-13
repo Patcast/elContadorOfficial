@@ -124,5 +124,6 @@
     <string name="askForValidCompanyId">Please insert a valid Companie\'s Id</string>
     <string name="noCompanyIdTyped">Please type the id of the Company</string>
     <string name="accounts">Accounts</string>
+    <string name="select_an_stakeholder">Select an Stakeholder</string>
 
 </resources>

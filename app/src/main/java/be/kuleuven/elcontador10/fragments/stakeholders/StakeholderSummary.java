@@ -38,13 +38,7 @@ import be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel;
 public class StakeholderSummary extends Fragment implements StakeholdersSummaryInterface, CachingObserver {
     // private variables
     private MainActivity mainActivity;
-
-    private RecyclerView recyclerView;
-    private FloatingActionButton fabAdd;
-    private FloatingActionButton fabFilter;
-
     private NavController navController;
-    private ArrayList<String> roles= new ArrayList<>();
     private RecyclerViewAdapter recyclerViewAdapter;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -54,8 +48,6 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
         // Inflate the layout for this fragment
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle(getString(R.string.stakeholder));
-        roles.addAll(Caching.INSTANCE.roles);
-        Caching.INSTANCE.attachCaching(this);
         return inflater.inflate(R.layout.fragment_stakeholder_summary, container, false);
     }
 
@@ -65,34 +57,14 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
         super.onViewCreated(view, savedInstanceState);
 
         // set views variables
-        recyclerView = requireView().findViewById(R.id.TransactionsRecycler);
-        fabAdd = requireView().findViewById(R.id.btn_add_Transaction);
-        fabFilter = requireView().findViewById(R.id.btn_filter_Transaction);
+        RecyclerView recyclerView = requireView().findViewById(R.id.TransactionsRecycler);
 
         // set up recyclerview
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                    fabFilter.setVisibility(View.GONE);
-                    fabAdd.setVisibility(View.GONE);
-                }
-                else {
-                    fabFilter.setVisibility(View.VISIBLE);
-                    fabAdd.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
         //set navigation
         navController = Navigation.findNavController(view);
-        fabFilter.setOnClickListener(v -> navController.navigate(R.id.action_stakeholderSummary_to_stakeholderFilter));
-        fabAdd.setOnClickListener(v -> navController.navigate(R.id.action_stakeholderSummary_to_stakeholderNew));
     }
 
     @Override
@@ -137,7 +109,7 @@ public class StakeholderSummary extends Fragment implements StakeholdersSummaryI
             StakeholderSummaryArgs args = StakeholderSummaryArgs.fromBundle(getArguments());
             filter = args.getFilter();
         } catch (Exception e) {
-            filter = new FilterStakeholdersParcel("*", roles, false, "Name");
+            filter = new FilterStakeholdersParcel("*", (ArrayList<String>) Caching.INSTANCE.roles, false, "Name");
         }
 
         StakeholdersManager manager = StakeholdersManager.getInstance();

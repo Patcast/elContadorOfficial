@@ -70,6 +70,9 @@
             android:id="@+id/action_newTransaction_to_transactions_summary"
             app:destination="@id/transactions_summary" >
         </action>
+        <action
+            android:id="@+id/action_newTransaction_to_chooseStakeHolderDialog"
+            app:destination="@id/chooseStakeHolderDialog" />
     </fragment>
     <fragment
         android:id="@+id/settings"
@@ -145,5 +148,14 @@
         <action
             android:id="@+id/action_signIn_to_home_summary"
             app:destination="@id/home_summary" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseStakeHolderDialog"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.ChooseStakeHolderDialog"
+        android:label="fragment_choose_stake_holder"
+        tools:layout="@layout/fragment_choose_stake_holder" >
+        <action
+            android:id="@+id/action_chooseStakeHolderDialog_to_newTransaction"
+            app:popUpTo="@id/newTransaction"/>
     </fragment>
 </navigation>
