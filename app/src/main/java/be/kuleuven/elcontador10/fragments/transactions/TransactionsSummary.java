@@ -31,7 +31,6 @@ import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsS
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 
 public class TransactionsSummary extends Fragment implements TransactionsSummaryInterface {
-    private MainActivity mainActivity;
     private RecyclerView recyclerView;
     private TransactionsManager manager;
     private FilterTransactionsParcel filter;
@@ -41,10 +40,6 @@ public class TransactionsSummary extends Fragment implements TransactionsSummary
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-  /*      mainActivity = (MainActivity) getActivity();
-        mainActivity.displayBottomMenu(true);
-        mainActivity.setTitle(getString(R.string.transactions));*/
         return inflater.inflate(R.layout.fragment_transactions, container, false);
     }
 
@@ -94,10 +89,7 @@ public class TransactionsSummary extends Fragment implements TransactionsSummary
         manager.getTransactions(this, filter);
     }
 
-    @Override
-    public Context getContext() {
-        return mainActivity;
-    }
+
 
     @Override
     public void populateRecyclerView(ArrayList<String> title, ArrayList<String> description, ArrayList<String> status,
@@ -113,7 +105,7 @@ public class TransactionsSummary extends Fragment implements TransactionsSummary
 
     @Override
     public void error(String error) {
-        Toast.makeText(mainActivity, error, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 
     @Override

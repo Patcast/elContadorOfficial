@@ -19,9 +19,6 @@
         <action
             android:id="@+id/action_home_summary_to_transactions_summary"
             app:destination="@id/transactions_summary" />
-        <action
-            android:id="@+id/action_home_summary_to_stakeholderSummary"
-            app:destination="@id/stakeholderSummary" />
     </fragment>
     <fragment
         android:id="@+id/transactions_summary"
