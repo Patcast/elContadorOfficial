@@ -21,11 +21,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import be.kuleuven.elcontador10.R;
@@ -35,8 +38,10 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
 
 
-public class ChooseStakeHolder extends Fragment {
-    RecyclerView recyclerStakeHolds;
+public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersObserver {
+    private RecyclerView recyclerStakeHolds;
+    private StakeHolderRecViewAdapter adapter;
+    private List <StakeHolder> stakeHolders = new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -49,15 +54,28 @@ public class ChooseStakeHolder extends Fragment {
     public void onViewCreated(@NonNull  View view, @Nullable  Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ChosenStakeViewModel viewModel = new ViewModelProvider(requireActivity()).get(ChosenStakeViewModel.class);
-        StakeHolderRecViewAdapter adapter = new StakeHolderRecViewAdapter(view,viewModel);
-        ArrayList<StakeHolder> stakeHolders = new ArrayList<>(Caching.INSTANCE.getStakeHolders());
-        adapter.setStakeholdersList(stakeHolders);
-        recyclerStakeHolds.setAdapter(adapter);
-        recyclerStakeHolds.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        adapter = new StakeHolderRecViewAdapter(view,viewModel);
+        Caching.INSTANCE.attachStakeholdersObservers(this);
+        createRecycler(stakeHolders);
 
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        Caching.INSTANCE.deAttachstakeholdersObservers(this);
+    }
+
+    private void createRecycler(List<StakeHolder> stakeHolders){
+        adapter.setStakeholdersList(stakeHolders);
+        recyclerStakeHolds.setAdapter(adapter);
+        recyclerStakeHolds.setLayoutManager(new LinearLayoutManager(this.getContext()));
+    }
 
 
-
+    @Override
+    public void notifyStakeholdersObserver(List<StakeHolder> stakeHolders) {
+        this.stakeHolders.clear();
+        this.stakeHolders.addAll(stakeHolders);
+    }
 }

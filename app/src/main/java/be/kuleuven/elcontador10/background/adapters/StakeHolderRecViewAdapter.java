@@ -73,6 +73,7 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
     }
 
     public void setStakeholdersList(List <StakeHolder> stakeholdersList) {
+        this.stakeholdersList.clear();
         this.stakeholdersList = stakeholdersList;
         notifyDataSetChanged();
     }

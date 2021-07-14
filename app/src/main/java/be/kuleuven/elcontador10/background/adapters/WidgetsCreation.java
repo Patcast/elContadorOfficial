@@ -25,15 +25,23 @@ import be.kuleuven.elcontador10.background.model.TransactionType;
 
 
 
-public enum WidgetsCreation implements CachingObserver {
+public enum WidgetsCreation implements Caching.StaticDataObserver {
     INSTANCE;
+
+    @Override
+    public void notifyStaticDataObserver(List<TransactionType> transTypes, List<String> roles) {
+        this.transTypes.clear();
+        this.transTypes.addAll(transTypes);
+    }
+
+
     List<TransactionType> transTypes = new ArrayList<>();
     List<StakeHolder> stakeHolds = new ArrayList<>();
     DatePickerDialog.OnDateSetListener setListenerFrom;
     DatePickerDialog.OnDateSetListener setListenerTo;
 
     WidgetsCreation(){
-        Caching.INSTANCE.attachCaching(this);
+        Caching.INSTANCE.attachStaticDataObservers(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -116,19 +124,7 @@ public enum WidgetsCreation implements CachingObserver {
         };
     }
 
-    @Override
-    public void notifyRoles(List<String> roles) {
 
-    }
 
-    @Override
-    public void notifyCategories(List<TransactionType> transTypes) {
-        this.transTypes.clear();
-        this.transTypes.addAll(transTypes);
-    }
-    @Override
-    public void notifyStakeHolders(List<StakeHolder> stakeHolders) {
-        stakeHolds.clear();
-        stakeHolds.addAll(stakeHolders);
-    }
+
 }

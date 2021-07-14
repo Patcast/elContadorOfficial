@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.lifecycle.ViewModel;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -42,18 +43,28 @@ import be.kuleuven.elcontador10.fragments.Accounts;
 
 public enum Caching {
     INSTANCE;
+    /// interfaces******
+    public interface StaticDataObserver {
+        void notifyStaticDataObserver( List <TransactionType> transTypes,  List <String> roles);
+    }
+    public interface StakeholdersObserver{
+        void notifyStakeholdersObserver(List <StakeHolder> stakeHolders);
+    }
+
     ////*********Data
     public List <StakeHolder> stakeHolders = new ArrayList<>();
     public List <TransactionType>  transTypes = new ArrayList<>();
     public List <String> roles = new ArrayList<>();
-    public StakeHolder stakeHolderOnTransaction;
-    ///********** Observers List
-    private List <CachingObserver> observers = new ArrayList<>();
     public List <Transaction> transactions = new ArrayList<>();
     private List <Account> accounts = new ArrayList<>();
+
+
+    ///********** Observers List
+    private final List <StaticDataObserver> staticDataObservers = new ArrayList<>();
+    private final List <StakeholdersObserver> stakeholdersObservers = new ArrayList<>();
     ///********** Variables
-     View view;
-     Context context;
+    View view;
+    Context context;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "Caching";
     /// ******** Authentication
@@ -63,22 +74,38 @@ public enum Caching {
     private String chosenAccountId;
     private String logInUserId;
 
-///Attach method
+///Attach methods*************************
+    public void attachStaticDataObservers(StaticDataObserver newObserver){
+        staticDataObservers.add(newObserver);
+        newObserver.notifyStaticDataObserver( transTypes,roles);
+    }
+    public void deAttachStaticDataObserver(StaticDataObserver newObserver){
+        staticDataObservers.remove(newObserver);
+    }
+    public void attachStakeholdersObservers(StakeholdersObserver newObserver){
+        stakeholdersObservers.add(newObserver);
+        newObserver.notifyStakeholdersObserver( stakeHolders);
+    }
+    public void deAttachstakeholdersObservers(StakeholdersObserver newObserver){
+        stakeholdersObservers.remove(newObserver);
+    }
 
-    public void startApp(String globalAccountId){
+
+///Other Methods*************************
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void startApp(String globalAccountId,String userId){
         requestAllAccounts(globalAccountId);
+        requestStaticData(globalAccountId);
         setGlobalAccountId(globalAccountId);
+        setLogInUserId(userId);
     }
-    public void attachCaching(CachingObserver newObserver){
 
-    }
     //// Request data
 
     //this goes on the click Listener of the account RecView
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void openAccount(String chosenAccountId){
         setChosenAccountId(chosenAccountId);
-        requestStaticData(chosenAccountId);
         requestAllTransactions(chosenAccountId);
         requestStakeHolder(chosenAccountId);
     }
@@ -110,8 +137,8 @@ public enum Caching {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void requestStaticData(String chosenAccountId){
-        final DocumentReference docRef = db.document("/globalAccounts/"+globalAccountId+"/accounts/"+chosenAccountId+"/datos/staticData");
+    public void requestStaticData(String globalAccountId){
+        final DocumentReference docRef = db.document("/globalAccounts/"+globalAccountId);
         docRef.addSnapshotListener((snapshot, e) -> {
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e);
@@ -119,16 +146,20 @@ public enum Caching {
             }
 
             if (snapshot != null && snapshot.exists()) {
-                (( HashMap<String,String[]> )snapshot.getData().get("categories")).forEach(this::makeTransactionTypes);
-                roles.add((String)snapshot.get("roles"));
+                (( HashMap<String,ArrayList<String>> )snapshot.getData().get("categories")).forEach(this::makeTransactionTypes);
+                roles.addAll((ArrayList)snapshot.get("roles"));
+                System.out.println(roles);
+                staticDataObservers.forEach(staticDataObserver -> staticDataObserver.notifyStaticDataObserver(transTypes,roles));
+
             } else {
                 Log.d(TAG, "Current data: null");
             }
         });
 
+
     }
 
-    private void makeTransactionTypes(String k, String[] v) {
+    private void makeTransactionTypes(String k, ArrayList<String> v) {
         for(String subCat: v){
             TransactionType typeOfTransactions1 = new TransactionType(k,subCat);
             transTypes.add(typeOfTransactions1);
@@ -179,10 +210,6 @@ public enum Caching {
 
 //////************** end of db
 
-    public void detach(CachingObserver observer){
-        observers.remove(observer);
-
-    }
     public List<TransactionType> getTransTypes() {
         return transTypes;
     }
@@ -223,11 +250,5 @@ public enum Caching {
         return accounts;
     }
 
-    public StakeHolder getStakeHolderOnTransaction() {
-        return stakeHolderOnTransaction;
-    }
 
-    public void setStakeHolderOnTransaction(StakeHolder stakeHolderOnTransaction) {
-        this.stakeHolderOnTransaction = stakeHolderOnTransaction;
-    }
 }

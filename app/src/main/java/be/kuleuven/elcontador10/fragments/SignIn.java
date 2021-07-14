@@ -2,10 +2,12 @@ package be.kuleuven.elcontador10.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -56,29 +58,24 @@ public class SignIn extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Caching.INSTANCE.mAuth = FirebaseAuth.getInstance();
-        GoogleSignInOptions gso = new GoogleSignInOptions.
-                Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
-                requestIdToken(getString(R.string.server_client_id)).
-                requestEmail().
-                build();
-
-
-        Caching.INSTANCE.mGoogleSignInClient =  GoogleSignIn.getClient(getContext(), gso);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_sign_in, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Caching.INSTANCE.mAuth = FirebaseAuth.getInstance();
+        GoogleSignInOptions gso = new GoogleSignInOptions.
+                Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
+                requestIdToken(getString(R.string.server_client_id)).
+                requestEmail().
+                build();
+        Caching.INSTANCE.mGoogleSignInClient =  GoogleSignIn.getClient(getContext(), gso);
         ///Buttons
         edTextIdCompany = view.findViewById(R.id.editTextIdCompany);
         SignInButton signInButton = view.findViewById(R.id.btn_sign_in_google);
@@ -140,10 +137,10 @@ public class SignIn extends Fragment {
                 });
     }
 
-    private void updateAfterSignedIn(FirebaseUser account,String userId,String idCompany){
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void updateAfterSignedIn(FirebaseUser account, String userId, String idCompany){
         if (account !=null ){
-            Caching.INSTANCE.startApp(idCompany);
-            Caching.INSTANCE.setLogInUserId(userId);
+            Caching.INSTANCE.startApp(idCompany,userId);
             navController.navigate(R.id.action_signIn_to_home_summary);
         }
     }

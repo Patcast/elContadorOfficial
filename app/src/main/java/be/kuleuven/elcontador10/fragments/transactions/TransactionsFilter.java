@@ -58,7 +58,7 @@ public class TransactionsFilter extends Fragment implements CachingObserver, Cre
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Caching.INSTANCE.attachCaching(this); //Adds Transaction new to the list of observers of Caching
+        //Caching.INSTANCE.attachCaching(this); //Adds Transaction new to the list of observers of Caching
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -179,12 +179,6 @@ public class TransactionsFilter extends Fragment implements CachingObserver, Cre
 
         //mainActivity.setSelectedFragment(new TransactionsSummary(filter), "TransactionsSummary");
         return new FilterTransactionsParcel(category_string, subcategory_string, name_text, from, to);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Caching.INSTANCE.detach(this);
     }
 
     ///Implementation of CashingObserver

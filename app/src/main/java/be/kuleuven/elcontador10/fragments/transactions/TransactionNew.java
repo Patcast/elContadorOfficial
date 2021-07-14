@@ -44,7 +44,7 @@ import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
 
-public class TransactionNew extends Fragment implements CachingObserver, CreateWidgets {
+public class TransactionNew extends Fragment {
     private static final String TAG = "TransactionNew";
 //// input from UI
     RadioGroup radGroup;
@@ -87,15 +87,15 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
         Button confirmButton = view.findViewById(R.id.btn_confirm_NewTransaction);
         /// Set spinner for category & Autofill for Stakeholders
         navController = Navigation.findNavController(view);
-        addSpinnerCat();
-        addAutoStake();
+        WidgetsCreation.INSTANCE.makeSpinnerCat(mainActivity,spCategory,false);
 
         //Set sp_SubCategory after clicking on category
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                addSpinnerSubCat(spCategory.getSelectedItem().toString());
+                WidgetsCreation.INSTANCE.makeSpinnerSubCat(mainActivity,spSubCategory,spCategory.getSelectedItem().toString(),false);
+
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -167,47 +167,9 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
     }
 
 
-    //IMPLEMENTATION of INTERFACES **********
-
-
-     @Override
-    public void notifyRoles(List<String> roles) {
-    }
-
-    @Override
-    public void notifyCategories(List<TransactionType> transTypes) {
-        this.transTypes.clear();
-        this.transTypes.addAll(transTypes);
-    }
-    @Override
-    public void notifyStakeHolders(List<StakeHolder> stakeHolders) {
-
-    }
 
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void addSpinnerCat() {
-        WidgetsCreation.INSTANCE.makeSpinnerCat(mainActivity,spCategory,false);
-    }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void addSpinnerSubCat(String catChosen) {
-        WidgetsCreation.INSTANCE.makeSpinnerSubCat(mainActivity,spSubCategory,catChosen,false);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void addAutoStake() {
-        //WidgetsCreation.INSTANCE.makeAutoStake(mainActivity,txtStakeHolder,false);
-
-    }
-
-    @Override
-    public void addCalendar() {
-
-    }
 
 }
