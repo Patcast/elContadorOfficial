@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.savedstate.SavedStateRegistry;
@@ -41,8 +42,9 @@ import be.kuleuven.elcontador10.background.interfaces.CreateWidgets;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
+import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
 
-public class TransactionNew extends Fragment implements CachingObserver, CreateWidgets, ChooseStakeHolderDialog.OnStakeHolderSelected {
+public class TransactionNew extends Fragment implements CachingObserver, CreateWidgets {
     private static final String TAG = "TransactionNew";
 //// input from UI
     RadioGroup radGroup;
@@ -124,6 +126,21 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
         });
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        ChosenStakeViewModel viewModel = new ViewModelProvider(requireActivity()).get(ChosenStakeViewModel.class);
+        viewModel.getChosenStakeholder().observe(getViewLifecycleOwner(), this::setStakeChosenText);
+    }
+
+    private void setStakeChosenText(StakeHolder stakeHolder) {
+        if(stakeHolder!=null){
+            txtStakeHolder.setText(stakeHolder.getName());
+        }
+        else{
+            txtStakeHolder.setText(R.string.select_an_stakeholder);
+        }
+    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -186,11 +203,4 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
 
     }
 
-
-    @Override
-    public void sendInput(StakeHolder input) {
-        chosenStakeHolder = input;
-        txtStakeHolder.setText(input.getName());
-
-    }
 }

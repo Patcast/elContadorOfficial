@@ -151,7 +151,7 @@
     </fragment>
     <fragment
         android:id="@+id/chooseStakeHolderDialog"
-        android:name="be.kuleuven.elcontador10.fragments.transactions.ChooseStakeHolderDialog"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.ChooseStakeHolder"
         android:label="fragment_choose_stake_holder"
         tools:layout="@layout/fragment_choose_stake_holder" >
         <action

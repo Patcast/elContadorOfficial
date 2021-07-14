@@ -1,6 +1,5 @@
 package be.kuleuven.elcontador10.background.adapters;
 
-import android.app.Dialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,24 +15,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.fragments.transactions.ChooseStakeHolderDialog;
+import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
+import be.kuleuven.elcontador10.fragments.transactions.ChooseStakeHolder;
 
 
 public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderRecViewAdapter.ViewHolder> {
 
     private List<StakeHolder> stakeholdersList = new ArrayList<>();
     private final View viewFromHostingClass;
-    public ChooseStakeHolderDialog.OnStakeHolderSelected receiverFragment;
+    private ChosenStakeViewModel viewModel;
 
-
-
-    public StakeHolderRecViewAdapter(View view,ChooseStakeHolderDialog.OnStakeHolderSelected receiverFragment) {
-            viewFromHostingClass= view;
-            this.receiverFragment = receiverFragment;
-
-            }
+    public StakeHolderRecViewAdapter(View viewFromHostingClass, ChosenStakeViewModel viewModel) {
+        this.viewFromHostingClass = viewFromHostingClass;
+        this.viewModel = viewModel;
+    }
 
     @NonNull
     @Override
@@ -48,9 +44,7 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
             holder.textName.setText(stakeholdersList.get(position).getName());
             holder.textRole.setText(String.valueOf(stakeholdersList.get(position).getRole()));
            holder.parent.setOnClickListener(v -> {
-               if(stakeholdersList.get(position)!= null){
-                   receiverFragment.sendInput(stakeholdersList.get(position));
-               }
+               viewModel.select(stakeholdersList.get(position));
                NavController navController = Navigation.findNavController(viewFromHostingClass);
                navController.navigate(R.id.action_chooseStakeHolderDialog_to_newTransaction);
             }
