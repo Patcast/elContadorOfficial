@@ -54,8 +54,9 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
     Spinner spSubCategory;
     EditText txtNotes;
     MainActivity mainActivity;
-    StakeHolder chosenStakeHolder;
     NavController navController;
+    ChosenStakeViewModel viewModel;
+    StakeHolder selectedStakeHolder;
     ////// Arrays to fill input
     List<TransactionType> transTypes = new ArrayList<>();
     @Override
@@ -76,13 +77,16 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        viewModel = new ViewModelProvider(requireActivity()).get(ChosenStakeViewModel.class);
         radGroup = view.findViewById(R.id.radioGroup);
         txtAmount = view.findViewById(R.id.ed_txt_amount);
         txtStakeHolder = view.findViewById(R.id.text_stakeholderSelected);
         spCategory = view.findViewById(R.id.sp_TransCategory);
         spSubCategory = view.findViewById(R.id.sp_TransSubcategory);
         txtNotes = view.findViewById(R.id.ed_txt_notes);
+        Button confirmButton = view.findViewById(R.id.btn_confirm_NewTransaction);
         /// Set spinner for category & Autofill for Stakeholders
+        navController = Navigation.findNavController(view);
         addSpinnerCat();
         addAutoStake();
 
@@ -97,17 +101,24 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+        txtStakeHolder.setOnClickListener(v -> { navController.navigate(R.id.action_newTransaction_to_chooseStakeHolderDialog); });
+        confirmButton.setOnClickListener(v -> confirmTransaction());
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        viewModel.getChosenStakeholder().observe(getViewLifecycleOwner(), this::setStakeChosenText);
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        viewModel.reset();
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void confirmTransaction(){
 
-
-        /// Navigates to  All Transaction and sends New transaction to db ******
-        navController = Navigation.findNavController(view);
-        txtStakeHolder.setOnClickListener(v -> {
-            navController.navigate(R.id.action_newTransaction_to_chooseStakeHolderDialog);
-        });
-        Button confirmButton = view.findViewById(R.id.btn_confirm_NewTransaction);
-        confirmButton.setOnClickListener(v -> {
             // here we check that the user added a certain amount.
             String amount =  txtAmount.getText().toString();
             if ( amount.isEmpty()) {
@@ -123,19 +134,15 @@ public class TransactionNew extends Fragment implements CachingObserver, CreateW
                     manager.addNewTransaction(makeNewTrans(),mainActivity);
                 }
             }
-        });
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        ChosenStakeViewModel viewModel = new ViewModelProvider(requireActivity()).get(ChosenStakeViewModel.class);
-        viewModel.getChosenStakeholder().observe(getViewLifecycleOwner(), this::setStakeChosenText);
+
+
     }
 
     private void setStakeChosenText(StakeHolder stakeHolder) {
         if(stakeHolder!=null){
             txtStakeHolder.setText(stakeHolder.getName());
+            selectedStakeHolder = stakeHolder;
         }
         else{
             txtStakeHolder.setText(R.string.select_an_stakeholder);

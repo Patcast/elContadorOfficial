@@ -15,5 +15,9 @@ public class ChosenStakeViewModel extends ViewModel {
     public void select (StakeHolder stakeholder){
         chosenStakeholder.setValue(stakeholder);
     }
+    public void reset(){
+        chosenStakeholder.setValue(null);
+    }
+
 
 }
