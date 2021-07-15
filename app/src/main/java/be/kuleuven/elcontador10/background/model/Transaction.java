@@ -1,48 +1,68 @@
 package be.kuleuven.elcontador10.background.model;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.type.DateTime;
 
+import java.util.Date;
+
+import be.kuleuven.elcontador10.background.database.Caching;
+
 public class Transaction {
-    private double amount;
+    private static final String TAG = "newTransaction";
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private int amount;
     private String registeredBy;
     private String stakeHolder;
-    private String txtComments;
-    private DateTime date;
-    private boolean deleted;
-    private String notes;
     private String category;
     private String subCategory;
+    private Timestamp date;
+    private boolean deleted;
+    private String notes;
     private String id;
 
     public Transaction() {
     }
 
-    public Transaction(double amount, String registeredBy, String stakeHolder, String txtComments, DateTime date, boolean deleted, String notes, String category, String subCategory, String id) {
+    public Transaction( int amount, String registeredBy, String stakeHolder, String category, String subCategory, String notes) {
+
         this.amount = amount;
         this.registeredBy = registeredBy;
         this.stakeHolder = stakeHolder;
-        this.txtComments = txtComments;
-        this.date = date;
-        this.deleted = deleted;
-        this.notes = notes;
         this.category = category;
         this.subCategory = subCategory;
-        this.id = id;
-    }
-
-    public Transaction(double amount, String registeredBy, String stakeHolder, String txtComments, DateTime date, boolean deleted, String notes, String category, String subCategory) {
-        this.amount = amount;
-        this.registeredBy = registeredBy;
-        this.stakeHolder = stakeHolder;
-        this.txtComments = txtComments;
-        this.date = date;
-        this.deleted = deleted;
+        this.date = new Timestamp(new Date());
+        this.deleted = false;
         this.notes = notes;
-        this.category = category;
-        this.subCategory = subCategory;
     }
 
-    public double getAmount() {
+    public void SendTransaction(Transaction newTrans){
+        String url = "/globalAccounts/"+ Caching.INSTANCE.getGlobalAccountId() +"/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
+
+        db.collection(url)
+                .add(newTrans)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
+    }
+
+    public int getAmount() {
         return amount;
     }
 
@@ -54,11 +74,15 @@ public class Transaction {
         return stakeHolder;
     }
 
-    public String getTxtComments() {
-        return txtComments;
+    public String getCategory() {
+        return category;
     }
 
-    public DateTime getDate() {
+    public String getSubCategory() {
+        return subCategory;
+    }
+
+    public Timestamp getDate() {
         return date;
     }
 
@@ -68,14 +92,6 @@ public class Transaction {
 
     public String getNotes() {
         return notes;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public String getSubCategory() {
-        return subCategory;
     }
 
     public String getId() {

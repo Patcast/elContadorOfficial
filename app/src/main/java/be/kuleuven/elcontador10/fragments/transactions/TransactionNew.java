@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 
 import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -23,30 +22,17 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.savedstate.SavedStateRegistry;
-import androidx.savedstate.SavedStateRegistryOwner;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.WidgetsCreation;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.database.TransactionsManager;
-import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
-import be.kuleuven.elcontador10.background.interfaces.CreateWidgets;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
-import be.kuleuven.elcontador10.background.model.TransactionType;
 import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
 
 public class TransactionNew extends Fragment {
     private static final String TAG = "TransactionNew";
-//// input from UI
     RadioGroup radGroup;
     EditText txtAmount;
     TextView txtStakeHolder;
@@ -57,27 +43,26 @@ public class TransactionNew extends Fragment {
     NavController navController;
     ChosenStakeViewModel viewModel;
     StakeHolder selectedStakeHolder;
-    ////// Arrays to fill input
-    List<TransactionType> transTypes = new ArrayList<>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle(getString(R.string.new_transaction_title));
+
         return inflater.inflate(R.layout.fragment_transaction_new, container, false);
     }
-
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(ChosenStakeViewModel.class);
+        navController = Navigation.findNavController(view);
+///      Initialize views
         radGroup = view.findViewById(R.id.radioGroup);
         txtAmount = view.findViewById(R.id.ed_txt_amount);
         txtStakeHolder = view.findViewById(R.id.text_stakeholderSelected);
@@ -85,11 +70,9 @@ public class TransactionNew extends Fragment {
         spSubCategory = view.findViewById(R.id.sp_TransSubcategory);
         txtNotes = view.findViewById(R.id.ed_txt_notes);
         Button confirmButton = view.findViewById(R.id.btn_confirm_NewTransaction);
-        /// Set spinner for category & Autofill for Stakeholders
-        navController = Navigation.findNavController(view);
         WidgetsCreation.INSTANCE.makeSpinnerCat(mainActivity,spCategory,false);
 
-        //Set sp_SubCategory after clicking on category
+////      Set sp_SubCategory after clicking on category
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -110,35 +93,16 @@ public class TransactionNew extends Fragment {
         super.onStart();
         viewModel.getChosenStakeholder().observe(getViewLifecycleOwner(), this::setStakeChosenText);
     }
-
     @Override
     public void onStop() {
         super.onStop();
         viewModel.reset();
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void confirmTransaction(){
-
-            // here we check that the user added a certain amount.
-            String amount =  txtAmount.getText().toString();
-            if ( amount.isEmpty()) {
-                Toast.makeText(getActivity(), R.string.zero_amount, Toast.LENGTH_LONG).show();
-            }
-            else{
-                if ( Double.parseDouble(amount) == 0 ) {
-                    Toast.makeText(getActivity(), R.string.zero_amount, Toast.LENGTH_LONG).show();
-                }
-                else{
-                    navController.navigate(R.id.action_newTransaction_to_transactions_summary);
-                    TransactionsManager manager = TransactionsManager.getInstance();
-                    manager.addNewTransaction(makeNewTrans(),mainActivity);
-                }
-            }
-
-
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.reset();
     }
-
     private void setStakeChosenText(StakeHolder stakeHolder) {
         if(stakeHolder!=null){
             txtStakeHolder.setText(stakeHolder.getName());
@@ -148,23 +112,34 @@ public class TransactionNew extends Fragment {
             txtStakeHolder.setText(R.string.select_an_stakeholder);
         }
     }
+    private void confirmTransaction(){
 
+        String amount = txtAmount.getText().toString() ;
+        if ( amount.isEmpty()||Integer.parseInt(amount) == 0) {
+            Toast.makeText(getActivity(), R.string.zero_amount, Toast.LENGTH_LONG).show();
+        }
+        else{
+            if (selectedStakeHolder==null ) {
+                Toast.makeText(getActivity(), R.string.select_an_stakeholder, Toast.LENGTH_LONG).show();
+            }
+            else{
+                navController.popBackStack();
+                makeNewTrans();
+            }
+        }
+    }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private Transaction makeNewTrans(){
-        boolean cashIn = radGroup.getCheckedRadioButtonId() == R.id.radio_CashIn;
-        double amount = Double.parseDouble(txtAmount.getText().toString());
-        String stakeholder =  txtStakeHolder.getText().toString();
+    private void makeNewTrans(){
+        boolean cashOut = radGroup.getCheckedRadioButtonId() == R.id.radio_CashOut;
+        int amount = Integer.parseInt(txtAmount.getText().toString());
+        if(cashOut) amount = amount*-1;
         String category = spCategory.getSelectedItem().toString();
         String subCategory = spSubCategory.getSelectedItem().toString();
         String notes = txtNotes.getText().toString();
-        Optional<TransactionType> searchIdType = transTypes.stream()
-                                                             .filter(cat ->cat.getCategory().equals(category))
-                                                             .filter(subCat -> subCat.getSubCategory().equals(subCategory))
-                                                             .findFirst();
-
-        return new Transaction();
+        Transaction newTrans= new Transaction(amount, Caching.INSTANCE.getLogInUserId(), selectedStakeHolder.getId(),category,subCategory,notes);
+        newTrans.SendTransaction(newTrans);
     }
+
 
 
 

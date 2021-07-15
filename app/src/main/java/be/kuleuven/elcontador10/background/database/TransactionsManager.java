@@ -192,7 +192,7 @@ public class TransactionsManager {
         requestQueue.add(request);
     }
 
-    public void addNewTransaction(Transaction newTrans, Context useContext){
+/*    public void addNewTransaction(Transaction newTrans, Context useContext){
             ///Make HashMap for params
             Map<String,String> params = new HashMap<>();
             params.put("amount", String.valueOf(newTrans.getAmount()));
@@ -207,7 +207,7 @@ public class TransactionsManager {
                     error -> Toast.makeText(useContext, error.toString(), Toast.LENGTH_LONG).show());
             requestQueue.add(submitRequest);
 
-    }
+    }*/
 
     private class JsonArrayRequestWithParams extends JsonArrayRequest {
         private Map<String, String> params;

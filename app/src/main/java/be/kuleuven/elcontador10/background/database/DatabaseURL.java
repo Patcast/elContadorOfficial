@@ -3,6 +3,12 @@ package be.kuleuven.elcontador10.background.database;
 public enum DatabaseURL {
     INSTANCE;
 
+    //// FireBase
+    private  String globalAccountId;
+    private String chosenAccountId;
+    private String logInUserId;
+
+
     // misc
     String getTranType =  "https://studev.groept.be/api/a20sd505/getTransactionTypes"; // table: TransactionType || columns: al
     String getRoles =  "https://studev.groept.be/api/a20sd505/getStakeholderRoles"; // table: Role || columns: All
@@ -30,4 +36,5 @@ public enum DatabaseURL {
     String getTransaction = "https://studev.groept.be/api/a20sd505/getTransaction/"; // single
     String deleteTransaction = "https://studev.groept.be/api/a20sd505/deleteTransaction/";
     String addTransaction = "https://studev.groept.be/api/a20sd505/postNewTransaction/";
+
 }
