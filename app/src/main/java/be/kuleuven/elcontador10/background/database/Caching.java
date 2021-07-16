@@ -108,7 +108,10 @@ public enum Caching {
     }
     public void attachAllTransactionsObserver(AllTransactionsObserver newObserver){
         allTransactionsObservers.add(newObserver);
-        newObserver.notifyAllTransactionsObserver( transactions);
+        if(transactions.size()!=0){
+            newObserver.notifyAllTransactionsObserver( transactions);
+        }
+
     }
     public void deAttachAllTransactionsObserver(AllTransactionsObserver unWantedObserver){
         allTransactionsObservers.remove(unWantedObserver);

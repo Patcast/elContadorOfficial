@@ -29,9 +29,7 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
     NavController navController;
 
 
-    public AccountsRecViewAdapter(View view) {
-        viewFromHostingClass= view;
-
+    public AccountsRecViewAdapter(View view) { viewFromHostingClass= view;
     }
 
     @NonNull
