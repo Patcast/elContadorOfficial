@@ -1,5 +1,6 @@
 package be.kuleuven.elcontador10.background.adapters;
 
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -15,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
@@ -24,6 +28,7 @@ import be.kuleuven.elcontador10.fragments.transactions.ChooseStakeHolder;
 public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderRecViewAdapter.ViewHolder> {
 
     private List<StakeHolder> stakeholdersList = new ArrayList<>();
+    private ArrayList<StakeHolder> stakeHoldersOriginal;
     private final View viewFromHostingClass;
     private ChosenStakeViewModel viewModel;
 
@@ -76,5 +81,26 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
     public void setStakeholdersList(List <StakeHolder> stakeholdersList) {
         this.stakeholdersList = stakeholdersList;
         notifyDataSetChanged();
+        stakeHoldersOriginal = new ArrayList<>();
+        stakeHoldersOriginal.addAll(this.stakeholdersList);
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void filter(String txtSearched){
+        int lenght = txtSearched.length();
+        if(lenght==0){
+            stakeholdersList.clear();
+            stakeholdersList.addAll(stakeHoldersOriginal);
+        }else{
+            List<StakeHolder> collection = stakeholdersList
+                                                            .stream()
+                                                            .filter(i->i.getName().toLowerCase().contains(txtSearched.toLowerCase()))
+                                                            .collect(Collectors.toList());
+            stakeholdersList.clear();
+            stakeholdersList.addAll(collection);
+
+        }
+
+     notifyDataSetChanged();
     }
 }

@@ -1,35 +1,22 @@
 package be.kuleuven.elcontador10.fragments.transactions;
 
-import android.app.Dialog;
-import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.SearchView;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
@@ -39,8 +26,9 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
 
 
-public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersObserver {
+public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersObserver , SearchView.OnQueryTextListener {
     private RecyclerView recyclerStakeHolds;
+    private android.widget.SearchView txtSearch;
     private StakeHolderRecViewAdapter adapter;
     private List <StakeHolder> stakeHolders = new ArrayList<>();
     @Override
@@ -50,6 +38,8 @@ public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersO
         MainActivity mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle(getString(R.string.select_micro_account));
         recyclerStakeHolds = view.findViewById(R.id.recyclerViewChooseStake);
+        txtSearch = view.findViewById(R.id.searchChosenStake);
+        txtSearch.setOnQueryTextListener(this);
         recyclerStakeHolds.setLayoutManager(new LinearLayoutManager(this.getContext()));
         ChosenStakeViewModel viewModel = new ViewModelProvider(requireActivity()).get(ChosenStakeViewModel.class);
         adapter = new StakeHolderRecViewAdapter(view,viewModel);
@@ -84,5 +74,17 @@ public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersO
         this.stakeHolders.clear();
         this.stakeHolders.addAll(stakeHolders);
         adapter.setStakeholdersList(this.stakeHolders);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        adapter.filter(newText);
+        return false;
     }
 }

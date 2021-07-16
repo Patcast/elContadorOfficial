@@ -1,6 +1,7 @@
 package be.kuleuven.elcontador10.activities;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -8,6 +9,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -33,7 +36,8 @@ public class MainActivity extends FragmentActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         header = findViewById(R.id.lblToolbarHeading);
-        setBottomMenu();
+        //setBottomMenu();
+
     }
 
    ///This is all the code required for the bottom Navigation Menu
@@ -51,13 +55,22 @@ public class MainActivity extends FragmentActivity  {
         header.setText(title);
     }
 
+   /* @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_top,menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
 
-
-
-
-
-
-
-
-
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }*/
 }

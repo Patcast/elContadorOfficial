@@ -127,5 +127,6 @@
     <string name="select_an_stakeholder">Select an Stakeholder</string>
     <string name="error_finding_microAccount">error finding microAccount</string>
     <string name="select_micro_account">Select a micro-account</string>
+    <string name="search">Search</string>
 
 </resources>
