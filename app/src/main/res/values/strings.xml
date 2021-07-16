@@ -128,5 +128,6 @@
     <string name="error_finding_microAccount">error finding microAccount</string>
     <string name="select_micro_account">Select a micro-account</string>
     <string name="search">Search</string>
+    <string name="micro_accounts">Micro Accounts</string>
 
 </resources>

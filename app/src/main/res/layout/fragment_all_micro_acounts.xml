@@ -2,15 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout7"
+    android:id="@+id/frameLayout9"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.transactions.ChooseStakeHolder"
+    tools:context=".fragments.stakeholders.AllMicroAccounts"
     android:padding="15dp"
     >
 
+
     <SearchView
-        android:id="@+id/searchChosenStake"
+        android:id="@+id/searchAllMicro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,14 +20,12 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewChooseStake"
-        android:layout_width="match_parent"
+        android:id="@+id/recyclerViewAllMicro"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchChosenStake" />
-
-
+        app:layout_constraintTop_toBottomOf="@+id/searchAllMicro" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -127,6 +127,7 @@ public enum Caching {
         requestStaticData(globalAccountId);
         setGlobalAccountId(globalAccountId);
         setLogInUserId(userId);
+        requestStakeHolder(chosenAccountId);
     }
 
     //// Request data
@@ -135,7 +136,6 @@ public enum Caching {
     public void openAccount(String chosenAccountId){
         setChosenAccountId(chosenAccountId);
         requestAllTransactions(chosenAccountId);
-        requestStakeHolder(chosenAccountId);
     }
 
 

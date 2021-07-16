@@ -106,7 +106,7 @@ public class TransactionsFilter extends Fragment implements CachingObserver, Cre
         final NavController navController = Navigation.findNavController(view);
         /// Navigate to Transaction and sent filerSent object  after pressing filter
         Button filterButton = view.findViewById(R.id.btn_filter_FilterTrans);
-        filterButton.setOnClickListener((v)-> {
+    /*    filterButton.setOnClickListener((v)-> {
             TransactionsFilterDirections.ActionTransactionsFilterToTransactionsSummary action =
                     TransactionsFilterDirections.actionTransactionsFilterToTransactionsSummary(getFilter());
             navController.navigate(action);
@@ -119,7 +119,7 @@ public class TransactionsFilter extends Fragment implements CachingObserver, Cre
             TransactionsFilterDirections.ActionTransactionsFilterToTransactionsSummary action =
                     TransactionsFilterDirections.actionTransactionsFilterToTransactionsSummary(parcel);
             navController.navigate(action);
-        });
+        });*/
 
 
     }

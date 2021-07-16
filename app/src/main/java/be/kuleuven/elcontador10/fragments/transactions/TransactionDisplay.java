@@ -108,9 +108,9 @@ public class TransactionDisplay extends Fragment implements TransactionsDisplayI
         FilterTransactionsParcel parcel = new FilterTransactionsParcel("*", "*", "*", null, null);
 
         NavController navController = Navigation.findNavController(requireView());
-        TransactionDisplayDirections.ActionTransactionDisplayToTransactionsSummary action =
+       /* TransactionDisplayDirections.ActionTransactionDisplayToTransactionsSummary action =
                 TransactionDisplayDirections.actionTransactionDisplayToTransactionsSummary(parcel);
-        navController.navigate(action);
+        navController.navigate(action);*/
     }
 
     @Override

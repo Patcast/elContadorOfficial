@@ -51,8 +51,8 @@ public class TransactionsSummary extends Fragment implements TransactionsSummary
         //Get argument from TransactionFilter
         try {
             assert getArguments() != null;
-            TransactionsSummaryArgs args = TransactionsSummaryArgs.fromBundle(getArguments());
-            filter = args.getParcelFilter();
+          /*  TransactionsSummaryArgs args = TransactionsSummaryArgs.fromBundle(getArguments());
+            filter = args.getParcelFilter();*/
         }
 
         catch (Exception e) {
@@ -62,14 +62,14 @@ public class TransactionsSummary extends Fragment implements TransactionsSummary
 
         ///// Set Navigation for TransactionsSummary buttons
         navController = Navigation.findNavController(view);
-        FloatingActionButton fabFilter = view.findViewById(R.id.btn_filter_Transaction);
+    /*    FloatingActionButton fabFilter = view.findViewById(R.id.btn_filter_Transaction);
         fabFilter.setOnClickListener(v -> navController.navigate(R.id.action_transactions_summary_to_transactionsFilter));
         FloatingActionButton fabAdd = view.findViewById(R.id.btn_add_Transaction);
-        fabAdd.setOnClickListener(v -> navController.navigate(R.id.action_transactions_summary_to_newTransaction));
+        fabAdd.setOnClickListener(v -> navController.navigate(R.id.action_transactions_summary_to_newTransaction));*/
         ///// End
 
         recyclerView = getView().findViewById(R.id.TransactionsRecycler);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+       /* recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -83,7 +83,7 @@ public class TransactionsSummary extends Fragment implements TransactionsSummary
                     fabAdd.setVisibility(View.VISIBLE);
                 }
             }
-        });
+        });*/
 
         manager = TransactionsManager.getInstance();
         manager.getTransactions(this, filter);
@@ -110,8 +110,8 @@ public class TransactionsSummary extends Fragment implements TransactionsSummary
 
     @Override
     public void displayTransaction(String id) {
-        TransactionsSummaryDirections.ActionTransactionsSummaryToTransactionDisplay action =
+    /*    TransactionsSummaryDirections.ActionTransactionsSummaryToTransactionDisplay action =
                 TransactionsSummaryDirections.actionTransactionsSummaryToTransactionDisplay(id);
-        navController.navigate(action);
+        navController.navigate(action);*/
     }
 }

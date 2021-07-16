@@ -6,12 +6,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -34,6 +38,8 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     private RecyclerView recyclerAllTransactions;
     private AllTransactionsRecViewAdapter adapter;
     ArrayList<Transaction> transactionArrayList = new ArrayList<>();
+    FloatingActionButton fabNewTransaction;
+    NavController navController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,6 +48,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         MainActivity mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle(getString(R.string.transactions));
         View view = inflater.inflate(R.layout.fragment_all_transactions, container, false);
+        fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
         recyclerAllTransactions = view.findViewById(R.id.RecViewTransactionsHolder);
         recyclerAllTransactions.setLayoutManager(new LinearLayoutManager(this.getContext()));
         adapter = new AllTransactionsRecViewAdapter(view,getContext());
@@ -50,9 +57,27 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         recyclerAllTransactions.setAdapter(adapter);
         return view;
     }
+
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
+        fabNewTransaction.setOnClickListener(v -> navController.navigate(R.id.action_allTransactions_to_newTransaction));
+        recyclerAllTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    fabNewTransaction .setVisibility(View.GONE);
+
+                }
+                else {
+                    fabNewTransaction.setVisibility(View.VISIBLE);
+
+                }
+            }
+        });
     }
 
     @Override
