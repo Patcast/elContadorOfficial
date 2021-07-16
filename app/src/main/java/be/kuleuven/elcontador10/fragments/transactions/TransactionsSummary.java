@@ -1,6 +1,6 @@
 package be.kuleuven.elcontador10.fragments.transactions;
 
-import android.content.Context;
+
 import android.os.Build;
 import android.os.Bundle;
 

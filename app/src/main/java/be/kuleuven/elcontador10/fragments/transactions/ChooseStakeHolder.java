@@ -63,7 +63,7 @@ public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersO
     @Override
     public void onStop() {
         super.onStop();
-        Caching.INSTANCE.deAttachstakeholdersObservers(this);
+        Caching.INSTANCE.deAttachStakeholdersObservers(this);
     }
 
     private void createRecycler(List<StakeHolder> stakeHolders){

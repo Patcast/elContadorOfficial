@@ -182,6 +182,7 @@ public class SignIn extends Fragment {
                     .whereEqualTo("email", currentUser.getEmail())
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @RequiresApi(api = Build.VERSION_CODES.N)
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful() ) {

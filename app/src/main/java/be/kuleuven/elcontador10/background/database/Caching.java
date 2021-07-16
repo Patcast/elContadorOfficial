@@ -22,6 +22,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -50,18 +51,26 @@ public enum Caching {
     public interface StakeholdersObserver{
         void notifyStakeholdersObserver(List <StakeHolder> stakeHolders);
     }
+    public interface AccountsObserver {
+        void notifyAccountsObserver(List<Account> accounts);
+    }
+    public interface AllTransactionsObserver{
+        void notifyAllTransactionsObserver(List<Transaction> allTransactions);
+    }
 
     ////*********Data
     public List <StakeHolder> stakeHolders = new ArrayList<>();
     public List <TransactionType>  transTypes = new ArrayList<>();
     public List <String> roles = new ArrayList<>();
     public List <Transaction> transactions = new ArrayList<>();
-    private List <Account> accounts = new ArrayList<>();
+    private final List <Account> accounts = new ArrayList<>();
 
 
     ///********** Observers List
     private final List <StaticDataObserver> staticDataObservers = new ArrayList<>();
     private final List <StakeholdersObserver> stakeholdersObservers = new ArrayList<>();
+    private final List <AccountsObserver> accountsObservers = new ArrayList<>();
+    private final List <AllTransactionsObserver> allTransactionsObservers = new ArrayList<>();
     ///********** Variables
     View view;
     Context context;
@@ -86,8 +95,23 @@ public enum Caching {
         stakeholdersObservers.add(newObserver);
         newObserver.notifyStakeholdersObserver( stakeHolders);
     }
-    public void deAttachstakeholdersObservers(StakeholdersObserver newObserver){
+    public void deAttachStakeholdersObservers(StakeholdersObserver newObserver){
         stakeholdersObservers.remove(newObserver);
+    }
+    public void attachAccountsObservers(AccountsObserver newObserver){
+        accountsObservers.add(newObserver);
+        if(accounts.size()!=0){
+        newObserver.notifyAccountsObserver( accounts);}
+    }
+    public void deAttachAccountsObservers(AccountsObserver unWantedObserver){
+        accountsObservers.remove(unWantedObserver);
+    }
+    public void attachAllTransactionsObserver(AllTransactionsObserver newObserver){
+        allTransactionsObservers.add(newObserver);
+        newObserver.notifyAllTransactionsObserver( transactions);
+    }
+    public void deAttachAllTransactionsObserver(AllTransactionsObserver unWantedObserver){
+        allTransactionsObservers.remove(unWantedObserver);
     }
 
 
@@ -117,8 +141,9 @@ public enum Caching {
     //OnClick Listener on signIn
     public void requestAllAccounts(String globalAccountId){
 
-        db.collection("/globalAccounts/"+globalAccountId+"/accounts")
+        db.collection("/globalAccounts/"+globalAccountId+"/accounts").orderBy("name", Query.Direction.ASCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value,
                                         @Nullable FirebaseFirestoreException e) {
@@ -126,11 +151,13 @@ public enum Caching {
                             Log.w(TAG, "Listen failed.", e);
                             return;
                         }
+                        accounts.clear();
                         for (QueryDocumentSnapshot doc : value) {
                             Account myAccount =  doc.toObject(Account.class);
                             myAccount.setId( doc.getId());
                             accounts.add(myAccount);
                         }
+                        accountsObservers.forEach(o -> o.notifyAccountsObserver(accounts));
                     }
                 });
 
@@ -169,6 +196,7 @@ public enum Caching {
     public void requestStakeHolder(String chosenAccountId){
         db.collection("/globalAccounts/"+globalAccountId+"/stakeHolders")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value,
                                         @Nullable FirebaseFirestoreException e) {
@@ -181,6 +209,7 @@ public enum Caching {
                             myStakeHolder.setId( doc.getId());
                             stakeHolders.add(myStakeHolder);
                         }
+                        stakeholdersObservers.forEach(s->s.notifyStakeholdersObserver(getStakeHolders()));
                     }
                 });
     }
@@ -189,6 +218,7 @@ public enum Caching {
 
         db.collection("/globalAccounts/"+globalAccountId+"/accounts/"+chosenAccountId+"/transactions")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value,
                                         @Nullable FirebaseFirestoreException e) {
@@ -201,6 +231,7 @@ public enum Caching {
                             myTransaction.setId( doc.getId());
                             transactions.add(myTransaction);
                         }
+                        allTransactionsObservers.forEach(t->t.notifyAllTransactionsObserver(getTransactions()));
                     }
                 });
 

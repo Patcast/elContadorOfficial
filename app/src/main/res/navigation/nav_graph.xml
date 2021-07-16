@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_home_summary_to_transactions_summary"
             app:destination="@id/transactions_summary" />
+        <action
+            android:id="@+id/action_home_summary_to_allTransactions"
+            app:destination="@id/allTransactions" />
     </fragment>
     <fragment
         android:id="@+id/transactions_summary"
@@ -158,4 +161,9 @@
             android:id="@+id/action_chooseStakeHolderDialog_to_newTransaction"
             app:popUpTo="@id/newTransaction"/>
     </fragment>
+    <fragment
+        android:id="@+id/allTransactions"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.AllTransactions"
+        android:label="fragment_all_transactions"
+        tools:layout="@layout/fragment_all_transactions" />
 </navigation>

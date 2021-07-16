@@ -22,9 +22,9 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Account;
 
 
-public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecViewAdapter.ViewHolder> {
+public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecViewAdapter.ViewHolder>  {
 
-    private List<Account> accounts = new ArrayList<>();
+    private  ArrayList<Account> accounts = new ArrayList<>();
     private final View viewFromHostingClass;
     NavController navController;
 
@@ -38,8 +38,8 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         navController = Navigation.findNavController(viewFromHostingClass);
-        View viewParent = LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_view_item_accounts,parent,false);
-        return new ViewHolder(viewParent);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_view_item_accounts,parent,false);
+        return new ViewHolder(view);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -50,7 +50,7 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
         holder.parent.setOnClickListener(v -> {
             String chosenAccount = accounts.get(position).getId();
             Caching.INSTANCE.openAccount(chosenAccount);
-            navController.navigate(R.id.action_home_summary_to_transactions_summary);
+            navController.navigate(R.id.action_home_summary_to_allTransactions);
             }
         );
         holder.buttonNewTransaction.setOnClickListener(v->{
@@ -68,6 +68,8 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
         return accounts.size();
     }
 
+
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView textName;
         private TextView textBalance;
@@ -84,8 +86,8 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
         }
     }
 
-    public void setAccounts(List<Account> greetings) {
-        this.accounts = greetings;
+    public void setAccounts(ArrayList<Account> accounts) {
+        this.accounts= accounts;
         notifyDataSetChanged();
     }
 }
