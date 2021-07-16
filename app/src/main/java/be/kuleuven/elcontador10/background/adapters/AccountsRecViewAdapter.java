@@ -55,13 +55,13 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
         holder.parent.setOnClickListener(v -> {
             String chosenAccount = accounts.get(position).getId();
             Caching.INSTANCE.openAccount(chosenAccount);
-            navController.navigate(R.id.action_home_summary_to_allTransactions);
+            navController.navigate(R.id.action_viewPagerHolder_to_allTransactions);
             }
         );
         holder.buttonNewTransaction.setOnClickListener(v->{
             String chosenAccount = accounts.get(position).getId();
             Caching.INSTANCE.openAccount(chosenAccount);
-            navController.navigate(R.id.action_home_summary_to_newTransaction);
+            navController.navigate(R.id.action_viewPagerHolder_to_newTransaction);
         });
 
 

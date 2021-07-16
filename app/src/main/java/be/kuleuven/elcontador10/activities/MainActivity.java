@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,11 @@ import be.kuleuven.elcontador10.background.model.TransactionType;
 public class MainActivity extends FragmentActivity  {
     private TextView header;
     BottomNavigationView bottomNavigationView;
+    TabLayout tabLayout;
+
+    public TabLayout getTabLayout() {
+        return tabLayout;
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -36,6 +42,7 @@ public class MainActivity extends FragmentActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         header = findViewById(R.id.lblToolbarHeading);
+        tabLayout = findViewById(R.id.tabLayout);
         //setBottomMenu();
 
     }

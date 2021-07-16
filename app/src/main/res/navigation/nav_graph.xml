@@ -115,6 +115,9 @@
         tools:layout="@layout/fragment_sign_in"
         app:startDestination="@id/action_signIn_to_home_summary">
         <action
+            android:id="@+id/action_signIn_to_viewPagerHolder"
+            app:destination="@id/viewPagerHolder" />
+        <action
             android:id="@+id/action_signIn_to_home_summary"
             app:destination="@id/home_summary" />
     </fragment>
@@ -141,4 +144,16 @@
         android:name="be.kuleuven.elcontador10.fragments.stakeholders.AllMicroAccounts"
         android:label="fragment_all_micro_acounts"
         tools:layout="@layout/fragment_all_micro_acounts" />
+    <fragment
+        android:id="@+id/viewPagerHolder"
+        android:name="be.kuleuven.elcontador10.ViewPagerHolder"
+        android:label="fragment_view_pager_holder"
+        tools:layout="@layout/fragment_view_pager_holder" >
+        <action
+            android:id="@+id/action_viewPagerHolder_to_newTransaction"
+            app:destination="@id/newTransaction" />
+        <action
+            android:id="@+id/action_viewPagerHolder_to_allTransactions"
+            app:destination="@id/allTransactions" />
+    </fragment>
 </navigation>

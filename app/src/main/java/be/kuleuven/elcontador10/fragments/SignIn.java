@@ -141,7 +141,7 @@ public class SignIn extends Fragment {
     private void updateAfterSignedIn(FirebaseUser account, String userId, String idCompany){
         if (account !=null ){
             Caching.INSTANCE.startApp(idCompany,userId);
-            navController.navigate(R.id.action_signIn_to_home_summary);
+            navController.navigate(R.id.action_signIn_to_viewPagerHolder);
         }
     }
     ///// Sign out process///////////////
