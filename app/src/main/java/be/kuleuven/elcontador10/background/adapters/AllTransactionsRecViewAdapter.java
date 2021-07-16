@@ -1,6 +1,7 @@
 package be.kuleuven.elcontador10.background.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +29,7 @@ import be.kuleuven.elcontador10.background.model.Account;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 
-public class AllTransactionsRecViewAdapter extends RecyclerView.Adapter<AllTransactionsRecViewAdapter.ViewHolder> implements Caching.AllTransactionsObserver {
+public class AllTransactionsRecViewAdapter extends RecyclerView.Adapter<AllTransactionsRecViewAdapter.ViewHolder>  {
     private List<Transaction> allTransactions = new ArrayList<>();
     NavController navController;
     View viewFromHostingClass;
@@ -37,7 +38,7 @@ public class AllTransactionsRecViewAdapter extends RecyclerView.Adapter<AllTrans
     public AllTransactionsRecViewAdapter(View viewFromHostingClass, Context context) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.context = context;
-        Caching.INSTANCE.attachAllTransactionsObserver(this);
+
     }
 
     @NonNull
@@ -46,20 +47,32 @@ public class AllTransactionsRecViewAdapter extends RecyclerView.Adapter<AllTrans
     public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         navController = Navigation.findNavController(viewFromHostingClass);
         View viewParent = LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_view_item_all_transactions,parent,false);
-        return new AllTransactionsRecViewAdapter.ViewHolder(viewParent);
+        return new ViewHolder(viewParent);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
-       Optional possibleName = Caching.INSTANCE.getStakeHolders().stream()
-                                                                    .filter(s->s.getId().equals(allTransactions.get(position).getId()))
+        String id = allTransactions.get(position).getStakeHolder();
+        Optional possibleName = Caching.INSTANCE.getStakeHolders().stream()
+                                                                    .filter(s->s.getId().equals(id))
                                                                     .map(StakeHolder::getName)
                                                                     .findFirst();
         String nameMicroAccount  = (possibleName.isPresent())?(String) possibleName.get(): context.getString(R.string.error_finding_microAccount);
-        holder.textAmount.setText(nameMicroAccount);
-        holder.textAmount.setText(String.valueOf(allTransactions.get(position).getAmount()));
-       holder.parent.setOnClickListener(v-> Toast.makeText(context,"This will be ready soon",Toast.LENGTH_SHORT));
+        holder.textName.setText(nameMicroAccount);
+        long amount = allTransactions.get(position).getAmount();
+        StringBuilder amountText = new StringBuilder();
+        if(amount<0){
+            holder.textAmount.setTextColor(Color.parseColor("#ffc7c7"));
+            amount = amount *-1;
+            amountText.append("- $" );
+        }
+        else{
+            amountText.append("  $" );
+        }
+        amountText.append(amount);
+        holder.textAmount.setText(amountText);
+        holder.parent.setOnClickListener(v-> Toast.makeText(context,"This will be ready soon",Toast.LENGTH_SHORT));
     }
 
     @Override
@@ -75,17 +88,13 @@ public class AllTransactionsRecViewAdapter extends RecyclerView.Adapter<AllTrans
         public ViewHolder(@NonNull  View itemView) {
             super(itemView);
             parent = itemView.findViewById(R.id.recVew_Item_AllTransactions);
-            textName = itemView.findViewById(R.id.text_Account_name);
-            textAmount = itemView.findViewById(R.id.text_Account_balance);
+            textName = itemView.findViewById(R.id.textMicroAccount);
+            textAmount = itemView.findViewById(R.id.textAmount);
         }
     }
-    @Override
-    public void notifyAllTransactionsObserver(List<Transaction> allTransactions) {
-        setAllTransactions(allTransactions);
-    }
+
 
     public void setAllTransactions (List<Transaction> NewTransactions) {
-        this.allTransactions.clear();
         this.allTransactions = NewTransactions;
         notifyDataSetChanged();
     }

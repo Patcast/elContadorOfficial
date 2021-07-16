@@ -1,10 +1,13 @@
 package be.kuleuven.elcontador10.background.adapters;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,7 +47,11 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
     @Override
     public void onBindViewHolder(@NonNull  AccountsRecViewAdapter.ViewHolder holder, int position) {
         holder.textName.setText(accounts.get(position).getName());
-        holder.textBalance.setText(String.valueOf(accounts.get(position).getBalance()));
+        long amount = accounts.get(position).getBalance();
+        StringBuilder amountText = new StringBuilder();
+        amountText.append("$" );
+        amountText.append(amount);
+        holder.textBalance.setText(amountText);
         holder.parent.setOnClickListener(v -> {
             String chosenAccount = accounts.get(position).getId();
             Caching.INSTANCE.openAccount(chosenAccount);
@@ -71,7 +78,7 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
     public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView textName;
         private TextView textBalance;
-        private Button buttonNewTransaction;
+        private ImageButton buttonNewTransaction;
         private ConstraintLayout parent;
 
         public ViewHolder(@NonNull  View itemView) {
@@ -79,7 +86,7 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
             parent = itemView.findViewById(R.id.RecView_ChooseAc);
             textName = itemView.findViewById(R.id.text_Account_name);
             textBalance = itemView.findViewById(R.id.text_Account_balance);
-            buttonNewTransaction = itemView.findViewById(R.id.button_AccountNewTrans);
+            buttonNewTransaction = itemView.findViewById(R.id.imageAddTransaction);
 
         }
     }

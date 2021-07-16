@@ -11,4 +11,7 @@
     <color name="contador_bg">#36393F</color>
     <color name="green">#00FF00</color>
     <color name="dark_grey">#696969</color>
+    <color name="cash_out">#ffc7c7</color>
+    <color name="rec_view_gray">#5a5a5a</color>
+
 </resources>

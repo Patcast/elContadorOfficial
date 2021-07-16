@@ -93,7 +93,8 @@ public enum Caching {
     }
     public void attachStakeholdersObservers(StakeholdersObserver newObserver){
         stakeholdersObservers.add(newObserver);
-        newObserver.notifyStakeholdersObserver( stakeHolders);
+        if(stakeHolders.size()!=0){
+            newObserver.notifyStakeholdersObserver( stakeHolders); }
     }
     public void deAttachStakeholdersObservers(StakeholdersObserver newObserver){
         stakeholdersObservers.remove(newObserver);
@@ -207,6 +208,7 @@ public enum Caching {
                             Log.w(TAG, "Listen failed.", e);
                             return;
                         }
+                        stakeHolders.clear();
                         for (QueryDocumentSnapshot doc : value) {
                             StakeHolder myStakeHolder =  doc.toObject(StakeHolder.class);
                             myStakeHolder.setId( doc.getId());
@@ -229,6 +231,7 @@ public enum Caching {
                             Log.w(TAG, "Listen failed.", e);
                             return;
                         }
+                        transactions.clear();
                         for (QueryDocumentSnapshot doc : value) {
                             Transaction myTransaction =  doc.toObject(Transaction.class);
                             myTransaction.setId( doc.getId());
@@ -237,16 +240,9 @@ public enum Caching {
                         allTransactionsObservers.forEach(t->t.notifyAllTransactionsObserver(getTransactions()));
                     }
                 });
-
-
-
     }
 
 //////************** end of db
-
-    public List<TransactionType> getTransTypes() {
-        return transTypes;
-    }
 
     public void setChosenAccountId(String chosenAccountId) {
         this.chosenAccountId = chosenAccountId;

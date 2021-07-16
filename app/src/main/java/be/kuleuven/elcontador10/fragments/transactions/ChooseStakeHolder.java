@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Objects;
 
 import be.kuleuven.elcontador10.R;
+import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.StakeHolderRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
@@ -46,17 +47,30 @@ public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersO
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_choose_stake_holder, container, false);
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity.setTitle(getString(R.string.select_micro_account));
         recyclerStakeHolds = view.findViewById(R.id.recyclerViewChooseStake);
+        recyclerStakeHolds.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        ChosenStakeViewModel viewModel = new ViewModelProvider(requireActivity()).get(ChosenStakeViewModel.class);
+        adapter = new StakeHolderRecViewAdapter(view,viewModel);
+        Caching.INSTANCE.attachStakeholdersObservers(this);
+        if(stakeHolders.size()>0) adapter.setStakeholdersList(stakeHolders);
+        recyclerStakeHolds.setAdapter(adapter);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull  View view, @Nullable  Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ChosenStakeViewModel viewModel = new ViewModelProvider(requireActivity()).get(ChosenStakeViewModel.class);
-        adapter = new StakeHolderRecViewAdapter(view,viewModel);
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         Caching.INSTANCE.attachStakeholdersObservers(this);
-        createRecycler(stakeHolders);
+        if(stakeHolders.size()>0) adapter.setStakeholdersList(stakeHolders);
+        recyclerStakeHolds.setAdapter(adapter);
 
     }
 
@@ -65,17 +79,10 @@ public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersO
         super.onStop();
         Caching.INSTANCE.deAttachStakeholdersObservers(this);
     }
-
-    private void createRecycler(List<StakeHolder> stakeHolders){
-        adapter.setStakeholdersList(stakeHolders);
-        recyclerStakeHolds.setAdapter(adapter);
-        recyclerStakeHolds.setLayoutManager(new LinearLayoutManager(this.getContext()));
-    }
-
-
     @Override
     public void notifyStakeholdersObserver(List<StakeHolder> stakeHolders) {
         this.stakeHolders.clear();
         this.stakeHolders.addAll(stakeHolders);
+        adapter.setStakeholdersList(this.stakeHolders);
     }
 }

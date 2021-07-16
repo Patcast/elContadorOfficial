@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -59,7 +60,7 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
     public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView textName;
         private TextView textRole;
-        private Button buttonNewTransaction;
+        private ImageView buttonNewTransaction;
         private ConstraintLayout parent;
 
         public ViewHolder(@NonNull View itemView) {
@@ -67,13 +68,12 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
             parent = itemView.findViewById(R.id.RecView_ChooseAc);
             textName = itemView.findViewById(R.id.text_Account_name);
             textRole = itemView.findViewById(R.id.text_Account_balance);
-            buttonNewTransaction = itemView.findViewById(R.id.button_AccountNewTrans);
+            buttonNewTransaction = itemView.findViewById(R.id.imageAddTransaction);
 
         }
     }
 
     public void setStakeholdersList(List <StakeHolder> stakeholdersList) {
-        this.stakeholdersList.clear();
         this.stakeholdersList = stakeholdersList;
         notifyDataSetChanged();
     }
