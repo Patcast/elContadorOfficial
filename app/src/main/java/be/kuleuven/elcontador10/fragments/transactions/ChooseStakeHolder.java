@@ -36,7 +36,7 @@ public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersO
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_choose_stake_holder, container, false);
         MainActivity mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitle(getString(R.string.select_micro_account));
+        mainActivity.setHeaderText(getString(R.string.select_micro_account));
         recyclerStakeHolds = view.findViewById(R.id.recyclerViewChooseStake);
         txtSearch = view.findViewById(R.id.searchChosenStake);
         txtSearch.setOnQueryTextListener(this);

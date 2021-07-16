@@ -2,6 +2,7 @@ package be.kuleuven.elcontador10.activities;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -28,9 +29,10 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 
 public class MainActivity extends FragmentActivity  {
-    private TextView header;
+    private TextView headerText;
     BottomNavigationView bottomNavigationView;
     TabLayout tabLayout;
+    Toolbar toolbar;
 
     public TabLayout getTabLayout() {
         return tabLayout;
@@ -41,43 +43,26 @@ public class MainActivity extends FragmentActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        header = findViewById(R.id.lblToolbarHeading);
+        toolbar = findViewById(R.id.toolbar);
+        headerText = findViewById(R.id.lblToolbarHeading);
         tabLayout = findViewById(R.id.tabLayout);
-        //setBottomMenu();
-
     }
-
-   ///This is all the code required for the bottom Navigation Menu
-    private void setBottomMenu(){
-        bottomNavigationView = findViewById(R.id.bottom_navigation_menu_main);
-        NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
-        NavigationUI.setupWithNavController(bottomNavigationView,navController);
-    }
-    public void displayBottomMenu(Boolean display){
+    public void displayToolBar(Boolean display){
         int visibility = (display)? View.VISIBLE :View.INVISIBLE;
-        bottomNavigationView.setVisibility(visibility);
+        toolbar.setVisibility(visibility);
+    }
+    public void displayHeaderText(Boolean display){
+        int visibility = (display)? View.VISIBLE :View.INVISIBLE;
+        headerText.setVisibility(visibility);
+    }
+    public void displayTabLayout(Boolean display){
+        int visibility = (display)? View.VISIBLE :View.GONE;
+        tabLayout.setVisibility(visibility);
     }
 
-    public void setTitle(String title) {
-        header.setText(title);
+    public void setHeaderText(String title) {
+        headerText.setText(title);
     }
 
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_top,menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) item.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
-    }*/
 }

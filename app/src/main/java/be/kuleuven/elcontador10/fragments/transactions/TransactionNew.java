@@ -52,8 +52,7 @@ public class TransactionNew extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitle(getString(R.string.new_transaction_title));
-
+        mainActivity.setHeaderText(getString(R.string.new_transaction_title));
         return inflater.inflate(R.layout.fragment_transaction_new, container, false);
     }
     @RequiresApi(api = Build.VERSION_CODES.N)

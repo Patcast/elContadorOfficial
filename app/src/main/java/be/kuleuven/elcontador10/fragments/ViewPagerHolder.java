@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10;
+package be.kuleuven.elcontador10.fragments;
 
 import android.os.Bundle;
 
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.ViewPagerAdapter;
 import be.kuleuven.elcontador10.fragments.Accounts;
@@ -28,8 +29,9 @@ public class ViewPagerHolder extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitle(getString(R.string.transactions));
-
+        mainActivity.displayToolBar(true);
+        mainActivity.displayHeaderText(false);
+        mainActivity.displayTabLayout(true);
     }
 
     @Override
@@ -48,10 +50,33 @@ public class ViewPagerHolder extends Fragment {
         viewPager2.setAdapter(mAdapter);
         new TabLayoutMediator(mainActivity.getTabLayout(),viewPager2,(t,p)->{
             switch(p){
-                case 0: t.setText("Accounts"); break;
-                case 1: t.setText("Micro Accounts"); break;
+                case 0:
+                    t.setText("Accounts");
+                    t.setIcon(R.drawable.ic_baseline_business_24);
+                    break;
+                case 1:
+                    t.setText("Micro Accounts");
+                    t.setIcon(R.drawable.ic_baseline_people_alt_24);
+                    break;
 
             }
         }).attach();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mainActivity.displayToolBar(true);
+        mainActivity.displayHeaderText(false);
+        mainActivity.displayTabLayout(true);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mainActivity.displayToolBar(true);
+        mainActivity.displayHeaderText(true);
+        mainActivity.displayTabLayout(false);
+
     }
 }
