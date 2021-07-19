@@ -15,15 +15,52 @@
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="129dp"
-                    android:layout_height="98dp"
+                    android:layout_width="311dp"
+                    android:layout_height="120dp"
+                    android:layout_marginHorizontal="50dp"
                     android:background="@color/white"
                     app:layout_constraintBottom_toTopOf="@+id/guideline10"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.695">
 
 
+                        <TextView
+                            android:id="@+id/textAmount3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Account"
+                            android:textColor="@color/rec_view_gray"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textConcerning" />
+
+                        <TextView
+                            android:id="@+id/textConcerning"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Concerning"
+                            android:textColor="@color/rec_view_gray"
+                            app:layout_constraintBottom_toTopOf="@+id/textAmount3"
+                            app:layout_constraintEnd_toEndOf="@+id/textAmount3"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="@+id/textAmount3"
+                            app:layout_constraintTop_toBottomOf="@+id/textAmount" />
+
+                        <TextView
+                            android:id="@+id/textAmount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/amount"
+                            android:textColor="@color/rec_view_gray"
+                            app:layout_constraintBottom_toTopOf="@+id/textConcerning"
+                            app:layout_constraintEnd_toEndOf="@+id/textConcerning"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="@+id/textConcerning"
+                            app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.Guideline
@@ -31,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    app:layout_constraintGuide_begin="131dp" />
+                    app:layout_constraintGuide_begin="194dp" />
 
                 <TextView
                     android:id="@+id/txtIdTransaction"
@@ -99,21 +136,70 @@
                     android:text="TextView"
                     android:layout_marginTop="20dp"
                     app:layout_constraintStart_toStartOf="@+id/guideline13"
-                    app:layout_constraintTop_toBottomOf="@+id/txtSubCategoryDisplay" />
+                    app:layout_constraintTop_toBottomOf="@+id/txtSubCategoryDisplay"
+                    />
+                <TextView
+                    android:id="@+id/txtRegisteredBy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/made_by"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintStart_toStartOf="@+id/guideline11"
+                    app:layout_constraintTop_toBottomOf="@+id/txtDate" />
+
+                <TextView
+                    android:id="@+id/txtRegisteredByDisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintStart_toStartOf="@+id/guideline13"
+                    app:layout_constraintTop_toBottomOf="@+id/txtDateDisplay"
+                    />
+                <TextView
+                    android:id="@+id/txtNotes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/notes"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintStart_toStartOf="@+id/guideline11"
+                    app:layout_constraintTop_toBottomOf="@+id/txtRegisteredBy" />
+
+                <TextView
+                    android:id="@+id/txtNotesDisplay"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:text="TextView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/guideline11"
+                    app:layout_constraintTop_toBottomOf="@+id/txtNotes"
+                    android:layout_marginRight="15dp" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintGuide_begin="46dp" />
+                    app:layout_constraintGuide_begin="30dp" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline13"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintGuide_begin="236dp" />
+                    app:layout_constraintGuide_begin="157dp" />
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:text="@string/delete"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtNotesDisplay" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
