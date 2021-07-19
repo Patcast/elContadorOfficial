@@ -19,14 +19,14 @@ public class Transaction {
     private static final String TAG = "newTransaction";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private int amount;
-    private String registeredBy;
     private String stakeHolder;
+    private String id;
     private String category;
     private String subCategory;
     private Timestamp date;
-    private boolean deleted;
+    private String registeredBy;
     private String notes;
-    private String id;
+    private boolean deleted;
 
     public Transaction() {
     }

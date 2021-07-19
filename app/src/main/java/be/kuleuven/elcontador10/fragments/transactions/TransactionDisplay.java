@@ -24,24 +24,28 @@ import android.widget.Toast;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.database.TransactionsManager;
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsDisplayInterface;
+import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 
-public class TransactionDisplay extends Fragment implements TransactionsDisplayInterface {
+public class TransactionDisplay extends Fragment  {
     private MainActivity mainActivity;
-    private String id;
-    private TransactionsManager manager;
+    TextView concerning, registeredBy, idText ,cuenta, amount, category, subcategory, date, notes;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitle(getString(R.string.transactions));
-        manager = TransactionsManager.getInstance();
+        mainActivity.setTitle(getString(R.string.transaction_display));
+
 
         return inflater.inflate(R.layout.fragment_transaction_display, container, false);
     }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -50,18 +54,21 @@ public class TransactionDisplay extends Fragment implements TransactionsDisplayI
 
         try {
             TransactionDisplayArgs args = TransactionDisplayArgs.fromBundle(getArguments());
-            id = args.getId();
+            String idOfTransaction = args.getId();
+            initializeViews(view);
+            displayInformation(idOfTransaction);
 
-            manager.getTransaction(this, id);
         }
         catch (Exception e) {
             Toast.makeText(mainActivity, "Nothing to show", Toast.LENGTH_SHORT).show();
         }
 
-        Button delete = requireView().findViewById(R.id.btn_Delete_DisplayTransaction);
-        delete.setOnClickListener(this::onDelete_Clicked);
+   /*     Button delete = requireView().findViewById(R.id.buttonDeleteTransaction);
+        delete.setOnClickListener(this::onDelete_Clicked);*/
     }
 
+
+/*
     public void onDelete_Clicked(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
 
@@ -71,48 +78,37 @@ public class TransactionDisplay extends Fragment implements TransactionsDisplayI
                 .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                 .create()
                 .show();
-    }
+    }*/
 
-    @Override
-    public void display(Bundle bundle) {
-        TextView sender, receiver, amount, category, subcategory, date, notes;
-
-        sender = requireView().findViewById(R.id.txtTransactionDisplaySender);
-        receiver = requireView().findViewById(R.id.txtTransactionDisplayReceiver);
-        amount = requireView().findViewById(R.id.txtTransactionDisplayAmount);
-        category = requireView().findViewById(R.id.txtTransactionDisplayCatgeory);
-        subcategory = requireView().findViewById(R.id.txtTransactionDisplaySubcategory);
-        date = requireView().findViewById(R.id.txtTransactionDisplayDate);
-        notes = requireView().findViewById(R.id.txtTransactionDisplayNotes);
+    public void initializeViews (View view) {
+        amount = view.findViewById(R.id.textAmount);
+        concerning = view.findViewById(R.id.textConcerning);
+        cuenta = view.findViewById(R.id.textAmount3);
+        idText = view.findViewById(R.id.txtIdTransactionDISPLAY);
+        category = view.findViewById(R.id.txtCategoryDisplay);
+        subcategory = view.findViewById(R.id.txtSubCategory);
+        date = view.findViewById(R.id.txtDateDisplay);
+        registeredBy = view.findViewById(R.id.txtRegisteredByDisplay);
+        notes = view.findViewById(R.id.txtNotesDisplay);
         notes.setMovementMethod(new ScrollingMovementMethod());
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void displayInformation(String idOfTransaction) {
+        Transaction selectedTrans = Caching.INSTANCE.getTransaction(idOfTransaction);
+        if(selectedTrans.equals(null))Toast.makeText(getContext(),"error getting Transaction",Toast.LENGTH_SHORT);
+        else {
+            amount.setText(String.valueOf(selectedTrans.getAmount()));
+            concerning.setText(selectedTrans.getStakeHolder());
+            cuenta.setText(Caching.INSTANCE.getStakeholderName(selectedTrans.getStakeHolder()));
+            idText.setText(selectedTrans.getId());
+            category.setText(selectedTrans.getCategory());
+            subcategory.setText(selectedTrans.getSubCategory());
+            date.setText(String.valueOf(selectedTrans.getDate()));
+            registeredBy.setText(Caching.INSTANCE.getStakeholderName(selectedTrans.getRegisteredBy()));
+            notes.setText(selectedTrans.getNotes());
 
-        sender.setText(bundle.getString("user"));
-        receiver.setText(bundle.getString("stakeholder"));
-
-        category.setText(bundle.getString("category"));
-        subcategory.setText(bundle.getString("subcategory"));
-        date.setText(bundle.getString("date"));
-        notes.setText(bundle.getString("notes"));
-
-        // for amount
-        double sum = bundle.getDouble("amount");
-        String amount_text = (sum > 0 ? "IN" : "OUT") + " $" + Math.abs(sum);
-        amount.setText(amount_text);
-
+        }
     }
 
-    @Override
-    public void error(String error) {
-        Toast.makeText(mainActivity, error, Toast.LENGTH_SHORT).show();
 
-        FilterTransactionsParcel parcel = new FilterTransactionsParcel("*", "*", "*", null, null);
-
-        NavController navController = Navigation.findNavController(requireView());
-       /* TransactionDisplayDirections.ActionTransactionDisplayToTransactionsSummary action =
-                TransactionDisplayDirections.actionTransactionDisplayToTransactionsSummary(parcel);
-        navController.navigate(action);*/
-    }
-
-    @Override
-    public Context getContext() { return mainActivity; }
 }

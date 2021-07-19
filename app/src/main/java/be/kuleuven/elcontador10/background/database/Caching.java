@@ -34,7 +34,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
 import be.kuleuven.elcontador10.background.model.Account;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
@@ -278,6 +281,34 @@ public enum Caching {
 
     public List<Account> getAccounts() {
         return accounts;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public Transaction getTransaction(String idOfTransaction){
+       Optional<Transaction> possibleTransaction = getTransactions().stream()
+                            .filter(t->t.getId().equals(idOfTransaction))
+                            .findFirst();
+       return possibleTransaction.orElse(null);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String getAccountName(){
+        Optional<String> selectedAccount = getAccounts().stream()
+                                                        .filter(a->a.getId().equals(chosenAccountId))
+                                                        .map(Account::getId)
+                                                        .findFirst();
+        return selectedAccount.orElse("account not found");
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String getStakeholderName(String idStakeholder) {
+
+        Optional possibleName = Caching.INSTANCE.getStakeHolders().stream()
+                .filter(s -> s.getId().equals(idStakeholder))
+                .map(StakeHolder::getName)
+                .findFirst();
+        String nameMicroAccount = (possibleName.isPresent()) ? (String) possibleName.get() : context.getString(R.string.error_finding_microAccount);
+
+        return nameMicroAccount;
     }
 
 

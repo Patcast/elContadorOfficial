@@ -28,6 +28,7 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Account;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
+import be.kuleuven.elcontador10.fragments.transactions.AllTransactionsDirections;
 
 public class AllTransactionsRecViewAdapter extends RecyclerView.Adapter<AllTransactionsRecViewAdapter.ViewHolder>  {
     private List<Transaction> allTransactions = new ArrayList<>();
@@ -54,12 +55,7 @@ public class AllTransactionsRecViewAdapter extends RecyclerView.Adapter<AllTrans
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
         String id = allTransactions.get(position).getStakeHolder();
-        Optional possibleName = Caching.INSTANCE.getStakeHolders().stream()
-                                                                    .filter(s->s.getId().equals(id))
-                                                                    .map(StakeHolder::getName)
-                                                                    .findFirst();
-        String nameMicroAccount  = (possibleName.isPresent())?(String) possibleName.get(): context.getString(R.string.error_finding_microAccount);
-        holder.textName.setText(nameMicroAccount);
+        holder.textName.setText(Caching.INSTANCE.getStakeholderName(id));
         long amount = allTransactions.get(position).getAmount();
         StringBuilder amountText = new StringBuilder();
         if(amount<0){
@@ -72,7 +68,10 @@ public class AllTransactionsRecViewAdapter extends RecyclerView.Adapter<AllTrans
         }
         amountText.append(amount);
         holder.textAmount.setText(amountText);
-        holder.parent.setOnClickListener(v-> Toast.makeText(context,"This will be ready soon",Toast.LENGTH_SHORT));
+        holder.parent.setOnClickListener(v->{
+            AllTransactionsDirections.ActionAllTransactionsToTransactionDisplay action = AllTransactionsDirections.actionAllTransactionsToTransactionDisplay(id);
+            navController.navigate(action);
+        });
     }
 
     @Override
