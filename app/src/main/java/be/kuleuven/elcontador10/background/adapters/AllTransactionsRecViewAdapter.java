@@ -54,8 +54,9 @@ public class AllTransactionsRecViewAdapter extends RecyclerView.Adapter<AllTrans
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
-        String id = allTransactions.get(position).getStakeHolder();
-        holder.textName.setText(Caching.INSTANCE.getStakeholderName(id));
+        String idStakeholder = allTransactions.get(position).getStakeHolder();
+        String idOfTransaction = allTransactions.get(position).getId();
+        holder.textName.setText(Caching.INSTANCE.getStakeholderName(idStakeholder));
         long amount = allTransactions.get(position).getAmount();
         StringBuilder amountText = new StringBuilder();
         if(amount<0){
@@ -69,7 +70,7 @@ public class AllTransactionsRecViewAdapter extends RecyclerView.Adapter<AllTrans
         amountText.append(amount);
         holder.textAmount.setText(amountText);
         holder.parent.setOnClickListener(v->{
-            AllTransactionsDirections.ActionAllTransactionsToTransactionDisplay action = AllTransactionsDirections.actionAllTransactionsToTransactionDisplay(id);
+            AllTransactionsDirections.ActionAllTransactionsToTransactionDisplay action = AllTransactionsDirections.actionAllTransactionsToTransactionDisplay(idOfTransaction);
             navController.navigate(action);
         });
     }

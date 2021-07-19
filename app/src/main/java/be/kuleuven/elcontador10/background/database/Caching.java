@@ -285,7 +285,8 @@ public enum Caching {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public Transaction getTransaction(String idOfTransaction){
-       Optional<Transaction> possibleTransaction = getTransactions().stream()
+        List<Transaction> availableTran = new ArrayList<>(getTransactions());
+       Optional<Transaction> possibleTransaction = availableTran.stream()
                             .filter(t->t.getId().equals(idOfTransaction))
                             .findFirst();
        return possibleTransaction.orElse(null);
@@ -295,7 +296,7 @@ public enum Caching {
     public String getAccountName(){
         Optional<String> selectedAccount = getAccounts().stream()
                                                         .filter(a->a.getId().equals(chosenAccountId))
-                                                        .map(Account::getId)
+                                                        .map(Account::getName)
                                                         .findFirst();
         return selectedAccount.orElse("account not found");
     }
@@ -310,6 +311,7 @@ public enum Caching {
 
         return nameMicroAccount;
     }
+
 
 
 }

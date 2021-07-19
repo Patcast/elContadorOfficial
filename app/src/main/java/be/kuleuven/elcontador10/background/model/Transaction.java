@@ -61,6 +61,9 @@ public class Transaction {
                     }
                 });
     }
+    public void deleteTransaction(){
+
+    }
 
     public int getAmount() {
         return amount;

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -33,6 +34,7 @@ import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 public class TransactionDisplay extends Fragment  {
     private MainActivity mainActivity;
     TextView concerning, registeredBy, idText ,cuenta, amount, category, subcategory, date, notes;
+    Transaction selectedTrans;
 
 
     @Nullable
@@ -63,13 +65,13 @@ public class TransactionDisplay extends Fragment  {
             Toast.makeText(mainActivity, "Nothing to show", Toast.LENGTH_SHORT).show();
         }
 
-   /*     Button delete = requireView().findViewById(R.id.buttonDeleteTransaction);
-        delete.setOnClickListener(this::onDelete_Clicked);*/
+        Button delete = requireView().findViewById(R.id.buttonDeleteTransaction);
+        delete.setOnClickListener(this::onDelete_Clicked);
     }
 
 
-/*
-    public void onDelete_Clicked(View view) {
+
+    private void onDelete_Clicked(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
 
         builder.setTitle("Delete transaction")
@@ -78,15 +80,17 @@ public class TransactionDisplay extends Fragment  {
                 .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                 .create()
                 .show();
-    }*/
+    }
+
+
 
     public void initializeViews (View view) {
         amount = view.findViewById(R.id.textAmount);
-        concerning = view.findViewById(R.id.textConcerning);
-        cuenta = view.findViewById(R.id.textAmount3);
+        concerning = view.findViewById(R.id.textConcerningDisplay);
+        cuenta = view.findViewById(R.id.textAccountChosenDisplay);
         idText = view.findViewById(R.id.txtIdTransactionDISPLAY);
         category = view.findViewById(R.id.txtCategoryDisplay);
-        subcategory = view.findViewById(R.id.txtSubCategory);
+        subcategory = view.findViewById(R.id.txtSubCategoryDisplay);
         date = view.findViewById(R.id.txtDateDisplay);
         registeredBy = view.findViewById(R.id.txtRegisteredByDisplay);
         notes = view.findViewById(R.id.txtNotesDisplay);
@@ -94,16 +98,28 @@ public class TransactionDisplay extends Fragment  {
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void displayInformation(String idOfTransaction) {
-        Transaction selectedTrans = Caching.INSTANCE.getTransaction(idOfTransaction);
+        selectedTrans = Caching.INSTANCE.getTransaction(idOfTransaction);
         if(selectedTrans.equals(null))Toast.makeText(getContext(),"error getting Transaction",Toast.LENGTH_SHORT);
         else {
-            amount.setText(String.valueOf(selectedTrans.getAmount()));
-            concerning.setText(selectedTrans.getStakeHolder());
-            cuenta.setText(Caching.INSTANCE.getStakeholderName(selectedTrans.getStakeHolder()));
+
+            long amountCollected = selectedTrans.getAmount();
+            StringBuilder amountText = new StringBuilder();
+            if(amountCollected<0){
+                amount.setTextColor(Color.parseColor("#ffc7c7"));
+                amountCollected = amountCollected *-1;
+                amountText.append("- $" );
+            }
+            else{
+                amountText.append("  $ " );
+            }
+            amountText.append(amountCollected);
+            amount.setText(amountText);
+            concerning.setText(Caching.INSTANCE.getStakeholderName(selectedTrans.getStakeHolder()));
+            cuenta.setText(Caching.INSTANCE.getAccountName());
             idText.setText(selectedTrans.getId());
             category.setText(selectedTrans.getCategory());
             subcategory.setText(selectedTrans.getSubCategory());
-            date.setText(String.valueOf(selectedTrans.getDate()));
+            date.setText(String.valueOf(selectedTrans.getDate().toDate()));
             registeredBy.setText(Caching.INSTANCE.getStakeholderName(selectedTrans.getRegisteredBy()));
             notes.setText(selectedTrans.getNotes());
 

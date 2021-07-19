@@ -130,5 +130,7 @@
     <string name="search">Search</string>
     <string name="micro_accounts">Micro Accounts</string>
     <string name="transaction_display">Transaction Display</string>
+    <string name="account">Account:</string>
+    <string name="concerning">Concerning:</string>
 
 </resources>
