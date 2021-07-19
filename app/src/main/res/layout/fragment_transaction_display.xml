@@ -14,159 +14,108 @@
             tools:context=".fragments.transactions.TransactionDisplay">
 
 
-
-        <TextView
-            android:id="@+id/lblTransactionDisplay1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/made_by"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/txtTransactionDisplaySender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/lblTransactionDisplay1" />
-
-        <TextView
-            android:id="@+id/lblTransactionDisplay2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/concerning"
-            app:layout_constraintStart_toStartOf="@+id/lblTransactionDisplay1"
-            app:layout_constraintTop_toBottomOf="@+id/lblTransactionDisplay1" />
-
-        <TextView
-            android:id="@+id/txtTransactionDisplayReceiver"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="20dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/txtTransactionDisplaySender"
-            app:layout_constraintTop_toBottomOf="@+id/txtTransactionDisplaySender" />
-
-        <TextView
-            android:id="@+id/lblTransactionDisplay3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/amount"
-            app:layout_constraintStart_toStartOf="@+id/lblTransactionDisplay2"
-            app:layout_constraintTop_toBottomOf="@+id/lblTransactionDisplay2" />
-
-        <TextView
-            android:id="@+id/txtTransactionDisplayAmount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="20dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/txtTransactionDisplayReceiver"
-            app:layout_constraintTop_toBottomOf="@+id/txtTransactionDisplayReceiver" />
-
-        <TextView
-            android:id="@+id/lblTransactionDisplay4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/category"
-            app:layout_constraintStart_toStartOf="@+id/lblTransactionDisplay3"
-            app:layout_constraintTop_toBottomOf="@+id/lblTransactionDisplay3" />
-
-        <TextView
-            android:id="@+id/txtTransactionDisplayCatgeory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="20dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/txtTransactionDisplayAmount"
-            app:layout_constraintTop_toBottomOf="@+id/txtTransactionDisplayAmount" />
-
-        <TextView
-            android:id="@+id/lblTransactionDisplay6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/subcategory"
-            app:layout_constraintStart_toStartOf="@+id/lblTransactionDisplay4"
-            app:layout_constraintTop_toBottomOf="@+id/lblTransactionDisplay4" />
-
-        <TextView
-            android:id="@+id/txtTransactionDisplaySubcategory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="20dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/txtTransactionDisplayCatgeory"
-            app:layout_constraintTop_toBottomOf="@+id/txtTransactionDisplayCatgeory" />
-
-        <TextView
-            android:id="@+id/lblTransactionDisplay5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/date_and_time"
-            app:layout_constraintStart_toStartOf="@+id/lblTransactionDisplay6"
-            app:layout_constraintTop_toBottomOf="@+id/lblTransactionDisplay6" />
-
-        <TextView
-            android:id="@+id/txtTransactionDisplayDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="20dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/txtTransactionDisplaySubcategory"
-            app:layout_constraintTop_toBottomOf="@+id/txtTransactionDisplaySubcategory" />
-
-        <TextView
-            android:id="@+id/lblTransactionDisplay7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/notes"
-            app:layout_constraintStart_toStartOf="@+id/lblTransactionDisplay5"
-            app:layout_constraintTop_toBottomOf="@+id/lblTransactionDisplay5" />
-
-                <TextView
-                    android:id="@+id/txtTransactionDisplayNotes"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:scrollbars="vertical"
-                    android:text="TextView"
-                    app:layout_constraintBottom_toTopOf="@+id/btn_Delete_DisplayTransaction"
-                    app:layout_constraintEnd_toEndOf="@+id/txtTransactionDisplayDate"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/lblTransactionDisplay7"
-                    app:layout_constraintTop_toBottomOf="@+id/lblTransactionDisplay7"
-                    app:layout_constraintVertical_bias="1.0" />
-
-                <Button
-                    android:id="@+id/btn_Delete_DisplayTransaction"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="50dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/buttons"
-                    android:text="@string/delete"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="129dp"
+                    android:layout_height="98dp"
+                    android:background="@color/white"
+                    app:layout_constraintBottom_toTopOf="@+id/guideline10"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txtTransactionDisplayNotes" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_begin="131dp" />
+
+                <TextView
+                    android:id="@+id/txtIdTransaction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Id: "
+                    app:layout_constraintStart_toStartOf="@+id/guideline11"
+                    app:layout_constraintTop_toTopOf="@+id/guideline10" />
+
+                <TextView
+                    android:id="@+id/txtIdTransactionDISPLAY"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    app:layout_constraintStart_toStartOf="@+id/guideline13"
+                    app:layout_constraintTop_toTopOf="@+id/guideline10" />
+
+                <TextView
+                    android:id="@+id/txtCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/category"
+                   android:layout_marginTop="20dp"
+                    app:layout_constraintStart_toStartOf="@+id/guideline11"
+                    app:layout_constraintTop_toBottomOf="@+id/txtIdTransaction" />
+
+                <TextView
+                    android:id="@+id/txtCategoryDisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintStart_toStartOf="@+id/guideline13"
+                    app:layout_constraintTop_toBottomOf="@+id/txtIdTransactionDISPLAY" />
+                <TextView
+                    android:id="@+id/txtSubCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/subcategory"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintStart_toStartOf="@+id/guideline11"
+                    app:layout_constraintTop_toBottomOf="@+id/txtCategory" />
+
+                <TextView
+                    android:id="@+id/txtSubCategoryDisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintStart_toStartOf="@+id/guideline13"
+                    app:layout_constraintTop_toBottomOf="@+id/txtCategoryDisplay" />
+                <TextView
+                    android:id="@+id/txtDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date_and_time"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintStart_toStartOf="@+id/guideline11"
+                    app:layout_constraintTop_toBottomOf="@+id/txtSubCategory" />
+
+                <TextView
+                    android:id="@+id/txtDateDisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintStart_toStartOf="@+id/guideline13"
+                    app:layout_constraintTop_toBottomOf="@+id/txtSubCategoryDisplay" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_begin="46dp" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_begin="236dp" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

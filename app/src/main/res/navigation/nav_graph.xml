@@ -145,6 +145,9 @@
         <action
             android:id="@+id/action_allTransactions_to_newTransaction"
             app:destination="@id/newTransaction" />
+        <action
+            android:id="@+id/action_allTransactions_to_transactionDisplay"
+            app:destination="@id/transactionDisplay" />
     </fragment>
     <fragment
         android:id="@+id/allMicroAccounts"

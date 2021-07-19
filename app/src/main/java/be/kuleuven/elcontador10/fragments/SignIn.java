@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
@@ -53,6 +54,7 @@ public class SignIn extends Fragment {
     private final String TAG = "SignInActivity";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     NavController navController;
+    GoogleSignInAccount account;
 
 
     @Override
@@ -103,7 +105,7 @@ public class SignIn extends Fragment {
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            account = completedTask.getResult(ApiException.class);
             Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
             firebaseAuthWithGoogle(account.getIdToken());
             // Signed in successfully, show authenticated UI.
@@ -148,6 +150,8 @@ public class SignIn extends Fragment {
     private void signOut() {
         navController.navigate(R.id.signIn);
         FirebaseAuth.getInstance().signOut();
+        Caching.INSTANCE.mGoogleSignInClient.signOut();
+        Caching.INSTANCE.mAuth.signOut();
     }
 
     ///// validate for registration and authorization ///////////////
