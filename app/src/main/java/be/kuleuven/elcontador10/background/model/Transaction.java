@@ -8,7 +8,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.type.DateTime;
 
 import java.util.Date;
@@ -18,6 +20,7 @@ import be.kuleuven.elcontador10.background.database.Caching;
 public class Transaction {
     private static final String TAG = "newTransaction";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    String urlForCollectionTransactions;
     private int amount;
     private String stakeHolder;
     private String id;
@@ -42,11 +45,10 @@ public class Transaction {
         this.deleted = false;
         this.notes = notes;
     }
-
     public void SendTransaction(Transaction newTrans){
-        String url = "/globalAccounts/"+ Caching.INSTANCE.getGlobalAccountId() +"/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
+        String urlForCollectionTransactions = "/globalAccounts/"+ Caching.INSTANCE.getGlobalAccountId() +"/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
 
-        db.collection(url)
+        db.collection(urlForCollectionTransactions)
                 .add(newTrans)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -62,8 +64,24 @@ public class Transaction {
                 });
     }
     public void deleteTransaction(){
-
+        db.collection(urlForCollectionTransactions).document(getId())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
     }
+
+
+
 
     public int getAmount() {
         return amount;
@@ -104,6 +122,8 @@ public class Transaction {
     public void setId(String id) {
         this.id = id;
     }
+
+
 }
 
 

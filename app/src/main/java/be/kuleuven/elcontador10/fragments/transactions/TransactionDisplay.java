@@ -73,10 +73,9 @@ public class TransactionDisplay extends Fragment  {
 
     private void onDelete_Clicked(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
-
         builder.setTitle("Delete transaction")
                 .setMessage("Are you sure you want to delete this transaction?")
-                .setPositiveButton("Yes", (dialog, which) -> manager.deleteTransaction(this, id))
+                .setPositiveButton("Yes", (dialog, which) ->selectedTrans.deleteTransaction())
                 .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                 .create()
                 .show();
