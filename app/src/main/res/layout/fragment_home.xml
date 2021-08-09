@@ -8,7 +8,6 @@
     tools:context=".fragments.Accounts"
     android:padding="15dp">
 
-
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerAccounts"
             android:layout_width="0dp"

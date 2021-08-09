@@ -18,6 +18,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
+
         <ImageView
             android:id="@+id/imgViewMainLogo"
             android:layout_width="90dp"
@@ -38,21 +40,10 @@
             tools:layout_editor_absoluteX="139dp"
             tools:layout_editor_absoluteY="49dp" />
 
+
+
     </androidx.appcompat.widget.Toolbar>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation_menu_main"
-        android:layout_width="0dp"
-        android:layout_height="75dp"
-        android:background="@color/contador_red"
-        app:labelVisibilityMode="selected"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_menu"
-        app:itemIconTint="@drawable/tab_colour"
-        app:itemTextColor="@drawable/tab_colour"
-        />
 
     <fragment
         android:id="@+id/nav_host_fragment"
@@ -61,11 +52,12 @@
         android:layout_height="0dp"
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_menu_main"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
       />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
