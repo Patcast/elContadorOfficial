@@ -32,13 +32,15 @@ public class Accounts extends Fragment implements Caching.AccountsObserver {
     private static final String TAG = "Accounts";
     RecyclerView recyclerAccounts;
     AccountsRecViewAdapter adapter;
+    MainActivity mainActivity;
     ArrayList<Account> accountsList = new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle(getString(R.string.accounts));
+        mainActivity.displayToolBar(true);
         recyclerAccounts = view.findViewById(R.id.recyclerAccounts);
         recyclerAccounts.setLayoutManager(new LinearLayoutManager(this.getContext()));
         adapter = new AccountsRecViewAdapter(view);
@@ -66,6 +68,7 @@ public class Accounts extends Fragment implements Caching.AccountsObserver {
     public void onStop() {
         super.onStop();
         Caching.INSTANCE.deAttachAccountsObservers(this);
+        mainActivity.displayToolBar(false);
     }
 
     @Override

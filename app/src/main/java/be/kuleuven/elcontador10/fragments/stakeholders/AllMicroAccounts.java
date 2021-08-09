@@ -36,8 +36,6 @@ private List<StakeHolder> microsList = new ArrayList<>();
 public View onCreateView(LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_micro_acounts, container, false);
-        MainActivity mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitle(getString(R.string.micro_accounts));
         recyclerMicros = view.findViewById(R.id.recyclerViewAllMicro);
         txtSearch = view.findViewById(R.id.searchAllMicro);
         txtSearch.setOnQueryTextListener(this);
@@ -86,5 +84,5 @@ public boolean onQueryTextSubmit(String query) {
 public boolean onQueryTextChange(String newText) {
         adapter.filter(newText);
         return false;
-        }
-        }
+}
+}

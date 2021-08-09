@@ -87,7 +87,6 @@ public enum Caching {
     /// ******** Authentication
     public GoogleSignInClient mGoogleSignInClient;
     public FirebaseAuth mAuth;
-    private  String globalAccountId;
     private String chosenAccountId;
 
 
@@ -272,9 +271,6 @@ public enum Caching {
     }
     public int getNumberOfAccountObservers(){
         return accountsObservers.size();
-    }
-    public String getGlobalAccountId() {
-        return globalAccountId;
     }
     public String getChosenAccountId() {
         return chosenAccountId;

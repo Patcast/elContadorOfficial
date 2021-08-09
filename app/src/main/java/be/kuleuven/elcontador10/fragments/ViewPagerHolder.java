@@ -1,7 +1,9 @@
 package be.kuleuven.elcontador10.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -15,6 +17,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.ViewPagerAdapter;
+import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.fragments.Accounts;
 import be.kuleuven.elcontador10.fragments.stakeholders.AllMicroAccounts;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
@@ -26,12 +29,14 @@ public class ViewPagerHolder extends Fragment {
    ViewPager2 viewPager2;
    MainActivity mainActivity;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) requireActivity();
         mainActivity.displayToolBar(true);
-        mainActivity.displayHeaderText(false);
+        String name = Caching.INSTANCE.getAccountName();
+        mainActivity.setHeaderText(name);
         mainActivity.displayTabLayout(true);
     }
 
@@ -68,7 +73,6 @@ public class ViewPagerHolder extends Fragment {
     public void onStart() {
         super.onStart();
         mainActivity.displayToolBar(true);
-        mainActivity.displayHeaderText(false);
         mainActivity.displayTabLayout(true);
     }
 
@@ -76,7 +80,6 @@ public class ViewPagerHolder extends Fragment {
     public void onStop() {
         super.onStop();
         mainActivity.displayToolBar(true);
-        mainActivity.displayHeaderText(true);
         mainActivity.displayTabLayout(false);
 
     }

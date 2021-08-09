@@ -39,14 +39,12 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     private AllTransactionsRecViewAdapter adapter;
     ArrayList<Transaction> transactionArrayList = new ArrayList<>();
     FloatingActionButton fabNewTransaction;
-    NavController navController;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        MainActivity mainActivity = (MainActivity) requireActivity();
-        mainActivity.setHeaderText(getString(R.string.transactions));
         View view = inflater.inflate(R.layout.fragment_all_transactions, container, false);
         fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
         recyclerAllTransactions = view.findViewById(R.id.RecViewTransactionsHolder);
