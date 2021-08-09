@@ -107,7 +107,7 @@ public class SettingsManager {
         String checkURL = DatabaseURL.INSTANCE.checkUsernameList + username;
 
         StringRequest update = new StringRequest(Request.Method.POST, DatabaseURL.INSTANCE.updateUsername,
-                response -> settings.feedback("User added"),
+                response -> settings.feedback("LoggedUser added"),
                 error -> {
                     error.printStackTrace();
                     settings.feedback(error.toString());

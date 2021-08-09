@@ -46,9 +46,9 @@ public class Transaction {
         this.notes = notes;
     }
     public void SendTransaction(Transaction newTrans){
-        String urlForCollectionTransactions = "/globalAccounts/"+ Caching.INSTANCE.getGlobalAccountId() +"/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
+        String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
 
-        db.collection(urlForCollectionTransactions)
+        db.collection(urlNewTransactions)
                 .add(newTrans)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override

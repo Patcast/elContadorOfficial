@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -46,10 +47,11 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
+import be.kuleuven.elcontador10.background.model.LoggedUser;
 
 
 public class SignIn extends Fragment {
-    private EditText edTextIdCompany;
+    //private EditText edTextIdCompany;
     private final int RC_SIGN_IN = 9001;
     private final String TAG = "SignInActivity";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -79,7 +81,6 @@ public class SignIn extends Fragment {
                 build();
         Caching.INSTANCE.mGoogleSignInClient =  GoogleSignIn.getClient(getContext(), gso);
         ///Buttons
-        edTextIdCompany = view.findViewById(R.id.editTextIdCompany);
         SignInButton signInButton = view.findViewById(R.id.btn_sign_in_google);
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setOnClickListener(v->signIn());
@@ -139,13 +140,7 @@ public class SignIn extends Fragment {
                 });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void updateAfterSignedIn(FirebaseUser account, String userId, String idCompany){
-        if (account !=null ){
-            Caching.INSTANCE.startApp(idCompany,userId);
-            navController.navigate(R.id.action_signIn_to_viewPagerHolder);
-        }
-    }
+
     ///// Sign out process///////////////
     private void signOut() {
         navController.navigate(R.id.signIn);
@@ -155,7 +150,7 @@ public class SignIn extends Fragment {
     }
 
     ///// validate for registration and authorization ///////////////
-    private void regInFireStore(FirebaseUser currentUser,String idCompany){
+    private void regInFireStore(FirebaseUser currentUser){
         if (currentUser !=null ) {
             Map<String, Object> stakeholder = new HashMap<>();
             if (currentUser.getDisplayName() != (null))
@@ -163,11 +158,10 @@ public class SignIn extends Fragment {
             if (currentUser.getPhoneNumber() != (null))
                 stakeholder.put("phone", currentUser.getPhoneNumber());
             stakeholder.put("email", currentUser.getEmail());
-            stakeholder.put("authorized", false);
-            stakeholder.put("idOfGlobalAccount",idCompany);
+            /*stakeholder.put("authorized", false);
+            stakeholder.put("idOfGlobalAccount",idCompany);*/
 
-
-            db.collection("/globalAccounts/"+idCompany+"/stakeHolders").document(currentUser.getUid())
+            db.collection("users").document(currentUser.getEmail())
                     .set(stakeholder)
                     .addOnSuccessListener(success -> Toast.makeText(getContext(), getText(R.string.succesful_registration), Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(noSuccess -> Toast.makeText(getContext(), getText(R.string.unsuccesful_registration), Toast.LENGTH_SHORT).show());
@@ -175,14 +169,29 @@ public class SignIn extends Fragment {
     }
 
     private void checkIfUserRegistered(FirebaseUser currentUser, Context currentContext) {
-        String idCompany = edTextIdCompany.getText().toString();
+      /* String idCompany = edTextIdCompany.getText().toString();
         if (idCompany.isEmpty()) {
             Toast.makeText(currentContext, getText(R.string.noCompanyIdTyped) + " " + currentUser.getEmail(), Toast.LENGTH_LONG).show();
-
         }
-        else {
-            String url ="/globalAccounts/" + idCompany + "/stakeHolders";
-            db.collection(url)
+        String url ="/globalAccounts/" + idCompany + "/stakeHolders";*/
+        DocumentReference docRef = db.collection("users").document(currentUser.getEmail());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        updateAfterSignedIn(document.toObject(LoggedUser.class));
+                    } else {
+                        regInFireStore(currentUser);
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    /*    db.collection(url)
                     .whereEqualTo("email", currentUser.getEmail())
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -214,8 +223,19 @@ public class SignIn extends Fragment {
                                 signOut();
                             }
                         }
-
-        });
-        }
+        });*/
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void updateAfterSignedIn(LoggedUser user){
+      /*  if (account !=null ){
+            Caching.INSTANCE.startApp(idCompany,userId);
+            navController.navigate(R.id.action_signIn_to_accounts);
+        }*/
+        Caching.INSTANCE.startApp(user);
+        navController.navigate(R.id.action_signIn_to_accounts);
+
+    }
+
+
 }

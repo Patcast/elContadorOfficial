@@ -1,13 +1,12 @@
 package be.kuleuven.elcontador10.background.adapters;
 
-import android.graphics.Color;
+
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,7 +17,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
@@ -52,20 +50,19 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
         amountText.append("$" );
         amountText.append(amount);
         holder.textBalance.setText(amountText);
+
         holder.parent.setOnClickListener(v -> {
             String chosenAccount = accounts.get(position).getId();
-            Caching.INSTANCE.openAccount(chosenAccount);
-            navController.navigate(R.id.action_viewPagerHolder_to_allTransactions);
+            Caching.INSTANCE.openAccountFully(chosenAccount);
+            navController.navigate(R.id.action_accounts_to_viewPagerHolder);
             }
         );
+
         holder.buttonNewTransaction.setOnClickListener(v->{
             String chosenAccount = accounts.get(position).getId();
-            Caching.INSTANCE.openAccount(chosenAccount);
-            navController.navigate(R.id.action_viewPagerHolder_to_newTransaction);
+            Caching.INSTANCE.openQuickNewTransaction(chosenAccount);
+            navController.navigate(R.id.action_accounts_to_newTransaction);
         });
-
-
-
     }
 
     @Override

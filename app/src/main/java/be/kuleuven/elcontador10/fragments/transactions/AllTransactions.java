@@ -61,13 +61,13 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        navController = Navigation.findNavController(view);
-        fabNewTransaction.setOnClickListener(v -> navController.navigate(R.id.action_allTransactions_to_newTransaction));
+       /* navController = Navigation.findNavController(view);
+        fabNewTransaction.setOnClickListener(v -> navController.navigate(R.id.action_viewPagerHolder_to_newTransaction));*/
+
         recyclerAllTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     fabNewTransaction .setVisibility(View.GONE);
 

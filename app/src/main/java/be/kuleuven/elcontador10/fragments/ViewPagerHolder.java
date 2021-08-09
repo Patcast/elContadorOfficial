@@ -17,6 +17,7 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.ViewPagerAdapter;
 import be.kuleuven.elcontador10.fragments.Accounts;
 import be.kuleuven.elcontador10.fragments.stakeholders.AllMicroAccounts;
+import be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
 
 
 public class ViewPagerHolder extends Fragment {
@@ -45,14 +46,14 @@ public class ViewPagerHolder extends Fragment {
     }
 
     private void addFragments(View view) {
-        mAdapter.addFragment(new Accounts());
+        mAdapter.addFragment(new AllTransactions());
         mAdapter.addFragment(new AllMicroAccounts());
         viewPager2.setAdapter(mAdapter);
         new TabLayoutMediator(mainActivity.getTabLayout(),viewPager2,(t,p)->{
             switch(p){
                 case 0:
-                    t.setText("Accounts");
-                    t.setIcon(R.drawable.ic_baseline_business_24);
+                    t.setText("Transactions");
+                    t.setIcon(R.drawable.icon_transaction);
                     break;
                 case 1:
                     t.setText("Micro Accounts");

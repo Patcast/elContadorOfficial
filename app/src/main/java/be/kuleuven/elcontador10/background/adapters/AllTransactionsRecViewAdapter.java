@@ -6,9 +6,7 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -25,23 +23,20 @@ import java.util.Optional;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.Account;
-import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
-import be.kuleuven.elcontador10.fragments.transactions.AllTransactionsDirections;
+import be.kuleuven.elcontador10.fragments.ViewPagerHolderDirections;
+
 
 public class AllTransactionsRecViewAdapter extends RecyclerView.Adapter<AllTransactionsRecViewAdapter.ViewHolder>  {
     private List<Transaction> allTransactions = new ArrayList<>();
     NavController navController;
     View viewFromHostingClass;
     Context context;
-
     public AllTransactionsRecViewAdapter(View viewFromHostingClass, Context context) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.context = context;
 
     }
-
     @NonNull
     @NotNull
     @Override
@@ -56,7 +51,8 @@ public class AllTransactionsRecViewAdapter extends RecyclerView.Adapter<AllTrans
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
         String idStakeholder = allTransactions.get(position).getStakeHolder();
         String idOfTransaction = allTransactions.get(position).getId();
-        holder.textName.setText(Caching.INSTANCE.getStakeholderName(idStakeholder));
+        String stakeName = Caching.INSTANCE.getStakeholderName(idStakeholder);
+        holder.textName.setText(stakeName);
         long amount = allTransactions.get(position).getAmount();
         StringBuilder amountText = new StringBuilder();
         if(amount<0){
@@ -70,7 +66,7 @@ public class AllTransactionsRecViewAdapter extends RecyclerView.Adapter<AllTrans
         amountText.append(amount);
         holder.textAmount.setText(amountText);
         holder.parent.setOnClickListener(v->{
-            AllTransactionsDirections.ActionAllTransactionsToTransactionDisplay action = AllTransactionsDirections.actionAllTransactionsToTransactionDisplay(idOfTransaction);
+            ViewPagerHolderDirections.ActionViewPagerHolderToTransactionDisplay action = ViewPagerHolderDirections.actionViewPagerHolderToTransactionDisplay(idOfTransaction);
             navController.navigate(action);
         });
     }

@@ -6,21 +6,6 @@
     app:startDestination="@id/signIn">
 
     <fragment
-        android:id="@+id/home_summary"
-        android:name="be.kuleuven.elcontador10.fragments.Accounts"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_home_summary_to_newTransaction"
-            app:destination="@id/newTransaction" />
-        <action
-            android:id="@+id/action_home_summary_to_settings"
-            app:destination="@id/settings" />
-        <action
-            android:id="@+id/action_home_summary_to_allTransactions"
-            app:destination="@id/allTransactions" />
-    </fragment>
-    <fragment
         android:id="@+id/transactionsFilter"
         android:name="be.kuleuven.elcontador10.fragments.transactions.TransactionsFilter"
         android:label="fragment_transactions_filter"
@@ -43,11 +28,6 @@
             android:id="@+id/action_newTransaction_to_chooseStakeHolderDialog"
             app:destination="@id/chooseStakeHolderDialog" />
     </fragment>
-    <fragment
-        android:id="@+id/settings"
-        android:name="be.kuleuven.elcontador10.fragments.Settings"
-        android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/stakeholderDisplay"
         android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderDisplay"
@@ -113,20 +93,14 @@
         android:name="be.kuleuven.elcontador10.fragments.SignIn"
         android:label="fragment_sign_in"
         tools:layout="@layout/fragment_sign_in"
-        app:startDestination="@id/action_signIn_to_home_summary">
+        >
         <action
-            android:id="@+id/action_signIn_to_viewPagerHolder"
-            app:destination="@id/viewPagerHolder"
-            app:popEnterAnim="@anim/nav_default_enter_anim"
-            app:popUpTo="@id/signIn"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_signIn_to_home_summary"
-            app:destination="@id/home_summary"
-            app:launchSingleTop="false"
-            app:popEnterAnim="@anim/nav_default_enter_anim"
-            app:popUpTo="@id/signIn"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_signIn_to_accounts"
+            app:destination="@id/accounts"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popUpTo="@id/accounts"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/chooseStakeHolderDialog"
@@ -138,23 +112,6 @@
             app:popUpTo="@id/newTransaction"/>
     </fragment>
     <fragment
-        android:id="@+id/allTransactions"
-        android:name="be.kuleuven.elcontador10.fragments.transactions.AllTransactions"
-        android:label="fragment_all_transactions"
-        tools:layout="@layout/fragment_all_transactions" >
-        <action
-            android:id="@+id/action_allTransactions_to_newTransaction"
-            app:destination="@id/newTransaction" />
-        <action
-            android:id="@+id/action_allTransactions_to_transactionDisplay"
-            app:destination="@id/transactionDisplay" />
-    </fragment>
-    <fragment
-        android:id="@+id/allMicroAccounts"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.AllMicroAccounts"
-        android:label="fragment_all_micro_acounts"
-        tools:layout="@layout/fragment_all_micro_acounts" />
-    <fragment
         android:id="@+id/viewPagerHolder"
         android:name="be.kuleuven.elcontador10.fragments.ViewPagerHolder"
         android:label="fragment_view_pager_holder"
@@ -163,7 +120,22 @@
             android:id="@+id/action_viewPagerHolder_to_newTransaction"
             app:destination="@id/newTransaction" />
         <action
-            android:id="@+id/action_viewPagerHolder_to_allTransactions"
-            app:destination="@id/allTransactions" />
+            android:id="@+id/action_viewPagerHolder_to_transactionDisplay"
+            app:destination="@id/transactionDisplay" />
+        <action
+            android:id="@+id/action_viewPagerHolder_to_newTransaction2"
+            app:destination="@id/newTransaction" />
+    </fragment>
+    <fragment
+        android:id="@+id/accounts"
+        android:name="be.kuleuven.elcontador10.fragments.Accounts"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_accounts_to_viewPagerHolder"
+            app:destination="@id/viewPagerHolder" />
+        <action
+            android:id="@+id/action_accounts_to_newTransaction"
+            app:destination="@id/newTransaction" />
     </fragment>
 </navigation>

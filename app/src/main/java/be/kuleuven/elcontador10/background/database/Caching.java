@@ -17,6 +17,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -38,8 +39,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
+import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
 import be.kuleuven.elcontador10.background.model.Account;
+import be.kuleuven.elcontador10.background.model.LoggedUser;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
@@ -47,6 +50,7 @@ import be.kuleuven.elcontador10.fragments.Accounts;
 
 public enum Caching {
     INSTANCE;
+
     /// interfaces******
     public interface StaticDataObserver {
         void notifyStaticDataObserver( List <TransactionType> transTypes,  List <String> roles);
@@ -68,23 +72,24 @@ public enum Caching {
     public List <Transaction> transactions = new ArrayList<>();
     private final List <Account> accounts = new ArrayList<>();
 
-
     ///********** Observers List
     private final List <StaticDataObserver> staticDataObservers = new ArrayList<>();
     private final List <StakeholdersObserver> stakeholdersObservers = new ArrayList<>();
     private final List <AccountsObserver> accountsObservers = new ArrayList<>();
     private final List <AllTransactionsObserver> allTransactionsObservers = new ArrayList<>();
+
     ///********** Variables
-    View view;
+    private LoggedUser logInUser;
     Context context;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "Caching";
+
     /// ******** Authentication
     public GoogleSignInClient mGoogleSignInClient;
     public FirebaseAuth mAuth;
     private  String globalAccountId;
     private String chosenAccountId;
-    private String logInUserId;
+
 
 ///Attach methods*************************
     public void attachStaticDataObservers(StaticDataObserver newObserver){
@@ -125,30 +130,50 @@ public enum Caching {
 ///Other Methods*************************
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void startApp(String globalAccountId,String userId){
-        requestAllAccounts(globalAccountId);
-        requestStaticData(globalAccountId);
-        setGlobalAccountId(globalAccountId);
-        setLogInUserId(userId);
-        requestStakeHolder(chosenAccountId);
+    public void startApp(LoggedUser user){
+        requestAllUserAccounts(user.getEmail());
+        setLogInUser(user);
+        requestStaticData();
     }
 
     //// Request data
 
     //this goes on the click Listener of the account RecView
-    public void openAccount(String chosenAccountId){
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void openAccountFully(String chosenAccountId){
         setChosenAccountId(chosenAccountId);
-        requestAllTransactions(chosenAccountId);
+        requestStakeHolder(chosenAccountId);
+        requestAccountTransactions(chosenAccountId);
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void openQuickNewTransaction(String chosenAccountId){
+        setChosenAccountId(chosenAccountId);
+        requestStakeHolder(chosenAccountId);
     }
 
 
-
     //////// DATA BASE ****************
-
     //OnClick Listener on signIn
-    public void requestAllAccounts(String globalAccountId){
-
-        db.collection("/globalAccounts/"+globalAccountId+"/accounts").orderBy("name", Query.Direction.ASCENDING)
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void requestAllUserAccounts(String email){
+        accounts.clear();
+        CollectionReference accountsRef = db.collection("accounts");
+        accountsRef.whereArrayContains("users", email);
+        accountsRef.addSnapshotListener((value, e) -> {
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e);
+                return;
+            }
+            for (QueryDocumentSnapshot doc : value) {
+                if (doc.get("name") != null) {
+                    Account myAccount =  doc.toObject(Account.class);
+                    myAccount.setId( doc.getId());
+                    accounts.add(myAccount);
+                }
+                accountsObservers.forEach(t->t.notifyAccountsObserver(getAccounts()));
+            }
+        });
+        /*db.collection("/globalAccounts/"+globalAccountId+"/accounts").orderBy("name", Query.Direction.ASCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
@@ -166,13 +191,12 @@ public enum Caching {
                         }
                         accountsObservers.forEach(o -> o.notifyAccountsObserver(accounts));
                     }
-                });
-
+                });*/
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void requestStaticData(String globalAccountId){
-        final DocumentReference docRef = db.document("/globalAccounts/"+globalAccountId);
+    public void requestStaticData(){
+        final DocumentReference docRef = db.document("/staticData/categories");
         docRef.addSnapshotListener((snapshot, e) -> {
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e);
@@ -182,15 +206,12 @@ public enum Caching {
             if (snapshot != null && snapshot.exists()) {
                 (( HashMap<String,ArrayList<String>> )snapshot.getData().get("categories")).forEach(this::makeTransactionTypes);
                 roles.addAll((ArrayList)snapshot.get("roles"));
-                System.out.println(roles);
                 staticDataObservers.forEach(staticDataObserver -> staticDataObserver.notifyStaticDataObserver(transTypes,roles));
-
+                System.out.println(transTypes);
             } else {
                 Log.d(TAG, "Current data: null");
             }
         });
-
-
     }
 
     private void makeTransactionTypes(String k, ArrayList<String> v) {
@@ -200,48 +221,41 @@ public enum Caching {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestStakeHolder(String chosenAccountId){
-        db.collection("/globalAccounts/"+globalAccountId+"/stakeHolders")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @RequiresApi(api = Build.VERSION_CODES.N)
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(TAG, "Listen failed.", e);
-                            return;
-                        }
-                        stakeHolders.clear();
-                        for (QueryDocumentSnapshot doc : value) {
-                            StakeHolder myStakeHolder =  doc.toObject(StakeHolder.class);
-                            myStakeHolder.setId( doc.getId());
-                            stakeHolders.add(myStakeHolder);
-                        }
-                        stakeholdersObservers.forEach(s->s.notifyStakeholdersObserver(getStakeHolders()));
+        String stakeHoldersUrl = "/accounts/"+chosenAccountId+"/stakeHolders";
+        db.collection(stakeHoldersUrl)
+                .addSnapshotListener((value, e) -> {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
                     }
+                    stakeHolders.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        StakeHolder myStakeHolder =  doc.toObject(StakeHolder.class);
+                        myStakeHolder.setId( doc.getId());
+                        stakeHolders.add(myStakeHolder);
+                    }
+                    stakeholdersObservers.forEach(s->s.notifyStakeholdersObserver(getStakeHolders()));
                 });
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void requestAccountTransactions(String chosenAccountId){
 
-    private void requestAllTransactions(String chosenAccountId){
-
-        db.collection("/globalAccounts/"+globalAccountId+"/accounts/"+chosenAccountId+"/transactions")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @RequiresApi(api = Build.VERSION_CODES.N)
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(TAG, "Listen failed.", e);
-                            return;
-                        }
-                        transactions.clear();
-                        for (QueryDocumentSnapshot doc : value) {
-                            Transaction myTransaction =  doc.toObject(Transaction.class);
-                            myTransaction.setId( doc.getId());
-                            transactions.add(myTransaction);
-                        }
-                        allTransactionsObservers.forEach(t->t.notifyAllTransactionsObserver(getTransactions()));
+    String urlGetAccountTransactions = "/accounts/"+chosenAccountId+"/transactions";
+        db.collection(urlGetAccountTransactions)
+                .addSnapshotListener((value, e) -> {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
                     }
+                    transactions.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        Transaction myTransaction =  doc.toObject(Transaction.class);
+                        myTransaction.setId( doc.getId());
+                        transactions.add(myTransaction);
+                    }
+                    allTransactionsObservers.forEach(t->t.notifyAllTransactionsObserver(getTransactions()));
                 });
     }
 
@@ -250,39 +264,33 @@ public enum Caching {
     public void setChosenAccountId(String chosenAccountId) {
         this.chosenAccountId = chosenAccountId;
     }
-
-    public String getChosenAccountId() {
-        return chosenAccountId;
+    public void setLogInUser(LoggedUser logInUser) {
+        this.logInUser = logInUser;
     }
-
-    public String getLogInUserId() {
-        return logInUserId;
+    public void setContext(Context context) {
+        this.context = context;
     }
-
-    public void setLogInUserId(String logInUserId) {
-        this.logInUserId = logInUserId;
+    public int getNumberOfAccountObservers(){
+        return accountsObservers.size();
     }
-
     public String getGlobalAccountId() {
         return globalAccountId;
     }
-
-    public void setGlobalAccountId(String globalAccountId) {
-        this.globalAccountId = globalAccountId;
+    public String getChosenAccountId() {
+        return chosenAccountId;
     }
-
+    public String getLogInUserId() {
+        return logInUser.getEmail();
+    }
     public List<StakeHolder> getStakeHolders() {
         return stakeHolders;
     }
-
     public List<Transaction> getTransactions() {
         return transactions;
     }
-
     public List<Account> getAccounts() {
         return accounts;
     }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     public Transaction getTransaction(String idOfTransaction){
         List<Transaction> availableTran = new ArrayList<>(getTransactions());
@@ -291,7 +299,6 @@ public enum Caching {
                             .findFirst();
        return possibleTransaction.orElse(null);
     }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     public String getAccountName(){
         Optional<String> selectedAccount = getAccounts().stream()
@@ -300,18 +307,15 @@ public enum Caching {
                                                         .findFirst();
         return selectedAccount.orElse("account not found");
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public String getStakeholderName(String idStakeholder) {
 
-        Optional possibleName = Caching.INSTANCE.getStakeHolders().stream()
+        Optional<String> possibleName = getStakeHolders().stream()
                 .filter(s -> s.getId().equals(idStakeholder))
                 .map(StakeHolder::getName)
                 .findFirst();
-        String nameMicroAccount = (possibleName.isPresent()) ? (String) possibleName.get() : context.getString(R.string.error_finding_microAccount);
-
-        return nameMicroAccount;
+        return possibleName.orElse(context.getString(R.string.error_finding_microAccount));
     }
-
-
 
 }

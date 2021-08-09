@@ -55,9 +55,11 @@ public class Accounts extends Fragment implements Caching.AccountsObserver {
     @Override
     public void onStart() {
         super.onStart();
-        Caching.INSTANCE.attachAccountsObservers(this);
-        if(accountsList.size()>0) adapter.setAccounts(accountsList);
-        recyclerAccounts.setAdapter(adapter);
+        if(Caching.INSTANCE.getNumberOfAccountObservers() ==0){
+            Caching.INSTANCE.attachAccountsObservers(this);
+            if(accountsList.size()>0) adapter.setAccounts(accountsList);
+            recyclerAccounts.setAdapter(adapter);
+        }
     }
 
     @Override

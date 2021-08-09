@@ -46,6 +46,7 @@ public class MainActivity extends FragmentActivity  {
         toolbar = findViewById(R.id.toolbar);
         headerText = findViewById(R.id.lblToolbarHeading);
         tabLayout = findViewById(R.id.tabLayout);
+        Caching.INSTANCE.setContext(this);
     }
     public void displayToolBar(Boolean display){
         int visibility = (display)? View.VISIBLE :View.INVISIBLE;
