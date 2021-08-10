@@ -103,6 +103,7 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
     @Override
     public void onLogOut() {
         bottomSheet.dismiss();
+        //Caching.INSTANCE.signOut();
         navController.navigate(R.id.action_accounts_to_signIn);
 
     }

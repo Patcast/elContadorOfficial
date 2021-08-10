@@ -88,6 +88,13 @@ public class SignIn extends Fragment {
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        try{Caching.INSTANCE.signOut();}
+        catch(Exception e){}
+    }
+
     ///// Sign in process///////////////
     private void signIn() {
         Intent signInIntent =  Caching.INSTANCE.mGoogleSignInClient.getSignInIntent();
@@ -141,13 +148,6 @@ public class SignIn extends Fragment {
     }
 
 
-    ///// Sign out process///////////////
-    private void signOut() {
-        navController.navigate(R.id.signIn);
-        FirebaseAuth.getInstance().signOut();
-        Caching.INSTANCE.mGoogleSignInClient.signOut();
-        Caching.INSTANCE.mAuth.signOut();
-    }
 
     ///// validate for registration and authorization ///////////////
     private void regInFireStore(FirebaseUser currentUser){

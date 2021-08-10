@@ -126,6 +126,11 @@ public enum Caching {
         setChosenAccountId(chosenAccountId);
         requestStakeHolder(chosenAccountId);
     }
+    public void signOut(){
+        FirebaseAuth.getInstance().signOut();
+        mGoogleSignInClient.signOut();
+        mAuth.signOut();
+    }
 
 
     //////// DATA BASE ****************
