@@ -11,14 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.ViewPagerAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.fragments.Accounts;
 import be.kuleuven.elcontador10.fragments.stakeholders.AllMicroAccounts;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
 

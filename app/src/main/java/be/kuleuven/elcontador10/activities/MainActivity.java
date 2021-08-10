@@ -1,5 +1,6 @@
 package be.kuleuven.elcontador10.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -16,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -31,12 +33,18 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 
 public class MainActivity extends AppCompatActivity {
-    TabLayout tabLayout;
-    Toolbar toolbar;
+    private TabLayout tabLayout;
+    private Toolbar toolbar;
 
-    public TabLayout getTabLayout() {
-        return tabLayout;
+    public interface MenuClicker{
+        void onBottomSheetClick();
     }
+    public void setCurrentMenuClicker(MenuClicker currentMenuClicker) {
+        this.currentMenuClicker = currentMenuClicker;
+    }
+
+    MenuClicker currentMenuClicker;
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -47,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         Caching.INSTANCE.setContext(this);
         setSupportActionBar(toolbar);
+
     }
     public void displayToolBar(Boolean display){
         int visibility = (display)? View.VISIBLE :View.INVISIBLE;
@@ -59,10 +68,35 @@ public class MainActivity extends AppCompatActivity {
     public void setHeaderText(String title) {
         toolbar.setTitle(title);
     }
+
+    public TabLayout getTabLayout() {
+        return tabLayout;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.top_three_buttons_menu,menu);
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_bottom_sheet:
+                try{
+                    currentMenuClicker.onBottomSheetClick();
+                }
+                catch(Exception e){
+                    Toast.makeText(this,"refresh the page",Toast.LENGTH_SHORT);
+                }
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+
 }

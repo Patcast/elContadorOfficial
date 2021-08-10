@@ -128,7 +128,7 @@
     </fragment>
     <fragment
         android:id="@+id/accounts"
-        android:name="be.kuleuven.elcontador10.fragments.Accounts"
+        android:name="be.kuleuven.elcontador10.fragments.accounts.Accounts"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -137,5 +137,17 @@
         <action
             android:id="@+id/action_accounts_to_newTransaction"
             app:destination="@id/newTransaction" />
+        <action
+            android:id="@+id/action_accounts_to_signIn"
+            app:destination="@id/signIn"
+            app:popUpTo="@id/signIn" />
+        <action
+            android:id="@+id/action_accounts_to_addNewAccount"
+            app:destination="@id/addNewAccount" />
     </fragment>
+    <fragment
+        android:id="@+id/addNewAccount"
+        android:name="be.kuleuven.elcontador10.fragments.accounts.AddNewAccount"
+        android:label="fragment_add_new_account"
+        tools:layout="@layout/fragment_add_new_account" />
 </navigation>

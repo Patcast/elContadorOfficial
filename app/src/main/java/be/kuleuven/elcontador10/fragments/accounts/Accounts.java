@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments;
+package be.kuleuven.elcontador10.fragments.accounts;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +9,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,20 +29,24 @@ import be.kuleuven.elcontador10.background.model.Account;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 
 
-public class Accounts extends Fragment implements Caching.AccountsObserver {
+public class Accounts extends Fragment implements Caching.AccountsObserver, MainActivity.MenuClicker, AccountsBottomMenu.AccountsBottomSheetListener {
 
     private static final String TAG = "Accounts";
     RecyclerView recyclerAccounts;
     AccountsRecViewAdapter adapter;
     MainActivity mainActivity;
     ArrayList<Account> accountsList = new ArrayList<>();
+    View view;
+    NavController navController;
+    AccountsBottomMenu bottomSheet;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle(getString(R.string.accounts));
         mainActivity.displayToolBar(true);
+        mainActivity.setCurrentMenuClicker(this);
         recyclerAccounts = view.findViewById(R.id.recyclerAccounts);
         recyclerAccounts.setLayoutManager(new LinearLayoutManager(this.getContext()));
         adapter = new AccountsRecViewAdapter(view);
@@ -52,6 +58,8 @@ public class Accounts extends Fragment implements Caching.AccountsObserver {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
+
     }
 
     @Override
@@ -76,6 +84,26 @@ public class Accounts extends Fragment implements Caching.AccountsObserver {
             accountsList.clear();
             accountsList.addAll(accounts);
             adapter.setAccounts(accountsList);
+
+    }
+
+
+    @Override
+    public void onBottomSheetClick() {
+        bottomSheet = new AccountsBottomMenu(this);
+        bottomSheet.show(getParentFragmentManager(),"AccountsBottomSheet");
+    }
+
+    @Override
+    public void onAddAccountClick() {
+        bottomSheet.dismiss();
+        navController.navigate(R.id.action_accounts_to_addNewAccount);
+    }
+
+    @Override
+    public void onLogOut() {
+        bottomSheet.dismiss();
+        navController.navigate(R.id.action_accounts_to_signIn);
 
     }
 }
