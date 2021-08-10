@@ -10,6 +10,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,8 +20,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +39,10 @@ import be.kuleuven.elcontador10.background.model.TransactionType;
 public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private Toolbar toolbar;
+    private SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+    private static final String SAVED_EMAIL_KEY = "email_key";
+    MenuClicker currentMenuClicker;
 
     public interface MenuClicker{
         void onBottomSheetClick();
@@ -42,21 +50,37 @@ public class MainActivity extends AppCompatActivity {
     public void setCurrentMenuClicker(MenuClicker currentMenuClicker) {
         this.currentMenuClicker = currentMenuClicker;
     }
-
-    MenuClicker currentMenuClicker;
-
+    public void saveLoggedInState(String email){
+        editor.putString(SAVED_EMAIL_KEY,email);
+        editor.commit();
+    }
+    public String returnSavedLoggedEmail(){
+        return sharedPreferences.getString(SAVED_EMAIL_KEY,null);
+    }
+    public void deleteSavedLoggedEmail(){
+        editor.remove(SAVED_EMAIL_KEY);
+        editor.commit();
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = getSharedPreferences("loggedInDetails",MODE_PRIVATE);
+        editor = sharedPreferences.edit();
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
         tabLayout = findViewById(R.id.tabLayout);
         Caching.INSTANCE.setContext(this);
         setSupportActionBar(toolbar);
-
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
     public void displayToolBar(Boolean display){
         int visibility = (display)? View.VISIBLE :View.INVISIBLE;
         toolbar.setVisibility(visibility);
@@ -68,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
     public void setHeaderText(String title) {
         toolbar.setTitle(title);
     }
-
     public TabLayout getTabLayout() {
         return tabLayout;
     }
@@ -97,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
 
 
 }

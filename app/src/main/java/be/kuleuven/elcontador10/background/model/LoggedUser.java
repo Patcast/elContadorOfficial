@@ -1,5 +1,7 @@
 package be.kuleuven.elcontador10.background.model;
 
+
+
 import java.util.HashMap;
 
 public class LoggedUser {
@@ -21,6 +23,7 @@ public class LoggedUser {
     public HashMap<String, String> getAccounts() {
         return accounts;
     }
+
 
     @Override
     public String toString() {

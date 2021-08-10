@@ -1,6 +1,6 @@
 package be.kuleuven.elcontador10.fragments;
 
-import android.content.Context;
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,16 +10,17 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.NavOptions;
+
 import androidx.navigation.Navigation;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -37,8 +38,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,18 +45,17 @@ import java.util.Map;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
 import be.kuleuven.elcontador10.background.model.LoggedUser;
 
 
 public class SignIn extends Fragment {
-    //private EditText edTextIdCompany;
     private final int RC_SIGN_IN = 9001;
     private final String TAG = "SignInActivity";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     NavController navController;
-    GoogleSignInAccount account;
-
+    MainActivity mainActivity;
+    private FirebaseAuth mAuth;
+    private GoogleSignInClient mGoogleSignInClient;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,19 +71,19 @@ public class SignIn extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Caching.INSTANCE.mAuth = FirebaseAuth.getInstance();
+         mainActivity = (MainActivity) requireActivity();
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> mainActivity.displayToolBar(false));
+        mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.
                 Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
                 requestIdToken(getString(R.string.server_client_id)).
                 requestEmail().
                 build();
-        Caching.INSTANCE.mGoogleSignInClient =  GoogleSignIn.getClient(getContext(), gso);
-        ///Buttons
+        mGoogleSignInClient= GoogleSignIn.getClient(getContext(), gso);
         SignInButton signInButton = view.findViewById(R.id.btn_sign_in_google);
-        signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setOnClickListener(v->signIn());
         navController = Navigation.findNavController(view);
-
     }
 
     @Override
@@ -97,7 +95,7 @@ public class SignIn extends Fragment {
 
     ///// Sign in process///////////////
     private void signIn() {
-        Intent signInIntent =  Caching.INSTANCE.mGoogleSignInClient.getSignInIntent();
+        Intent signInIntent =  mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
     @Override
@@ -113,7 +111,7 @@ public class SignIn extends Fragment {
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
-            account = completedTask.getResult(ApiException.class);
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
             firebaseAuthWithGoogle(account.getIdToken());
             // Signed in successfully, show authenticated UI.
@@ -128,15 +126,15 @@ public class SignIn extends Fragment {
 
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        Caching.INSTANCE.mAuth.signInWithCredential(credential)
+        mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user =  Caching.INSTANCE.mAuth.getCurrentUser();
-                            checkIfUserRegistered(user, getContext());
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            checkIfUserRegistered(user);
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -158,8 +156,7 @@ public class SignIn extends Fragment {
             if (currentUser.getPhoneNumber() != (null))
                 stakeholder.put("phone", currentUser.getPhoneNumber());
             stakeholder.put("email", currentUser.getEmail());
-            /*stakeholder.put("authorized", false);
-            stakeholder.put("idOfGlobalAccount",idCompany);*/
+
 
             db.collection("users").document(currentUser.getEmail())
                     .set(stakeholder)
@@ -168,12 +165,7 @@ public class SignIn extends Fragment {
         }
     }
 
-    private void checkIfUserRegistered(FirebaseUser currentUser, Context currentContext) {
-      /* String idCompany = edTextIdCompany.getText().toString();
-        if (idCompany.isEmpty()) {
-            Toast.makeText(currentContext, getText(R.string.noCompanyIdTyped) + " " + currentUser.getEmail(), Toast.LENGTH_LONG).show();
-        }
-        String url ="/globalAccounts/" + idCompany + "/stakeHolders";*/
+    private void checkIfUserRegistered(FirebaseUser currentUser) {
         DocumentReference docRef = db.collection("users").document(currentUser.getEmail());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -191,51 +183,16 @@ public class SignIn extends Fragment {
                 }
             }
         });
-    /*    db.collection(url)
-                    .whereEqualTo("email", currentUser.getEmail())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @RequiresApi(api = Build.VERSION_CODES.N)
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful() ) {
-                                if(!(task.getResult().getDocuments().isEmpty())){
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                            if (document.get("authorized") != null && (boolean) document.get("authorized")) {
-                                                updateAfterSignedIn(currentUser, document.getId(), idCompany);
-                                            }
-                                            else {
-                                                signOut();
-                                                Toast.makeText(currentContext, getText(R.string.Access_denied) + " " + currentUser.getEmail(), Toast.LENGTH_LONG).show();
-                                            }
-                                    }
-                                }
-                                else{
-                                    regInFireStore(currentUser, idCompany);
-                                    signOut();
-                                    Toast.makeText(currentContext, getText(R.string.askForPermission), Toast.LENGTH_LONG).show();
-                                }
-                            }
-                            else {
-                                Log.d(TAG, "Error getting documents: ", task.getException());
-                                Toast.makeText(currentContext, getText(R.string.askForValidCompanyId) + " " + currentUser.getEmail(), Toast.LENGTH_LONG).show();
-                                signOut();
-                            }
-                        }
-        });*/
     }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateAfterSignedIn(LoggedUser user){
-      /*  if (account !=null ){
-            Caching.INSTANCE.startApp(idCompany,userId);
-            navController.navigate(R.id.action_signIn_to_accounts);
-        }*/
         Caching.INSTANCE.startApp(user);
-        navController.navigate(R.id.action_signIn_to_accounts);
-
-
+        mainActivity.displayToolBar(true);
+        navController.popBackStack();
+        mainActivity.saveLoggedInState(user.getEmail());
+        FirebaseAuth.getInstance().signOut();
+        mAuth.signOut();
+        mGoogleSignInClient.signOut();
     }
 
 

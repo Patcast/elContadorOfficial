@@ -19,5 +19,4 @@ public class ChosenStakeViewModel extends ViewModel {
         chosenStakeholder.setValue(null);
     }
 
-
 }

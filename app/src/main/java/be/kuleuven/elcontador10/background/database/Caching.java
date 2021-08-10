@@ -56,15 +56,14 @@ public enum Caching {
     private final List <AllTransactionsObserver> allTransactionsObservers = new ArrayList<>();
 
     ///********** Variables
-    private LoggedUser logInUser;
+
     Context context;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "Caching";
 
     /// ******** Authentication
-    public GoogleSignInClient mGoogleSignInClient;
-    public FirebaseAuth mAuth;
     private String chosenAccountId;
+    private LoggedUser logInUser;
 
 
 ///Attach methods*************************
@@ -127,9 +126,11 @@ public enum Caching {
         requestStakeHolder(chosenAccountId);
     }
     public void signOut(){
-        FirebaseAuth.getInstance().signOut();
+       /* FirebaseAuth.getInstance().signOut();
         mGoogleSignInClient.signOut();
-        mAuth.signOut();
+        mAuth.signOut();*/
+        logInUser = null;
+        chosenAccountId = null;
     }
 
 
@@ -154,25 +155,6 @@ public enum Caching {
                 accountsObservers.forEach(t->t.notifyAccountsObserver(getAccounts()));
             }
         });
-        /*db.collection("/globalAccounts/"+globalAccountId+"/accounts").orderBy("name", Query.Direction.ASCENDING)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @RequiresApi(api = Build.VERSION_CODES.N)
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(TAG, "Listen failed.", e);
-                            return;
-                        }
-                        accounts.clear();
-                        for (QueryDocumentSnapshot doc : value) {
-                            Account myAccount =  doc.toObject(Account.class);
-                            myAccount.setId( doc.getId());
-                            accounts.add(myAccount);
-                        }
-                        accountsObservers.forEach(o -> o.notifyAccountsObserver(accounts));
-                    }
-                });*/
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -253,6 +235,9 @@ public enum Caching {
     }
     public int getNumberOfAccountObservers(){
         return accountsObservers.size();
+    }
+    public LoggedUser getLogInUser() {
+        return logInUser;
     }
     public String getChosenAccountId() {
         return chosenAccountId;
