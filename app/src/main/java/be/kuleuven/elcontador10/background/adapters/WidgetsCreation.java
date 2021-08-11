@@ -14,10 +14,12 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
@@ -66,6 +68,16 @@ public enum WidgetsCreation implements Caching.StaticDataObserver {
                 .distinct().collect(Collectors.toList()));
         ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(useContext,android.R.layout.simple_dropdown_item_1line,subCategories );
         useSpin.setAdapter(adapterSpinner);
+    }
+
+    // TODO roles using caching and Firebase
+    public void makeSpinnerRole(Context context, Spinner spinner, boolean filter) {
+        List<String> roles = new ArrayList<>();
+        if (filter) roles.add("All");
+        roles.addAll(Arrays.asList(context.getResources().getStringArray(R.array.roles)));
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, roles);
+        spinner.setAdapter(adapter);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

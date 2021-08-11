@@ -44,9 +44,11 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_all_transactions, container, false);
+
         fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
+        fabNewTransaction.setOnClickListener(this::onFAB_Clicked);
+
         recyclerAllTransactions = view.findViewById(R.id.RecViewTransactionsHolder);
         recyclerAllTransactions.setLayoutManager(new LinearLayoutManager(this.getContext()));
         adapter = new AllTransactionsRecViewAdapter(view,getContext());
@@ -66,14 +68,8 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                    fabNewTransaction .setVisibility(View.GONE);
-
-                }
-                else {
-                    fabNewTransaction.setVisibility(View.VISIBLE);
-
-                }
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) fabNewTransaction .setVisibility(View.GONE);
+                else fabNewTransaction.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -98,5 +94,10 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         transactionArrayList.addAll(allTransactions);
         adapter.setAllTransactions(transactionArrayList);
 
+    }
+
+    public void onFAB_Clicked(View view) {
+        NavController navController = Navigation.findNavController(view);
+        navController.navigate(R.id.action_viewPagerHolder_to_newTransaction2);
     }
 }
