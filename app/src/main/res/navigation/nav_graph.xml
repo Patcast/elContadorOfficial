@@ -125,6 +125,9 @@
         <action
             android:id="@+id/action_viewPagerHolder_to_newTransaction2"
             app:destination="@id/newTransaction" />
+        <action
+            android:id="@+id/action_viewPagerHolder_to_newMicroAccount"
+            app:destination="@id/newMicroAccount" />
     </fragment>
     <fragment
         android:id="@+id/accounts"
@@ -150,4 +153,9 @@
         android:name="be.kuleuven.elcontador10.fragments.accounts.AddNewAccount"
         android:label="fragment_add_new_account"
         tools:layout="@layout/fragment_add_new_account" />
+    <fragment
+        android:id="@+id/newMicroAccount"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.NewMicroAccount"
+        android:label="fragment_add_new_microaccount"
+        tools:layout="@layout/fragment_add_new_microaccount" />
 </navigation>
