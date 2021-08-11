@@ -129,5 +129,6 @@
     <string name="transaction_display">Transaction Display</string>
     <string name="account">Account:</string>
     <string name="concerning">Concerning:</string>
+    <string name="add_account">Add account</string>
 
 </resources>

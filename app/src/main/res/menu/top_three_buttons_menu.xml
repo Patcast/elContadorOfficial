@@ -2,10 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/topRightMenu"
     tools:context=".MainActivity">
-    <item android:id="@+id/action_bottom_sheet"
-        android:icon="@drawable/ic_baseline_menu_24"
-        android:title="bottonSheet"
-        app:showAsAction="ifRoom"/>
+    <group android:id="@+id/basic_menu_options">
+        <item android:id="@+id/action_bottom_sheet"
+            android:icon="@drawable/ic_baseline_menu_24"
+            android:title="bottonSheet"
+            app:showAsAction="ifRoom"/>
+
+    </group>
+
+
 
 </menu>

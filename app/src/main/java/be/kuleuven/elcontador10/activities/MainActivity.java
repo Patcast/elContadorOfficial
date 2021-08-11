@@ -37,10 +37,12 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 
 public class MainActivity extends AppCompatActivity {
+
+
     public interface MenuClicker{
         void onBottomSheetClick();
     }
-
+    private Menu topRightMenu;
     private TabLayout tabLayout;
     private Toolbar toolbar;
     private SharedPreferences sharedPreferences;
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         Caching.INSTANCE.setContext(this);
         setSupportActionBar(toolbar);
-        //Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+
     }
 
     @Override
@@ -84,6 +86,9 @@ public class MainActivity extends AppCompatActivity {
         Caching.INSTANCE.signOut();
 
     }
+    public void displayTopMenu(boolean b) {
+       topRightMenu.setGroupVisible(R.id.basic_menu_options,b);
+    }
     public void displayToolBar(Boolean display){
         int visibility = (display)? View.VISIBLE :View.INVISIBLE;
         toolbar.setVisibility(visibility);
@@ -101,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        topRightMenu = menu;
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.top_three_buttons_menu,menu);
         return true;

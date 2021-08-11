@@ -18,6 +18,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
@@ -36,7 +37,7 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 
 public class Accounts extends Fragment implements Caching.AccountsObserver, MainActivity.MenuClicker, AccountsBottomMenu.AccountsBottomSheetListener {
 
-    //Todo: Accounts are repeating when opening fragment after logging in and bottom sheet is not disappearing.
+
     private static final String TAG = "Accounts";
     RecyclerView recyclerAccounts;
     AccountsRecViewAdapter adapter;
@@ -45,7 +46,7 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
     View view;
     NavController navController;
     AccountsBottomMenu bottomSheet;
-
+    FloatingActionButton newAccountButton;
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +56,7 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
+        newAccountButton= view.findViewById(R.id.btn_new_AccountFAB);
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle(getString(R.string.accounts));
         mainActivity.setCurrentMenuClicker(this);
@@ -69,6 +71,8 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
         checkLogIn(mainActivity.returnSavedLoggedEmail());
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> mainActivity.displayToolBar(true));
+        newAccountButton.setOnClickListener(v -> navController.navigate(R.id.action_accounts_to_addNewAccount));
+
     }
 
     private void startRecyclerView(View view){
@@ -102,7 +106,7 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
     public void onStop() {
         super.onStop();
         Caching.INSTANCE.deAttachAccountsObservers(this);
-        mainActivity.displayToolBar(false);
+        //mainActivity.displayToolBar(false);
     }
 
     @Override

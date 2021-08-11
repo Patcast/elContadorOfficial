@@ -19,13 +19,12 @@
 
     </androidx.recyclerview.widget.RecyclerView>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_new_TransactionFAB"
+        android:id="@+id/btn_new_AccountFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/settings"
         app:backgroundTint="?attr/colorPrimary"
         app:fabCustomSize="60dp"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="40dp"

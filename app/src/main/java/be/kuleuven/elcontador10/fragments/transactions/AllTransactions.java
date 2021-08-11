@@ -39,7 +39,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     private AllTransactionsRecViewAdapter adapter;
     ArrayList<Transaction> transactionArrayList = new ArrayList<>();
     FloatingActionButton fabNewTransaction;
-
+    NavController navController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,8 +61,6 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-       /* navController = Navigation.findNavController(view);
-        fabNewTransaction.setOnClickListener(v -> navController.navigate(R.id.action_viewPagerHolder_to_newTransaction));*/
 
         recyclerAllTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
