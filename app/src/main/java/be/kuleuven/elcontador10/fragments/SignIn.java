@@ -86,12 +86,12 @@ public class SignIn extends Fragment {
         navController = Navigation.findNavController(view);
     }
 
-    @Override
+   /* @Override
     public void onStart() {
         super.onStart();
         try{Caching.INSTANCE.signOut();}
         catch(Exception e){}
-    }
+    }*/
 
     ///// Sign in process///////////////
     private void signIn() {
@@ -105,7 +105,6 @@ public class SignIn extends Fragment {
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
-
         }
     }
 
@@ -114,12 +113,7 @@ public class SignIn extends Fragment {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
             firebaseAuthWithGoogle(account.getIdToken());
-            // Signed in successfully, show authenticated UI.
-            // updateAfterSignedIn(account);//maybe I can pass fireBase user
-
         } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
         }
     }
@@ -135,11 +129,9 @@ public class SignIn extends Fragment {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             checkIfUserRegistered(user);
-
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-
                         }
                     }
                 });
@@ -174,7 +166,8 @@ public class SignIn extends Fragment {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        updateAfterSignedIn(document.toObject(LoggedUser.class));
+                        //updateAfterSignedIn(document.toObject(LoggedUser.class));
+                        updateAfterSignedIn(currentUser.getEmail());
                     } else {
                         regInFireStore(currentUser);
                     }
@@ -184,15 +177,14 @@ public class SignIn extends Fragment {
             }
         });
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void updateAfterSignedIn(LoggedUser user){
-        Caching.INSTANCE.startApp(user);
-        mainActivity.displayToolBar(true);
-        navController.popBackStack();
-        mainActivity.saveLoggedInState(user.getEmail());
-        FirebaseAuth.getInstance().signOut();
-        mAuth.signOut();
+    private void updateAfterSignedIn(String email){
+        Caching.INSTANCE.requestStaticData();
+        //mainActivity.displayToolBar(true);
+        mainActivity.saveLoggedInState(email);
         mGoogleSignInClient.signOut();
+        navController.popBackStack();
     }
 
 

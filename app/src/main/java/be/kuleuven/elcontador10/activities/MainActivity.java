@@ -37,6 +37,10 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 
 public class MainActivity extends AppCompatActivity {
+    public interface MenuClicker{
+        void onBottomSheetClick();
+    }
+
     private TabLayout tabLayout;
     private Toolbar toolbar;
     private SharedPreferences sharedPreferences;
@@ -44,23 +48,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String SAVED_EMAIL_KEY = "email_key";
     MenuClicker currentMenuClicker;
 
-    public interface MenuClicker{
-        void onBottomSheetClick();
-    }
-    public void setCurrentMenuClicker(MenuClicker currentMenuClicker) {
-        this.currentMenuClicker = currentMenuClicker;
-    }
-    public void saveLoggedInState(String email){
-        editor.putString(SAVED_EMAIL_KEY,email);
-        editor.commit();
-    }
-    public String returnSavedLoggedEmail(){
-        return sharedPreferences.getString(SAVED_EMAIL_KEY,null);
-    }
-    public void deleteSavedLoggedEmail(){
-        editor.remove(SAVED_EMAIL_KEY);
-        editor.commit();
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -73,14 +60,30 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         Caching.INSTANCE.setContext(this);
         setSupportActionBar(toolbar);
-        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+        //Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
     }
+    public void setCurrentMenuClicker(MenuClicker currentMenuClicker) {
+        this.currentMenuClicker = currentMenuClicker;
+    }
+    public void saveLoggedInState(String email){
+        editor.putString(SAVED_EMAIL_KEY,email);
+        editor.commit();
+    }
+    public String returnSavedLoggedEmail(){
+        return sharedPreferences.getString(SAVED_EMAIL_KEY,null);
+    }
+    public void signOut(){
+        editor.clear();
+        editor.apply();
+        FirebaseAuth.getInstance().signOut();
+        Caching.INSTANCE.signOut();
 
+    }
     public void displayToolBar(Boolean display){
         int visibility = (display)? View.VISIBLE :View.INVISIBLE;
         toolbar.setVisibility(visibility);

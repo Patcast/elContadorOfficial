@@ -49,14 +49,12 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
-
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle(getString(R.string.accounts));
         mainActivity.setCurrentMenuClicker(this);
@@ -67,39 +65,37 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
-        String email= mainActivity.returnSavedLoggedEmail();
-        logInRequired(email==null,email);
+        startRecyclerView(view);
+        checkLogIn(mainActivity.returnSavedLoggedEmail());
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> mainActivity.displayToolBar(true));
+    }
+
+    private void startRecyclerView(View view){
         recyclerAccounts = view.findViewById(R.id.recyclerAccounts);
         recyclerAccounts.setLayoutManager(new LinearLayoutManager(this.getContext()));
         adapter = new AccountsRecViewAdapter(view);
-        Caching.INSTANCE.attachAccountsObservers(this);
-        if(accountsList.size()>0) adapter.setAccounts(accountsList);
         recyclerAccounts.setAdapter(adapter);
-        System.out.println(Thread.getAllStackTraces());
-
     }
+
+
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void logInRequired(boolean required, String email){
-        if(required){
-            navController.navigate(R.id.signIn);
-            accountsList.clear();
+    private void checkLogIn(String email){
+        if(email==null){
+            navController.navigate(R.id.action_accounts_to_signIn);
         }
         else{
-            if(accountsList.size()==0) Caching.INSTANCE.requestAllUserAccounts(email);
+            Caching.INSTANCE.requestStaticData();
         }
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onStart() {
         super.onStart();
-        if(Caching.INSTANCE.getNumberOfAccountObservers() ==0){
-            Caching.INSTANCE.attachAccountsObservers(this);
-            if(accountsList.size()>0) adapter.setAccounts(accountsList);
-            recyclerAccounts.setAdapter(adapter);
-        }
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(() -> mainActivity.displayToolBar(true));
+        Caching.INSTANCE.attachAccountsObservers(this, mainActivity.returnSavedLoggedEmail());
+
     }
 
     @Override
@@ -114,7 +110,6 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
             accountsList.clear();
             accountsList.addAll(accounts);
             adapter.setAccounts(accountsList);
-
     }
 
     @Override
@@ -132,7 +127,7 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
     @Override
     public void onLogOut() {
         bottomSheet.dismiss();
-        mainActivity.deleteSavedLoggedEmail();
-        navController.navigate(R.id.action_accounts_to_signIn);
+        mainActivity.signOut();
+        navController.navigate(R.id.signIn);
     }
 }
