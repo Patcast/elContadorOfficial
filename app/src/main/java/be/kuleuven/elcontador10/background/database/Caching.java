@@ -1,6 +1,7 @@
 package be.kuleuven.elcontador10.background.database;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
 
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import be.kuleuven.elcontador10.R;
+import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.model.Account;
 import be.kuleuven.elcontador10.background.model.LoggedUser;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
@@ -27,6 +29,8 @@ import be.kuleuven.elcontador10.background.model.TransactionType;
 
 public enum Caching {
     INSTANCE;
+
+
 
     /// interfaces******
     public interface StaticDataObserver {
@@ -42,17 +46,57 @@ public enum Caching {
         void notifyAllTransactionsObserver(List<Transaction> allTransactions);
     }
 
+
+    private final List <Account> accounts = new ArrayList<>();
+    private final List <AccountsObserver> accountsObservers = new ArrayList<>();
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void attachAccountsObservers(AccountsObserver newObserver, String email){
+        if(email!=null){
+            accountsObservers.add(newObserver);
+            if(accounts.size()==0) requestAllUserAccounts(email);
+            else newObserver.notifyAccountsObserver(accounts);
+        }
+    }
+    public void deAttachAccountsObservers(AccountsObserver unWantedObserver){
+        if (unWantedObserver!=null){
+            accountsObservers.remove(unWantedObserver);
+        }
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void requestAllUserAccounts(String email){
+        accounts.clear();
+        db.collection("accounts").
+                whereArrayContains("users", email).
+                addSnapshotListener((value, e) -> {
+
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e);
+                            return;
+                        }
+                        for (QueryDocumentSnapshot doc : value) {
+                            if (doc.get("name") != null) {
+                                Account myAccount =  doc.toObject(Account.class);
+                                myAccount.setId( doc.getId());
+                                accounts.add(myAccount);
+                            }
+                        }
+                        accountsObservers.forEach(t->t.notifyAccountsObserver(getAccounts()));
+        });
+    }
+
+
+
     ////*********Data
     public List <StakeHolder> stakeHolders = new ArrayList<>();
     public List <TransactionType>  transTypes = new ArrayList<>();
     public List <String> roles = new ArrayList<>();
     public List <Transaction> transactions = new ArrayList<>();
-    private final List <Account> accounts = new ArrayList<>();
+
 
     ///********** Observers List
     private final List <StaticDataObserver> staticDataObservers = new ArrayList<>();
     private final List <StakeholdersObserver> stakeholdersObservers = new ArrayList<>();
-    private final List <AccountsObserver> accountsObservers = new ArrayList<>();
+
     private final List <AllTransactionsObserver> allTransactionsObservers = new ArrayList<>();
 
     ///********** Variables
@@ -82,14 +126,7 @@ public enum Caching {
     public void deAttachStakeholdersObservers(StakeholdersObserver newObserver){
         stakeholdersObservers.remove(newObserver);
     }
-    public void attachAccountsObservers(AccountsObserver newObserver){
-        accountsObservers.add(newObserver);
-        if(accounts.size()!=0){
-        newObserver.notifyAccountsObserver( accounts);}
-    }
-    public void deAttachAccountsObservers(AccountsObserver unWantedObserver){
-        accountsObservers.remove(unWantedObserver);
-    }
+
     public void attachAllTransactionsObserver(AllTransactionsObserver newObserver){
         allTransactionsObservers.add(newObserver);
         if(transactions.size()!=0){
@@ -104,14 +141,6 @@ public enum Caching {
 
 ///Other Methods*************************
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void startApp(LoggedUser user){
-        requestAllUserAccounts(user.getEmail());
-        setLogInUser(user);
-        requestStaticData();
-    }
-
-    //// Request data
 
     //this goes on the click Listener of the account RecView
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -126,36 +155,17 @@ public enum Caching {
         requestStakeHolder(chosenAccountId);
     }
     public void signOut(){
-       /* FirebaseAuth.getInstance().signOut();
-        mGoogleSignInClient.signOut();
-        mAuth.signOut();*/
-        logInUser = null;
-        chosenAccountId = null;
+     stakeHolders.clear();
+     transTypes.clear();
+     accounts.clear();
+     transactions.clear();
+     roles.clear();
+     logInUser = null;
+     chosenAccountId = null;
     }
-
 
     //////// DATA BASE ****************
-    //OnClick Listener on signIn
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void requestAllUserAccounts(String email){
-        accounts.clear();
-        CollectionReference accountsRef = db.collection("accounts");
-        accountsRef.whereArrayContains("users", email);
-        accountsRef.addSnapshotListener((value, e) -> {
-            if (e != null) {
-                Log.w(TAG, "Listen failed.", e);
-                return;
-            }
-            for (QueryDocumentSnapshot doc : value) {
-                if (doc.get("name") != null) {
-                    Account myAccount =  doc.toObject(Account.class);
-                    myAccount.setId( doc.getId());
-                    accounts.add(myAccount);
-                }
-                accountsObservers.forEach(t->t.notifyAccountsObserver(getAccounts()));
-            }
-        });
-    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestStaticData(){
@@ -227,17 +237,9 @@ public enum Caching {
     public void setChosenAccountId(String chosenAccountId) {
         this.chosenAccountId = chosenAccountId;
     }
-    public void setLogInUser(LoggedUser logInUser) {
-        this.logInUser = logInUser;
-    }
+
     public void setContext(Context context) {
         this.context = context;
-    }
-    public int getNumberOfAccountObservers(){
-        return accountsObservers.size();
-    }
-    public LoggedUser getLogInUser() {
-        return logInUser;
     }
     public String getChosenAccountId() {
         return chosenAccountId;

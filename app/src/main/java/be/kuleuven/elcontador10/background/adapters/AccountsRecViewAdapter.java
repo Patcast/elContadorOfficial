@@ -88,8 +88,9 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
         }
     }
 
-    public void setAccounts(ArrayList<Account> accounts) {
-        this.accounts= accounts;
+    public void setAccounts(ArrayList<Account> accountsReceived) {
+        accounts.clear();
+        accounts= accountsReceived;
         notifyDataSetChanged();
     }
 }
