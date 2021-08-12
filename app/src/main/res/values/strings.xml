@@ -130,5 +130,7 @@
     <string name="account">Account:</string>
     <string name="concerning">Concerning:</string>
     <string name="add_account">Add account</string>
+    <string name="name_of_account">Name Of Account</string>
+    <string name="starting_balance">Starting Balance ( Default $0.00 )</string>
 
 </resources>
