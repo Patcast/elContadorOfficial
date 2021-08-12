@@ -25,6 +25,7 @@ import be.kuleuven.elcontador10.background.model.Account;
 
 
 public class AddNewAccount extends Fragment {
+    //Todo: Add Notes for the account (for example to add the address)
     Button confirmButton;
     EditText edTextName;
     EditText edTextBalance;
@@ -77,7 +78,6 @@ public class AddNewAccount extends Fragment {
         }
         else{
             Toast.makeText(getContext(),"No Logged In email found",Toast.LENGTH_SHORT).show();
-
         }
         navController.popBackStack();
     }

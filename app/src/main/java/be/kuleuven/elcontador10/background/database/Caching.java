@@ -64,7 +64,7 @@ public enum Caching {
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestAllUserAccounts(String email){
-        accounts.clear();
+
         db.collection("accounts").
                 whereArrayContains("users", email).
                 addSnapshotListener((value, e) -> {
@@ -73,6 +73,7 @@ public enum Caching {
                             Log.w(TAG, "Listen failed.", e);
                             return;
                         }
+                        accounts.clear();
                         for (QueryDocumentSnapshot doc : value) {
                             if (doc.get("name") != null) {
                                 Account myAccount =  doc.toObject(Account.class);
