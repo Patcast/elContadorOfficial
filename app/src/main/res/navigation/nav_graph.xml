@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/stakeholderDisplay"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderDisplay"
+        android:name="be.kuleuven.elcontador10.fragments.microaccounts.StakeholderDisplay"
         android:label="fragment_stakeholder_display"
         tools:layout="@layout/fragment_stakeholder_display" >
         <argument
@@ -45,7 +45,7 @@
     </fragment>
     <fragment
         android:id="@+id/stakeholderFilter"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderFilter"
+        android:name="be.kuleuven.elcontador10.fragments.microaccounts.StakeholderFilter"
         android:label="fragment_stakeholder_filter"
         tools:layout="@layout/fragment_stakeholder_filter" >
         <action
@@ -54,7 +54,7 @@
     </fragment>
     <fragment
         android:id="@+id/stakeholderNew"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderNew"
+        android:name="be.kuleuven.elcontador10.fragments.microaccounts.StakeholderNew"
         android:label="fragment_stakeholder_new"
         tools:layout="@layout/fragment_stakeholder_new" >
         <action
@@ -71,7 +71,7 @@
     </fragment>
     <fragment
         android:id="@+id/stakeholderSummary"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderSummary"
+        android:name="be.kuleuven.elcontador10.fragments.microaccounts.StakeholderSummary"
         android:label="fragment_stakeholder_summary"
         tools:layout="@layout/fragment_stakeholder_summary" >
         <argument
@@ -128,6 +128,9 @@
         <action
             android:id="@+id/action_viewPagerHolder_to_newMicroAccount"
             app:destination="@id/newMicroAccount" />
+        <action
+            android:id="@+id/action_viewPagerHolder_to_microAccountViewPagerHolder"
+            app:destination="@id/microAccountViewPagerHolder" />
     </fragment>
     <fragment
         android:id="@+id/accounts"
@@ -155,7 +158,16 @@
         tools:layout="@layout/fragment_add_new_account" />
     <fragment
         android:id="@+id/newMicroAccount"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.NewMicroAccount"
+        android:name="be.kuleuven.elcontador10.fragments.microaccounts.NewMicroAccount"
         android:label="fragment_add_new_microaccount"
         tools:layout="@layout/fragment_add_new_microaccount" />
+    <fragment
+        android:id="@+id/microAccountViewPagerHolder"
+        android:name="be.kuleuven.elcontador10.fragments.microaccounts.MicroAccountViewPagerHolder"
+        android:label="fragment_micro_account_view_holder"
+        tools:layout="@layout/fragment_micro_account_view_holder" >
+        <argument
+            android:name="StakeHolder"
+            app:argType="be.kuleuven.elcontador10.background.model.StakeHolder" />
+    </fragment>
 </navigation>

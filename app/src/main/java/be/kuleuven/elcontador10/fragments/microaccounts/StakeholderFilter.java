@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.stakeholders;
+package be.kuleuven.elcontador10.fragments.microaccounts;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -18,11 +18,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;

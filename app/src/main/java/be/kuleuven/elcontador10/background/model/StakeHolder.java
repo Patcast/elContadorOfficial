@@ -1,6 +1,12 @@
 package be.kuleuven.elcontador10.background.model;
 
-public class StakeHolder {
+import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.RequiresApi;
+
+public class StakeHolder implements Parcelable {
     private String id;
     private String name;
     private String role;
@@ -20,8 +26,49 @@ public class StakeHolder {
         this.authorized = authorized;
     }
 
-    public StakeHolder() {
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    protected StakeHolder(Parcel in) {
+        this.name = in.readString();
+        this.role = in.readString();
+        this.deleted = in.readBoolean();
+        this.email = in.readString();
+        this.phoneNumber = in.readInt();
+        this.idOfGlobalAccount = in.readString();
+        this.authorized = in.readBoolean();
     }
+
+    public StakeHolder() {    }
+
+    public static final Creator<StakeHolder> CREATOR = new Creator<StakeHolder>() {
+        @RequiresApi(api = Build.VERSION_CODES.Q)
+        @Override
+        public StakeHolder createFromParcel(Parcel parcel) {
+            return new StakeHolder(parcel);
+        }
+
+        @Override
+        public StakeHolder[] newArray(int i) {
+            return new StakeHolder[i];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(role);
+        parcel.writeBoolean(deleted);
+        parcel.writeString(email);
+        parcel.writeInt(phoneNumber);
+        parcel.writeString(idOfGlobalAccount);
+        parcel.writeBoolean(authorized);
+    }
+
     public String getIdOfGlobalAccount() {
         return idOfGlobalAccount;
     }
