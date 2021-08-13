@@ -3,9 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/drawable/file_document_edit_outline.xml" value="0.3828125" />
+        <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/drawable/icon_delete.xml" value="0.3828125" />
+        <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/activity_main.xml" value="0.3061594202898551" />
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/fragment_all_micro_acounts.xml" value="0.36666666666666664" />
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/fragment_all_transactions.xml" value="0.36666666666666664" />
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/fragment_home.xml" value="0.36666666666666664" />
+        <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/fragment_micro_account_contracts.xml" value="0.36666666666666664" />
+        <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/fragment_micro_account_transactions.xml" value="0.36666666666666664" />
+        <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/fragment_micro_account_view_holder.xml" value="0.25" />
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/fragment_view_pager_holder.xml" value="0.36666666666666664" />
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/rec_view_item_accounts.xml" value="0.36666666666666664" />
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/menu/top_three_buttons_menu.xml" value="0.36666666666666664" />

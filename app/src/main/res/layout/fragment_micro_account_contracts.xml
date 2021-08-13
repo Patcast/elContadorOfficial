@@ -3,10 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.microaccounts.MicroAccountViewPagerHolder">
+    tools:context=".fragments.microaccounts.MicroAccountContracts">
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPagerHolder"
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:text="contracts" />
+
 </FrameLayout>

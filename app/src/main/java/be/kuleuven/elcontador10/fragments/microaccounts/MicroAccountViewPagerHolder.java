@@ -13,6 +13,8 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.tabs.TabLayoutMediator;
+
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.ViewPagerAdapter;
@@ -54,6 +56,28 @@ public class MicroAccountViewPagerHolder extends Fragment {
     }
 
     private void addFragments(View view) {
-//        mAdapter.addFragment();
+        mAdapter.addFragment(new MicroAccountTransactions());
+        mAdapter.addFragment(new MicroAccountContracts());
+        viewPager.setAdapter(mAdapter);
+
+        new TabLayoutMediator(mainActivity.getTabLayout(), viewPager, (t, p) -> {
+            switch (p) {
+                case 0:
+                    t.setText("Transactions");
+                    t.setIcon(R.drawable.icon_transaction);
+                    break;
+                case 1:
+                    t.setText("Contracts");
+                    t.setIcon(R.drawable.icon_contracts);
+                    break;
+            }
+        }).attach();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mainActivity.displayToolBar(true);
+        mainActivity.displayTabLayout(false);
     }
 }
