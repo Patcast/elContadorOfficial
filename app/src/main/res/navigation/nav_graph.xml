@@ -169,5 +169,11 @@
         <argument
             android:name="StakeHolder"
             app:argType="be.kuleuven.elcontador10.background.model.StakeHolder" />
+        <action
+            android:id="@+id/action_microAccountViewPagerHolder_to_transactionDisplay"
+            app:destination="@id/transactionDisplay" />
+        <action
+            android:id="@+id/action_microAccountViewPagerHolder_to_newTransaction"
+            app:destination="@id/newTransaction" />
     </fragment>
 </navigation>

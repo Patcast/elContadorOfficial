@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
@@ -27,12 +26,12 @@ import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.fragments.ViewPagerHolderDirections;
 
 
-public class AllTransactionsRecViewAdapter extends RecyclerView.Adapter<AllTransactionsRecViewAdapter.ViewHolder>  {
+public class TransactionsRecViewAdapter extends RecyclerView.Adapter<TransactionsRecViewAdapter.ViewHolder>  {
     private List<Transaction> allTransactions = new ArrayList<>();
     NavController navController;
     View viewFromHostingClass;
     Context context;
-    public AllTransactionsRecViewAdapter(View viewFromHostingClass, Context context) {
+    public TransactionsRecViewAdapter(View viewFromHostingClass, Context context) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.context = context;
 
@@ -65,6 +64,7 @@ public class AllTransactionsRecViewAdapter extends RecyclerView.Adapter<AllTrans
         }
         amountText.append(amount);
         holder.textAmount.setText(amountText);
+
         holder.parent.setOnClickListener(v->{
             ViewPagerHolderDirections.ActionViewPagerHolderToTransactionDisplay action = ViewPagerHolderDirections.actionViewPagerHolderToTransactionDisplay(idOfTransaction);
             navController.navigate(action);

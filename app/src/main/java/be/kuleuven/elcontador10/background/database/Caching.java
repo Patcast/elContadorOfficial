@@ -45,7 +45,9 @@ public enum Caching {
     public interface AllTransactionsObserver{
         void notifyAllTransactionsObserver(List<Transaction> allTransactions);
     }
-
+    public interface MicroAccountTransactionObserver{
+        void notifyMicroAccountTransactionObserver(List<Transaction> transactions);
+    }
 
     private final List <Account> accounts = new ArrayList<>();
     private final List <AccountsObserver> accountsObservers = new ArrayList<>();
@@ -92,12 +94,12 @@ public enum Caching {
     public List <TransactionType>  transTypes = new ArrayList<>();
     public List <String> roles = new ArrayList<>();
     public List <Transaction> transactions = new ArrayList<>();
-
+    public List <Transaction> microAccountTransactions = new ArrayList<>();
 
     ///********** Observers List
     private final List <StaticDataObserver> staticDataObservers = new ArrayList<>();
     private final List <StakeholdersObserver> stakeholdersObservers = new ArrayList<>();
-
+    private final List <MicroAccountTransactionObserver> microAccountObservers = new ArrayList<>();
     private final List <AllTransactionsObserver> allTransactionsObservers = new ArrayList<>();
 
     ///********** Variables
@@ -109,7 +111,7 @@ public enum Caching {
     /// ******** Authentication
     private String chosenAccountId;
     private LoggedUser logInUser;
-
+    private String chosenMicroAccountId;
 
 ///Attach methods*************************
     public void attachStaticDataObservers(StaticDataObserver newObserver){
@@ -139,6 +141,15 @@ public enum Caching {
         allTransactionsObservers.remove(unWantedObserver);
     }
 
+    public void attachMicroTransactionsObserver(MicroAccountTransactionObserver newObserver) {
+        microAccountObservers.add(newObserver);
+        if (microAccountTransactions.size() != 0)
+            newObserver.notifyMicroAccountTransactionObserver(microAccountTransactions);
+    }
+
+    public void deAttachMicroTransactionsObserver(MicroAccountTransactionObserver observer) {
+        microAccountObservers.remove(observer);
+    }
 
 ///Other Methods*************************
 
@@ -150,11 +161,19 @@ public enum Caching {
         requestStakeHolder(chosenAccountId);
         requestAccountTransactions(chosenAccountId);
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void openQuickNewTransaction(String chosenAccountId){
         setChosenAccountId(chosenAccountId);
         requestStakeHolder(chosenAccountId);
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void openMicroAccount(String chosenAccountId, String microAccountId) {
+        setChosenMicroAccountId(microAccountId);
+        requestMicroAccountTransactions(chosenAccountId, microAccountId);
+    }
+
     public void signOut(){
      stakeHolders.clear();
      transTypes.clear();
@@ -214,7 +233,7 @@ public enum Caching {
                 });
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void requestAccountTransactions(String chosenAccountId){
+    public void requestAccountTransactions(String chosenAccountId){
 
     String urlGetAccountTransactions = "/accounts/"+chosenAccountId+"/transactions";
         db.collection(urlGetAccountTransactions)
@@ -233,6 +252,30 @@ public enum Caching {
                 });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void requestMicroAccountTransactions(String chosenAccountId, String microAccountId) {
+        String url = "/accounts/" + chosenAccountId + "/transactions";
+
+        db.collection(url)
+                .whereEqualTo("stakeHolder", microAccountId)
+                .addSnapshotListener((value, e) -> {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed", e);
+                        return;
+                    }
+
+                    microAccountTransactions.clear();
+
+                    for (QueryDocumentSnapshot doc : value) {
+                        Transaction myTransaction = doc.toObject(Transaction.class);
+                        myTransaction.setId(doc.getId());
+                        microAccountTransactions.add(myTransaction);
+                    }
+
+                    allTransactionsObservers.forEach(t -> t.notifyAllTransactionsObserver(getTransactions()));
+                });
+    }
+
 //////************** end of db
 
     public void setChosenAccountId(String chosenAccountId) {
@@ -242,21 +285,35 @@ public enum Caching {
     public void setContext(Context context) {
         this.context = context;
     }
+
+    public void setChosenMicroAccountId(String chosenMicroAccountId) {
+        this.chosenMicroAccountId = chosenMicroAccountId;
+    }
+
     public String getChosenAccountId() {
         return chosenAccountId;
     }
+
     public String getLogInUserId() {
         return logInUser.getEmail();
     }
+
+    public String getChosenMicroAccountId() {
+        return chosenMicroAccountId;
+    }
+
     public List<StakeHolder> getStakeHolders() {
         return stakeHolders;
     }
+
     public List<Transaction> getTransactions() {
         return transactions;
     }
+
     public List<Account> getAccounts() {
         return accounts;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public Transaction getTransaction(String idOfTransaction){
         List<Transaction> availableTran = new ArrayList<>(getTransactions());

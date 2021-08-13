@@ -15,6 +15,8 @@
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/fragment_view_pager_holder.xml" value="0.36666666666666664" />
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/rec_view_item_accounts.xml" value="0.36666666666666664" />
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/menu/top_three_buttons_menu.xml" value="0.36666666666666664" />
+        <entry key="app/src/main/res/layout/fragment_all_transactions.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_micro_account_transactions.xml" value="0.1286231884057971" />
       </map>
     </option>
   </component>
