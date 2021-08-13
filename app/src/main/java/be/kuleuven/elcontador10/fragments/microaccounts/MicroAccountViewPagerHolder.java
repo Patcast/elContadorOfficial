@@ -74,10 +74,12 @@ public class MicroAccountViewPagerHolder extends Fragment {
         }).attach();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onStop() {
         super.onStop();
         mainActivity.displayToolBar(true);
+        mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         mainActivity.displayTabLayout(false);
     }
 }
