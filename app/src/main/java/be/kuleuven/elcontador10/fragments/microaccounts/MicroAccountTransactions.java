@@ -38,7 +38,7 @@ public class MicroAccountTransactions extends Fragment implements Caching.MicroA
 
         transactions = new ArrayList<>();
 
-        fab = view.findViewById(R.id.btn_new_AccountFAB);
+        fab = view.findViewById(R.id.btn_new_TransactionFAB);
         fab.setOnClickListener(this::onFAB_Clicked);
 
         recyclerView = view.findViewById(R.id.RecViewTransactionsHolder);
@@ -79,6 +79,7 @@ public class MicroAccountTransactions extends Fragment implements Caching.MicroA
     public void onStop() {
         super.onStop();
         Caching.INSTANCE.deAttachMicroTransactionsObserver(this);
+        transactions.clear();
     }
 
     @Override

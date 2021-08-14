@@ -14,6 +14,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -169,7 +170,7 @@ public enum Caching {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void openMicroAccount(String chosenAccountId, String microAccountId) {
+    public void openMicroAccount(String microAccountId) {
         setChosenMicroAccountId(microAccountId);
         requestMicroAccountTransactions(chosenAccountId, microAccountId);
     }
@@ -272,7 +273,8 @@ public enum Caching {
                         microAccountTransactions.add(myTransaction);
                     }
 
-                    allTransactionsObservers.forEach(t -> t.notifyAllTransactionsObserver(getTransactions()));
+                    System.out.println(getStakeholderName(microAccountId));
+                    microAccountObservers.forEach(t -> t.notifyMicroAccountTransactionObserver(microAccountTransactions));
                 });
     }
 

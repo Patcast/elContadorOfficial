@@ -25,6 +25,7 @@ public class MicroAccountViewPagerHolder extends Fragment {
     private ViewPagerAdapter mAdapter;
     private ViewPager2 viewPager;
     private MainActivity mainActivity;
+    private String chosenAccountId;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -46,6 +47,7 @@ public class MicroAccountViewPagerHolder extends Fragment {
         return view;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -53,6 +55,10 @@ public class MicroAccountViewPagerHolder extends Fragment {
         StakeHolder stakeHolder = MicroAccountViewPagerHolderArgs.fromBundle(getArguments()).getStakeHolder();
         mainActivity.setHeaderText(stakeHolder.getName());
         mainActivity.displayTabLayout(true);
+
+        chosenAccountId = MicroAccountViewPagerHolderArgs.fromBundle(getArguments()).getAccountID();
+
+        Caching.INSTANCE.openMicroAccount(stakeHolder.getId());
     }
 
     private void addFragments(View view) {
@@ -79,7 +85,11 @@ public class MicroAccountViewPagerHolder extends Fragment {
     public void onStop() {
         super.onStop();
         mainActivity.displayToolBar(true);
+
+        // set account ID to origin
+        Caching.INSTANCE.setChosenAccountId(chosenAccountId);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         mainActivity.displayTabLayout(false);
+        Caching.INSTANCE.setChosenMicroAccountId(null);
     }
 }

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
+import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
 import be.kuleuven.elcontador10.fragments.ViewPagerHolderDirections;
@@ -52,8 +53,9 @@ public class AllMicroRecViewAdapter extends RecyclerView.Adapter<AllMicroRecView
         holder.parent.setOnClickListener(v -> {
                     viewModel.select(microAccountsList.get(position));
                     NavController navController = Navigation.findNavController(viewFromHostingClass);
+                    String id = Caching.INSTANCE.getChosenAccountId();
                     ViewPagerHolderDirections.ActionViewPagerHolderToMicroAccountViewPagerHolder action =
-                        ViewPagerHolderDirections.actionViewPagerHolderToMicroAccountViewPagerHolder(microAccountsList.get(position));
+                        ViewPagerHolderDirections.actionViewPagerHolderToMicroAccountViewPagerHolder(microAccountsList.get(position), Caching.INSTANCE.getChosenAccountId());
                     navController.navigate(action);
                 }
         );

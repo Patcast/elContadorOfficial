@@ -175,5 +175,8 @@
         <action
             android:id="@+id/action_microAccountViewPagerHolder_to_newTransaction"
             app:destination="@id/newTransaction" />
+        <argument
+            android:name="accountID"
+            app:argType="string" />
     </fragment>
 </navigation>
