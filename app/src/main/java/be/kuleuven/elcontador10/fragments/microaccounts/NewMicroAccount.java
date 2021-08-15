@@ -1,12 +1,10 @@
-package be.kuleuven.elcontador10.fragments.stakeholders;
+package be.kuleuven.elcontador10.fragments.microaccounts;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -24,7 +22,6 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.adapters.WidgetsCreation;
 import be.kuleuven.elcontador10.background.model.MicroAccount;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
 
 public class NewMicroAccount extends Fragment {
     private NavController navController;

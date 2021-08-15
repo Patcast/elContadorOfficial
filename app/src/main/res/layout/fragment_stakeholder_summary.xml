@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.stakeholders.StakeholderSummary">
+    tools:context=".fragments.microaccounts.StakeholderSummary">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/TransactionsRecycler"
         android:layout_width="0dp"

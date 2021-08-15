@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,20 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.adapters.AccountsRecViewAdapter;
-import be.kuleuven.elcontador10.background.adapters.AllTransactionsRecViewAdapter;
-import be.kuleuven.elcontador10.background.adapters.StakeHolderRecViewAdapter;
+import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
 import be.kuleuven.elcontador10.background.model.Transaction;
-import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
 
 
 public class AllTransactions extends Fragment implements Caching.AllTransactionsObserver {
 
     private RecyclerView recyclerAllTransactions;
-    private AllTransactionsRecViewAdapter adapter;
+    private TransactionsRecViewAdapter adapter;
     ArrayList<Transaction> transactionArrayList = new ArrayList<>();
     FloatingActionButton fabNewTransaction;
     NavController navController;
@@ -51,7 +45,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
 
         recyclerAllTransactions = view.findViewById(R.id.RecViewTransactionsHolder);
         recyclerAllTransactions.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        adapter = new AllTransactionsRecViewAdapter(view,getContext());
+        adapter = new TransactionsRecViewAdapter(view,getContext());
         Caching.INSTANCE.attachAllTransactionsObserver(this);
         if(transactionArrayList.size()>0) adapter.setAllTransactions(transactionArrayList);
         recyclerAllTransactions.setAdapter(adapter);
@@ -75,6 +69,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     @Override
     public void onStart() {
         super.onStart();
+
         Caching.INSTANCE.attachAllTransactionsObserver(this);
         if(transactionArrayList.size()>0) adapter.setAllTransactions(transactionArrayList);
         recyclerAllTransactions.setAdapter(adapter);

@@ -17,7 +17,7 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.ViewPagerAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.fragments.stakeholders.AllMicroAccounts;
+import be.kuleuven.elcontador10.fragments.microaccounts.AllMicroAccounts;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
 
 
