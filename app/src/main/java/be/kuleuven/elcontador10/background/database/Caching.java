@@ -1,16 +1,16 @@
 package be.kuleuven.elcontador10.background.database;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -20,9 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.model.Account;
-import be.kuleuven.elcontador10.background.model.LoggedUser;
+import be.kuleuven.elcontador10.background.model.User;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
@@ -62,29 +61,6 @@ public enum Caching {
             accountsObservers.remove(unWantedObserver);
         }
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void requestAllUserAccounts(String email){
-
-        db.collection("accounts").
-                whereArrayContains("users", email).
-                addSnapshotListener((value, e) -> {
-
-                        if (e != null) {
-                            Log.w(TAG, "Listen failed.", e);
-                            return;
-                        }
-                        accounts.clear();
-                        for (QueryDocumentSnapshot doc : value) {
-                            if (doc.get("name") != null) {
-                                Account myAccount =  doc.toObject(Account.class);
-                                myAccount.setId( doc.getId());
-                                accounts.add(myAccount);
-                            }
-                        }
-                        accountsObservers.forEach(t->t.notifyAccountsObserver(getAccounts()));
-        });
-    }
-
 
 
     ////*********Data
@@ -108,7 +84,7 @@ public enum Caching {
 
     /// ******** Authentication
     private String chosenAccountId;
-    private LoggedUser logInUser;
+    private User logInUser;
 
 
 ///Attach methods*************************
@@ -147,13 +123,13 @@ public enum Caching {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void openAccountFully(String chosenAccountId){
         setChosenAccountId(chosenAccountId);
-        requestStakeHolder(chosenAccountId);
+        requestGroupOFStakeHolders(chosenAccountId);
         requestAccountTransactions(chosenAccountId);
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void openQuickNewTransaction(String chosenAccountId){
         setChosenAccountId(chosenAccountId);
-        requestStakeHolder(chosenAccountId);
+        requestGroupOFStakeHolders(chosenAccountId);
     }
     public void signOut(){
      stakeHolders.clear();
@@ -166,6 +142,29 @@ public enum Caching {
     }
 
     //////// DATA BASE ****************
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void requestAllUserAccounts(String email){
+
+        db.collection("accounts").
+                whereArrayContains("users", email).
+                addSnapshotListener((value, e) -> {
+
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
+                    }
+                    accounts.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc.get("name") != null) {
+                            Account myAccount =  doc.toObject(Account.class);
+                            myAccount.setId( doc.getId());
+                            accounts.add(myAccount);
+                        }
+                    }
+                    accountsObservers.forEach(t->t.notifyAccountsObserver(getAccounts()));
+                });
+    }
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -196,7 +195,7 @@ public enum Caching {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void requestStakeHolder(String chosenAccountId){
+    public void requestGroupOFStakeHolders(String chosenAccountId){
         String stakeHoldersUrl = "/accounts/"+chosenAccountId+"/stakeHolders";
         db.collection(stakeHoldersUrl)
                 .addSnapshotListener((value, e) -> {
@@ -231,6 +230,23 @@ public enum Caching {
                     }
                     allTransactionsObservers.forEach(t->t.notifyAllTransactionsObserver(getTransactions()));
                 });
+    }
+    User requestedUser;
+    private User requestUser(String userEmail){
+
+        db.collection("users").whereEqualTo("email",userEmail).
+        addSnapshotListener((value, e) -> {
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e);
+                return;
+            }
+            for (QueryDocumentSnapshot doc : value) {
+                if (doc.get("email") != null) {
+                    requestedUser =  doc.toObject(User.class);
+                }
+            }
+        });
+        return requestedUser;
     }
 
 //////************** end of db
@@ -283,5 +299,6 @@ public enum Caching {
                 .findFirst();
         return possibleName.orElse(context.getString(R.string.error_finding_microAccount));
     }
+
 
 }

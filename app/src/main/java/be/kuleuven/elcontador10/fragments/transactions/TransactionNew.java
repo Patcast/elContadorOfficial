@@ -135,7 +135,7 @@ public class TransactionNew extends Fragment {
         String category = spCategory.getSelectedItem().toString();
         String subCategory = spSubCategory.getSelectedItem().toString();
         String notes = txtNotes.getText().toString();
-        Transaction newTrans= new Transaction(amount, Caching.INSTANCE.getLogInUserId(), selectedStakeHolder.getId(),category,subCategory,notes);
+        Transaction newTrans= new Transaction(amount, mainActivity.returnSavedLoggedEmail(), selectedStakeHolder.getId(),category,subCategory,notes);
         newTrans.SendTransaction(newTrans);
     }
 

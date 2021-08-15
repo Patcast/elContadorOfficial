@@ -45,7 +45,6 @@ import java.util.Map;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.LoggedUser;
 
 
 public class SignIn extends Fragment {
@@ -166,7 +165,7 @@ public class SignIn extends Fragment {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        //updateAfterSignedIn(document.toObject(LoggedUser.class));
+                        //updateAfterSignedIn(document.toObject(User.class));
                         updateAfterSignedIn(currentUser.getEmail());
                     } else {
                         regInFireStore(currentUser);

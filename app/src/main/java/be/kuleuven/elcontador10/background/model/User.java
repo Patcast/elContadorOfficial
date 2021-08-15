@@ -4,12 +4,12 @@ package be.kuleuven.elcontador10.background.model;
 
 import java.util.HashMap;
 
-public class LoggedUser {
+public class User {
     String name;
     String email;
     HashMap<String,String> accounts;
 
-    public LoggedUser() {
+    public User() {
     }
 
     public String getName() {
@@ -24,13 +24,4 @@ public class LoggedUser {
         return accounts;
     }
 
-
-    @Override
-    public String toString() {
-        return "LoggedUser{" +
-                "Name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", accounts=" + accounts +
-                '}';
-    }
 }
