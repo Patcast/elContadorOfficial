@@ -26,7 +26,7 @@
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25384615384615383" />
         <entry key="app/src/main/res/layout/fragment_micro_account_transactions.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/fragment_transaction_new.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_transaction_new.xml" value="0.335" />
         <entry key="app/src/main/res/layout/rec_view_item_accounts.xml" value="0.4040920716112532" />
         <entry key="app/src/main/res/layout/rec_view_item_all_micros.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/rec_view_item_all_transactions.xml" value="0.2578125" />

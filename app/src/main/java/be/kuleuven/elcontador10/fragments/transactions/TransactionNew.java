@@ -67,11 +67,11 @@ public class TransactionNew extends Fragment {
         txtTitle = view.findViewById(R.id.text_newTransaction_title);
         txtAmount = view.findViewById(R.id.ed_txt_amount);
         txtStakeHolder = view.findViewById(R.id.text_stakeholderSelected);
-        spCategory = view.findViewById(R.id.sp_TransCategory);
-        spSubCategory = view.findViewById(R.id.sp_TransSubcategory);
+        /*spCategory = view.findViewById(R.id.sp_TransCategory);
+        spSubCategory = view.findViewById(R.id.sp_TransSubcategory);*/
         txtNotes = view.findViewById(R.id.ed_txt_notes);
         Button confirmButton = view.findViewById(R.id.btn_confirm_NewTransaction);
-        WidgetsCreation.INSTANCE.makeSpinnerCat(mainActivity,spCategory,false);
+      /*  WidgetsCreation.INSTANCE.makeSpinnerCat(mainActivity,spCategory,false);
 
 ////      Set sp_SubCategory after clicking on category
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -84,7 +84,7 @@ public class TransactionNew extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
-        });
+        });*/
         txtStakeHolder.setOnClickListener(v -> { navController.navigate(R.id.action_newTransaction_to_chooseStakeHolderDialog); });
         confirmButton.setOnClickListener(v -> confirmTransaction());
     }
