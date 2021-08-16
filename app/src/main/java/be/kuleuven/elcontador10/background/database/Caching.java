@@ -14,7 +14,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.core.OrderBy;
 
 
 import java.util.ArrayList;
@@ -30,6 +29,7 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 import be.kuleuven.elcontador10.background.model.User;
+import be.kuleuven.elcontador10.background.model.contract.Contract;
 
 public enum Caching {
     INSTANCE;
@@ -51,6 +51,9 @@ public enum Caching {
     }
     public interface MicroAccountTransactionObserver{
         void notifyMicroAccountTransactionObserver(List<Transaction> transactions);
+    }
+    public interface MicroAccountContractObserver {
+        void notifyMicroAccountContractsObserver(List<Contract> contracts);
     }
 
     private final List <Account> accounts = new ArrayList<>();
@@ -76,12 +79,14 @@ public enum Caching {
     public List <String> roles = new ArrayList<>();
     public List <Transaction> transactions = new ArrayList<>();
     public List <Transaction> microAccountTransactions = new ArrayList<>();
+    public List <Contract> microAccountContracts = new ArrayList<>();
 
     ///********** Observers List
     private final List <StaticDataObserver> staticDataObservers = new ArrayList<>();
     private final List <StakeholdersObserver> stakeholdersObservers = new ArrayList<>();
     private final List <MicroAccountTransactionObserver> microAccountObservers = new ArrayList<>();
     private final List <AllTransactionsObserver> allTransactionsObservers = new ArrayList<>();
+    private final List <MicroAccountContractObserver> microAccountContractObservers = new ArrayList<>();
 
     ///********** Variables
 
@@ -119,7 +124,8 @@ public enum Caching {
 
     }
     public void deAttachAllTransactionsObserver(AllTransactionsObserver unWantedObserver){
-        allTransactionsObservers.remove(unWantedObserver);
+        if (allTransactionsObservers.size() != 0)
+            allTransactionsObservers.remove(unWantedObserver);
     }
 
     public void attachMicroTransactionsObserver(MicroAccountTransactionObserver newObserver) {
@@ -129,7 +135,19 @@ public enum Caching {
     }
 
     public void deAttachMicroTransactionsObserver(MicroAccountTransactionObserver observer) {
-        microAccountObservers.remove(observer);
+        if (microAccountObservers.size() != 0)
+            microAccountObservers.remove(observer);
+    }
+
+    public void attachMicroContractObserver(MicroAccountContractObserver observer) {
+        microAccountContractObservers.add(observer);
+        if (microAccountContracts.size() != 0)
+            observer.notifyMicroAccountContractsObserver(microAccountContracts);
+    }
+
+    public void deAttachMicroContractObserver(MicroAccountContractObserver observer) {
+        if (microAccountContractObservers.size() != 0)
+            microAccountContractObservers.remove(observer);
     }
 
 ///Other Methods*************************
@@ -153,6 +171,7 @@ public enum Caching {
     public void openMicroAccount(String microAccountId) {
         setChosenMicroAccountId(microAccountId);
         requestMicroAccountTransactions(chosenAccountId, microAccountId);
+        requestMicroAccountContracts(chosenAccountId, microAccountId);
     }
 
     public void signOut(){
@@ -291,8 +310,30 @@ public enum Caching {
                         microAccountTransactions.add(myTransaction);
                     }
 
-                    System.out.println(getStakeholderName(microAccountId));
                     microAccountObservers.forEach(t -> t.notifyMicroAccountTransactionObserver(microAccountTransactions));
+                });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void requestMicroAccountContracts(String chosenAccountId, String microAccountId) {
+        String url = "/accounts/" + chosenAccountId + "/stakeHolders/" + microAccountId + "/contracts";
+
+        db.collection(url)
+                .addSnapshotListener((value, e) -> {
+                   if (e != null) {
+                       Log.w(TAG, "Listen failed", e);
+                       return;
+                   }
+
+                   microAccountContracts.clear();
+
+                   for (QueryDocumentSnapshot doc : value) {
+                       Contract myContract = doc.toObject(Contract.class);
+                       myContract.setId(doc.getId());
+                       microAccountContracts.add(myContract);
+                   }
+
+                   microAccountContractObservers.forEach(t -> t.notifyMicroAccountContractsObserver(microAccountContracts));
                 });
     }
 

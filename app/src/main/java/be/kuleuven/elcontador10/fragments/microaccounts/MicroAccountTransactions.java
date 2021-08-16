@@ -29,7 +29,6 @@ public class MicroAccountTransactions extends Fragment implements Caching.MicroA
     private TransactionsRecViewAdapter adapter;
     private ArrayList<Transaction> transactions;
     private FloatingActionButton fab;
-    private NavController navController;
 
     @Nullable
     @Override
@@ -90,7 +89,7 @@ public class MicroAccountTransactions extends Fragment implements Caching.MicroA
     }
 
     public void onFAB_Clicked(View view) {
-        navController = Navigation.findNavController(view);
+        NavController navController = Navigation.findNavController(view);
         navController.navigate(R.id.action_microAccountViewPagerHolder_to_newTransaction);
     }
 }

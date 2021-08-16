@@ -16,7 +16,7 @@ import be.kuleuven.elcontador10.background.database.Caching;
 
 public class MicroAccount {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static final String TAG = "newMicroAccount";
+    private static final String TAG = "microAccount";
 
     private String name;
     private String role;
