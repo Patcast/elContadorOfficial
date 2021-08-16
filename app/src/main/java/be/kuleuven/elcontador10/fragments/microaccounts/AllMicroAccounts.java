@@ -27,7 +27,7 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.adapters.AllMicroRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
+import be.kuleuven.elcontador10.background.viewModels.NewTransactionViewModel;
 
 
 public class AllMicroAccounts extends Fragment implements Caching.StakeholdersObserver , SearchView.OnQueryTextListener {
@@ -48,7 +48,7 @@ public class AllMicroAccounts extends Fragment implements Caching.StakeholdersOb
                 recyclerMicros = view.findViewById(R.id.recyclerViewAllMicro);
                 recyclerMicros.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-                ChosenStakeViewModel viewModel = new ViewModelProvider(requireActivity()).get(ChosenStakeViewModel.class);
+                NewTransactionViewModel viewModel = new ViewModelProvider(requireActivity()).get(NewTransactionViewModel.class);
                 adapter = new AllMicroRecViewAdapter(view,viewModel);
                 Caching.INSTANCE.attachStakeholdersObservers(this);
 

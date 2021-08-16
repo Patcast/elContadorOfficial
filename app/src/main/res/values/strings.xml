@@ -136,5 +136,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="paid_to">Paid to</string>
     <string name="title">Title</string>
+    <string name="words_">\"Words: \"</string>
+    <string name="choose_category">Choose a Category</string>
 
 </resources>

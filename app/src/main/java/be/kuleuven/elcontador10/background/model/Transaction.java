@@ -4,6 +4,7 @@ import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,7 +40,7 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction( String title, int amount, String registeredBy, String stakeHolder, String category, String subCategory, String notes) {
+    public Transaction(String title, int amount, String registeredBy, String stakeHolder,String category,String subCategory, String notes) {
         this.title = title;
         this.amount = amount;
         this.registeredBy = registeredBy;

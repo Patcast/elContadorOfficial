@@ -23,18 +23,17 @@ import java.util.stream.Collectors;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
+import be.kuleuven.elcontador10.background.viewModels.NewTransactionViewModel;
 import be.kuleuven.elcontador10.fragments.ViewPagerHolderDirections;
-import be.kuleuven.elcontador10.fragments.microaccounts.MicroAccountViewPagerHolderArgs;
 
 public class AllMicroRecViewAdapter extends RecyclerView.Adapter<AllMicroRecViewAdapter.ViewHolder> {
 
     private List<StakeHolder> microAccountsList = new ArrayList<>();
     private ArrayList<StakeHolder> microAccountsOriginal;
     private final View viewFromHostingClass;
-    private ChosenStakeViewModel viewModel;
+    private NewTransactionViewModel viewModel;
 
-    public AllMicroRecViewAdapter(View viewFromHostingClass, ChosenStakeViewModel viewModel) {
+    public AllMicroRecViewAdapter(View viewFromHostingClass, NewTransactionViewModel viewModel) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.viewModel = viewModel;
     }
@@ -51,7 +50,7 @@ public class AllMicroRecViewAdapter extends RecyclerView.Adapter<AllMicroRecView
         holder.textName.setText(microAccountsList.get(position).getName());
         holder.textRole.setText(String.valueOf(microAccountsList.get(position).getRole()));
         holder.parent.setOnClickListener(v -> {
-                    viewModel.select(microAccountsList.get(position));
+                    viewModel.selectStakeholder(microAccountsList.get(position));
                     NavController navController = Navigation.findNavController(viewFromHostingClass);
                     String id = Caching.INSTANCE.getChosenAccountId();
                     ViewPagerHolderDirections.ActionViewPagerHolderToMicroAccountViewPagerHolder action =
