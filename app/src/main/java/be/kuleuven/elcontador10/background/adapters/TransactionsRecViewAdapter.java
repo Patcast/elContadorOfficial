@@ -55,10 +55,11 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         String stakeName = Caching.INSTANCE.getStakeholderName(idStakeholder);
         NumberFormatter formatter = new NumberFormatter(allTransactions.get(position).getAmount());
         if(formatter.isNegative())holder.textAmount.setTextColor(ContextCompat.getColor(context, R.color.rec_view_negative_amount));
+        if(formatter.isNegative())holder.textPaidBy.setText(R.string.paid_to);
         holder.textNameOfParticipant.setText(stakeName);
         holder.textAmount.setText(formatter.getFinalNumber());
         holder.textDate.setText(allTransactions.get(position).getShortDate());
-
+        holder.textTitle.setText(allTransactions.get(position).getTitle());
         holder.parent.setOnClickListener(v->{
             ViewPagerHolderDirections.ActionViewPagerHolderToTransactionDisplay action = ViewPagerHolderDirections.actionViewPagerHolderToTransactionDisplay(idOfTransaction);
             navController.navigate(action);
@@ -75,14 +76,17 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         private TextView textAmount;
         private TextView textDate;
         private TextView textNameOfParticipant;
+        private TextView textPaidBy;
         private ConstraintLayout parent;
 
         public ViewHolder(@NonNull  View itemView) {
             super(itemView);
+            textTitle = itemView.findViewById(R.id.text_title_allTrans);
             parent = itemView.findViewById(R.id.recVew_Item_AllTransactions);
             textTitle = itemView.findViewById(R.id.text_title_allTrans);
             textAmount = itemView.findViewById(R.id.textAmount);
             textDate = itemView.findViewById(R.id.text_date_allTrans);
+            textPaidBy = itemView.findViewById(R.id.textPaidBy);
             textNameOfParticipant = itemView.findViewById(R.id.text_nameOfParticipant);
 
         }

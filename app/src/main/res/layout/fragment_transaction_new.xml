@@ -7,10 +7,10 @@
     android:layout_width="match_parent">
 
 
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="wrap_content"
-    android:paddingBottom="20dp"
     android:id="@+id/frameLayout2"
     tools:context=".fragments.transactions.TransactionNew"
     android:paddingHorizontal="20dp"
@@ -21,9 +21,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+
                 >
                 <RadioButton
                     android:id="@+id/radio_CashIn"
@@ -36,7 +34,8 @@
                     android:scaleY="1.7"
                     android:text="@string/cash_in"
                     android:translationX="24dp"
-                    android:paddingVertical="10dp"/>
+                    android:paddingVertical="10dp"
+                    />
 
                 <RadioButton
                     android:id="@+id/radio_CashOut"
@@ -49,29 +48,35 @@
                     android:paddingVertical="10dp"/>
 
             </RadioGroup>
+    <EditText
+        android:id="@+id/text_newTransaction_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/title"
+        android:layout_marginTop="20dp"
+        android:inputType="text"
+        android:maxLength="22"
+        />
 
-            <EditText
-                android:id="@+id/ed_txt_amount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+    <EditText
+        android:id="@+id/ed_txt_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/amount"
+        android:inputType="number"
+        android:layout_marginTop="10dp"
 
-                android:layout_marginTop="30dp"
-                android:hint="@string/amount"
-                android:inputType="number"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        />
 
-            <TextView
+    <TextView
                 android:id="@+id/actv_stakeholder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/stakeholder"
-                android:layout_marginTop="30dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ed_txt_amount"
-                />
+                android:layout_marginTop="10dp"
+
+
+        />
 
     <TextView
         android:id="@+id/text_stakeholderSelected"
@@ -81,49 +86,38 @@
         android:layout_marginTop="5dp"
         android:background="@color/rec_view_gray"
         android:text="@string/select_an_stakeholder"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/actv_stakeholder" />
+        />
 
     <TextView
                 android:id="@+id/txtCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/select_a_category"
+                android:layout_marginTop="10dp"
 
-                android:layout_marginTop="15dp"
 
-                app:layout_constraintEnd_toEndOf="parent"
-                android:gravity="start"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_stakeholderSelected"/>
+        />
             <Spinner
                 android:id="@+id/sp_TransCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtCategory"/>
+               />
     <TextView
                 android:id="@+id/txtSubCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/select_a_sub_category"
-                android:layout_marginTop="15dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:gravity="start"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sp_TransCategory"/>
+            android:layout_marginTop="10dp"
+
+        />
 
             <Spinner
                 android:id="@+id/sp_TransSubcategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtSubCategory"/>
+             />
 
     <EditText
                 android:id="@+id/ed_txt_notes"
@@ -131,23 +125,22 @@
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
                 android:hint="@string/additional_comments"
-                android:layout_marginTop="15dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sp_TransSubcategory"
+                android:layout_marginTop="10dp"
+
+
         />
 
     <Button
+        android:layout_marginTop="30dp"
         android:id="@+id/btn_confirm_NewTransaction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/buttons"
         android:text="@string/confirm"
-        android:layout_marginTop="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ed_txt_notes" />
+     />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>
 </ScrollView>

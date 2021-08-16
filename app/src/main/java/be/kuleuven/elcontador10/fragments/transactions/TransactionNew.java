@@ -34,6 +34,7 @@ import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
 public class TransactionNew extends Fragment {
     private static final String TAG = "TransactionNew";
     RadioGroup radGroup;
+    EditText txtTitle;
     EditText txtAmount;
     TextView txtStakeHolder;
     Spinner spCategory;
@@ -63,6 +64,7 @@ public class TransactionNew extends Fragment {
         navController = Navigation.findNavController(view);
 ///      Initialize views
         radGroup = view.findViewById(R.id.radioGroup);
+        txtTitle = view.findViewById(R.id.text_newTransaction_title);
         txtAmount = view.findViewById(R.id.ed_txt_amount);
         txtStakeHolder = view.findViewById(R.id.text_stakeholderSelected);
         spCategory = view.findViewById(R.id.sp_TransCategory);
@@ -130,12 +132,13 @@ public class TransactionNew extends Fragment {
 
     private void makeNewTrans(){
         boolean cashOut = radGroup.getCheckedRadioButtonId() == R.id.radio_CashOut;
+        String title = txtTitle.getText().toString();
         int amount = Integer.parseInt(txtAmount.getText().toString());
         if(cashOut) amount = amount*-1;
         String category = spCategory.getSelectedItem().toString();
         String subCategory = spSubCategory.getSelectedItem().toString();
         String notes = txtNotes.getText().toString();
-        Transaction newTrans= new Transaction(amount, mainActivity.returnSavedLoggedEmail(), selectedStakeHolder.getId(),category,subCategory,notes);
+        Transaction newTrans= new Transaction(title,amount, mainActivity.returnSavedLoggedEmail(), selectedStakeHolder.getId(),category,subCategory,notes);
         newTrans.SendTransaction(newTrans);
     }
 

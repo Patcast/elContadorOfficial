@@ -25,6 +25,7 @@ public class Transaction {
     private static final String TAG = "newTransaction";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    private String title;
     private int amount;
     private String stakeHolder;
     private String id;
@@ -38,8 +39,8 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction( int amount, String registeredBy, String stakeHolder, String category, String subCategory, String notes) {
-
+    public Transaction( String title, int amount, String registeredBy, String stakeHolder, String category, String subCategory, String notes) {
+        this.title = title;
         this.amount = amount;
         this.registeredBy = registeredBy;
         this.stakeHolder = stakeHolder;
@@ -135,7 +136,9 @@ public class Transaction {
         this.id = id;
     }
 
-
+    public String getTitle() {
+        return title;
+    }
 }
 
 
