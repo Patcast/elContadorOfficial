@@ -67,7 +67,7 @@
     <string name="filter">Filter</string>
     <string name="dd_mm_yyyy">DD/MM/YYYY</string>
     <string name="pay_to">Pay to</string>
-    <string name="stakeholder">Micro-Account</string>
+    <string name="stakeholder">Stakeholder</string>
     <string name="additional_comments">Additional Comments</string>
     <string name="select_a_category">Select a category</string>
     <string name="select_a_sub_category">Select a sub-Category</string>
@@ -80,7 +80,7 @@
     <string name="delete">Delete</string>
     <string name="change_pic">Change Picture</string>
     <string name="all_stakeholders">All Stakeholders</string>
-    <string name="select_stakeholder">Select StakeHolder</string>
+    <string name="select_stakeholder">Select A Stakeholder</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="log_in">Log In</string>

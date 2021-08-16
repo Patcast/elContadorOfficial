@@ -30,7 +30,7 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
-
+//Todo: Improvement of Categories and programming limit words for notes and title. Also remove mandatory Stakeholder.
 public class TransactionNew extends Fragment {
     private static final String TAG = "TransactionNew";
     RadioGroup radGroup;
