@@ -20,7 +20,7 @@ import be.kuleuven.elcontador10.background.database.Caching;
 public class Transaction {
     private static final String TAG = "newTransaction";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    String urlForCollectionTransactions;
+
     private int amount;
     private String stakeHolder;
     private String id;
@@ -64,7 +64,8 @@ public class Transaction {
                 });
     }
     public void deleteTransaction(){
-        db.collection(urlForCollectionTransactions).document(getId())
+        String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
+        db.collection(urlNewTransactions).document(getId())
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

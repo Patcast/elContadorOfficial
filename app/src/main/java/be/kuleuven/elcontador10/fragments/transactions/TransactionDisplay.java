@@ -33,8 +33,9 @@ import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 
 public class TransactionDisplay extends Fragment  {
     private MainActivity mainActivity;
-    TextView concerning, registeredBy, idText ,cuenta, amount, category, subcategory, date, notes;
+    TextView concerning, registeredBy, idText ,account, amount, category, subcategory, date, notes;
     Transaction selectedTrans;
+    NavController navController;
 
 
     @Nullable
@@ -53,7 +54,7 @@ public class TransactionDisplay extends Fragment  {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        navController = Navigation.findNavController(view);
         try {
             TransactionDisplayArgs args = TransactionDisplayArgs.fromBundle(getArguments());
             String idOfTransaction = args.getId();
@@ -75,10 +76,16 @@ public class TransactionDisplay extends Fragment  {
         AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
         builder.setTitle("Delete transaction")
                 .setMessage("Are you sure you want to delete this transaction?")
-                .setPositiveButton("Yes", (dialog, which) ->selectedTrans.deleteTransaction())
+                .setPositiveButton("Yes", (dialog, which) ->confirmDelete())
                 .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                 .create()
                 .show();
+    }
+
+    private void confirmDelete(){
+        navController.popBackStack();
+        selectedTrans.deleteTransaction();
+
     }
 
 
@@ -86,7 +93,7 @@ public class TransactionDisplay extends Fragment  {
     public void initializeViews (View view) {
         amount = view.findViewById(R.id.textAmount);
         concerning = view.findViewById(R.id.textConcerningDisplay);
-        cuenta = view.findViewById(R.id.textAccountChosenDisplay);
+        account = view.findViewById(R.id.textAccountChosenDisplay);
         idText = view.findViewById(R.id.txtIdTransactionDISPLAY);
         category = view.findViewById(R.id.txtCategoryDisplay);
         subcategory = view.findViewById(R.id.txtSubCategoryDisplay);
@@ -114,14 +121,13 @@ public class TransactionDisplay extends Fragment  {
             amountText.append(amountCollected);
             amount.setText(amountText);
             concerning.setText(Caching.INSTANCE.getStakeholderName(selectedTrans.getStakeHolder()));
-            cuenta.setText(Caching.INSTANCE.getAccountName());
+            account.setText(Caching.INSTANCE.getAccountName());
             idText.setText(selectedTrans.getId());
             category.setText(selectedTrans.getCategory());
             subcategory.setText(selectedTrans.getSubCategory());
             date.setText(String.valueOf(selectedTrans.getDate().toDate()));
-            registeredBy.setText(Caching.INSTANCE.getStakeholderName(selectedTrans.getRegisteredBy()));
+            registeredBy.setText(selectedTrans.getRegisteredBy());
             notes.setText(selectedTrans.getNotes());
-
         }
     }
 

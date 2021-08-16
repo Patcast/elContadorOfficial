@@ -1,33 +1,35 @@
 package be.kuleuven.elcontador10.background.database;
 
 import android.content.Context;
-import android.content.SharedPreferences;
+
 import android.os.Build;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
+
 import androidx.annotation.RequiresApi;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.sql.SQLOutput;
+import com.google.firebase.firestore.DocumentReference;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.core.OrderBy;
+
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
+
 import be.kuleuven.elcontador10.background.model.Account;
-import be.kuleuven.elcontador10.background.model.LoggedUser;
+
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
+import be.kuleuven.elcontador10.background.model.User;
 
 public enum Caching {
     INSTANCE;
@@ -66,29 +68,6 @@ public enum Caching {
             accountsObservers.remove(unWantedObserver);
         }
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void requestAllUserAccounts(String email){
-
-        db.collection("accounts").
-                whereArrayContains("users", email).
-                addSnapshotListener((value, e) -> {
-
-                        if (e != null) {
-                            Log.w(TAG, "Listen failed.", e);
-                            return;
-                        }
-                        accounts.clear();
-                        for (QueryDocumentSnapshot doc : value) {
-                            if (doc.get("name") != null) {
-                                Account myAccount =  doc.toObject(Account.class);
-                                myAccount.setId( doc.getId());
-                                accounts.add(myAccount);
-                            }
-                        }
-                        accountsObservers.forEach(t->t.notifyAccountsObserver(getAccounts()));
-        });
-    }
-
 
 
     ////*********Data
@@ -189,9 +168,9 @@ public enum Caching {
     //////// DATA BASE ****************
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestAllUserAccounts(String email){
-
         db.collection("accounts").
                 whereArrayContains("users", email).
+                orderBy("name").
                 addSnapshotListener((value, e) -> {
 
                     if (e != null) {
@@ -209,8 +188,6 @@ public enum Caching {
                     accountsObservers.forEach(t->t.notifyAccountsObserver(getAccounts()));
                 });
     }
-
-
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestStaticData(){
@@ -261,8 +238,9 @@ public enum Caching {
     public void requestAccountTransactions(String chosenAccountId){
 
     String urlGetAccountTransactions = "/accounts/"+chosenAccountId+"/transactions";
-        db.collection(urlGetAccountTransactions)
-                .addSnapshotListener((value, e) -> {
+        db.collection(urlGetAccountTransactions).
+                orderBy("date", Query.Direction.DESCENDING).
+                addSnapshotListener((value, e) -> {
                     if (e != null) {
                         Log.w(TAG, "Listen failed.", e);
                         return;
@@ -277,7 +255,7 @@ public enum Caching {
                 });
     }
     User requestedUser;
-    private User requestUser(String userEmail){
+    public User requestUser(String userEmail){
 
         db.collection("users").whereEqualTo("email",userEmail).
         addSnapshotListener((value, e) -> {
