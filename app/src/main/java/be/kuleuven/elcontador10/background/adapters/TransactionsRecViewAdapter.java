@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,8 +54,7 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         String idOfTransaction = allTransactions.get(position).getId();
         String stakeName = Caching.INSTANCE.getStakeholderName(idStakeholder);
         NumberFormatter formatter = new NumberFormatter(allTransactions.get(position).getAmount());
-        if(formatter.isNegative())holder.textAmount.setText(String.valueOf(R.color.rec_view_negative_amount));
-
+        if(formatter.isNegative())holder.textAmount.setTextColor(ContextCompat.getColor(context, R.color.rec_view_negative_amount));
         holder.textNameOfParticipant.setText(stakeName);
         holder.textAmount.setText(formatter.getFinalNumber());
         holder.textDate.setText(allTransactions.get(position).getShortDate());
