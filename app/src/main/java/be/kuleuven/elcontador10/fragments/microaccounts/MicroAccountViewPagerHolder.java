@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,11 +20,16 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.ViewPagerAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 
 public class MicroAccountViewPagerHolder extends Fragment {
     private ViewPagerAdapter mAdapter;
+
+    private TextView textRole;
+    private TextView textBalance;
     private ViewPager2 viewPager;
+
     private MainActivity mainActivity;
     private String chosenAccountId;
 
@@ -42,6 +48,10 @@ public class MicroAccountViewPagerHolder extends Fragment {
         View view = inflater.inflate(R.layout.fragment_micro_account_view_holder, container, false);
         viewPager = view.findViewById(R.id.viewPagerHolder);
         mAdapter = new ViewPagerAdapter(mainActivity.getSupportFragmentManager(), getLifecycle());
+
+        textBalance = view.findViewById(R.id.txtViewBalance);
+        textRole = view.findViewById(R.id.txtViewRole);
+
         addFragments(view);
 
         return view;
@@ -53,12 +63,16 @@ public class MicroAccountViewPagerHolder extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         StakeHolder stakeHolder = MicroAccountViewPagerHolderArgs.fromBundle(getArguments()).getStakeHolder();
-        mainActivity.setHeaderText(stakeHolder.getName());
+        mainActivity.setHeaderText(stakeHolder.getName() + " - " + Caching.INSTANCE.getAccountName());
         mainActivity.displayTabLayout(true);
 
-        chosenAccountId = MicroAccountViewPagerHolderArgs.fromBundle(getArguments()).getAccountID();
+        chosenAccountId = Caching.INSTANCE.getChosenAccountId();
 
-        Caching.INSTANCE.openMicroAccount(stakeHolder.getId());
+        // set texts
+        textRole.setText(stakeHolder.getRole());
+        textBalance.setText(new NumberFormatter(stakeHolder.getBalance()).getFinalNumber());
+
+        Caching.INSTANCE.openMicroAccount(stakeHolder.getId()); // set MicroAccount to caching
     }
 
     private void addFragments(View view) {

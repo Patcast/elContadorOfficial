@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
 import be.kuleuven.elcontador10.fragments.ViewPagerHolderDirections;
@@ -50,12 +51,14 @@ public class AllMicroRecViewAdapter extends RecyclerView.Adapter<AllMicroRecView
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
         holder.textName.setText(microAccountsList.get(position).getName());
         holder.textRole.setText(String.valueOf(microAccountsList.get(position).getRole()));
+        NumberFormatter formatter = new NumberFormatter(microAccountsList.get(position).getBalance());
+        String formatted = formatter.getFinalNumber();
+        holder.textBalance.setText(formatted);
         holder.parent.setOnClickListener(v -> {
                     viewModel.select(microAccountsList.get(position));
                     NavController navController = Navigation.findNavController(viewFromHostingClass);
-                    String id = Caching.INSTANCE.getChosenAccountId();
                     ViewPagerHolderDirections.ActionViewPagerHolderToMicroAccountViewPagerHolder action =
-                        ViewPagerHolderDirections.actionViewPagerHolderToMicroAccountViewPagerHolder(microAccountsList.get(position), Caching.INSTANCE.getChosenAccountId());
+                        ViewPagerHolderDirections.actionViewPagerHolderToMicroAccountViewPagerHolder(microAccountsList.get(position));
                     navController.navigate(action);
                 }
         );
@@ -70,6 +73,7 @@ public class AllMicroRecViewAdapter extends RecyclerView.Adapter<AllMicroRecView
     public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView textName;
         private TextView textRole;
+        private TextView textBalance;
         private ImageView buttonNewTransaction;
         private ConstraintLayout parent;
 
@@ -78,6 +82,7 @@ public class AllMicroRecViewAdapter extends RecyclerView.Adapter<AllMicroRecView
             parent = itemView.findViewById(R.id.parent_allMicros);
             textName = itemView.findViewById(R.id.text_Account_name_Micros);
             textRole = itemView.findViewById(R.id.text_micros_role);
+            textBalance = itemView.findViewById(R.id.text_micros_balance);
         }
     }
 

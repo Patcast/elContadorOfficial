@@ -9,6 +9,17 @@
     android:paddingVertical="5dp"
     android:id="@+id/parent_allMicros"
     >
+
+        <TextView
+            android:id="@+id/text_micros_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="21dp"
+            android:layout_marginRight="21dp"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_Account_name_Micros" />
+
         <TextView
             android:id="@+id/text_Account_name_Micros"
             android:layout_width="wrap_content"
@@ -33,5 +44,5 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="20dp" />
+            app:layout_constraintGuide_begin="21dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

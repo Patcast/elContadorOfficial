@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi;
 
 public class StakeHolder implements Parcelable {
     private String id;
+    private long balance;
     private String name;
     private String role;
     private boolean deleted;
@@ -16,7 +17,8 @@ public class StakeHolder implements Parcelable {
     private String idOfGlobalAccount;
     private boolean authorized;
 
-    public StakeHolder(String name, String role, boolean deleted, String email, int phoneNumber, String idOfGlobalAccount, boolean authorized) {
+    public StakeHolder(long balance, String name, String role, boolean deleted, String email, int phoneNumber, String idOfGlobalAccount, boolean authorized) {
+        this.balance = balance;
         this.name = name;
         this.role = role;
         this.deleted = deleted;
@@ -28,6 +30,7 @@ public class StakeHolder implements Parcelable {
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     protected StakeHolder(Parcel in) {
+        this.balance = in.readLong();
         this.name = in.readString();
         this.role = in.readString();
         this.deleted = in.readBoolean();
@@ -60,6 +63,7 @@ public class StakeHolder implements Parcelable {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeDouble(balance);
         parcel.writeString(name);
         parcel.writeString(role);
         parcel.writeBoolean(deleted);
@@ -79,6 +83,10 @@ public class StakeHolder implements Parcelable {
 
     public String getId() {
         return id;
+    }
+
+    public long getBalance() {
+        return balance;
     }
 
     public String getName() {
