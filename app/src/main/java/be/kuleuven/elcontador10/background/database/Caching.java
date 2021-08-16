@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.sql.Timestamp;
 
 import be.kuleuven.elcontador10.R;
 
@@ -30,6 +31,7 @@ import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 import be.kuleuven.elcontador10.background.model.User;
 import be.kuleuven.elcontador10.background.model.contract.Contract;
+import be.kuleuven.elcontador10.background.model.contract.Payment;
 
 public enum Caching {
     INSTANCE;
@@ -329,12 +331,36 @@ public enum Caching {
 
                    for (QueryDocumentSnapshot doc : value) {
                        Contract myContract = doc.toObject(Contract.class);
+
                        myContract.setId(doc.getId());
+                       myContract.setPayments(getMicroAccountPayments(chosenAccountId, microAccountId, doc.getId()));
+
                        microAccountContracts.add(myContract);
                    }
 
                    microAccountContractObservers.forEach(t -> t.notifyMicroAccountContractsObserver(microAccountContracts));
                 });
+    }
+
+    private ArrayList<Payment> getMicroAccountPayments(String chosenAccountId, String microAccountId, String contractId) {
+        String url = "/accounts/" + chosenAccountId + "/stakeHolders/" + microAccountId + "/contracts/" + contractId + "/payments";
+        ArrayList<Payment> payments = new ArrayList<>();
+
+        db.collection(url)
+                .addSnapshotListener((value, e) -> {
+                   if (e!= null) {
+                       Log.w(TAG, "Listen failed", e);
+                       return;
+                   }
+
+                   for (QueryDocumentSnapshot doc : value) {
+                       Payment myPayment = doc.toObject(Payment.class);
+                       myPayment.setId(doc.getId());
+                       payments.add(myPayment);
+                   }
+                });
+
+        return payments;
     }
 
 //////************** end of db

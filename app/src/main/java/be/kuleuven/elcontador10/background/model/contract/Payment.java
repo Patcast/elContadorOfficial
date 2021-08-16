@@ -1,6 +1,8 @@
 package be.kuleuven.elcontador10.background.model.contract;
 
-import java.sql.Timestamp;
+
+import com.google.firebase.Timestamp;
+import com.google.type.Date;
 
 public class Payment {
     private String id;
@@ -11,8 +13,7 @@ public class Payment {
     private String frequency;
     private String notes;
 
-    public Payment(String id, String title, long amount, Timestamp start, Timestamp end, String frequency, String notes) {
-        this.id = id;
+    public Payment(String title, long amount, Timestamp start, Timestamp end, String frequency, String notes) {
         this.title = title;
         this.amount = amount;
         this.start = start;
@@ -20,6 +21,8 @@ public class Payment {
         this.frequency = frequency;
         this.notes = notes;
     }
+
+    public Payment() {}
 
     public String getId() {
         return id;

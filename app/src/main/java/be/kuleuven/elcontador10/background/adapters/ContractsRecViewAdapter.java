@@ -14,6 +14,8 @@ import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -21,12 +23,13 @@ import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.contract.Contract;
+import be.kuleuven.elcontador10.background.model.contract.Payment;
 
 public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecViewAdapter.ViewHolder> {
     private List<Contract> contracts;
     private final View viewFromHostingClass;
-    private Context context;
-    NavController navController;
+    private final Context context;
+    private NavController navController;
 
     public ContractsRecViewAdapter(View view, Context context) {
         viewFromHostingClass = view;
@@ -53,10 +56,20 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
             if (holder.payments.getVisibility() == View.GONE) {
                 holder.expand.setBackground(context.getDrawable(R.drawable.icon_compress));
                 holder.payments.setVisibility(View.VISIBLE);
+
+                // set up Payments recycler view
+                holder.payments.setLayoutManager(new LinearLayoutManager(context));
+                ArrayList<Payment> payments = contract.getPayments();
+                PaymentsRecViewAdapter adapter = new PaymentsRecViewAdapter(viewFromHostingClass, context);
+                adapter.setPayments(payments);
+                holder.payments.setAdapter(adapter);
+
+                holder.divider.setVisibility(View.VISIBLE);
             }
             else {
                 holder.expand.setBackground(context.getDrawable(R.drawable.icon_expand));
                 holder.payments.setVisibility(View.GONE);
+                holder.divider.setVisibility(View.GONE);
             }
         });
 
@@ -78,6 +91,7 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
         private final Button expand;
         private final RecyclerView payments;
         private final ConstraintLayout layout;
+        private final View divider;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -86,6 +100,7 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
             expand = itemView.findViewById(R.id.contract_expand);
             payments = itemView.findViewById(R.id.contract_recyclerview);
             layout = itemView.findViewById(R.id.contract_layout);
+            divider = itemView.findViewById(R.id.contract_divider);
         }
     }
 
