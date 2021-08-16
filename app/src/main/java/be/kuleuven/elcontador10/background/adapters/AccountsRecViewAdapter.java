@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Account;
+import be.kuleuven.elcontador10.background.model.NumberFormatter;
 
 
 public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecViewAdapter.ViewHolder>  {
@@ -46,10 +47,8 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
     public void onBindViewHolder(@NonNull  AccountsRecViewAdapter.ViewHolder holder, int position) {
         holder.textName.setText(accounts.get(position).getName());
         long amount = accounts.get(position).getBalance();
-        StringBuilder amountText = new StringBuilder();
-        amountText.append("$" );
-        amountText.append(amount);
-        holder.textBalance.setText(amountText);
+        NumberFormatter formatter = new NumberFormatter(amount);
+        holder.textBalance.setText(formatter.getFinalNumber());
 
         holder.parent.setOnClickListener(v -> {
             String chosenAccount = accounts.get(position).getId();

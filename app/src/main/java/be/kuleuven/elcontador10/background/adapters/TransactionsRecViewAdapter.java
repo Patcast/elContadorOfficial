@@ -22,6 +22,7 @@ import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.fragments.ViewPagerHolderDirections;
 
@@ -51,19 +52,12 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         String idStakeholder = allTransactions.get(position).getStakeHolder();
         String idOfTransaction = allTransactions.get(position).getId();
         String stakeName = Caching.INSTANCE.getStakeholderName(idStakeholder);
-        holder.textName.setText(stakeName);
-        long amount = allTransactions.get(position).getAmount();
-        StringBuilder amountText = new StringBuilder();
-        if(amount<0){
-            holder.textAmount.setTextColor(Color.parseColor("#ffc7c7"));
-            amount = amount *-1;
-            amountText.append("- $" );
-        }
-        else{
-            amountText.append("  $" );
-        }
-        amountText.append(amount);
-        holder.textAmount.setText(amountText);
+        NumberFormatter formatter = new NumberFormatter(allTransactions.get(position).getAmount());
+        if(formatter.isNegative())holder.textAmount.setText(String.valueOf(R.color.rec_view_negative_amount));
+
+        holder.textNameOfParticipant.setText(stakeName);
+        holder.textAmount.setText(formatter.getFinalNumber());
+        holder.textDate.setText(allTransactions.get(position).getShortDate());
 
         holder.parent.setOnClickListener(v->{
             ViewPagerHolderDirections.ActionViewPagerHolderToTransactionDisplay action = ViewPagerHolderDirections.actionViewPagerHolderToTransactionDisplay(idOfTransaction);
@@ -77,15 +71,20 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView textName;
+        private TextView textTitle;
         private TextView textAmount;
+        private TextView textDate;
+        private TextView textNameOfParticipant;
         private ConstraintLayout parent;
 
         public ViewHolder(@NonNull  View itemView) {
             super(itemView);
             parent = itemView.findViewById(R.id.recVew_Item_AllTransactions);
-            textName = itemView.findViewById(R.id.textMicroAccount);
+            textTitle = itemView.findViewById(R.id.text_title_allTrans);
             textAmount = itemView.findViewById(R.id.textAmount);
+            textDate = itemView.findViewById(R.id.text_date_allTrans);
+            textNameOfParticipant = itemView.findViewById(R.id.text_nameOfParticipant);
+
         }
     }
 

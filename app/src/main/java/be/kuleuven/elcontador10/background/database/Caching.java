@@ -170,7 +170,6 @@ public enum Caching {
     public void requestAllUserAccounts(String email){
         db.collection("accounts").
                 whereArrayContains("users", email).
-                orderBy("name").
                 addSnapshotListener((value, e) -> {
 
                     if (e != null) {

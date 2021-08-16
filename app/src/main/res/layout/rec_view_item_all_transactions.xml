@@ -4,17 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/recVew_Item_AllTransactions"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-    android:background="@color/rec_view_gray">
+    android:paddingHorizontal="15dp"
+    android:background="@color/rec_view_transactions">
 
     <TextView
-        android:id="@+id/textMicroAccount"
+        android:id="@+id/text_title_allTrans"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Transacción"
+        android:layout_marginTop="10dp"
+        android:text="Renta de Noviembre"
+        android:textColor="@color/rec_view_title"
+        android:layout_marginBottom="10dp"
+
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,21 +27,48 @@
         android:id="@+id/textAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="17dp"
-        android:layout_marginRight="17dp"
-        android:text="@string/amount"
+        android:textColor="@color/rec_view_title"
+        android:text="$4,000.00"
         android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/text_title_allTrans"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.511" />
+        app:layout_constraintTop_toTopOf="@+id/text_title_allTrans" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="17dp" />
+        app:layout_constraintGuide_begin="10dp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="pagado por"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline4"
+        app:layout_constraintTop_toBottomOf="@+id/text_title_allTrans" />
+
+    <TextView
+        android:id="@+id/text_date_allTrans"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Yesterday"
+        app:layout_constraintBottom_toBottomOf="@+id/textView4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/text_nameOfParticipant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="Patricio Castillo"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toTopOf="@+id/textView4"
+        android:layout_marginStart="5dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,18 +1,22 @@
 package be.kuleuven.elcontador10.background.model;
 
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.type.DateTime;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
+
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import be.kuleuven.elcontador10.background.database.Caching;
@@ -82,7 +86,14 @@ public class Transaction {
     }
 
 
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String getShortDate(){
+        String [] bitsOfDate = date.toDate().toString().split(" ");
+        StringBuilder shortDate = new StringBuilder();
+        shortDate.append(bitsOfDate[1]);
+        shortDate.append(bitsOfDate[2]);
+        return shortDate.toString();
+    }
 
     public int getAmount() {
         return amount;

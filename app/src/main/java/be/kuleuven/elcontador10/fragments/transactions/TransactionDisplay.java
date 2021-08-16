@@ -28,6 +28,7 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.database.TransactionsManager;
 import be.kuleuven.elcontador10.background.interfaces.transactions.TransactionsDisplayInterface;
+import be.kuleuven.elcontador10.background.model.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.parcels.FilterTransactionsParcel;
 
@@ -108,18 +109,9 @@ public class TransactionDisplay extends Fragment  {
         if(selectedTrans.equals(null))Toast.makeText(getContext(),"error getting Transaction",Toast.LENGTH_SHORT);
         else {
 
-            long amountCollected = selectedTrans.getAmount();
-            StringBuilder amountText = new StringBuilder();
-            if(amountCollected<0){
-                amount.setTextColor(Color.parseColor("#ffc7c7"));
-                amountCollected = amountCollected *-1;
-                amountText.append("- $" );
-            }
-            else{
-                amountText.append("  $ " );
-            }
-            amountText.append(amountCollected);
-            amount.setText(amountText);
+            NumberFormatter formatter = new NumberFormatter(selectedTrans.getAmount());
+            if(formatter.isNegative())amount.setTextColor(Color.parseColor("#ffc7c7"));
+            amount.setText(formatter.getFinalNumber());
             concerning.setText(Caching.INSTANCE.getStakeholderName(selectedTrans.getStakeHolder()));
             account.setText(Caching.INSTANCE.getAccountName());
             idText.setText(selectedTrans.getId());

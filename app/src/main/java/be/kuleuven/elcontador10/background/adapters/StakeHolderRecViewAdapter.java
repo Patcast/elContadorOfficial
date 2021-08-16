@@ -39,13 +39,13 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View viewParent = LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_view_item_accounts,parent,false);
+            View viewParent = LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_view_item_all_micros,parent,false);
             return new ViewHolder(viewParent);
             }
 
     @Override
     public void onBindViewHolder(@NonNull  StakeHolderRecViewAdapter.ViewHolder holder, int position) {
-            holder.buttonNewTransaction.setVisibility(View.INVISIBLE);
+
             holder.textName.setText(stakeholdersList.get(position).getName());
             holder.textRole.setText(String.valueOf(stakeholdersList.get(position).getRole()));
            holder.parent.setOnClickListener(v -> {
@@ -69,11 +69,9 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            parent = itemView.findViewById(R.id.RecView_ChooseAc);
-            textName = itemView.findViewById(R.id.text_Account_name);
-            textRole = itemView.findViewById(R.id.text_Account_balance);
-            buttonNewTransaction = itemView.findViewById(R.id.imageAddTransaction);
-
+            parent = itemView.findViewById(R.id.parent_allMicros);
+            textName = itemView.findViewById(R.id.text_Account_name_Micros);
+            textRole = itemView.findViewById(R.id.text_micros_role);
         }
     }
 
