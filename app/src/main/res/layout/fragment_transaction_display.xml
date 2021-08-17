@@ -35,7 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TextView"
-                    app:layout_constraintStart_toStartOf="@+id/guideline13"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline13"
                     app:layout_constraintTop_toTopOf="@+id/guideline10" />
 
                 <TextView
@@ -53,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:text="TextView"
-                    app:layout_constraintStart_toStartOf="@+id/guideline13"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline13"
                     app:layout_constraintTop_toBottomOf="@+id/txtIdTransactionDISPLAY" />
 
                 <TextView
@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:text="TextView"
-                    app:layout_constraintStart_toStartOf="@+id/guideline13"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline13"
                     app:layout_constraintTop_toBottomOf="@+id/txtCategoryDisplay" />
 
                 <TextView
@@ -89,7 +89,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:text="TextView"
-                    app:layout_constraintStart_toStartOf="@+id/guideline13"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline13"
                     app:layout_constraintTop_toBottomOf="@+id/txtSubCategoryDisplay" />
 
                 <TextView
@@ -107,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:text="TextView"
-                    app:layout_constraintStart_toStartOf="@+id/guideline13"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline13"
                     app:layout_constraintTop_toBottomOf="@+id/txtDateDisplay" />
 
                 <TextView
@@ -124,10 +124,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginRight="15dp"
                     android:text="TextView"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline13"
                     app:layout_constraintStart_toStartOf="@+id/guideline11"
                     app:layout_constraintTop_toBottomOf="@+id/txtNotes" />
 
@@ -136,14 +134,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintGuide_begin="71dp" />
+                    app:layout_constraintGuide_begin="40dp" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline13"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintGuide_begin="186dp" />
+                    app:layout_constraintGuide_end="40dp" />
 
                 <Button
                     android:id="@+id/buttonDeleteTransaction"

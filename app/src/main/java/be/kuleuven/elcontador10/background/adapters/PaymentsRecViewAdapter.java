@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,11 +28,13 @@ public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecView
     private final View viewFromHostingClass;
     private Context context;
     private NavController navController;
+    private Fragment fragment;
 
-    public PaymentsRecViewAdapter(View viewFromHostingClass, Context context) {
+    public PaymentsRecViewAdapter(View viewFromHostingClass, Context context, Fragment fragment) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.context = context;
         payments = new ArrayList<>();
+        this.fragment = fragment;
     }
 
     @NonNull

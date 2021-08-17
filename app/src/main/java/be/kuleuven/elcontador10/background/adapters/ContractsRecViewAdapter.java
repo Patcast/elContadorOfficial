@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -24,17 +25,20 @@ import java.util.List;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.contract.Contract;
 import be.kuleuven.elcontador10.background.model.contract.Payment;
+import be.kuleuven.elcontador10.fragments.microaccounts.MicroAccountViewPagerHolderDirections;
 
 public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecViewAdapter.ViewHolder> {
     private List<Contract> contracts;
     private final View viewFromHostingClass;
     private final Context context;
     private NavController navController;
+    private Fragment fragment;
 
-    public ContractsRecViewAdapter(View view, Context context) {
+    public ContractsRecViewAdapter(View view, Context context, Fragment fragment) {
         viewFromHostingClass = view;
         this.context = context;
         contracts = new ArrayList<>();
+        this.fragment = fragment;
     }
 
     @NonNull
@@ -60,7 +64,7 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
                 // set up Payments recycler view
                 holder.payments.setLayoutManager(new LinearLayoutManager(context));
                 ArrayList<Payment> payments = contract.getPayments();
-                PaymentsRecViewAdapter adapter = new PaymentsRecViewAdapter(viewFromHostingClass, context);
+                PaymentsRecViewAdapter adapter = new PaymentsRecViewAdapter(viewFromHostingClass, context, fragment);
                 adapter.setPayments(payments);
                 holder.payments.setAdapter(adapter);
 
@@ -73,10 +77,10 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
             }
         });
 
-
-        // TODO go to contracts page when clicked
         holder.layout.setOnClickListener(v -> {
-
+            MicroAccountViewPagerHolderDirections.ActionMicroAccountViewPagerHolderToContractDisplay action =
+                    MicroAccountViewPagerHolderDirections.actionMicroAccountViewPagerHolderToContractDisplay(contract.getId());
+            navController.navigate(action);
         });
     }
 

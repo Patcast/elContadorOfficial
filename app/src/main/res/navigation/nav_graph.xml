@@ -175,5 +175,17 @@
         <action
             android:id="@+id/action_microAccountViewPagerHolder_to_newTransaction"
             app:destination="@id/newTransaction" />
+        <action
+            android:id="@+id/action_microAccountViewPagerHolder_to_contractDisplay"
+            app:destination="@id/contractDisplay" />
+    </fragment>
+    <fragment
+        android:id="@+id/contractDisplay"
+        android:name="be.kuleuven.elcontador10.fragments.microaccounts.ContractDisplay"
+        android:label="fragment_contract_display"
+        tools:layout="@layout/fragment_contract_display" >
+        <argument
+            android:name="id"
+            app:argType="string" />
     </fragment>
 </navigation>

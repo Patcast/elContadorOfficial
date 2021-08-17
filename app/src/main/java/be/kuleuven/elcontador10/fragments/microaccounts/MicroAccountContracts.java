@@ -27,7 +27,6 @@ public class MicroAccountContracts extends Fragment implements Caching.MicroAcco
     private ContractsRecViewAdapter adapter;
     private List<Contract> contracts;
     private FloatingActionButton fab;
-    private NavController navController;
 
     @Nullable
     @Override
@@ -42,7 +41,7 @@ public class MicroAccountContracts extends Fragment implements Caching.MicroAcco
         recyclerView = view.findViewById(R.id.RecViewContracts);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new ContractsRecViewAdapter(view, getContext());
+        adapter = new ContractsRecViewAdapter(view, getContext(), this);
         Caching.INSTANCE.attachMicroContractObserver(this);
         if (contracts.size() > 0) adapter.setContracts(contracts);
 

@@ -333,6 +333,7 @@ public enum Caching {
                        Contract myContract = doc.toObject(Contract.class);
 
                        myContract.setId(doc.getId());
+                       myContract.setMicroAccount(microAccountId);
                        myContract.setPayments(getMicroAccountPayments(chosenAccountId, microAccountId, doc.getId()));
 
                        microAccountContracts.add(myContract);
@@ -364,6 +365,8 @@ public enum Caching {
     }
 
 //////************** end of db
+
+    // getters
 
     public void setChosenAccountId(String chosenAccountId) {
         this.chosenAccountId = chosenAccountId;
@@ -428,5 +431,12 @@ public enum Caching {
         return possibleName.orElse(context.getString(R.string.error_finding_microAccount));
     }
 
+    public Contract getContractFromId(String id) {
+        for (Contract contract : microAccountContracts) {
+            if (contract.getId().equals(id)) return contract;
+        }
+        Log.w(TAG, "Contract not found", new IllegalArgumentException());
+        return null;
+    }
 
 }
