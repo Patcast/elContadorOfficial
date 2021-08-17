@@ -58,6 +58,7 @@ public class TransactionNew extends Fragment {
                              Bundle savedInstanceState) {
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setHeaderText(getString(R.string.new_transaction_title));
+        mainActivity.displayTopMenu(false);
         return inflater.inflate(R.layout.fragment_transaction_new, container, false);
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -88,54 +89,6 @@ public class TransactionNew extends Fragment {
     }
 
     private void setWordCounters() {
-
-       /* txtTitle.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                int maxCharacters = 30;
-                String text = txtTitle.getText().toString();
-                String counter = text.length()+"/"+ maxCharacters;
-                txtWordsCounterTitle.setText(counter);
-                if (text.length()>maxCharacters){
-                    txtWordsCounterTitle.setTextColor(getResources().getColor(R.color.contador_red));
-                } else{
-                    txtWordsCounterTitle.setTextColor(getResources().getColor(R.color.light_grey));
-                }
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        txtNotes.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                int maxCharacters = 100;
-                String text = txtNotes.getText().toString();
-                String counter = text.length()+"/"+ maxCharacters;
-                txtWordsCounterNotes.setText(counter);
-                if (text.length()>maxCharacters){
-                    txtWordsCounterNotes.setTextColor(getResources().getColor(R.color.contador_red));
-                } else{
-                    txtWordsCounterNotes.setTextColor(getResources().getColor(R.color.light_grey));
-                }
-
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });*/
         new MaxWordsCounter(30,txtTitle,txtWordsCounterTitle,getContext());
         new MaxWordsCounter(100,txtNotes,txtWordsCounterNotes,getContext());
 

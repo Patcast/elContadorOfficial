@@ -49,6 +49,7 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         View view = inflater.inflate(R.layout.fragment_choose_category, container, false);
         MainActivity mainActivity = (MainActivity) requireActivity();
         mainActivity.setHeaderText(getString(R.string.choose_category));
+        mainActivity.displayTopMenu(true);
         mainActivity.setCurrentMenuClicker(this);
         noCategoryItem = view.findViewById(R.id.choose_noCat);
         Caching.INSTANCE.attachCatObserver(this);

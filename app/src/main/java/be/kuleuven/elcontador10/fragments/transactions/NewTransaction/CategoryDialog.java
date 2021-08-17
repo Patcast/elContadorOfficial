@@ -14,60 +14,106 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.vanniktech.emoji.EmojiUtils;
+import com.vdurmont.emoji.EmojiManager;
+import com.vdurmont.emoji.EmojiParser;
 
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
 
 public class CategoryDialog extends DialogFragment {
+
+    EmojiCategory editingEmoji;
     EditText edTextName,edTextIcon;
-    TextView textWordCounter,textEmojiRequest;
+    TextView textWordCounter,textEmojiRequest,dialogTitle;
     Button btnDelete,btnConfirm;
+    public CategoryDialog() {
+    }
+
+    public CategoryDialog(EmojiCategory editingEmojiInput) {
+        this.editingEmoji = editingEmojiInput;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialoge_category_editing,null);
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        dialogTitle = view.findViewById(R.id.text_categoryDialog_title);
         edTextName = view.findViewById(R.id.editText_category_Name);
         edTextIcon = view.findViewById(R.id.editText_category_Icon);
         textWordCounter = view.findViewById(R.id.text_categories_wordCounter);
         textEmojiRequest = view.findViewById(R.id.text_categories_verify_emoji);
         btnDelete = view.findViewById(R.id.button_category_delete);
         btnConfirm = view.findViewById(R.id.button_category_confirm);
-        setWordCounter();
-
-        btnConfirm.setOnClickListener(v -> confirmCategory());
+        updateUIEditingMode();
+        return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setWordCounter();
+        btnConfirm.setOnClickListener(v -> confirmCategory());
+        btnDelete.setOnClickListener(v->deleteCategory());
+    }
+
+    private void deleteCategory() {
+        if(editingEmoji!=null){
+            editingEmoji.deleteCategory();
+
+        }
+        dismiss();
+
+    }
+
+    private void updateUIEditingMode() {
+        if (editingEmoji!=null){
+            edTextName.setText(editingEmoji.getTitle());
+            edTextIcon.setText(editingEmoji.getIcon());
+            dialogTitle.setText(R.string.editing_custom_category);
+        }
+        else {
+            dialogTitle.setText(R.string.add_new_cat);
+            btnDelete.setText(R.string.dismiss);
+        }
+
+    }
+
     private void setWordCounter() {
         new MaxWordsCounter(20,edTextName,textWordCounter,getContext());
     }
     private void confirmCategory() {
         String title = edTextName.getText().toString();
         String emoji = edTextIcon.getText().toString();
-        if (EmojiUtils.isOnlyEmojis(emoji)) {
-            EmojiCategory newEmoji = new EmojiCategory(title,emoji);
-            Toast.makeText(getContext(),"emoji",Toast.LENGTH_SHORT).show();
+        if(title.length()!=0){
+                        if(emoji.length()!=0){
+                                                if (EmojiManager.isEmoji(emoji)){
+                                                                        if(editingEmoji==null){
+                                                                            EmojiCategory newEmoji = new EmojiCategory(title,emoji);
+                                                                            newEmoji.saveNewCategory(newEmoji);
+                                                                        }else{
+                                                                            editingEmoji.setIcon(emoji);
+                                                                            editingEmoji.setTitle(title);
+                                                                            editingEmoji.updateCategory(editingEmoji);
+                                                                            editingEmoji=null;
+
+                                                                        }
+                                                                        dismiss();
+                                                } else {
+                                                    textEmojiRequest.setVisibility(View.VISIBLE);
+                                                    textEmojiRequest.setText(R.string.invalid_icon_please_enter_an_emoji);
+                                                }
+                        }else{
+                            textEmojiRequest.setVisibility(View.VISIBLE);
+                            textEmojiRequest.setText(R.string.this_field_is_requiered);
+                        }
+        }else{
+            textWordCounter.setText(R.string.this_field_is_requiered);
+            textWordCounter.setTextColor(getResources().getColor(R.color.light_red_warning));
         }
-        else Toast.makeText(getContext(),"No emoji",Toast.LENGTH_SHORT).show();
-       /* String htmlifiedText = EmojiUtils.isOnlyEmojis(emoji);
-// regex to identify html entitities in htmlified text
-        Matcher matcher = htmlEntityPattern.matcher(htmlifiedText);
-
-        while (matcher.find()) {
-            String emojiCode = matcher.group();
-            if (isEmoji(emojiCode)) {
-
-                emojis.add(EmojiUtils.getEmoji(emojiCode).getEmoji());
-            }
-        }*/
     }
 
 
