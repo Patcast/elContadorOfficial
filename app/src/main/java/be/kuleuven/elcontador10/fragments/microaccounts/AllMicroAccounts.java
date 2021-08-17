@@ -27,7 +27,7 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.adapters.AllMicroRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.viewModels.NewTransactionViewModel;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.NewTransactionViewModel;
 
 
 public class AllMicroAccounts extends Fragment implements Caching.StakeholdersObserver , SearchView.OnQueryTextListener {

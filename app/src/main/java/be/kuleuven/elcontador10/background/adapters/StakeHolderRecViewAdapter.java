@@ -4,7 +4,6 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.viewModels.NewTransactionViewModel;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.NewTransactionViewModel;
 
 
 

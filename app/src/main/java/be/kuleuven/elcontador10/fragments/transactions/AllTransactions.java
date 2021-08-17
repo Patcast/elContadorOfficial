@@ -33,7 +33,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     private TransactionsRecViewAdapter adapter;
     ArrayList<Transaction> transactionArrayList = new ArrayList<>();
     FloatingActionButton fabNewTransaction;
-    NavController navController;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

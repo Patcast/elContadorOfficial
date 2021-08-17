@@ -12,7 +12,7 @@
     android:orientation="vertical"
     android:layout_height="wrap_content"
     android:id="@+id/frameLayout2"
-    tools:context=".fragments.transactions.TransactionNew"
+    tools:context=".fragments.transactions.NewTransaction.TransactionNew"
     android:paddingHorizontal="20dp"
     >
             <RadioGroup
@@ -57,43 +57,83 @@
 
         <EditText
             android:id="@+id/text_newTransaction_title"
-            android:layout_width="269dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/title"
             android:inputType="text"
-            android:maxLength="30"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton_chooseCategory"
+            android:maxLength="31"
+            app:layout_constraintEnd_toStartOf="@+id/guideline5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/text_newTransaction_wordCounter"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="5dp"
             android:layout_height="wrap_content"
-            android:text="Words: 0/30"
+            android:layout_marginLeft="5dp"
+            android:text="0/30"
             android:textColor="@color/light_grey"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_newTransaction_title" />
 
-        <ImageButton
-            android:id="@+id/imageButton_chooseCategory"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageButton_addPicture"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton_addPicture"
-            app:layout_constraintTop_toTopOf="@+id/imageButton_addPicture"
-            app:srcCompat="@drawable/ic_tag" />
 
         <ImageButton
             android:id="@+id/imageButton_addPicture"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             app:layout_constraintBottom_toBottomOf="@+id/text_newTransaction_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/text_newTransaction_title"
-            app:srcCompat="@drawable/ic_baseline_add_a_photo_24" />
+            app:srcCompat="@drawable/ic_baseline_add_a_photo_24"
+            android:background="@drawable/new_account_category_outline"/>
+
+
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="285dp" />
+
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintBottom_toBottomOf="@+id/text_newTransaction_title"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toTopOf="@+id/text_newTransaction_title"
+            android:background="@drawable/new_account_category_outline">
+            <TextView
+                android:id="@+id/text_emoji_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🏘️"
+                android:textSize="25sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="gone"
+                />
+
+            <ImageButton
+                android:id="@+id/imageButton_chooseCategory"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_tag"
+                android:background="@color/transparent"
+                />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -126,36 +166,7 @@
         android:text="@string/select_an_stakeholder"
         />
 
-<!--    <TextView-->
-<!--                android:id="@+id/txtCategory"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="@string/select_a_category"-->
-<!--                android:layout_marginTop="10dp"-->
 
-
-<!--        />-->
-<!--    <Spinner-->
-<!--        android:id="@+id/sp_TransCategory"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="5dp"-->
-<!--        />-->
-<!--    <TextView-->
-<!--        android:id="@+id/txtSubCategory"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/select_a_sub_category"-->
-<!--        android:layout_marginTop="10dp"-->
-
-<!--        />-->
-
-<!--    <Spinner-->
-<!--        android:id="@+id/sp_TransSubcategory"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="5dp"-->
-<!--        />-->
 
     <EditText
                 android:id="@+id/ed_txt_notes"
@@ -164,7 +175,7 @@
                 android:inputType="textMultiLine"
                 android:hint="@string/additional_comments"
                 android:layout_marginTop="30dp"
-                android:maxLength="50"
+                android:maxLength="101"
         />
     <TextView
         android:id="@+id/text_newTransaction_wordCounter_notes"
@@ -172,7 +183,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/light_grey"
         android:layout_marginLeft="4dp"
-        android:text="Words: 0/50"
+        android:text="0/100"
         android:layout_marginStart="4dp" />
 
     <Button

@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.transactions;
+package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +23,6 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.StakeHolderRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.viewModels.NewTransactionViewModel;
 
 
 public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersObserver , SearchView.OnQueryTextListener {

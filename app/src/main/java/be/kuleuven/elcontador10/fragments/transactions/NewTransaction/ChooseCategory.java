@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.transactions;
+package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -22,28 +22,27 @@ import java.util.stream.Collectors;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.CategoriesRecViewAdapter;
-import be.kuleuven.elcontador10.background.adapters.StakeHolderRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.StakeHolder;
+import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.TransactionType;
-import be.kuleuven.elcontador10.background.viewModels.NewTransactionViewModel;
 
-public class ChooseCategory extends Fragment implements Caching.StaticDataObserver {
+public class ChooseCategory extends Fragment implements Caching.DefCategoriesObserver {
     private RecyclerView recyclerCategories;
 
     private CategoriesRecViewAdapter adapter;
-    private List<String> defCategories = new ArrayList<>();
+    private List<EmojiCategory> defCategories = new ArrayList<>();
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_choose_stake_holder, container, false);
+        View view = inflater.inflate(R.layout.fragment_choose_category, container, false);
         MainActivity mainActivity = (MainActivity) requireActivity();
         mainActivity.setHeaderText(getString(R.string.choose_category));
-        recyclerCategories = view.findViewById(R.id.recyclerViewChooseStake);
+        recyclerCategories = view.findViewById(R.id.recView_categories);
         recyclerCategories.setLayoutManager(new LinearLayoutManager(this.getContext()));
         NewTransactionViewModel viewModel = new ViewModelProvider(requireActivity()).get(NewTransactionViewModel.class);
         adapter = new CategoriesRecViewAdapter(view,viewModel);
-        Caching.INSTANCE.attachStaticDataObservers(this);
+        Caching.INSTANCE.attachDefCatObserver(this);
         if(defCategories.size()>0) adapter.setDefCategories(defCategories);
         recyclerCategories.setAdapter(adapter);
         return view;
@@ -54,10 +53,11 @@ public class ChooseCategory extends Fragment implements Caching.StaticDataObserv
         super.onViewCreated(view, savedInstanceState);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onStart() {
         super.onStart();
-        Caching.INSTANCE.attachStaticDataObservers(this);
+        if(!(Caching.INSTANCE.getDefCatObservers().contains(this))) Caching.INSTANCE.attachDefCatObserver(this);
         if(defCategories.size()>0) adapter.setDefCategories(defCategories);
         recyclerCategories.setAdapter(adapter);
 
@@ -66,16 +66,13 @@ public class ChooseCategory extends Fragment implements Caching.StaticDataObserv
     @Override
     public void onStop() {
         super.onStop();
-        Caching.INSTANCE.deAttachStaticDataObserver(this);
+        Caching.INSTANCE.deAttachDefCatObserver(this);
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void notifyStaticDataObserver(List<TransactionType> transTypes, List<String> roles) {
-        this.defCategories.clear();
 
-        this.defCategories.addAll( transTypes.stream()
-                .map(TransactionType::getSubCategory)
-                .collect(Collectors.toList()));
+    @Override
+    public void notifyDefCatObserver(List<EmojiCategory> categoriesInput) {
+        defCategories.clear();
+        defCategories.addAll(categoriesInput);
         adapter.setDefCategories(defCategories);
     }
 }

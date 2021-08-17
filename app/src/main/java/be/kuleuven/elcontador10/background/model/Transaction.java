@@ -31,7 +31,6 @@ public class Transaction {
     private String stakeHolder;
     private String id;
     private String category;
-    private String subCategory;
     private Timestamp date;
     private String registeredBy;
     private String notes;
@@ -40,13 +39,12 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(String title, int amount, String registeredBy, String stakeHolder,String category,String subCategory, String notes) {
+    public Transaction(String title, int amount, String registeredBy, String stakeHolder,String category, String notes) {
         this.title = title;
         this.amount = amount;
         this.registeredBy = registeredBy;
         this.stakeHolder = stakeHolder;
         this.category = category;
-        this.subCategory = subCategory;
         this.date = new Timestamp(new Date());
         this.deleted = false;
         this.notes = notes;
@@ -92,8 +90,9 @@ public class Transaction {
     public String getShortDate(){
         String [] bitsOfDate = date.toDate().toString().split(" ");
         StringBuilder shortDate = new StringBuilder();
-        shortDate.append(bitsOfDate[1]);
         shortDate.append(bitsOfDate[2]);
+        shortDate.append(" ");
+        shortDate.append(bitsOfDate[1]);
         return shortDate.toString();
     }
 
@@ -111,10 +110,6 @@ public class Transaction {
 
     public String getCategory() {
         return category;
-    }
-
-    public String getSubCategory() {
-        return subCategory;
     }
 
     public Timestamp getDate() {

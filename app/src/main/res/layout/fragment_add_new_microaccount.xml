@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="20dp"
         android:paddingBottom="20dp"
-        tools:context=".fragments.transactions.TransactionNew">
+        tools:context=".fragments.transactions.NewTransaction.TransactionNew">
 
         <EditText
             android:id="@+id/ed_txt_name"

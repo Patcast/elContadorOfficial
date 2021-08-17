@@ -26,6 +26,7 @@ import be.kuleuven.elcontador10.R;
 
 import be.kuleuven.elcontador10.background.model.Account;
 
+import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
@@ -37,6 +38,9 @@ public enum Caching {
 
 
     /// interfaces******
+    public interface DefCategoriesObserver{
+        void notifyDefCatObserver(List <EmojiCategory> categoriesInput);
+    }
     public interface StaticDataObserver {
         void notifyStaticDataObserver( List <TransactionType> transTypes,  List <String> roles);
     }
@@ -53,24 +57,9 @@ public enum Caching {
         void notifyMicroAccountTransactionObserver(List<Transaction> transactions);
     }
 
-    private final List <Account> accounts = new ArrayList<>();
-    private final List <AccountsObserver> accountsObservers = new ArrayList<>();
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void attachAccountsObservers(AccountsObserver newObserver, String email){
-        if(email!=null){
-            accountsObservers.add(newObserver);
-            if(accounts.size()==0) requestAllUserAccounts(email);
-            else newObserver.notifyAccountsObserver(accounts);
-        }
-    }
-    public void deAttachAccountsObservers(AccountsObserver unWantedObserver){
-        if (unWantedObserver!=null){
-            accountsObservers.remove(unWantedObserver);
-        }
-    }
-
-
     ////*********Data
+    private final List <Account> accounts = new ArrayList<>();
+    private List<EmojiCategory> defaultCategories = new ArrayList<>();
     public List <StakeHolder> stakeHolders = new ArrayList<>();
     public List <TransactionType>  transTypes = new ArrayList<>();
     public List <String> roles = new ArrayList<>();
@@ -78,6 +67,8 @@ public enum Caching {
     public List <Transaction> microAccountTransactions = new ArrayList<>();
 
     ///********** Observers List
+    private final List <AccountsObserver> accountsObservers = new ArrayList<>();
+    private final List <DefCategoriesObserver> defCatObservers = new ArrayList<>();
     private final List <StaticDataObserver> staticDataObservers = new ArrayList<>();
     private final List <StakeholdersObserver> stakeholdersObservers = new ArrayList<>();
     private final List <MicroAccountTransactionObserver> microAccountObservers = new ArrayList<>();
@@ -95,6 +86,32 @@ public enum Caching {
     private String chosenMicroAccountId;
 
 ///Attach methods*************************
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void attachDefCatObserver(DefCategoriesObserver newObserver){
+        defCatObservers.add(newObserver);
+        if (defaultCategories.size()==0) {
+            requestDefaultCategories();
+        }
+        else {
+            newObserver.notifyDefCatObserver(defaultCategories);
+        }
+    }
+    public void deAttachDefCatObserver(DefCategoriesObserver unWantedObserver){
+        if(unWantedObserver!=null)defCatObservers.remove(unWantedObserver);
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void attachAccountsObservers(AccountsObserver newObserver, String email){
+        if(email!=null){
+            accountsObservers.add(newObserver);
+            if(accounts.size()==0) requestAllUserAccounts(email);
+            else newObserver.notifyAccountsObserver(accounts);
+        }
+    }
+    public void deAttachAccountsObservers(AccountsObserver unWantedObserver){
+        if (unWantedObserver!=null){
+            accountsObservers.remove(unWantedObserver);
+        }
+    }
     public void attachStaticDataObservers(StaticDataObserver newObserver){
         staticDataObservers.add(newObserver);
         newObserver.notifyStaticDataObserver( transTypes,roles);
@@ -110,7 +127,6 @@ public enum Caching {
     public void deAttachStakeholdersObservers(StakeholdersObserver newObserver){
         stakeholdersObservers.remove(newObserver);
     }
-
     public void attachAllTransactionsObserver(AllTransactionsObserver newObserver){
         allTransactionsObservers.add(newObserver);
         if(transactions.size()!=0){
@@ -121,13 +137,11 @@ public enum Caching {
     public void deAttachAllTransactionsObserver(AllTransactionsObserver unWantedObserver){
         allTransactionsObservers.remove(unWantedObserver);
     }
-
     public void attachMicroTransactionsObserver(MicroAccountTransactionObserver newObserver) {
         microAccountObservers.add(newObserver);
         if (microAccountTransactions.size() != 0)
             newObserver.notifyMicroAccountTransactionObserver(microAccountTransactions);
     }
-
     public void deAttachMicroTransactionsObserver(MicroAccountTransactionObserver observer) {
         microAccountObservers.remove(observer);
     }
@@ -154,18 +168,47 @@ public enum Caching {
         setChosenMicroAccountId(microAccountId);
         requestMicroAccountTransactions(chosenAccountId, microAccountId);
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public  void startApp(){
+        requestStaticData();
+        requestDefaultCategories();
+    }
+
 
     public void signOut(){
-     stakeHolders.clear();
-     transTypes.clear();
-     accounts.clear();
-     transactions.clear();
-     roles.clear();
-     logInUser = null;
-     chosenAccountId = null;
+         defCatObservers.clear();
+         stakeHolders.clear();
+         transTypes.clear();
+         accounts.clear();
+         transactions.clear();
+         roles.clear();
+         logInUser = null;
+         chosenAccountId = null;
     }
 
     //////// DATA BASE ****************
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void requestDefaultCategories() {
+        db.collection("defaultCategories").
+                addSnapshotListener((value, e) -> {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
+                    }
+
+                    defaultCategories.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc.get("title") != null) {
+                            EmojiCategory myCategory =  doc.toObject(EmojiCategory.class);
+                            myCategory.setId(doc.getId());
+                            defaultCategories.add(myCategory);
+                        }
+                    }
+                    defCatObservers.forEach(t->t.notifyDefCatObserver(defaultCategories));
+                });
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestAllUserAccounts(String email){
         db.collection("accounts").
@@ -361,5 +404,7 @@ public enum Caching {
         return possibleName.orElse(context.getString(R.string.error_finding_microAccount));
     }
 
-
+    public List<DefCategoriesObserver> getDefCatObservers() {
+        return defCatObservers;
+    }
 }

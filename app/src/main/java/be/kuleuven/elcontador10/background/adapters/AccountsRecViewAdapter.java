@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Account;
-import be.kuleuven.elcontador10.background.model.NumberFormatter;
+import be.kuleuven.elcontador10.background.formatter.NumberFormatter;
 
 
 public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecViewAdapter.ViewHolder>  {

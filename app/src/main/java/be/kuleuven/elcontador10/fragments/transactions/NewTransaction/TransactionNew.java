@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.transactions;
+package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,25 +26,27 @@ import androidx.navigation.Navigation;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
-import be.kuleuven.elcontador10.background.viewModels.NewTransactionViewModel;
+
 //Todo: Improvement of Categories and programming limit words for notes and title. Also remove mandatory Stakeholder.
 public class TransactionNew extends Fragment {
     private static final String TAG = "TransactionNew";
     RadioGroup radGroup;
     EditText txtTitle;
     TextView txtWordsCounterTitle;
+    ImageButton btnAddCategory;
+    TextView txtEmojiCategory;
     EditText txtAmount;
     TextView txtStakeHolder;
-//    Spinner spCategory;
-//    Spinner spSubCategory;
     EditText txtNotes;
     TextView txtWordsCounterNotes;
     MainActivity mainActivity;
     NavController navController;
     NewTransactionViewModel viewModel;
     StakeHolder selectedStakeHolder;
+    String idCatSelected;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,36 +63,27 @@ public class TransactionNew extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         viewModel = new ViewModelProvider(requireActivity()).get(NewTransactionViewModel.class);
         navController = Navigation.findNavController(view);
+
 ///      Initialize views
         radGroup = view.findViewById(R.id.radioGroup);
+        btnAddCategory = view.findViewById(R.id.imageButton_chooseCategory);
+        txtEmojiCategory = view.findViewById(R.id.text_emoji_category);
         txtTitle = view.findViewById(R.id.text_newTransaction_title);
         txtWordsCounterTitle = view.findViewById(R.id.text_newTransaction_wordCounter);
         txtAmount = view.findViewById(R.id.ed_txt_amount);
         txtStakeHolder = view.findViewById(R.id.text_stakeholderSelected);
-        /*spCategory = view.findViewById(R.id.sp_TransCategory);
-        spSubCategory = view.findViewById(R.id.sp_TransSubcategory);*/
         txtNotes = view.findViewById(R.id.ed_txt_notes);
         txtWordsCounterNotes = view.findViewById(R.id.text_newTransaction_wordCounter_notes);
         Button confirmButton = view.findViewById(R.id.btn_confirm_NewTransaction);
-        setWordCounters();
-      /*  WidgetsCreation.INSTANCE.makeSpinnerCat(mainActivity,spCategory,false);
-
-////      Set sp_SubCategory after clicking on category
-        spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                WidgetsCreation.INSTANCE.makeSpinnerSubCat(mainActivity,spSubCategory,spCategory.getSelectedItem().toString(),false);
-
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });*/
+        // listeners
         txtStakeHolder.setOnClickListener(v -> { navController.navigate(R.id.action_newTransaction_to_chooseStakeHolderDialog); });
         confirmButton.setOnClickListener(v -> confirmTransaction());
+        btnAddCategory.setOnClickListener(v-> navController.navigate(R.id.action_newTransaction_to_chooseCategory));
+        txtEmojiCategory.setOnClickListener(v-> navController.navigate(R.id.action_newTransaction_to_chooseCategory));
+        setWordCounters();
     }
 
     private void setWordCounters() {
@@ -102,9 +96,16 @@ public class TransactionNew extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                int maxCharacters = 30;
                 String text = txtTitle.getText().toString();
-                String words = getString(R.string.words_)+text.length()+"/30";
-                txtWordsCounterTitle.setText(words);
+                String counter = text.length()+"/"+ maxCharacters;
+                txtWordsCounterTitle.setText(counter);
+                if (text.length()>maxCharacters){
+                    txtWordsCounterTitle.setTextColor(getResources().getColor(R.color.contador_red));
+                } else{
+                    txtWordsCounterTitle.setTextColor(getResources().getColor(R.color.light_grey));
+                }
             }
             @Override
             public void afterTextChanged(Editable s) {
@@ -118,9 +119,16 @@ public class TransactionNew extends Fragment {
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int maxCharacters = 100;
                 String text = txtNotes.getText().toString();
-                String words = getString(R.string.words_)+text.length()+"/30";
-                txtWordsCounterNotes.setText(words);
+                String counter = text.length()+"/"+ maxCharacters;
+                txtWordsCounterNotes.setText(counter);
+                if (text.length()>maxCharacters){
+                    txtWordsCounterNotes.setTextColor(getResources().getColor(R.color.contador_red));
+                } else{
+                    txtWordsCounterNotes.setTextColor(getResources().getColor(R.color.light_grey));
+                }
+
             }
             @Override
             public void afterTextChanged(Editable s) {
@@ -133,16 +141,32 @@ public class TransactionNew extends Fragment {
     public void onStart() {
         super.onStart();
         viewModel.getChosenStakeholder().observe(getViewLifecycleOwner(), this::setStakeChosenText);
+        viewModel.getChosenCategory().observe(getViewLifecycleOwner(), this::setCategoryChosen);
     }
     @Override
     public void onStop() {
         super.onStop();
         viewModel.reset();
+        viewModel.resetCategory();
     }
     @Override
     public void onDestroy() {
         super.onDestroy();
         viewModel.reset();
+    }
+    private void setCategoryChosen(EmojiCategory emojiCategory){
+        if(emojiCategory==null){
+            txtEmojiCategory.setVisibility(View.GONE);
+            btnAddCategory.setVisibility(View.VISIBLE);
+        }
+        else{
+            if(emojiCategory.getIcon()!=null){
+                idCatSelected= emojiCategory.getId();
+                btnAddCategory.setVisibility(View.GONE);
+                txtEmojiCategory.setVisibility(View.VISIBLE);
+                txtEmojiCategory.setText(emojiCategory.getIcon());
+            }
+        }
     }
     private void setStakeChosenText(StakeHolder stakeHolder) {
         if(stakeHolder!=null){
@@ -175,10 +199,9 @@ public class TransactionNew extends Fragment {
         String title = txtTitle.getText().toString();
         int amount = Integer.parseInt(txtAmount.getText().toString());
         if(cashOut) amount = amount*-1;
-//        String category = spCategory.getSelectedItem().toString();
-//        String subCategory = spSubCategory.getSelectedItem().toString()
+        String idCatFinal=(idCatSelected!=null)?idCatSelected: " ";
         String notes = txtNotes.getText().toString();
-        Transaction newTrans= new Transaction(title,amount, mainActivity.returnSavedLoggedEmail(), selectedStakeHolder.getId()," ","",notes);
+        Transaction newTrans= new Transaction(title,amount, mainActivity.returnSavedLoggedEmail(), selectedStakeHolder.getId(),idCatFinal,notes);
         newTrans.SendTransaction(newTrans);
     }
 

@@ -1,7 +1,6 @@
 package be.kuleuven.elcontador10.background.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +22,7 @@ import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.NumberFormatter;
+import be.kuleuven.elcontador10.background.formatter.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.fragments.ViewPagerHolderDirections;
 
@@ -47,7 +46,7 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         return new ViewHolder(viewParent);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
         String idStakeholder = allTransactions.get(position).getStakeHolder();

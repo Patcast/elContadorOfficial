@@ -27,14 +27,14 @@ import be.kuleuven.elcontador10.background.model.TransactionType;
 
 
 
-public enum WidgetsCreation implements Caching.StaticDataObserver {
+public enum WidgetsCreation {
     INSTANCE;
 
-    @Override
+   /* @Override
     public void notifyStaticDataObserver(List<TransactionType> transTypes, List<String> roles) {
         this.transTypes.clear();
         this.transTypes.addAll(transTypes);
-    }
+    }*/
 
 
     List<TransactionType> transTypes = new ArrayList<>();
@@ -42,9 +42,11 @@ public enum WidgetsCreation implements Caching.StaticDataObserver {
     DatePickerDialog.OnDateSetListener setListenerFrom;
     DatePickerDialog.OnDateSetListener setListenerTo;
 
+/*
     WidgetsCreation(){
         Caching.INSTANCE.attachStaticDataObservers(this);
     }
+*/
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void makeSpinnerCat(Context useContext, Spinner useSpin,boolean filter){
