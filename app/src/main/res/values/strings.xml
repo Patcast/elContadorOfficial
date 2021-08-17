@@ -138,5 +138,10 @@
     <string name="title">Title</string>
     <string name="words_">\"Words: \"</string>
     <string name="choose_category">Choose a Category</string>
+    <string name="no_category">No Category</string>
+    <string name="default_categories">Default Categories</string>
+    <string name="custom_categories">Custom Categories</string>
+    <string name="edit_categories">Edit Categories</string>
+    <string name="add_new_category">Add New Category</string>
 
 </resources>

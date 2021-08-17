@@ -38,8 +38,8 @@ public enum Caching {
 
 
     /// interfaces******
-    public interface DefCategoriesObserver{
-        void notifyDefCatObserver(List <EmojiCategory> categoriesInput);
+    public interface CategoriesObserver{
+        void notifyCatObserver(List <EmojiCategory> defCategoriesInput,List <EmojiCategory> customCategoriesInput);
     }
     public interface StaticDataObserver {
         void notifyStaticDataObserver( List <TransactionType> transTypes,  List <String> roles);
@@ -60,6 +60,7 @@ public enum Caching {
     ////*********Data
     private final List <Account> accounts = new ArrayList<>();
     private List<EmojiCategory> defaultCategories = new ArrayList<>();
+    private List<EmojiCategory> customCategories = new ArrayList<>();
     public List <StakeHolder> stakeHolders = new ArrayList<>();
     public List <TransactionType>  transTypes = new ArrayList<>();
     public List <String> roles = new ArrayList<>();
@@ -68,7 +69,7 @@ public enum Caching {
 
     ///********** Observers List
     private final List <AccountsObserver> accountsObservers = new ArrayList<>();
-    private final List <DefCategoriesObserver> defCatObservers = new ArrayList<>();
+    private final List <CategoriesObserver> catObservers = new ArrayList<>();
     private final List <StaticDataObserver> staticDataObservers = new ArrayList<>();
     private final List <StakeholdersObserver> stakeholdersObservers = new ArrayList<>();
     private final List <MicroAccountTransactionObserver> microAccountObservers = new ArrayList<>();
@@ -87,17 +88,20 @@ public enum Caching {
 
 ///Attach methods*************************
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void attachDefCatObserver(DefCategoriesObserver newObserver){
-        defCatObservers.add(newObserver);
+    public void attachCatObserver(CategoriesObserver newObserver){
+        catObservers.add(newObserver);
         if (defaultCategories.size()==0) {
             requestDefaultCategories();
         }
+        if(customCategories.size()==0){
+            requestCustomCategories();
+        }
         else {
-            newObserver.notifyDefCatObserver(defaultCategories);
+            newObserver.notifyCatObserver(defaultCategories,customCategories);
         }
     }
-    public void deAttachDefCatObserver(DefCategoriesObserver unWantedObserver){
-        if(unWantedObserver!=null)defCatObservers.remove(unWantedObserver);
+    public void deAttachCatObserver(CategoriesObserver unWantedObserver){
+        if(unWantedObserver!=null)catObservers.remove(unWantedObserver);
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void attachAccountsObservers(AccountsObserver newObserver, String email){
@@ -176,7 +180,7 @@ public enum Caching {
 
 
     public void signOut(){
-         defCatObservers.clear();
+         customCategories.clear();
          stakeHolders.clear();
          transTypes.clear();
          accounts.clear();
@@ -187,6 +191,26 @@ public enum Caching {
     }
 
     //////// DATA BASE ****************
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void requestCustomCategories() {
+        db.collection("/accounts/"+chosenAccountId+"/customCategories").
+                addSnapshotListener((value, e) -> {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
+                    }
+                    customCategories.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc.get("title") != null) {
+                            EmojiCategory myCategory =  doc.toObject(EmojiCategory.class);
+                            myCategory.setId(doc.getId());
+                            customCategories.add(myCategory);
+                        }
+                    }
+                    catObservers.forEach(t->t.notifyCatObserver(defaultCategories,customCategories));
+                });
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void requestDefaultCategories() {
@@ -205,7 +229,7 @@ public enum Caching {
                             defaultCategories.add(myCategory);
                         }
                     }
-                    defCatObservers.forEach(t->t.notifyDefCatObserver(defaultCategories));
+                    catObservers.forEach(t->t.notifyCatObserver(defaultCategories,defaultCategories));
                 });
     }
 
@@ -404,7 +428,7 @@ public enum Caching {
         return possibleName.orElse(context.getString(R.string.error_finding_microAccount));
     }
 
-    public List<DefCategoriesObserver> getDefCatObservers() {
-        return defCatObservers;
+    public List<CategoriesObserver> getDefCatObservers() {
+        return catObservers;
     }
 }

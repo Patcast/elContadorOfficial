@@ -146,13 +146,12 @@ public class TransactionNew extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        viewModel.reset();
-        viewModel.resetCategory();
     }
     @Override
     public void onDestroy() {
         super.onDestroy();
         viewModel.reset();
+        viewModel.resetCategory();
     }
     private void setCategoryChosen(EmojiCategory emojiCategory){
         if(emojiCategory==null){

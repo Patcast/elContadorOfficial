@@ -23,6 +23,10 @@
         <entry key="app/src/main/res/drawable/ic_tag.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/new_account_category_outline.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/bottom_menu_accounts.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/bottom_menu_categories.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/cardview_row.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/fragment_accounts_bottom_menu.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_all_micro_acounts.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_all_transactions.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_choose_category.xml" value="0.2578125" />
