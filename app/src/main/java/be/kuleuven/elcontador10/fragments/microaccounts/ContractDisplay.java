@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.elcontador10.R;
+import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.PaymentsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.contract.Contract;
@@ -42,6 +43,7 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
     private List<Payment> paymentsList;
     private Contract contract;
     private String id;
+    private MainActivity mainActivity;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Nullable
@@ -51,6 +53,7 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
 
         // set up variables
         paymentsList = new ArrayList<>();
+        mainActivity = (MainActivity) getActivity();
 
         // find views
         title = view.findViewById(R.id.contract_display_title);
@@ -88,6 +91,10 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
         // get argument and attach to caching
         id = ContractDisplayArgs.fromBundle(getArguments()).getId();
         Caching.INSTANCE.attachMicroContractObserver(this);
+
+        // set activity header
+        mainActivity.displayToolBar(true);
+        mainActivity.displayTabLayout(false);
     }
 
     @Override
@@ -102,9 +109,14 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
     public void notifyMicroAccountContractsObserver(List<Contract> contracts) {
         contract = Caching.INSTANCE.getContractFromId(id);
         if (contract != null) {
+            String name = Caching.INSTANCE.getStakeholderName(contract.getMicroAccount());
+
+            // set up header
+            mainActivity.setHeaderText(name + " - " + contract.getTitle());
+
             // set up texts
             title.setText(contract.getTitle());
-            microAccountName.setText(Caching.INSTANCE.getStakeholderName(contract.getMicroAccount()));
+            microAccountName.setText(name);
             accountName.setText(Caching.INSTANCE.getAccountName());
             registeredBy.setText(contract.getRegisteredBy());
             // TODO set date
