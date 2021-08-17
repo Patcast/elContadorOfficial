@@ -30,9 +30,12 @@ public class CategoryDialog extends DialogFragment {
     EditText edTextName,edTextIcon;
     TextView textWordCounter,textEmojiRequest,dialogTitle;
     Button btnDelete,btnConfirm;
+    DialogCategoriesListener listener;
+    public interface DialogCategoriesListener{
+        void closeDialog();
+    }
     public CategoryDialog() {
     }
-
     public CategoryDialog(EmojiCategory editingEmojiInput) {
         this.editingEmoji = editingEmojiInput;
     }
@@ -63,10 +66,8 @@ public class CategoryDialog extends DialogFragment {
     private void deleteCategory() {
         if(editingEmoji!=null){
             editingEmoji.deleteCategory();
-
         }
-        dismiss();
-
+        closeDialog();
     }
 
     private void updateUIEditingMode() {
@@ -80,6 +81,13 @@ public class CategoryDialog extends DialogFragment {
             btnDelete.setText(R.string.dismiss);
         }
 
+    }
+    private void closeDialog(){
+        if(listener!=null){
+            listener.closeDialog();
+            setListener(null);
+        }
+        dismiss();
     }
 
     private void setWordCounter() {
@@ -101,7 +109,7 @@ public class CategoryDialog extends DialogFragment {
                                                                             editingEmoji=null;
 
                                                                         }
-                                                                        dismiss();
+                                                                        closeDialog();
                                                 } else {
                                                     textEmojiRequest.setVisibility(View.VISIBLE);
                                                     textEmojiRequest.setText(R.string.invalid_icon_please_enter_an_emoji);
@@ -116,7 +124,7 @@ public class CategoryDialog extends DialogFragment {
         }
     }
 
-
-
-
+    public void setListener(DialogCategoriesListener listener) {
+        this.listener = listener;
+    }
 }

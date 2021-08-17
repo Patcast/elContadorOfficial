@@ -34,12 +34,14 @@
             app:layout_constraintTop_toTopOf="parent"
             />
 
-        <Switch
-            android:id="@+id/switch1"
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switch_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck"
+            android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
