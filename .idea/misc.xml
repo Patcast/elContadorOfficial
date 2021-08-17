@@ -21,10 +21,11 @@
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/rec_view_item_all_transactions.xml" value="0.3061594202898551" />
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/rec_view_payments.xml" value="0.5" />
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/menu/top_three_buttons_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/rec_view_contracts.xml" value="0.3061594202898551" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
