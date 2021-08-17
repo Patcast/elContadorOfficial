@@ -143,4 +143,5 @@
     <string name="frequency">Frequency:</string>
     <string name="made_date">Registered date:</string>
     <string name="payments">Payments:</string>
+    <string name="cancel">Cancel</string>
 </resources>

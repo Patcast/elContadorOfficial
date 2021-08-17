@@ -1,5 +1,6 @@
 package be.kuleuven.elcontador10.fragments.microaccounts;
 
+import android.app.AlertDialog;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -7,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -135,7 +137,8 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
     }
 
     public void onEdit_Clicked(View view) {
-
+        NewContractDialog dialog = new NewContractDialog((MainActivity) getActivity(), contract);
+        dialog.show();
     }
 
     public void onDelete_Clicked(View view) {

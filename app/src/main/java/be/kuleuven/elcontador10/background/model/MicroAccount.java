@@ -15,7 +15,7 @@ import com.google.firestore.v1.FirestoreGrpc;
 import be.kuleuven.elcontador10.background.database.Caching;
 
 public class MicroAccount {
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "microAccount";
 
     private String name;
