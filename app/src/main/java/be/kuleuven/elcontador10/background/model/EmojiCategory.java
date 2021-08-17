@@ -8,6 +8,10 @@ public class EmojiCategory {
     public EmojiCategory() {
     }
 
+    public EmojiCategory(String icon, String title) {
+        this.icon = icon;
+        this.title = title;
+    }
 
     public String getIcon() {
         return icon;

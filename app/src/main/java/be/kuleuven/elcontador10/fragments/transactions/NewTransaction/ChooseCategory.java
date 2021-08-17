@@ -125,10 +125,14 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
     @Override
     public void onAddCategoryClick() {
         bottomSheet.dismiss();
+        CategoryDialog dialog =new CategoryDialog();
+        dialog.show(getParentFragmentManager(),"Category Dialog");
     }
 
     @Override
     public void onEditClick() {
         bottomSheet.dismiss();
+        CategoryDialog dialog =new CategoryDialog();
+        dialog.show(getParentFragmentManager(),"Category Dialog");
     }
 }

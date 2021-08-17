@@ -61,7 +61,6 @@
             android:layout_height="wrap_content"
             android:hint="@string/title"
             android:inputType="text"
-            android:maxLength="31"
             app:layout_constraintEnd_toStartOf="@+id/guideline5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -71,11 +70,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="0/30"
             android:textColor="@color/light_grey"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_newTransaction_title" />
+            app:layout_constraintTop_toBottomOf="@+id/text_newTransaction_title"
+            android:layout_marginStart="5dp" />
 
 
         <ImageButton
@@ -175,7 +174,6 @@
                 android:inputType="textMultiLine"
                 android:hint="@string/additional_comments"
                 android:layout_marginTop="30dp"
-                android:maxLength="101"
         />
     <TextView
         android:id="@+id/text_newTransaction_wordCounter_notes"
@@ -183,7 +181,6 @@
         android:layout_height="wrap_content"
         android:textColor="@color/light_grey"
         android:layout_marginLeft="4dp"
-        android:text="0/100"
         android:layout_marginStart="4dp" />
 
     <Button

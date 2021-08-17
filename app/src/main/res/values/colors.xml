@@ -21,6 +21,8 @@
     <color name="button">#b89016</color>
     <color name="light_grey">#8d8c8c</color>
     <color name="transparent">#00A3A3A3</color>
+    <color name="dark_header">#1c1c1c</color>
+    <color name="light_red_warning">#ff8989</color>
 
 
 </resources>

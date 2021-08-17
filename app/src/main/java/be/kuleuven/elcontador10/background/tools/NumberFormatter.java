@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.background.formatter;
+package be.kuleuven.elcontador10.background.tools;
 
 import java.text.NumberFormat;
 import java.util.Locale;

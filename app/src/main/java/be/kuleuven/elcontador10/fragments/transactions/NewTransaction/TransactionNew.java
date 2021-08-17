@@ -29,6 +29,7 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
+import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
 
 //Todo: Improvement of Categories and programming limit words for notes and title. Also remove mandatory Stakeholder.
 public class TransactionNew extends Fragment {
@@ -88,7 +89,7 @@ public class TransactionNew extends Fragment {
 
     private void setWordCounters() {
 
-        txtTitle.addTextChangedListener(new TextWatcher() {
+       /* txtTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -134,7 +135,10 @@ public class TransactionNew extends Fragment {
             public void afterTextChanged(Editable s) {
 
             }
-        });
+        });*/
+        new MaxWordsCounter(30,txtTitle,txtWordsCounterTitle,getContext());
+        new MaxWordsCounter(100,txtNotes,txtWordsCounterNotes,getContext());
+
     }
 
     @Override

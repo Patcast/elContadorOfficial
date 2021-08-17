@@ -23,7 +23,7 @@ import android.widget.Toast;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.formatter.NumberFormatter;
+import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.Transaction;
 
 public class TransactionDisplay extends Fragment  {
