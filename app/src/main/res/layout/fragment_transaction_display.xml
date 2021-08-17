@@ -151,7 +151,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:text="@string/delete"
-                    android:background="@drawable/buttons"
+                    android:background="@drawable/background_buttons"
 
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

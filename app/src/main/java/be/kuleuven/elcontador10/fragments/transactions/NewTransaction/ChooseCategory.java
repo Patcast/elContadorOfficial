@@ -38,8 +38,8 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
     private RecyclerView recyclerCategories_custom;
     private CategoriesRecViewAdapter adapter_custom;
     private CategoriesRecViewAdapter adapter_default;
-    private List<EmojiCategory> defCategories = new ArrayList<>();
-    private List<EmojiCategory> customCategories = new ArrayList<>();
+    private final List<EmojiCategory> defCategories = new ArrayList<>();
+    private final List<EmojiCategory> customCategories = new ArrayList<>();
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)

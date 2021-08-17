@@ -18,6 +18,9 @@
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/menu/top_three_buttons_menu.xml" value="0.36666666666666664" />
         <entry key="app/src/main/res/drawable/accounts_first_background.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/accounts_second_background.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/background_accounts_second.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/background_bottom_menu.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/background_buttons_white_outline.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/buttons.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_a_photo_24.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/ic_tag.xml" value="0.27395833333333336" />
@@ -26,6 +29,7 @@
         <entry key="app/src/main/res/layout/bottom_menu_accounts.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/bottom_menu_categories.xml" value="0.335" />
         <entry key="app/src/main/res/layout/cardview_row.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/dialoge_category_editing.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_accounts_bottom_menu.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_all_micro_acounts.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_all_transactions.xml" value="0.22" />
