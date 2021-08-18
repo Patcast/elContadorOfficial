@@ -31,6 +31,7 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 import be.kuleuven.elcontador10.background.model.User;
+import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 public enum Caching {
     INSTANCE;
@@ -415,17 +416,29 @@ public enum Caching {
                                                         .filter(a->a.getId().equals(chosenAccountId))
                                                         .map(Account::getName)
                                                         .findFirst();
-        return selectedAccount.orElse("account not found");
+        return selectedAccount.orElse(context.getString(R.string.error_loading));
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String getAccountBalance(){
+        Optional<String> selectedAccount = getAccounts().stream()
+                .filter(a->a.getId().equals(chosenAccountId))
+                .map(Account::getBalance)
+                .map(this::formatNumber)
+                .findFirst();
+        return selectedAccount.orElse(context.getString(R.string.error_loading));
+    }
+    private String formatNumber(Long inputNumber){
+        NumberFormatter formatter = new NumberFormatter(inputNumber);
+        return formatter.getFinalNumber();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public String getStakeholderName(String idStakeholder) {
-
         Optional<String> possibleName = getStakeHolders().stream()
                 .filter(s -> s.getId().equals(idStakeholder))
                 .map(StakeHolder::getName)
                 .findFirst();
-        return possibleName.orElse(context.getString(R.string.error_finding_microAccount));
+        return possibleName.orElse(context.getString(R.string.not_recorded));
     }
 
     public List<CategoriesObserver> getDefCatObservers() {

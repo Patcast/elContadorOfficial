@@ -32,14 +32,14 @@
         <entry key="app/src/main/res/layout/dialoge_category_editing.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_accounts_bottom_menu.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_all_micro_acounts.xml" value="0.2578125" />
-        <entry key="app/src/main/res/layout/fragment_all_transactions.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_all_transactions.xml" value="0.2911882219335624" />
         <entry key="app/src/main/res/layout/fragment_choose_category.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_choose_stake_holder.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25384615384615383" />
         <entry key="app/src/main/res/layout/fragment_micro_account_transactions.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_micro_account_view_holder.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/fragment_transaction_new.xml" value="0.29942539291572473" />
+        <entry key="app/src/main/res/layout/fragment_transaction_new.xml" value="0.24458204334365324" />
         <entry key="app/src/main/res/layout/rec_view_item_accounts.xml" value="0.4040920716112532" />
         <entry key="app/src/main/res/layout/rec_view_item_all_micros.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/rec_view_item_all_transactions.xml" value="0.2578125" />

@@ -15,11 +15,42 @@
     tools:context=".fragments.transactions.NewTransaction.TransactionNew"
     android:paddingHorizontal="20dp"
     >
-            <RadioGroup
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp">
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/account"
+            android:gravity="center"
+            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp" />
+
+        <TextView
+            android:id="@+id/textView_currentAccount"
+            android:layout_width="wrap_content"
+            android:padding="5dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="@drawable/background_accounts_second"
+            android:textColor="@color/white"
+            android:text="Gonzales Ortega" />
+
+
+
+    </LinearLayout>
+
+    <RadioGroup
                 android:id="@+id/radioGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal"
 
                 >
@@ -146,6 +177,11 @@
         android:inputType="number"
         android:layout_marginTop="30dp"
         />
+    <TextView
+        android:id="@+id/textView_fillAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/light_red_warning"/>
 
     <TextView
                 android:id="@+id/actv_stakeholder"
@@ -191,8 +227,6 @@
         android:background="@drawable/background_buttons"
         android:text="@string/confirm"
      />
-
-
 
 
 </LinearLayout>

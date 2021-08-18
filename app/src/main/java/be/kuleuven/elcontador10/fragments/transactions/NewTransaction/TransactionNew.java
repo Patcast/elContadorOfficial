@@ -26,6 +26,7 @@ import androidx.navigation.Navigation;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
@@ -35,19 +36,15 @@ import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
 public class TransactionNew extends Fragment {
     private static final String TAG = "TransactionNew";
     RadioGroup radGroup;
-    EditText txtTitle;
-    TextView txtWordsCounterTitle;
+    TextView txtWordsCounterTitle,accountSelected,txtEmojiCategory,txtStakeHolder,txtWordsCounterNotes,txtMustHaveAmount;
     ImageButton btnAddCategory;
-    TextView txtEmojiCategory;
-    EditText txtAmount;
-    TextView txtStakeHolder;
-    EditText txtNotes;
-    TextView txtWordsCounterNotes;
+    EditText txtAmount,txtTitle,txtNotes;
     MainActivity mainActivity;
     NavController navController;
     NewTransactionViewModel viewModel;
     StakeHolder selectedStakeHolder;
     String idCatSelected;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +67,7 @@ public class TransactionNew extends Fragment {
         navController = Navigation.findNavController(view);
 
 ///      Initialize views
+        accountSelected = view.findViewById(R.id.textView_currentAccount);
         radGroup = view.findViewById(R.id.radioGroup);
         btnAddCategory = view.findViewById(R.id.imageButton_chooseCategory);
         txtEmojiCategory = view.findViewById(R.id.text_emoji_category);
@@ -79,6 +77,8 @@ public class TransactionNew extends Fragment {
         txtStakeHolder = view.findViewById(R.id.text_stakeholderSelected);
         txtNotes = view.findViewById(R.id.ed_txt_notes);
         txtWordsCounterNotes = view.findViewById(R.id.text_newTransaction_wordCounter_notes);
+        txtMustHaveAmount = view.findViewById(R.id.textView_fillAmount);
+
         Button confirmButton = view.findViewById(R.id.btn_confirm_NewTransaction);
         // listeners
         txtStakeHolder.setOnClickListener(v -> { navController.navigate(R.id.action_newTransaction_to_chooseStakeHolderDialog); });
@@ -86,6 +86,7 @@ public class TransactionNew extends Fragment {
         btnAddCategory.setOnClickListener(v-> navController.navigate(R.id.action_newTransaction_to_chooseCategory));
         txtEmojiCategory.setOnClickListener(v-> navController.navigate(R.id.action_newTransaction_to_chooseCategory));
         setWordCounters();
+        accountSelected.setText(Caching.INSTANCE.getAccountName());
     }
 
     private void setWordCounters() {
@@ -137,11 +138,14 @@ public class TransactionNew extends Fragment {
 
         String amount = txtAmount.getText().toString() ;
         if ( amount.isEmpty()||Integer.parseInt(amount) == 0) {
-            Toast.makeText(getActivity(), R.string.zero_amount, Toast.LENGTH_LONG).show();
+            txtMustHaveAmount.setVisibility(View.VISIBLE);
+            txtMustHaveAmount.setText(R.string.this_field_is_requiered);
         }
         else{
-            if (selectedStakeHolder==null ) {
-                Toast.makeText(getActivity(), R.string.select_an_stakeholder, Toast.LENGTH_LONG).show();
+            txtMustHaveAmount.setVisibility(View.GONE);
+            if (txtTitle.getText().toString().length()==0 ) {
+                txtWordsCounterTitle.setText(R.string.this_field_is_requiered);
+                txtWordsCounterTitle.setTextColor(getResources().getColor(R.color.light_red_warning));
             }
             else{
                 navController.popBackStack();
@@ -157,7 +161,8 @@ public class TransactionNew extends Fragment {
         if(cashOut) amount = amount*-1;
         String idCatFinal=(idCatSelected!=null)?idCatSelected: " ";
         String notes = txtNotes.getText().toString();
-        Transaction newTrans= new Transaction(title,amount, mainActivity.returnSavedLoggedEmail(), selectedStakeHolder.getId(),idCatFinal,notes);
+        String idStakeHolder =(selectedStakeHolder!=null)?selectedStakeHolder.getId():"";
+        Transaction newTrans= new Transaction(title,amount, mainActivity.returnSavedLoggedEmail(), idStakeHolder,idCatFinal,notes);
         newTrans.SendTransaction(newTrans);
     }
 

@@ -151,5 +151,9 @@
     <string name="editing_custom_category">Editing Category</string>
     <string name="add_new_cat">Add New Category</string>
     <string name="dismiss">Dismiss</string>
+    <string name="not_recorded">Not Recorded</string>
+    <string name="balance">BALANCE</string>
+    <string name="error_loading">Error Loading...</string>
+
 
 </resources>

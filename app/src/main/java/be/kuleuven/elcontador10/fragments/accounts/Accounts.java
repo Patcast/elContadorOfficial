@@ -94,7 +94,8 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
     public void onStart() {
         super.onStart();
         Caching.INSTANCE.attachAccountsObservers(this, mainActivity.returnSavedLoggedEmail());
-
+        try{mainActivity.displayTopMenu(true);}
+        catch(Exception e){}
     }
 
     @Override
