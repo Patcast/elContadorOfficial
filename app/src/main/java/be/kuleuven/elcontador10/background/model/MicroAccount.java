@@ -20,10 +20,12 @@ public class MicroAccount {
 
     private String name;
     private String role;
+    private long balance;
 
     public MicroAccount(String name, String role) {
         this.name = name;
         this.role = role;
+        this.balance = 0;
     }
 
     public void addAccount(MicroAccount account) {
@@ -49,5 +51,13 @@ public class MicroAccount {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public long getBalance() {
+        return balance;
+    }
+
+    public void setBalance(long balance) {
+        this.balance = balance;
     }
 }

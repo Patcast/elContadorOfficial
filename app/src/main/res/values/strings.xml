@@ -144,4 +144,13 @@
     <string name="made_date">Registered date:</string>
     <string name="payments">Payments:</string>
     <string name="cancel">Cancel</string>
+    <string name="in">In</string>
+    <string name="out">Out</string>
+    <string-array name="frequency">
+        <item>One-time</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Quarterly</item>
+        <item>Yearly</item>
+    </string-array>
 </resources>

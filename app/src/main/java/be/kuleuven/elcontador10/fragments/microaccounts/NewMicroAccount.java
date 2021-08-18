@@ -30,8 +30,6 @@ public class NewMicroAccount extends Fragment {
     private Spinner inputRole;
     private Button confirm;
 
-    private StakeHolder selectedStakeHolder;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable  ViewGroup container, @Nullable  Bundle savedInstanceState) {

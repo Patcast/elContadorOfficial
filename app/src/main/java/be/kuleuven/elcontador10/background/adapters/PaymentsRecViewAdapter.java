@@ -1,15 +1,12 @@
 package be.kuleuven.elcontador10.background.adapters;
 
 import android.content.Context;
-import android.icu.number.FormattedNumber;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -49,10 +46,19 @@ public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecView
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Payment payment = payments.get(position);
 
+        // set texts
         holder.title.setText(payment.getTitle());
-        holder.amount.setText(context.getString(R.string.amount) + " " + new NumberFormatter(payment.getAmount()).getFinalNumber());
+
+        long amount = payment.getAmount();
+        String absolute_amount = new NumberFormatter(Math.abs(amount)).getFinalNumber();
+        String amount_text = ((amount > 0)? context.getString(R.string.in) : context.getString(R.string.out)) + " " + absolute_amount;
+        holder.amount.setText(amount_text);
+
         // TODO dates
-        holder.frequency.setText(context.getString(R.string.frequency) + " " + payment.getFrequency());
+
+        String[] frequencies = context.getResources().getStringArray(R.array.frequency);
+        String frequency_text = context.getString(R.string.frequency) + " " + frequencies[payment.getFrequency()];
+        holder.frequency.setText(frequency_text);
 
         // TODO go to payment fragment
         holder.layout.setOnClickListener(v -> {
@@ -60,8 +66,7 @@ public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecView
         });
 
         // hide last divider
-        if (position + 1 != getItemCount()) holder.divider.setVisibility(View.VISIBLE);
-        else holder.divider.setVisibility(View.GONE);
+        if (position + 1 == getItemCount()) holder.divider.setVisibility(View.GONE);
     }
 
     @Override

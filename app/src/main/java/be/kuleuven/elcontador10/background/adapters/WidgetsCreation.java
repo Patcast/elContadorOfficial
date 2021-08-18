@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -95,6 +96,7 @@ public enum WidgetsCreation implements Caching.StaticDataObserver {
         autoText.setAdapter(adapter);
     }
 
+    // TODO safely remove this function
     public void makeCalendarFrom (Context useContext, TextView selectedText){
         /// implementation of calendar
         Calendar calendar = Calendar.getInstance();
@@ -115,6 +117,8 @@ public enum WidgetsCreation implements Caching.StaticDataObserver {
             selectedText.setText(date);
         };
     }
+
+    // TODO safely remove this function
     public void makeCalendarTo(Context useContext, TextView selectedText) {
         /// implementation of calendar
         Calendar calendar = Calendar.getInstance();
@@ -136,7 +140,24 @@ public enum WidgetsCreation implements Caching.StaticDataObserver {
         };
     }
 
+    public void attachCalendarButton(Context useContext, Button button) {
+        Calendar calendar = Calendar.getInstance();
+        final int year_int = calendar.get(Calendar.YEAR);
+        final int month_int = calendar.get(Calendar.MONTH);
+        final int day_int = calendar.get(Calendar.DAY_OF_MONTH);
 
+        button.setOnClickListener(v -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    useContext,android.R.style.Theme_Holo_Dialog_MinWidth,
+                    (view, year, month, dayOfMonth) -> {
+                        month += 1;
+                        String date = dayOfMonth + "/" + ((month < 10)? "0" : "") + month + "/" + year;
+                        button.setText(date);
+                    }, year_int, month_int, day_int);
 
+            datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            datePickerDialog.show();
+        });
+    }
 
 }

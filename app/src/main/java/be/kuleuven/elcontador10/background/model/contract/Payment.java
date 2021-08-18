@@ -1,8 +1,18 @@
 package be.kuleuven.elcontador10.background.model.contract;
 
 
+import android.os.Build;
+import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.type.Date;
+
+import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.database.Caching;
 
 public class Payment {
     private String id;
@@ -10,20 +20,37 @@ public class Payment {
     private long amount;
     private Timestamp start;
     private Timestamp end;
-    private String frequency;
+    private int frequency;
     private String notes;
+    private String registeredBy;
 
-    public Payment(String title, long amount, Timestamp start, Timestamp end, String frequency, String notes) {
+    private static final String TAG = "payment";
+    private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public Payment(String title, long amount, Timestamp start, Timestamp end, int frequency, String notes, String registeredBy) {
         this.title = title;
         this.amount = amount;
         this.start = start;
         this.end = end;
         this.frequency = frequency;
         this.notes = notes;
+        this.registeredBy = registeredBy;
     }
 
     public Payment() {}
 
+    public static void newPayment(Payment payment, String contractId, String microAccountId) {
+        String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + microAccountId +
+                "/contracts/" + contractId + "/payments";
+
+        db.collection(url)
+                .add(payment)
+                .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId()))
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+    }
+
+    @Exclude
     public String getId() {
         return id;
     }
@@ -64,11 +91,11 @@ public class Payment {
         this.end = end;
     }
 
-    public String getFrequency() {
+    public int getFrequency() {
         return frequency;
     }
 
-    public void setFrequency(String frequency) {
+    public void setFrequency(int frequency) {
         this.frequency = frequency;
     }
 
@@ -78,5 +105,13 @@ public class Payment {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getRegisteredBy() {
+        return registeredBy;
+    }
+
+    public void setRegisteredBy(String registeredBy) {
+        this.registeredBy = registeredBy;
     }
 }

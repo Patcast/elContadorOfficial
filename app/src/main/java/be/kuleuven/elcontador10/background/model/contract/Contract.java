@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -59,6 +60,7 @@ public class Contract {
 
 
     // setters and getters
+    @Exclude
     public String getId() {
         return id;
     }
@@ -75,6 +77,7 @@ public class Contract {
         this.title = title;
     }
 
+    @Exclude
     public String getMicroAccount() {
         return microAccount;
     }
@@ -107,6 +110,7 @@ public class Contract {
         this.notes = notes;
     }
 
+    @Exclude
     public ArrayList<Payment> getPayments() {
         return payments;
     }

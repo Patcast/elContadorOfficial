@@ -1,6 +1,5 @@
 package be.kuleuven.elcontador10.fragments.microaccounts;
 
-import android.app.AlertDialog;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -8,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +35,6 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
     private TextView title, microAccountName, accountName, registeredBy, registeredDate, notes;
     private RecyclerView paymentsView;
     private FloatingActionButton add_btn, edit_btn, delete_btn;
-    private ScrollView scrollView;
 
     // adapters
     private PaymentsRecViewAdapter adapter;
@@ -44,8 +42,10 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
     // variables
     private List<Payment> paymentsList;
     private Contract contract;
-    private String id;
+    private String contractId;
+    private String microAccountId;
     private MainActivity mainActivity;
+    private NavController navController;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Nullable
@@ -72,8 +72,6 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
         edit_btn = view.findViewById(R.id.contract_btn_edit);
         delete_btn = view.findViewById(R.id.contract_btn_delete);
 
-        scrollView = view.findViewById(R.id.contract_scroller);
-
         // set onClickListeners
         add_btn.setOnClickListener(this::onAdd_Clicked);
         edit_btn.setOnClickListener(this::onEdit_Clicked);
@@ -91,12 +89,15 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
         super.onViewCreated(view, savedInstanceState);
 
         // get argument and attach to caching
-        id = ContractDisplayArgs.fromBundle(getArguments()).getId();
+        contractId = ContractDisplayArgs.fromBundle(getArguments()).getContractId();
+        microAccountId = ContractDisplayArgs.fromBundle(getArguments()).getMicroAccountId();
         Caching.INSTANCE.attachMicroContractObserver(this);
 
         // set activity header
         mainActivity.displayToolBar(true);
         mainActivity.displayTabLayout(false);
+
+        navController = Navigation.findNavController(view);
     }
 
     @Override
@@ -109,7 +110,7 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void notifyMicroAccountContractsObserver(List<Contract> contracts) {
-        contract = Caching.INSTANCE.getContractFromId(id);
+        contract = Caching.INSTANCE.getContractFromId(contractId);
         if (contract != null) {
             String name = Caching.INSTANCE.getStakeholderName(contract.getMicroAccount());
 
@@ -128,12 +129,14 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
             // set up recycler view
             paymentsList = contract.getPayments();
             adapter.setPayments(paymentsList);
-        } else Toast.makeText(getContext(), "Error getting contract id = " + id, Toast.LENGTH_LONG).show();
+        } else Toast.makeText(getContext(), "Error getting contract id = " + contractId, Toast.LENGTH_LONG).show();
     }
 
     // TODO make buttons go somewhere
     public void onAdd_Clicked(View view) {
-
+        ContractDisplayDirections.ActionContractDisplayToContractNewPayment action =
+                ContractDisplayDirections.actionContractDisplayToContractNewPayment(contractId, microAccountId);
+        navController.navigate(action);
     }
 
     public void onEdit_Clicked(View view) {

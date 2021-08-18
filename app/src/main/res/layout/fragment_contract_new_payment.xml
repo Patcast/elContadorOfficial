@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ContractNewPayment" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <EditText
+            android:id="@+id/payment_new_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="@string/title"
+            android:inputType="text"
+            android:maxLength="22"
+            android:minHeight="48dp" />
+
+        <EditText
+            android:id="@+id/payment_new_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="@string/amount"
+            android:inputType="number"
+            android:maxLength="22"
+            android:minHeight="48dp" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal"
+            android:gravity="center" >
+
+            <RadioButton
+                android:id="@+id/payment_new_in"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginEnd="140dp"
+                android:layout_marginRight="140dp"
+                android:checked="true"
+                android:paddingVertical="10dp"
+                android:scaleX="1.7"
+                android:scaleY="1.7"
+                android:text="@string/in"
+                android:translationX="24dp" />
+
+            <RadioButton
+                android:id="@+id/payment_new_out"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:paddingVertical="10dp"
+                android:scaleX="1.7"
+                android:scaleY="1.7"
+                android:text="@string/out"
+                android:translationX="-30dp" />
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:text="@string/frequency"
+            android:textSize="16sp" />
+
+        <Spinner
+            android:id="@+id/payment_new_frequency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dialog" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:text="@string/start"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/payment_new_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buttons"
+            android:enabled="false"
+            android:text="N/A" />
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:text="@string/end"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/payment_new_end"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buttons"
+            android:enabled="false"
+            android:text="N/A" />
+
+        <EditText
+            android:id="@+id/payment_new_notes"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginTop="20dp"
+            android:gravity="top|left"
+            android:hint="@string/notes"
+            android:inputType="number"
+            android:maxLength="22"
+            android:minHeight="48dp" />
+
+        <Button
+            android:id="@+id/payment_new_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buttons"
+            android:text="@string/confirm" />
+
+    </LinearLayout>
+</ScrollView>
