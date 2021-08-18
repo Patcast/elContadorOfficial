@@ -38,16 +38,17 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     private TransactionsRecViewAdapter adapter;
     ArrayList<Transaction> transactionArrayList = new ArrayList<>();
     FloatingActionButton fabNewTransaction;
-    private TextView textBalance;
+    MainActivity mainActivity;
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_transactions, container, false);
-        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity = (MainActivity) getActivity();
         mainActivity.displayTopMenu(false);
-        textBalance = view.findViewById(R.id.textView_allTransactions_balance);
+
         fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
         startRecycler(view);
 
@@ -93,12 +94,9 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void notifyAllTransactionsObserver(List<Transaction> allTransactions) {
-
-        textBalance.setText(Caching.INSTANCE.getAccountBalance());
         transactionArrayList.clear();
         transactionArrayList.addAll(allTransactions);
         adapter.setAllTransactions(transactionArrayList);
-
     }
 
     public void onFAB_Clicked(View view) {

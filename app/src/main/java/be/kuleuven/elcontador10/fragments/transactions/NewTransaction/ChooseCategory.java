@@ -25,6 +25,7 @@ import java.util.List;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.CategoriesRecViewAdapter;
+import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 
@@ -50,33 +51,36 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         mainActivity.displayTopMenu(true);
         mainActivity.setCurrentMenuClicker(this);
         noCategoryItem = view.findViewById(R.id.choose_noCat);
-        Caching.INSTANCE.attachCatObserver(this);
-        startRecViews(view);
+        viewModel = new ViewModelProvider(requireActivity()).get(NewTransactionViewModel.class);
+        startDefaultRecViews(view);
+        startCustomRecycler(view);
         return view;
 
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void startDefaultRecViews(View view){
+        recyclerCategories_default = view.findViewById(R.id.recView_categories_default);
+        recyclerCategories_default.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        adapter_default = new CategoriesRecViewAdapter(view,viewModel,this);
+        recyclerCategories_default.setAdapter(adapter_default);
+        adapter_default.setDefCategories(Caching.INSTANCE.getDefaultCategories());
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void startCustomRecycler(View view) {
+        recyclerCategories_custom = view.findViewById(R.id.recView_categories_custom);
+        recyclerCategories_custom.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        adapter_custom = new CategoriesRecViewAdapter(view,viewModel,this);
+        Caching.INSTANCE.attachCatObserver(this);
+        if(customCategories.size()>0) adapter_custom.setDefCategories(customCategories);
+        recyclerCategories_custom.setAdapter(adapter_custom);
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         NavController navController = Navigation.findNavController(view);
         noCategoryItem.setOnClickListener(v->closeWithNoCategory(navController));
     }
-    private void startRecViews(View view){
-        recyclerCategories_custom = view.findViewById(R.id.recView_categories_custom);
-        recyclerCategories_custom.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        recyclerCategories_default = view.findViewById(R.id.recView_categories_default);
-        recyclerCategories_default.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        viewModel = new ViewModelProvider(requireActivity()).get(NewTransactionViewModel.class);
-        adapter_default = new CategoriesRecViewAdapter(view,viewModel,this);
-        adapter_custom = new CategoriesRecViewAdapter(view,viewModel,this);
-        if(defCategories.size()>0){
-            adapter_default.setDefCategories(defCategories);
-            adapter_custom.setDefCategories(customCategories);
-        }
-        recyclerCategories_default.setAdapter(adapter_default);
-        recyclerCategories_custom.setAdapter(adapter_custom);
-    }
+
 
     private void closeWithNoCategory(NavController navController ) {
         viewModel.resetCategory();
@@ -87,16 +91,10 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
     @Override
     public void onStart() {
         super.onStart();
-        if(!(Caching.INSTANCE.getDefCatObservers().contains(this))) Caching.INSTANCE.attachCatObserver(this);
-        if(defCategories.size()>0){
-            adapter_default.setDefCategories(defCategories);
-            adapter_custom.setDefCategories(defCategories);
-        }
-        recyclerCategories_default.setAdapter(adapter_default);
+        Caching.INSTANCE.attachCatObserver(this);
+        if(customCategories.size()>0) adapter_custom.setDefCategories(customCategories);
         recyclerCategories_custom.setAdapter(adapter_custom);
     }
-
-
 
     @Override
     public void onStop() {
@@ -106,13 +104,10 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
 
 
     @Override
-    public void notifyCatObserver(List<EmojiCategory> defCategoriesInput, List<EmojiCategory> customCategoriesInput) {
-        defCategories.clear();
-        defCategories.addAll(defCategoriesInput);
+    public void notifyCatObserver(List<EmojiCategory> customCategoriesInput) {
         customCategories.clear();
         customCategories.addAll(customCategoriesInput);
-        if(adapter_default!=null)adapter_default.setDefCategories(defCategories);
-        if(adapter_custom!=null)adapter_custom.setDefCategories(customCategories);
+        adapter_custom.setDefCategories(customCategories);
     }
 
     @Override

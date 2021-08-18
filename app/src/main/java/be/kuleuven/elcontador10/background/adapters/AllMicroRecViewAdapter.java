@@ -24,7 +24,8 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.NewTransactionViewModel;
-import be.kuleuven.elcontador10.fragments.ViewPagerHolderDirections;
+import be.kuleuven.elcontador10.fragments.transactions.ViewPagerHolderDirections;
+
 
 public class AllMicroRecViewAdapter extends RecyclerView.Adapter<AllMicroRecViewAdapter.ViewHolder> {
 

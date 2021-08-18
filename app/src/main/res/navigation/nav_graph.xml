@@ -116,7 +116,7 @@
     </fragment>
     <fragment
         android:id="@+id/viewPagerHolder"
-        android:name="be.kuleuven.elcontador10.fragments.ViewPagerHolder"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.ViewPagerHolder"
         android:label="fragment_view_pager_holder"
         tools:layout="@layout/fragment_view_pager_holder" >
         <action

@@ -40,7 +40,7 @@ public enum Caching {
 
     /// interfaces******
     public interface CategoriesObserver{
-        void notifyCatObserver(List <EmojiCategory> defCategoriesInput,List <EmojiCategory> customCategoriesInput);
+        void notifyCatObserver(List <EmojiCategory> customCategoriesInput);
     }
     public interface StaticDataObserver {
         void notifyStaticDataObserver( List <TransactionType> transTypes,  List <String> roles);
@@ -60,8 +60,8 @@ public enum Caching {
 
     ////*********Data
     private final List <Account> accounts = new ArrayList<>();
-    private List<EmojiCategory> defaultCategories = new ArrayList<>();
-    private List<EmojiCategory> customCategories = new ArrayList<>();
+    private final List<EmojiCategory> defaultCategories = new ArrayList<>();
+    private final List<EmojiCategory> customCategories = new ArrayList<>();
     public List <StakeHolder> stakeHolders = new ArrayList<>();
     public List <TransactionType>  transTypes = new ArrayList<>();
     public List <String> roles = new ArrayList<>();
@@ -91,15 +91,7 @@ public enum Caching {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void attachCatObserver(CategoriesObserver newObserver){
         catObservers.add(newObserver);
-        if (defaultCategories.size()==0) {
-            requestDefaultCategories();
-        }
-        if(customCategories.size()==0){
-            requestCustomCategories();
-        }
-        else {
-            newObserver.notifyCatObserver(defaultCategories,customCategories);
-        }
+        if(customCategories.size()!=0)newObserver.notifyCatObserver(customCategories);
     }
     public void deAttachCatObserver(CategoriesObserver unWantedObserver){
         if(unWantedObserver!=null)catObservers.remove(unWantedObserver);
@@ -160,14 +152,14 @@ public enum Caching {
         setChosenAccountId(chosenAccountId);
         requestGroupOFStakeHolders(chosenAccountId);
         requestAccountTransactions(chosenAccountId);
+        requestCustomCategories();
     }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void openQuickNewTransaction(String chosenAccountId){
         setChosenAccountId(chosenAccountId);
         requestGroupOFStakeHolders(chosenAccountId);
+        requestCustomCategories();
     }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void openMicroAccount(String microAccountId) {
         setChosenMicroAccountId(microAccountId);
@@ -178,8 +170,6 @@ public enum Caching {
         requestStaticData();
         requestDefaultCategories();
     }
-
-
     public void signOut(){
          customCategories.clear();
          stakeHolders.clear();
@@ -209,7 +199,7 @@ public enum Caching {
                             customCategories.add(myCategory);
                         }
                     }
-                    catObservers.forEach(t->t.notifyCatObserver(defaultCategories,customCategories));
+                    catObservers.forEach(t->t.notifyCatObserver(customCategories));
                 });
     }
 
@@ -230,12 +220,12 @@ public enum Caching {
                             defaultCategories.add(myCategory);
                         }
                     }
-                    catObservers.forEach(t->t.notifyCatObserver(defaultCategories,defaultCategories));
                 });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestAllUserAccounts(String email){
+        startApp();
         db.collection("accounts").
                 whereArrayContains("users", email).
                 addSnapshotListener((value, e) -> {
@@ -440,8 +430,11 @@ public enum Caching {
                 .findFirst();
         return possibleName.orElse(context.getString(R.string.not_recorded));
     }
-
-    public List<CategoriesObserver> getDefCatObservers() {
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public List<EmojiCategory> getDefaultCategories() {
+        return defaultCategories;
+    }
+    public List<CategoriesObserver> getCatObservers() {
         return catObservers;
     }
 }

@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public interface MenuClicker{
         void onBottomSheetClick();
     }
+
     private Menu topRightMenu;
     private TabLayout tabLayout;
     private Toolbar toolbar;
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         Caching.INSTANCE.signOut();
 
     }
+
     public void displayTopMenu(boolean b) {
        topRightMenu.setGroupVisible(R.id.basic_menu_options,b);
     }

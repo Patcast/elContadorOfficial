@@ -24,7 +24,7 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.Transaction;
-import be.kuleuven.elcontador10.fragments.ViewPagerHolderDirections;
+import be.kuleuven.elcontador10.fragments.transactions.ViewPagerHolderDirections;
 
 
 public class TransactionsRecViewAdapter extends RecyclerView.Adapter<TransactionsRecViewAdapter.ViewHolder>  {
