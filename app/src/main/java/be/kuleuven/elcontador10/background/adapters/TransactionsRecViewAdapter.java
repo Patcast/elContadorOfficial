@@ -59,6 +59,7 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         holder.textAmount.setText(formatter.getFinalNumber());
         holder.textDate.setText(allTransactions.get(position).getShortDate());
         holder.textTitle.setText(allTransactions.get(position).getTitle());
+        holder.txtEmojiCategory.setText(Caching.INSTANCE.getCategoryEmoji(allTransactions.get(position).getCategory()));
         holder.parent.setOnClickListener(v->{
             ViewPagerHolderDirections.ActionViewPagerHolderToTransactionDisplay action = ViewPagerHolderDirections.actionViewPagerHolderToTransactionDisplay(idOfTransaction);
             navController.navigate(action);
@@ -71,15 +72,12 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView textTitle;
-        private TextView textAmount;
-        private TextView textDate;
-        private TextView textNameOfParticipant;
-        private TextView textPaidBy;
+        private TextView textTitle,textAmount,textDate,textNameOfParticipant,textPaidBy,txtEmojiCategory;
         private ConstraintLayout parent;
 
         public ViewHolder(@NonNull  View itemView) {
             super(itemView);
+            txtEmojiCategory = itemView.findViewById(R.id.textView_transaction_emoji);
             textTitle = itemView.findViewById(R.id.text_title_allTrans);
             parent = itemView.findViewById(R.id.recVew_Item_AllTransactions);
             textTitle = itemView.findViewById(R.id.text_title_allTrans);

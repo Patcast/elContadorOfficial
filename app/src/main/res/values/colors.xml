@@ -24,6 +24,7 @@
     <color name="dark_header">#1c1c1c</color>
     <color name="light_red_warning">#ff8989</color>
     <color name="toolBar_color">#212121</color>
+    <color name="superDarkGrey">#141414</color>
 
 
 </resources>

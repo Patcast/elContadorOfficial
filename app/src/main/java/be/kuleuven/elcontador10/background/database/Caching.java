@@ -38,6 +38,7 @@ public enum Caching {
 
 
 
+
     /// interfaces******
     public interface CategoriesObserver{
         void notifyCatObserver(List <EmojiCategory> customCategoriesInput);
@@ -436,5 +437,26 @@ public enum Caching {
     }
     public List<CategoriesObserver> getCatObservers() {
         return catObservers;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String getCategoryEmoji(String idCategory) {
+        List<EmojiCategory> emojiCategoriesCombo = new ArrayList<>(customCategories);
+        emojiCategoriesCombo.addAll(defaultCategories);
+        Optional<String> possibleEmoji = emojiCategoriesCombo.stream()
+                .filter(s -> s.getId().equals(idCategory))
+                .map(EmojiCategory::getIcon)
+                .findFirst();
+        return possibleEmoji.orElse("");
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String getCategoryTitle(String idCategory) {
+        List<EmojiCategory> emojiCategoriesCombo = new ArrayList<>(customCategories);
+        emojiCategoriesCombo.addAll(defaultCategories);
+        Optional<String> possibleEmoji = emojiCategoriesCombo.stream()
+                .filter(s -> s.getId().equals(idCategory))
+                .map(EmojiCategory::getTitle)
+                .findFirst();
+        return possibleEmoji.orElse("");
     }
 }

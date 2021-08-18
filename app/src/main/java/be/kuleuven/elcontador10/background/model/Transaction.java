@@ -86,7 +86,6 @@ public class Transaction {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public String getShortDate(){
         String [] bitsOfDate = date.toDate().toString().split(" ");
         StringBuilder shortDate = new StringBuilder();
