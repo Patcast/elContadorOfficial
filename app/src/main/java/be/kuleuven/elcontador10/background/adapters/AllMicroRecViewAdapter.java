@@ -21,9 +21,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
+import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.NewTransactionViewModel;
 import be.kuleuven.elcontador10.fragments.transactions.ViewPagerHolderDirections;
 

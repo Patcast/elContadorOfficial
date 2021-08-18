@@ -27,6 +27,7 @@ import be.kuleuven.elcontador10.R;
 
 import be.kuleuven.elcontador10.background.model.Account;
 
+import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
@@ -64,21 +65,9 @@ public enum Caching {
         void notifyMicroAccountContractsObserver(List<Contract> contracts);
     }
 
-    private final List <Account> accounts = new ArrayList<>();
-    private final List <AccountsObserver> accountsObservers = new ArrayList<>();
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void attachAccountsObservers(AccountsObserver newObserver, String email){
-        if(email!=null){
-            accountsObservers.add(newObserver);
-            if(accounts.size()==0) requestAllUserAccounts(email);
-            else newObserver.notifyAccountsObserver(accounts);
-        }
-    }
-    public void deAttachAccountsObservers(AccountsObserver unWantedObserver){
-        if (unWantedObserver!=null){
-            accountsObservers.remove(unWantedObserver);
-        }
-    }
+
+
+
 
 
     ////*********Data

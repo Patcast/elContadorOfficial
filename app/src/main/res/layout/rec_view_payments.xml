@@ -5,7 +5,8 @@
     android:id="@+id/payment_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/accounts_first_background">
+    android:background="@drawable/background_accounts_first"
+    >
 
     <TextView
         android:id="@+id/payment_frequency"

@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.background.model.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.contract.Payment;
+import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecViewAdapter.ViewHolder> {
     private List<Payment> payments;

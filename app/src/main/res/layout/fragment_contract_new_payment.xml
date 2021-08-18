@@ -92,7 +92,7 @@
             android:id="@+id/payment_new_start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/buttons"
+            android:background="@drawable/background_buttons"
             android:enabled="false"
             android:text="N/A" />
 
@@ -108,7 +108,7 @@
             android:id="@+id/payment_new_end"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/buttons"
+            android:background="@drawable/background_buttons"
             android:enabled="false"
             android:text="N/A" />
 
@@ -127,7 +127,7 @@
             android:id="@+id/payment_new_confirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/buttons"
+            android:background="@drawable/background_buttons"
             android:text="@string/confirm" />
 
     </LinearLayout>

@@ -20,8 +20,9 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.ViewPagerAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.NumberFormatter;
+
 import be.kuleuven.elcontador10.background.model.StakeHolder;
+import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 public class MicroAccountViewPagerHolder extends Fragment {
     private ViewPagerAdapter mAdapter;
