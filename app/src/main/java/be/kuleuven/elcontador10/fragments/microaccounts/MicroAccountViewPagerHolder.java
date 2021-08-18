@@ -26,8 +26,6 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 public class MicroAccountViewPagerHolder extends Fragment {
     private ViewPagerAdapter mAdapter;
 
-    private TextView textRole;
-    private TextView textBalance;
     private ViewPager2 viewPager;
 
     private MainActivity mainActivity;
@@ -49,9 +47,6 @@ public class MicroAccountViewPagerHolder extends Fragment {
         viewPager = view.findViewById(R.id.viewPagerHolder);
         mAdapter = new ViewPagerAdapter(mainActivity.getSupportFragmentManager(), getLifecycle());
 
-        textBalance = view.findViewById(R.id.txtViewBalance);
-        textRole = view.findViewById(R.id.txtViewRole);
-
         addFragments(view);
 
         return view;
@@ -68,9 +63,10 @@ public class MicroAccountViewPagerHolder extends Fragment {
 
         chosenAccountId = Caching.INSTANCE.getChosenAccountId();
 
-        // set texts
-        textRole.setText(stakeHolder.getRole());
-        textBalance.setText(new NumberFormatter(stakeHolder.getBalance()).getFinalNumber());
+        // set details
+        String balance = new NumberFormatter(stakeHolder.getBalance()).getFinalNumber();
+        mainActivity.displayStakeHolderDetails(true, balance, stakeHolder.getRole());
+
 
         Caching.INSTANCE.openMicroAccount(stakeHolder.getId()); // set MicroAccount to caching
     }
@@ -104,6 +100,7 @@ public class MicroAccountViewPagerHolder extends Fragment {
         Caching.INSTANCE.setChosenAccountId(chosenAccountId);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         mainActivity.displayTabLayout(false);
+        mainActivity.displayStakeholderDetails(false);
         Caching.INSTANCE.setChosenMicroAccountId(null);
     }
 }

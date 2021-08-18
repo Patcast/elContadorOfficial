@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private Toolbar toolbar;
     private SharedPreferences sharedPreferences;
+    private TextView stakeHolderBalance, stakeholderRole;
+    private ConstraintLayout stakeholderDetails;
     SharedPreferences.Editor editor;
     private static final String SAVED_EMAIL_KEY = "email_key";
     MenuClicker currentMenuClicker;
@@ -58,8 +61,13 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("loggedInDetails",MODE_PRIVATE);
         editor = sharedPreferences.edit();
         setContentView(R.layout.activity_main);
+
         toolbar = findViewById(R.id.toolbar);
         tabLayout = findViewById(R.id.tabLayout);
+        stakeholderDetails = findViewById(R.id.stakeHolderDetails);
+        stakeHolderBalance = findViewById(R.id.txtViewBalance);
+        stakeholderRole = findViewById(R.id.txtViewRole);
+
         Caching.INSTANCE.setContext(this);
         setSupportActionBar(toolbar);
 
@@ -97,6 +105,20 @@ public class MainActivity extends AppCompatActivity {
         int visibility = (display)? View.VISIBLE :View.GONE;
         tabLayout.setVisibility(visibility);
     }
+
+    public void displayStakeHolderDetails(boolean display, String balance, String role) {
+        if (display) {
+            stakeholderDetails.setVisibility(View.VISIBLE);
+            stakeHolderBalance.setText(balance);
+            stakeholderRole.setText(role);
+        } else stakeholderDetails.setVisibility(View.GONE);
+    }
+
+    public void displayStakeholderDetails(boolean display) {
+        if (display) stakeholderDetails.setVisibility(View.VISIBLE);
+        else stakeholderDetails.setVisibility(View.GONE);
+    }
+
     public void setHeaderText(String title) {
         toolbar.setTitle(title);
     }
@@ -120,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                     currentMenuClicker.onBottomSheetClick();
                 }
                 catch(Exception e){
-                    Toast.makeText(this,"refresh the page",Toast.LENGTH_SHORT);
+                    Toast.makeText(this,"refresh the page",Toast.LENGTH_SHORT).show();
                 }
 
                 return true;
