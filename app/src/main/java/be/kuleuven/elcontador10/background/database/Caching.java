@@ -14,6 +14,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.core.OrderBy;
 
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 import be.kuleuven.elcontador10.background.model.User;
+import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.contract.Contract;
 import be.kuleuven.elcontador10.background.model.contract.Payment;
 
@@ -38,7 +40,11 @@ public enum Caching {
 
 
 
+
     /// interfaces******
+    public interface CategoriesObserver{
+        void notifyCatObserver(List <EmojiCategory> customCategoriesInput);
+    }
     public interface StaticDataObserver {
         void notifyStaticDataObserver( List <TransactionType> transTypes,  List <String> roles);
     }
@@ -76,6 +82,9 @@ public enum Caching {
 
 
     ////*********Data
+    private final List <Account> accounts = new ArrayList<>();
+    private final List<EmojiCategory> defaultCategories = new ArrayList<>();
+    private final List<EmojiCategory> customCategories = new ArrayList<>();
     public List <StakeHolder> stakeHolders = new ArrayList<>();
     public List <TransactionType>  transTypes = new ArrayList<>();
     public List <String> roles = new ArrayList<>();
@@ -84,6 +93,8 @@ public enum Caching {
     public List <Contract> microAccountContracts = new ArrayList<>();
 
     ///********** Observers List
+    private final List <AccountsObserver> accountsObservers = new ArrayList<>();
+    private final List <CategoriesObserver> catObservers = new ArrayList<>();
     private final List <StaticDataObserver> staticDataObservers = new ArrayList<>();
     private final List <StakeholdersObserver> stakeholdersObservers = new ArrayList<>();
     private final List <MicroAccountTransactionObserver> microAccountObservers = new ArrayList<>();
@@ -102,6 +113,27 @@ public enum Caching {
     private String chosenMicroAccountId;
 
 ///Attach methods*************************
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void attachCatObserver(CategoriesObserver newObserver){
+        catObservers.add(newObserver);
+        if(customCategories.size()!=0)newObserver.notifyCatObserver(customCategories);
+    }
+    public void deAttachCatObserver(CategoriesObserver unWantedObserver){
+        if(unWantedObserver!=null)catObservers.remove(unWantedObserver);
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void attachAccountsObservers(AccountsObserver newObserver, String email){
+        if(email!=null){
+            accountsObservers.add(newObserver);
+            if(accounts.size()==0) requestAllUserAccounts(email);
+            else newObserver.notifyAccountsObserver(accounts);
+        }
+    }
+    public void deAttachAccountsObservers(AccountsObserver unWantedObserver){
+        if (unWantedObserver!=null){
+            accountsObservers.remove(unWantedObserver);
+        }
+    }
     public void attachStaticDataObservers(StaticDataObserver newObserver){
         staticDataObservers.add(newObserver);
         newObserver.notifyStaticDataObserver( transTypes,roles);
@@ -117,7 +149,6 @@ public enum Caching {
     public void deAttachStakeholdersObservers(StakeholdersObserver newObserver){
         stakeholdersObservers.remove(newObserver);
     }
-
     public void attachAllTransactionsObserver(AllTransactionsObserver newObserver){
         allTransactionsObservers.add(newObserver);
         if(transactions.size()!=0){
@@ -129,13 +160,11 @@ public enum Caching {
         if (allTransactionsObservers.size() != 0)
             allTransactionsObservers.remove(unWantedObserver);
     }
-
     public void attachMicroTransactionsObserver(MicroAccountTransactionObserver newObserver) {
         microAccountObservers.add(newObserver);
         if (microAccountTransactions.size() != 0)
             newObserver.notifyMicroAccountTransactionObserver(microAccountTransactions);
     }
-
     public void deAttachMicroTransactionsObserver(MicroAccountTransactionObserver observer) {
         if (microAccountObservers.size() != 0)
             microAccountObservers.remove(observer);
@@ -161,34 +190,81 @@ public enum Caching {
         setChosenAccountId(chosenAccountId);
         requestGroupOFStakeHolders(chosenAccountId);
         requestAccountTransactions(chosenAccountId);
+        requestCustomCategories();
     }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void openQuickNewTransaction(String chosenAccountId){
         setChosenAccountId(chosenAccountId);
         requestGroupOFStakeHolders(chosenAccountId);
+        requestCustomCategories();
     }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void openMicroAccount(String microAccountId) {
         setChosenMicroAccountId(microAccountId);
         requestMicroAccountTransactions(chosenAccountId, microAccountId);
         requestMicroAccountContracts(chosenAccountId, microAccountId);
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public  void startApp(){
+        requestStaticData();
+        requestDefaultCategories();
+    }
     public void signOut(){
-     stakeHolders.clear();
-     transTypes.clear();
-     accounts.clear();
-     transactions.clear();
-     roles.clear();
-     logInUser = null;
-     chosenAccountId = null;
+         customCategories.clear();
+         stakeHolders.clear();
+         transTypes.clear();
+         accounts.clear();
+         transactions.clear();
+         roles.clear();
+         logInUser = null;
+         chosenAccountId = null;
     }
 
     //////// DATA BASE ****************
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void requestCustomCategories() {
+        db.collection("/accounts/"+chosenAccountId+"/customCategories").
+                addSnapshotListener((value, e) -> {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
+                    }
+                    customCategories.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc.get("title") != null) {
+                            EmojiCategory myCategory =  doc.toObject(EmojiCategory.class);
+                            myCategory.setId(doc.getId());
+                            customCategories.add(myCategory);
+                        }
+                    }
+                    catObservers.forEach(t->t.notifyCatObserver(customCategories));
+                });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void requestDefaultCategories() {
+        db.collection("defaultCategories").
+                addSnapshotListener((value, e) -> {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
+                    }
+
+                    defaultCategories.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc.get("title") != null) {
+                            EmojiCategory myCategory =  doc.toObject(EmojiCategory.class);
+                            myCategory.setId(doc.getId());
+                            defaultCategories.add(myCategory);
+                        }
+                    }
+                });
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestAllUserAccounts(String email){
+        startApp();
         db.collection("accounts").
                 whereArrayContains("users", email).
                 addSnapshotListener((value, e) -> {
@@ -312,6 +388,7 @@ public enum Caching {
                         microAccountTransactions.add(myTransaction);
                     }
 
+                    System.out.println(getStakeholderName(microAccountId));
                     microAccountObservers.forEach(t -> t.notifyMicroAccountTransactionObserver(microAccountTransactions));
                 });
     }
@@ -418,7 +495,20 @@ public enum Caching {
                                                         .filter(a->a.getId().equals(chosenAccountId))
                                                         .map(Account::getName)
                                                         .findFirst();
-        return selectedAccount.orElse("account not found");
+        return selectedAccount.orElse(context.getString(R.string.error_loading));
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String getAccountBalance(){
+        Optional<String> selectedAccount = getAccounts().stream()
+                .filter(a->a.getId().equals(chosenAccountId))
+                .map(Account::getBalance)
+                .map(this::formatNumber)
+                .findFirst();
+        return selectedAccount.orElse(context.getString(R.string.error_loading));
+    }
+    private String formatNumber(Long inputNumber){
+        NumberFormatter formatter = new NumberFormatter(inputNumber);
+        return formatter.getFinalNumber();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -428,7 +518,14 @@ public enum Caching {
                 .filter(s -> s.getId().equals(idStakeholder))
                 .map(StakeHolder::getName)
                 .findFirst();
-        return possibleName.orElse(context.getString(R.string.error_finding_microAccount));
+        return possibleName.orElse(context.getString(R.string.not_recorded));
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public List<EmojiCategory> getDefaultCategories() {
+        return defaultCategories;
+    }
+    public List<CategoriesObserver> getCatObservers() {
+        return catObservers;
     }
 
     public Contract getContractFromId(String id) {
@@ -439,4 +536,24 @@ public enum Caching {
         return null;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String getCategoryEmoji(String idCategory) {
+        List<EmojiCategory> emojiCategoriesCombo = new ArrayList<>(customCategories);
+        emojiCategoriesCombo.addAll(defaultCategories);
+        Optional<String> possibleEmoji = emojiCategoriesCombo.stream()
+                .filter(s -> s.getId().equals(idCategory))
+                .map(EmojiCategory::getIcon)
+                .findFirst();
+        return possibleEmoji.orElse("");
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String getCategoryTitle(String idCategory) {
+        List<EmojiCategory> emojiCategoriesCombo = new ArrayList<>(customCategories);
+        emojiCategoriesCombo.addAll(defaultCategories);
+        Optional<String> possibleEmoji = emojiCategoriesCombo.stream()
+                .filter(s -> s.getId().equals(idCategory))
+                .map(EmojiCategory::getTitle)
+                .findFirst();
+        return possibleEmoji.orElse("");
+    }
 }

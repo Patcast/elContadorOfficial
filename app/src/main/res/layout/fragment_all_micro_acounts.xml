@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.microaccounts.AllMicroAccounts"
-    android:padding="15dp"
     >
 
 
@@ -14,13 +13,16 @@
         android:id="@+id/btn_new_MicroFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
         android:contentDescription="@string/settings"
         app:backgroundTint="@color/fb_color"
         app:fabCustomSize="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_baseline_add_24"  />
+        app:srcCompat="@drawable/ic_baseline_add_24" />
 
     <SearchView
         android:id="@+id/searchAllMicro"

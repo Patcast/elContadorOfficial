@@ -24,11 +24,12 @@ import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.NumberFormatter;
+import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.fragments.ViewPagerHolderDirections;
 import be.kuleuven.elcontador10.fragments.microaccounts.MicroAccountViewPagerHolder;
 import be.kuleuven.elcontador10.fragments.microaccounts.MicroAccountViewPagerHolderDirections;
+import be.kuleuven.elcontador10.fragments.transactions.ViewPagerHolderDirections;
 
 
 public class TransactionsRecViewAdapter extends RecyclerView.Adapter<TransactionsRecViewAdapter.ViewHolder>  {
@@ -50,7 +51,7 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         return new ViewHolder(viewParent);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
         String idStakeholder = allTransactions.get(position).getStakeHolder();
@@ -63,6 +64,7 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         holder.textAmount.setText(formatter.getFinalNumber());
         holder.textDate.setText(allTransactions.get(position).getShortDate());
         holder.textTitle.setText(allTransactions.get(position).getTitle());
+        holder.txtEmojiCategory.setText(Caching.INSTANCE.getCategoryEmoji(allTransactions.get(position).getCategory()));
         holder.parent.setOnClickListener(v->{
             try {
                 // from Account ViewHolder
@@ -83,15 +85,12 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView textTitle;
-        private TextView textAmount;
-        private TextView textDate;
-        private TextView textNameOfParticipant;
-        private TextView textPaidBy;
+        private TextView textTitle,textAmount,textDate,textNameOfParticipant,textPaidBy,txtEmojiCategory;
         private ConstraintLayout parent;
 
         public ViewHolder(@NonNull  View itemView) {
             super(itemView);
+            txtEmojiCategory = itemView.findViewById(R.id.textView_transaction_emoji);
             textTitle = itemView.findViewById(R.id.text_title_allTrans);
             parent = itemView.findViewById(R.id.recVew_Item_AllTransactions);
             textTitle = itemView.findViewById(R.id.text_title_allTrans);

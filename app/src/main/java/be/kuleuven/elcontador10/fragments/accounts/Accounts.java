@@ -51,7 +51,7 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
-        newAccountButton= view.findViewById(R.id.btn_new_AccountFAB);
+        //newAccountButton= view.findViewById(R.id.btn_new_AccountFAB);
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle(getString(R.string.accounts));
         mainActivity.setCurrentMenuClicker(this);
@@ -66,7 +66,7 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
         checkLogIn(mainActivity.returnSavedLoggedEmail());
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> mainActivity.displayToolBar(true));
-        newAccountButton.setOnClickListener(v -> navController.navigate(R.id.action_accounts_to_addNewAccount));
+        //newAccountButton.setOnClickListener(v -> navController.navigate(R.id.action_accounts_to_addNewAccount));
 
     }
 
@@ -94,7 +94,8 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
     public void onStart() {
         super.onStart();
         Caching.INSTANCE.attachAccountsObservers(this, mainActivity.returnSavedLoggedEmail());
-
+        try{mainActivity.displayTopMenu(true);}
+        catch(Exception e){}
     }
 
     @Override

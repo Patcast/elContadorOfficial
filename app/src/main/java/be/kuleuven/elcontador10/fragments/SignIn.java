@@ -85,13 +85,6 @@ public class SignIn extends Fragment {
         navController = Navigation.findNavController(view);
     }
 
-   /* @Override
-    public void onStart() {
-        super.onStart();
-        try{Caching.INSTANCE.signOut();}
-        catch(Exception e){}
-    }*/
-
     ///// Sign in process///////////////
     private void signIn() {
         Intent signInIntent =  mGoogleSignInClient.getSignInIntent();
@@ -179,8 +172,6 @@ public class SignIn extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateAfterSignedIn(String email){
-        Caching.INSTANCE.requestStaticData();
-        //mainActivity.displayToolBar(true);
         mainActivity.saveLoggedInState(email);
         mGoogleSignInClient.signOut();
         navController.popBackStack();

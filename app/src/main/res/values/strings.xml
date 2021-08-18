@@ -134,7 +134,7 @@
     <string name="starting_balance">Starting Balance ( Default $0.00 )</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="paid_to">Paid to</string>
+    <string name="paid_to">Paid to </string>
     <string name="title">Title</string>
     <string name="no_transactions">No transactions to show</string>
     <string name="no_contracts">No contracts to show</string>
@@ -153,4 +153,27 @@
         <item>Quarterly</item>
         <item>Yearly</item>
     </string-array>
+    <string name="words_">\"Words: \"</string>
+    <string name="choose_category">Choose a Category</string>
+    <string name="no_category">No Category</string>
+    <string name="default_categories">Default Categories</string>
+    <string name="custom_categories">Custom Categories</string>
+    <string name="edit_categories">Edit Categories</string>
+    <string name="add_new_category">Add New Category</string>
+    <string name="custom_category">Custom Category</string>
+    <string name="category_name">Category Name</string>
+    <string name="category_icon">Category emoji</string>
+    <string name="invalid_icon_please_enter_an_emoji">Invalid Icon, please enter an emoji.</string>
+    <string name="this_field_is_requiered">This field is required.</string>
+    <string name="editing_custom_category">Editing Category</string>
+    <string name="add_new_cat">Add New Category</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="not_recorded">Not Recorded</string>
+    <string name="balance">BALANCE</string>
+    <string name="error_loading">Error Loading...</string>
+    <string name="add_custom_category">Add Custom Category</string>
+    <string name="time">Time:</string>
+    <string name="date">Date:</string>
+
+
 </resources>

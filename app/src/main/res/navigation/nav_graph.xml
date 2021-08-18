@@ -21,12 +21,15 @@
     </fragment>
     <fragment
         android:id="@+id/newTransaction"
-        android:name="be.kuleuven.elcontador10.fragments.transactions.TransactionNew"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.NewTransaction.TransactionNew"
         android:label="fragment_new_transaction"
         tools:layout="@layout/fragment_transaction_new" >
         <action
             android:id="@+id/action_newTransaction_to_chooseStakeHolderDialog"
             app:destination="@id/chooseStakeHolderDialog" />
+        <action
+            android:id="@+id/action_newTransaction_to_chooseCategory"
+            app:destination="@id/chooseCategory" />
     </fragment>
     <fragment
         android:id="@+id/stakeholderDisplay"
@@ -104,7 +107,7 @@
     </fragment>
     <fragment
         android:id="@+id/chooseStakeHolderDialog"
-        android:name="be.kuleuven.elcontador10.fragments.transactions.ChooseStakeHolder"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ChooseStakeHolder"
         android:label="fragment_choose_stake_holder"
         tools:layout="@layout/fragment_choose_stake_holder" >
         <action
@@ -113,7 +116,7 @@
     </fragment>
     <fragment
         android:id="@+id/viewPagerHolder"
-        android:name="be.kuleuven.elcontador10.fragments.ViewPagerHolder"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.ViewPagerHolder"
         android:label="fragment_view_pager_holder"
         tools:layout="@layout/fragment_view_pager_holder" >
         <action
@@ -204,4 +207,9 @@
             app:argType="string" />
         <argument android:name="microAccountId" />
     </fragment>
+    <fragment
+        android:id="@+id/chooseCategory"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ChooseCategory"
+        android:label="fragment_choose_category"
+        tools:layout="@layout/fragment_choose_category" />
 </navigation>

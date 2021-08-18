@@ -10,17 +10,21 @@
     <color name="contador_red">#CC0303</color>
     <color name="contador_bg">#36393F</color>
     <color name="green">#00FF00</color>
-    <color name="dark_grey">#696969</color>
+    <color name="dark_grey">#343434</color>
     <color name="cash_out">#ffc7c7</color>
-    <color name="rec_view_gray">#5a5a5a</color>
+    <color name="rec_view_gray">#36393F</color>
     <color name="rec_view_transactions">#282828</color>
     <color name="rec_view_title">#eed075</color>
     <color name="rec_view_negative_amount">#e4b31d</color>
     <color name="fb_color">#cfa219</color>
     <color name="text_titles">#e4b31d</color>
     <color name="button">#b89016</color>
-
-
+    <color name="light_grey">#8d8c8c</color>
+    <color name="transparent">#00A3A3A3</color>
+    <color name="dark_header">#1c1c1c</color>
+    <color name="light_red_warning">#ff8989</color>
+    <color name="toolBar_color">#212121</color>
+    <color name="superDarkGrey">#141414</color>
 
 
 </resources>

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="20dp"
         android:paddingBottom="20dp"
-        tools:context=".fragments.transactions.TransactionNew">
+        tools:context=".fragments.transactions.NewTransaction.TransactionNew">
 
         <EditText
             android:id="@+id/ed_txt_name"
@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:background="@drawable/buttons"
+            android:background="@drawable/background_buttons"
             android:text="@string/confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -4,7 +4,6 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.NewTransactionViewModel;
 
 
 
@@ -29,9 +28,9 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
     private List<StakeHolder> stakeholdersList = new ArrayList<>();
     private ArrayList<StakeHolder> stakeHoldersOriginal;
     private final View viewFromHostingClass;
-    private ChosenStakeViewModel viewModel;
+    private NewTransactionViewModel viewModel;
 
-    public StakeHolderRecViewAdapter(View viewFromHostingClass, ChosenStakeViewModel viewModel) {
+    public StakeHolderRecViewAdapter(View viewFromHostingClass, NewTransactionViewModel viewModel) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.viewModel = viewModel;
     }
@@ -48,8 +47,8 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
 
             holder.textName.setText(stakeholdersList.get(position).getName());
             holder.textRole.setText(String.valueOf(stakeholdersList.get(position).getRole()));
-           holder.parent.setOnClickListener(v -> {
-               viewModel.select(stakeholdersList.get(position));
+            holder.parent.setOnClickListener(v -> {
+               viewModel.selectStakeholder(stakeholdersList.get(position));
                NavController navController = Navigation.findNavController(viewFromHostingClass);
                navController.navigate(R.id.action_chooseStakeHolderDialog_to_newTransaction);
             }
@@ -64,7 +63,7 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
     public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView textName;
         private TextView textRole;
-        private ImageView buttonNewTransaction;
+
         private ConstraintLayout parent;
 
         public ViewHolder(@NonNull View itemView) {

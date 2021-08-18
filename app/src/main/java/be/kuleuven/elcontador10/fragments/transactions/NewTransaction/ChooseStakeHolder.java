@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.transactions;
+package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +23,6 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.StakeHolderRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.viewModels.ChosenStakeViewModel;
 
 
 public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersObserver , SearchView.OnQueryTextListener {
@@ -31,6 +30,7 @@ public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersO
     private android.widget.SearchView txtSearch;
     private StakeHolderRecViewAdapter adapter;
     private List <StakeHolder> stakeHolders = new ArrayList<>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersO
         txtSearch = view.findViewById(R.id.searchChosenStake);
         txtSearch.setOnQueryTextListener(this);
         recyclerStakeHolds.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        ChosenStakeViewModel viewModel = new ViewModelProvider(requireActivity()).get(ChosenStakeViewModel.class);
+        NewTransactionViewModel viewModel = new ViewModelProvider(requireActivity()).get(NewTransactionViewModel.class);
         adapter = new StakeHolderRecViewAdapter(view,viewModel);
         Caching.INSTANCE.attachStakeholdersObservers(this);
         if(stakeHolders.size()>0) adapter.setStakeholdersList(stakeHolders);
