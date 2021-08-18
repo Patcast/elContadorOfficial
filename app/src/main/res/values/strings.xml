@@ -154,6 +154,7 @@
     <string name="not_recorded">Not Recorded</string>
     <string name="balance">BALANCE</string>
     <string name="error_loading">Error Loading...</string>
+    <string name="add_custom_category">Add Custom Category</string>
 
 
 </resources>

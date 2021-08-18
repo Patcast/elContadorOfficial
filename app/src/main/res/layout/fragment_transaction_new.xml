@@ -112,6 +112,7 @@
             android:id="@+id/imageButton_addPicture"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
             app:layout_constraintBottom_toBottomOf="@+id/text_newTransaction_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/text_newTransaction_title"
@@ -119,20 +120,19 @@
             android:background="@drawable/new_account_category_outline"/>
 
 
-
-
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="285dp" />
+            app:layout_constraintGuide_begin="268dp" />
 
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
             app:layout_constraintBottom_toBottomOf="@+id/text_newTransaction_title"
             app:layout_constraintStart_toStartOf="@+id/guideline5"
             app:layout_constraintTop_toTopOf="@+id/text_newTransaction_title"
@@ -160,6 +160,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_tag"
                 android:background="@color/transparent"
+
                 />
 
 

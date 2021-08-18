@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:layout_marginTop="2dp"
-    android:background="@color/rec_view_gray"
+    android:background="@color/rec_view_transactions"
     android:paddingVertical="5dp"
+    android:paddingHorizontal="10dp"
     android:id="@+id/parent_allMicros"
     >
         <TextView

@@ -54,7 +54,10 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if (editMode) holder.editingSwitch.setVisibility(View.VISIBLE);
+        if (editMode) {
+            holder.editingSwitch.setChecked(false);
+            holder.editingSwitch.setVisibility(View.VISIBLE);}
+
         else holder.editingSwitch.setVisibility(View.GONE);
         holder.textNameCategory.setText(categories.get(position).getTitle());
         String icon = categories.get(position).getIcon();
