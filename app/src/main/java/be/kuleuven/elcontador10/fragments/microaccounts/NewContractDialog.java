@@ -69,8 +69,11 @@ public class NewContractDialog extends Dialog {
         if (!title_text.equals("")) {
             String notes_text = notes.getText().toString();
             if (editing) {
+                // edit fields
                 contract.setTitle(title_text);
                 contract.setNotes(notes_text);
+
+                Contract.editContract(contract);
 
                 Toast.makeText(activity, "Contract edited", Toast.LENGTH_SHORT).show();
             } else {

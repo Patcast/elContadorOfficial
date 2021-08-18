@@ -26,6 +26,7 @@ public class Contract {
 
     // firebase
     private static final String TAG = "contract";
+    private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public Contract(String title, String registeredBy, String notes) {
         this.title = title;
@@ -40,12 +41,20 @@ public class Contract {
     public static void newContract(Contract contract) {
         String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + contract.getMicroAccount() + "/contracts";
 
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         db.collection(url)
                 .add(contract)
                 .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId()))
                 .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+    }
+
+    public static void editContract(Contract contract) {
+        String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + contract.getMicroAccount() + "/contracts/" +
+                contract.getId();
+
+        db.document(url)
+                .set(contract)
+                .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot edited with ID: " + contract.getId()))
+                .addOnFailureListener(e -> Log.w(TAG, "Error editing document", e));
     }
 
 
