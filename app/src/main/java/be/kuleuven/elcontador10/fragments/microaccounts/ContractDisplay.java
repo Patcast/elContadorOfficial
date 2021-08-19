@@ -1,5 +1,7 @@
 package be.kuleuven.elcontador10.fragments.microaccounts;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -29,6 +31,7 @@ import be.kuleuven.elcontador10.background.adapters.PaymentsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.contract.Contract;
 import be.kuleuven.elcontador10.background.model.contract.Payment;
+import be.kuleuven.elcontador10.background.tools.DateFormatter;
 
 public class ContractDisplay extends Fragment implements Caching.MicroAccountContractObserver {
     // views
@@ -120,8 +123,9 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
             microAccountName.setText(name);
             accountName.setText(Caching.INSTANCE.getAccountName());
             registeredBy.setText(contract.getRegisteredBy());
-            // TODO set date
-//            registeredDate.setText(contract.getRegisterDate().toString());
+
+            String date = new DateFormatter(contract.getRegisterDate(), "s").getFormattedDate();
+            registeredDate.setText(date);
             notes.setText(contract.getNotes());
 
             // set up recycler view
@@ -142,7 +146,20 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
         dialog.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void onDelete_Clicked(View view) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
 
+        //TODO use string resources
+        dialog.setTitle("Delete contract")
+                .setMessage("Are you sure about deleting contract " + contract.getTitle() + " from micro account "
+                    + Caching.INSTANCE.getStakeholderName(contract.getMicroAccount()) + "?")
+                .setPositiveButton("Yes", (dialogInterface, i) -> {
+                    Contract.deleteContract(contract);
+                    Toast.makeText(mainActivity, "Contract deleted", Toast.LENGTH_SHORT).show();
+                    dialogInterface.dismiss();
+                    navController.popBackStack();
+                }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss())
+                .create().show();
     }
 }

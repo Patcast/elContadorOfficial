@@ -3,8 +3,11 @@ package be.kuleuven.elcontador10.background.model.contract;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -58,6 +61,15 @@ public class Contract {
                 .addOnFailureListener(e -> Log.w(TAG, "Error editing document", e));
     }
 
+    public static void deleteContract(Contract contract) {
+        String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + contract.getMicroAccount() + "/contracts/" +
+                contract.getId();
+
+        db.document(url)
+                .delete()
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted!"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
+    }
 
     // setters and getters
     @Exclude

@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,15 +23,10 @@ import androidx.navigation.Navigation;
 
 import com.google.firebase.Timestamp;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.WidgetsCreation;
-import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.contract.Payment;
+import be.kuleuven.elcontador10.background.tools.DateStringToTimestamp;
 
 public class ContractNewPayment extends Fragment {
     private NavController navController;
@@ -123,14 +117,8 @@ public class ContractNewPayment extends Fragment {
                 start_value = null;
                 end_value = null;
             } else {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                ZoneId zone = ZoneId.systemDefault();
-
-                LocalDate start_date = LocalDate.parse(start.getText().toString(), formatter);
-                LocalDate end_date = LocalDate.parse(end.getText().toString(), formatter);
-
-                start_value = new Timestamp(Date.from(start_date.atStartOfDay(zone).toInstant()));
-                end_value = new Timestamp(Date.from(end_date.atStartOfDay(zone).toInstant()));
+                start_value = DateStringToTimestamp.INSTANCE.date(start.getText().toString());
+                end_value = DateStringToTimestamp.INSTANCE.date(end.getText().toString());
             }
 
             Payment payment = new Payment(title_text, amount_value, start_value, end_value, frequency_value,

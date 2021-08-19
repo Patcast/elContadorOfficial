@@ -18,6 +18,7 @@ import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.contract.Payment;
+import be.kuleuven.elcontador10.background.tools.DateFormatter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecViewAdapter.ViewHolder> {
@@ -54,7 +55,16 @@ public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecView
         String amount_text = ((amount > 0)? context.getString(R.string.in) : context.getString(R.string.out)) + " " + absolute_amount;
         holder.amount.setText(amount_text);
 
-        // TODO dates
+        String start = context.getString(R.string.start), end = context.getString(R.string.end);
+        if (payment.getStart() != null && payment.getEnd() != null) {
+            start += " " + new DateFormatter(payment.getStart(), "f").getFormattedDate();
+            end += " " + new DateFormatter(payment.getEnd(), "f").getFormattedDate();
+        } else {
+            start += " N/A";
+            end += " N/A";
+        }
+        holder.start.setText(start);
+        holder.end.setText(end);
 
         String[] frequencies = context.getResources().getStringArray(R.array.frequency);
         String frequency_text = context.getString(R.string.frequency) + " " + frequencies[payment.getFrequency()];
