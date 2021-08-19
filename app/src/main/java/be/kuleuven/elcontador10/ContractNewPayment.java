@@ -31,6 +31,7 @@ import java.util.Date;
 
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.WidgetsCreation;
+import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.contract.Payment;
 
 public class ContractNewPayment extends Fragment {
@@ -45,7 +46,6 @@ public class ContractNewPayment extends Fragment {
     //variables
     private MainActivity mainActivity;
     private String contractId;
-    private String microAccountId;
 
     @Nullable
     @Override
@@ -62,7 +62,6 @@ public class ContractNewPayment extends Fragment {
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setHeaderText("New Payment");
         contractId = ContractNewPaymentArgs.fromBundle(getArguments()).getContractId();
-        microAccountId = ContractNewPaymentArgs.fromBundle(getArguments()).getMicroAccountId();
 
         // set views
         title = view.findViewById(R.id.payment_new_title);
@@ -137,7 +136,8 @@ public class ContractNewPayment extends Fragment {
             Payment payment = new Payment(title_text, amount_value, start_value, end_value, frequency_value,
                     notes.getText().toString(), mainActivity.returnSavedLoggedEmail());
 
-            Payment.newPayment(payment, contractId, microAccountId);
+            Payment.newPayment(payment, contractId);
+
             navController.popBackStack();
         }
     }

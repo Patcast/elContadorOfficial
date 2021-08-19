@@ -40,8 +40,8 @@ public class Payment {
 
     public Payment() {}
 
-    public static void newPayment(Payment payment, String contractId, String microAccountId) {
-        String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + microAccountId +
+    public static void newPayment(Payment payment, String contractId) {
+        String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + Caching.INSTANCE.getChosenMicroAccountId() +
                 "/contracts/" + contractId + "/payments";
 
         db.collection(url)

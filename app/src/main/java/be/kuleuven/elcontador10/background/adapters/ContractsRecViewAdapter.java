@@ -80,7 +80,7 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
 
         holder.layout.setOnClickListener(v -> {
             MicroAccountViewPagerHolderDirections.ActionMicroAccountViewPagerHolderToContractDisplay action =
-                    MicroAccountViewPagerHolderDirections.actionMicroAccountViewPagerHolderToContractDisplay(contract.getId(), Caching.INSTANCE.getChosenMicroAccountId());
+                    MicroAccountViewPagerHolderDirections.actionMicroAccountViewPagerHolderToContractDisplay(contract.getId());
             navController.navigate(action);
         });
     }

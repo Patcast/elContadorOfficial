@@ -43,7 +43,6 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
     private List<Payment> paymentsList;
     private Contract contract;
     private String contractId;
-    private String microAccountId;
     private MainActivity mainActivity;
     private NavController navController;
 
@@ -90,7 +89,6 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
 
         // get argument and attach to caching
         contractId = ContractDisplayArgs.fromBundle(getArguments()).getContractId();
-        microAccountId = ContractDisplayArgs.fromBundle(getArguments()).getMicroAccountId();
         Caching.INSTANCE.attachMicroContractObserver(this);
 
         // set activity header
@@ -135,7 +133,7 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
     // TODO make buttons go somewhere
     public void onAdd_Clicked(View view) {
         ContractDisplayDirections.ActionContractDisplayToContractNewPayment action =
-                ContractDisplayDirections.actionContractDisplayToContractNewPayment(contractId, microAccountId);
+                ContractDisplayDirections.actionContractDisplayToContractNewPayment(contractId);
         navController.navigate(action);
     }
 

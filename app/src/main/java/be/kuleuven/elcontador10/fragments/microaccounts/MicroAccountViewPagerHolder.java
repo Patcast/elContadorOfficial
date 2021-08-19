@@ -96,12 +96,8 @@ public class MicroAccountViewPagerHolder extends Fragment {
     public void onStop() {
         super.onStop();
         mainActivity.displayToolBar(true);
-
-        // set account ID to origin
-        Caching.INSTANCE.setChosenAccountId(chosenAccountId);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         mainActivity.displayTabLayout(false);
         mainActivity.displayStakeholderDetails(false);
-        Caching.INSTANCE.setChosenMicroAccountId(null);
     }
 }

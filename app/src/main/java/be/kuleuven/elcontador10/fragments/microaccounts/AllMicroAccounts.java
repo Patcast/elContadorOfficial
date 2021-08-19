@@ -69,6 +69,7 @@ public class AllMicroAccounts extends Fragment implements Caching.StakeholdersOb
         @Override
         public void onStart() {
                 super.onStart();
+                Caching.INSTANCE.setChosenMicroAccountId(null);
                 Caching.INSTANCE.attachStakeholdersObservers(this);
                 if(microsList.size()>0) adapter.setMicroAccountsList(microsList);
                 recyclerMicros.setAdapter(adapter);

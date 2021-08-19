@@ -195,7 +195,6 @@
             app:destination="@id/contractNewPayment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
-        <argument android:name="microAccountId" />
     </fragment>
     <fragment
         android:id="@+id/contractNewPayment"
@@ -205,7 +204,6 @@
         <argument
             android:name="contractId"
             app:argType="string" />
-        <argument android:name="microAccountId" />
     </fragment>
     <fragment
         android:id="@+id/chooseCategory"
