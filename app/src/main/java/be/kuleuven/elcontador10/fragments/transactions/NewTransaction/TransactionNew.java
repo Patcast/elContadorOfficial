@@ -2,8 +2,10 @@ package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
 
 import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +43,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class TransactionNew extends Fragment implements EasyPermissions.PermissionCallbacks{
     public static final int CAMARA_PERM_CODE = 2901;
     private static final String TAG = "TransactionNew";
+    public static final int CAMARA_REQUEST_CODE = 1382;
     RadioGroup radGroup;
     TextView txtWordsCounterTitle,accountSelected,txtEmojiCategory,txtStakeHolder,txtWordsCounterNotes,txtMustHaveAmount;
     ImageButton btnAddCategory,btnAddPicture;
@@ -226,7 +229,8 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
     }
 
     private void openCamara() {
-        Intent
+        Intent camara = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(camara, CAMARA_REQUEST_CODE);
     }
 
     @Override
@@ -246,6 +250,10 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE){
 
+        }
+        if(requestCode==CAMARA_REQUEST_CODE){
+            Bitmap image = (Bitmap) data.getExtras().get("data");
+            btnAddPicture.setImageBitmap(image);
         }
     }
 }

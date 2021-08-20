@@ -16,10 +16,6 @@
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/fragment_view_pager_holder.xml" value="0.36666666666666664" />
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/rec_view_item_accounts.xml" value="0.36666666666666664" />
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/menu/top_three_buttons_menu.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_contract_new.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_contract_new_payment.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_micro_account_contracts.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/rec_view_payments.xml" value="0.5" />
         <entry key="app/src/main/res/drawable/accounts_first_background.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/accounts_second_background.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/background_accounts_first.xml" value="0.22870370370370371" />
@@ -49,7 +45,7 @@
         <entry key="app/src/main/res/layout/fragment_micro_account_view_holder.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_transaction_display.xml" value="0.31375064168012506" />
-        <entry key="app/src/main/res/layout/fragment_transaction_new.xml" value="0.24458204334365324" />
+        <entry key="app/src/main/res/layout/fragment_transaction_new.xml" value="0.8076272547835825" />
         <entry key="app/src/main/res/layout/fragment_view_pager_holder.xml" value="0.18796296296296297" />
         <entry key="app/src/main/res/layout/rec_view_contracts.xml" value="0.1328125" />
         <entry key="app/src/main/res/layout/rec_view_item_accounts.xml" value="0.38368905582062923" />
