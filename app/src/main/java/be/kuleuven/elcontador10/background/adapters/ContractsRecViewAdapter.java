@@ -58,23 +58,24 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
         holder.title.setText(contract.getTitle());
 
         holder.expand.setOnClickListener(v -> {
-            if (holder.payments.getVisibility() == View.GONE) {
-                holder.expand.setBackground(context.getDrawable(R.drawable.icon_compress));
-                holder.payments.setVisibility(View.VISIBLE);
+            if (contract.getPayments().size() != 0) {
+                if (holder.payments.getVisibility() == View.GONE) {
+                    holder.expand.setBackground(context.getDrawable(R.drawable.icon_compress));
+                    holder.payments.setVisibility(View.VISIBLE);
 
-                // set up Payments recycler view
-                holder.payments.setLayoutManager(new LinearLayoutManager(context));
-                ArrayList<Payment> payments = contract.getPayments();
-                PaymentsRecViewAdapter adapter = new PaymentsRecViewAdapter(viewFromHostingClass, context, fragment);
-                adapter.setPayments(payments);
-                holder.payments.setAdapter(adapter);
+                    // set up Payments recycler view
+                    holder.payments.setLayoutManager(new LinearLayoutManager(context));
+                    ArrayList<Payment> payments = contract.getPayments();
+                    PaymentsRecViewAdapter adapter = new PaymentsRecViewAdapter(viewFromHostingClass, context, fragment);
+                    adapter.setPayments(payments);
+                    holder.payments.setAdapter(adapter);
 
-                holder.divider.setVisibility(View.VISIBLE);
-            }
-            else {
-                holder.expand.setBackground(context.getDrawable(R.drawable.icon_expand));
-                holder.payments.setVisibility(View.GONE);
-                holder.divider.setVisibility(View.GONE);
+                    holder.divider.setVisibility(View.VISIBLE);
+                } else {
+                    holder.expand.setBackground(context.getDrawable(R.drawable.icon_expand));
+                    holder.payments.setVisibility(View.GONE);
+                    holder.divider.setVisibility(View.GONE);
+                }
             }
         });
 

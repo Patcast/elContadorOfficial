@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:hint="@string/amount"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:maxLength="22"
             android:minHeight="48dp" />
 
@@ -67,50 +67,107 @@
         </RadioGroup>
 
         <TextView
-            android:id="@+id/textView7"
+            android:id="@+id/payment_new_frequency_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
             android:text="@string/frequency"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <Spinner
             android:id="@+id/payment_new_frequency"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:spinnerMode="dialog" />
 
-        <TextView
-            android:id="@+id/textView10"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/payment_new_customFrequencyLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="20dp"
-            android:text="@string/start"
-            android:textSize="16sp" />
+            android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/payment_new_start"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_buttons"
-            android:enabled="false"
-            android:text="N/A" />
+            <EditText
+                android:id="@+id/payment_new_customFrequency"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:hint="@string/frequency"
+                android:inputType="number"
+                android:maxLength="22"
+                android:minHeight="48dp"
+                app:layout_constraintEnd_toStartOf="@+id/payment_new_customFrequencySpinner"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView11"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="20dp"
-            android:text="@string/end"
-            android:textSize="16sp" />
+            <Spinner
+                android:id="@+id/payment_new_customFrequencySpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:spinnerMode="dialog"
+                app:layout_constraintBottom_toBottomOf="@+id/payment_new_customFrequency"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/payment_new_customFrequency" />
 
-        <Button
-            android:id="@+id/payment_new_end"
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/payment_new_duration_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_buttons"
-            android:enabled="false"
-            android:text="N/A" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/payment_new_startLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:text="@string/start"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/payment_new_start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_buttons"
+                android:text="N/A"
+                android:textSize="18sp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Spinner
+                    android:id="@+id/payment_new_durationSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:spinnerMode="dialog"
+                    app:layout_constraintBottom_toBottomOf="@+id/payment_new_duration"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/payment_new_duration" />
+
+                <EditText
+                    android:id="@+id/payment_new_duration"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/duration"
+                    android:inputType="number"
+                    android:maxLength="22"
+                    android:minHeight="48dp"
+                    app:layout_constraintEnd_toStartOf="@+id/payment_new_durationSpinner"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/payment_new_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|left"
+                android:textColor="#FF0000"
+                android:textSize="18sp" />
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/payment_new_notes"

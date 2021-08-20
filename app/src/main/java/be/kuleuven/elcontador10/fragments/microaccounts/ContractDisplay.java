@@ -124,7 +124,7 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
             accountName.setText(Caching.INSTANCE.getAccountName());
             registeredBy.setText(contract.getRegisteredBy());
 
-            String date = new DateFormatter(contract.getRegisterDate(), "s").getFormattedDate();
+            String date = new DateFormatter(contract.getRegisterDate(), "f").getFormattedDate();
             registeredDate.setText(date);
             notes.setText(contract.getNotes());
 

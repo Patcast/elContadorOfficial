@@ -29,7 +29,7 @@
 
 
         <TextView
-            android:id="@+id/textView10"
+            android:id="@+id/payment_new_startLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/balance"
@@ -47,6 +47,6 @@
             android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+            app:layout_constraintTop_toBottomOf="@+id/payment_new_startLabel" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

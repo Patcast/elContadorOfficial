@@ -12,10 +12,10 @@
         android:id="@+id/payment_frequency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="@string/frequency"
-        app:layout_constraintBottom_toTopOf="@+id/payment_end"
-        app:layout_constraintEnd_toEndOf="@+id/payment_amount"
-        app:layout_constraintTop_toBottomOf="@+id/payment_start" />
+        app:layout_constraintStart_toStartOf="@+id/payment_period"
+        app:layout_constraintTop_toBottomOf="@+id/payment_period" />
 
     <TextView
         android:id="@+id/payment_amount"
@@ -24,28 +24,25 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:text="$4,000.00"
         android:textColor="@color/rec_view_title"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/payment_end"
+        android:id="@+id/payment_nextPayment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:paddingBottom="16dp"
-        android:text="@string/end"
+        android:text="@string/next_payment"
         app:layout_constraintStart_toStartOf="@+id/payment_title"
-        app:layout_constraintTop_toBottomOf="@+id/payment_start" />
+        app:layout_constraintTop_toBottomOf="@+id/payment_frequency" />
 
     <TextView
-        android:id="@+id/payment_start"
+        android:id="@+id/payment_period"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/start"
         app:layout_constraintStart_toStartOf="@+id/payment_title"
         app:layout_constraintTop_toBottomOf="@+id/payment_title" />
 
@@ -57,7 +54,6 @@
         android:layout_marginStart="17dp"
         android:layout_marginLeft="17dp"
         android:layout_marginTop="17dp"
-        android:text="placeholder"
         android:textColor="@color/rec_view_title"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,10 +63,18 @@
         android:id="@+id/payment_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginLeft="2dp"
         android:background="?android:attr/listDivider"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/payment_end" />
+        app:layout_constraintTop_toBottomOf="@+id/payment_paymentsLeft" />
+
+    <TextView
+        android:id="@+id/payment_paymentsLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/payments_left"
+        app:layout_constraintStart_toStartOf="@+id/payment_nextPayment"
+        app:layout_constraintTop_toBottomOf="@+id/payment_nextPayment" />
 </androidx.constraintlayout.widget.ConstraintLayout>

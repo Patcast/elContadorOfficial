@@ -1,12 +1,14 @@
 package be.kuleuven.elcontador10.background.adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -18,6 +20,7 @@ import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.contract.Payment;
+import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
 import be.kuleuven.elcontador10.background.tools.DateFormatter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
@@ -43,6 +46,7 @@ public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecView
         return new ViewHolder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Payment payment = payments.get(position);
@@ -55,20 +59,17 @@ public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecView
         String amount_text = ((amount > 0)? context.getString(R.string.in) : context.getString(R.string.out)) + " " + absolute_amount;
         holder.amount.setText(amount_text);
 
-        String start = context.getString(R.string.start), end = context.getString(R.string.end);
-        if (payment.getStart() != null && payment.getEnd() != null) {
-            start += " " + new DateFormatter(payment.getStart(), "f").getFormattedDate();
-            end += " " + new DateFormatter(payment.getEnd(), "f").getFormattedDate();
-        } else {
-            start += " N/A";
-            end += " N/A";
-        }
-        holder.start.setText(start);
-        holder.end.setText(end);
+        holder.period.setText(payment.getPeriod());
 
-        String[] frequencies = context.getResources().getStringArray(R.array.frequency);
-        String frequency_text = context.getString(R.string.frequency) + " " + frequencies[payment.getFrequency()];
+        String frequency_text = context.getString(R.string.frequency) + ": " + DatabaseDatesFunctions.INSTANCE.frequencyDecoder(payment.getFrequency(), context);
         holder.frequency.setText(frequency_text);
+
+        String next_string = context.getString(R.string.next_payment) + " " +
+                ((payment.getNextPaymentDate() == null)? "N/A" :  new DateFormatter(payment.getNextPaymentDate(), "f").getFormattedDate());
+        holder.next.setText(next_string);
+
+        String paymentsLeft = context.getString(R.string.payments_left) + " " + payment.getPaymentsLeft();
+        holder.left.setText(paymentsLeft);
 
         // TODO go to payment fragment
         holder.layout.setOnClickListener(v -> {
@@ -85,7 +86,7 @@ public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecView
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView title, amount, start, end, frequency;
+        private final TextView title, amount, period, next, frequency, left;
         private final View divider;
         private final ConstraintLayout layout;
 
@@ -93,9 +94,10 @@ public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecView
             super(itemView);
             title = itemView.findViewById(R.id.payment_title);
             amount = itemView.findViewById(R.id.payment_amount);
-            start = itemView.findViewById(R.id.payment_start);
-            end = itemView.findViewById(R.id.payment_end);
+            period = itemView.findViewById(R.id.payment_period);
+            next = itemView.findViewById(R.id.payment_nextPayment);
             frequency = itemView.findViewById(R.id.payment_frequency);
+            left = itemView.findViewById(R.id.payment_paymentsLeft);
             layout = itemView.findViewById(R.id.payment_layout);
             divider = itemView.findViewById(R.id.payment_divider);
         }

@@ -1,38 +1,47 @@
 package be.kuleuven.elcontador10.background.model.contract;
 
 
-import android.os.Build;
 import android.util.Log;
-
-import androidx.annotation.RequiresApi;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.type.Date;
 
-import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
 
 public class Payment {
     private String id;
     private String title;
     private long amount;
-    private Timestamp start;
-    private Timestamp end;
-    private int frequency;
+    private Timestamp nextPaymentDate;
+    private int paymentsLeft;
+    private String period;
+    private String frequency;
     private String notes;
     private String registeredBy;
 
     private static final String TAG = "payment";
     private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public Payment(String title, long amount, Timestamp start, Timestamp end, int frequency, String notes, String registeredBy) {
+    /**
+     *
+      * @param title title of payment
+     * @param amount amount of payment
+     * @param nextPaymentDate next date when balance changes
+     * @param paymentsLeft how many payments left
+     * @param period start date - end date
+     * @param frequency how many times the payment repeats (value-unit)
+     *                  unit: 0 - days, 1 - weeks, 2 - months, 3 - quarters, 4 - years
+     *                  without unit: 1 - daily, 2 - weekly, 3 - monthly, 4 - quarterly, 5 - yearly
+     * @param notes notes
+     * @param registeredBy email of account registered
+     */
+    public Payment(String title, long amount, Timestamp nextPaymentDate, int paymentsLeft, String period, String frequency, String notes, String registeredBy) {
         this.title = title;
         this.amount = amount;
-        this.start = start;
-        this.end = end;
+        this.nextPaymentDate = nextPaymentDate;
+        this.paymentsLeft = paymentsLeft;
+        this.period = period;
         this.frequency = frequency;
         this.notes = notes;
         this.registeredBy = registeredBy;
@@ -75,27 +84,41 @@ public class Payment {
         this.amount = amount;
     }
 
-    public Timestamp getStart() {
-        return start;
+    public Timestamp getNextPaymentDate() {
+        return nextPaymentDate;
     }
 
-    public void setStart(Timestamp start) {
-        this.start = start;
+    public void setNextPaymentDate(Timestamp nextPaymentDate) {
+        this.nextPaymentDate = nextPaymentDate;
     }
 
-    public Timestamp getEnd() {
-        return end;
+    public int getPaymentsLeft() {
+        return paymentsLeft;
     }
 
-    public void setEnd(Timestamp end) {
-        this.end = end;
+    public void setPaymentsLeft(int paymentsLeft) {
+        this.paymentsLeft = paymentsLeft;
     }
 
-    public int getFrequency() {
+    public String getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(String period) {
+        this.period = period;
+    }
+
+    /**
+     *
+     * @return how many times the payment repeats (value-unit)
+     *         unit: 0 - days, 1 - weeks, 2 - months, 3 - quarters, 4 - years
+     *         without unit: 1 - daily, 2 - weekly, 3 - monthly, 4 - quarterly, 5 - yearly
+     */
+    public String getFrequency() {
         return frequency;
     }
 
-    public void setFrequency(int frequency) {
+    public void setFrequency(String frequency) {
         this.frequency = frequency;
     }
 

@@ -11,9 +11,11 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -25,7 +27,7 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.TransactionType;
-
+import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
 
 
 public enum WidgetsCreation {
@@ -140,26 +142,6 @@ public enum WidgetsCreation {
             String date = dayOfMonth + "/" + month + "/" + year;
             selectedText.setText(date);
         };
-    }
-
-    public void attachCalendarButton(Context useContext, Button button) {
-        Calendar calendar = Calendar.getInstance();
-        final int year_int = calendar.get(Calendar.YEAR);
-        final int month_int = calendar.get(Calendar.MONTH);
-        final int day_int = calendar.get(Calendar.DAY_OF_MONTH);
-
-        button.setOnClickListener(v -> {
-            DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    useContext,android.R.style.Theme_Holo_Dialog_MinWidth,
-                    (view, year, month, dayOfMonth) -> {
-                        month += 1;
-                        String date = dayOfMonth + "/" + ((month < 10)? "0" : "") + month + "/" + year;
-                        button.setText(date);
-                    }, year_int, month_int, day_int);
-
-            datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            datePickerDialog.show();
-        });
     }
 
 }

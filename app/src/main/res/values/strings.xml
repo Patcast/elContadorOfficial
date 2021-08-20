@@ -136,9 +136,9 @@
     <string name="title">Title</string>
     <string name="no_transactions">No transactions to show</string>
     <string name="no_contracts">No contracts to show</string>
-    <string name="start">Start:</string>
+    <string name="start">Start</string>
     <string name="end">End:</string>
-    <string name="frequency">Frequency:</string>
+    <string name="frequency">Frequency</string>
     <string name="made_date">Registered date:</string>
     <string name="payments">Payments:</string>
     <string name="cancel">Cancel</string>
@@ -146,10 +146,19 @@
     <string name="out">Out</string>
     <string-array name="frequency">
         <item>One-time</item>
+        <item>Daily</item>
         <item>Weekly</item>
         <item>Monthly</item>
         <item>Quarterly</item>
         <item>Yearly</item>
+        <item>Custom</item>
+    </string-array>
+    <string-array name="frequency_names">
+        <item>days</item>
+        <item>weeks</item>
+        <item>months</item>
+        <item>quarters</item>
+        <item>years</item>
     </string-array>
     <string name="words_">\"Words: \"</string>
     <string name="choose_category">Choose a Category</string>
@@ -172,6 +181,17 @@
     <string name="add_custom_category">Add Custom Category</string>
     <string name="time">Time:</string>
     <string name="date">Date:</string>
+    <string name="duration">Duration</string>
+    <string name="payments_left">Payments left:</string>
+    <string name="next_payment">Next payment:</string>
+    <string name="please_fill_in_duration">Please fill in duration</string>
+    <string name="select_starting_date">Please select starting date</string>
+    <string name="error_no_payments_can_be_made">ERROR: No payments can be made during these dates</string>
+    <string name="every">Every </string>
+    <string name="select_frequency">Please select frequency</string>
+    <string name="number_of_payments">Number of payments</string>
+    <string name="date_before_error">Date chosen is before today</string>
+    <string name="error_period">ERROR: the last payment is not a full period. Please use a lower unit of time for the duration.</string>
 
 
 </resources>
