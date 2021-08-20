@@ -223,24 +223,30 @@ public class ContractNewPayment extends Fragment {
                 } else {
                     String frequency_value = custom_frequency.getText().toString();
                     int frequency_unit = custom_frequency_spinner.getSelectedItemPosition();
-                    frequency_text = frequency_value + "-" + frequency_unit;
 
-                    LinkedList<String> data = DatabaseDatesFunctions.INSTANCE.customPeriod(start_date, durationValue,
-                            frequency_text);
+                    if (!frequency_value.equals("")) {
+                        frequency_text = frequency_value + "-" + frequency_unit;
 
-                    if (data != null) {
-                        period_text = data.getLast();
-                        paymentsLeft = data.size() - 1;
+                        LinkedList<String> data = DatabaseDatesFunctions.INSTANCE.customPeriod(start_date, durationValue,
+                                frequency_text);
 
-                        String info_text = period_text + "\n\nPayment dates:\n" +
-                                data.stream()
-                                        .limit(data.size() - 1) // last one not a payment
-                                        .map(String::toString)
-                                        .collect(Collectors.joining("\n"));
+                        if (data != null) {
+                            period_text = data.getLast();
+                            paymentsLeft = data.size() - 1;
 
-                        info.setText(info_text);
+                            String info_text = period_text + "\n\nPayment dates:\n" +
+                                    data.stream()
+                                            .limit(data.size() - 1) // last one not a payment
+                                            .map(String::toString)
+                                            .collect(Collectors.joining("\n"));
+
+                            info.setText(info_text);
+                        } else {
+                            info.setText(R.string.error_period);
+                            info.setTextColor(Color.RED);
+                        }
                     } else {
-                        info.setText(R.string.error_period);
+                        info.setText(R.string.zero_amount);
                         info.setTextColor(Color.RED);
                     }
                 }
