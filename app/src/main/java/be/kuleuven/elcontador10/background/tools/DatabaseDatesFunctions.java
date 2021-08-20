@@ -154,7 +154,7 @@ public enum DatabaseDatesFunctions {
             String[] split = frequency.split("-");
             String unit = context.getResources().getStringArray(R.array.frequency_names)[Integer.parseInt(split[1])];
 
-            return context.getString(R.string.every) + split[0] + " " + unit;
+            return context.getString(R.string.every) + " " + split[0] + " " + unit;
         } else return context.getResources().getStringArray(R.array.frequency)[Integer.parseInt(frequency)];
     }
 }
