@@ -117,7 +117,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/text_newTransaction_title"
             app:srcCompat="@drawable/ic_baseline_add_a_photo_24"
-            android:background="@drawable/new_account_category_outline"/>
+            android:background="@drawable/new_account_category_outline"
+            android:layout_marginStart="10dp" />
 
 
         <androidx.constraintlayout.widget.Guideline

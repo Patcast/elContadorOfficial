@@ -192,6 +192,7 @@
     <string name="number_of_payments">Number of payments</string>
     <string name="date_before_error">Date chosen is before today</string>
     <string name="error_period">ERROR: the last payment is not a full period. Please use a lower unit of time for the duration.</string>
+    <string name="camara_permission_denied">Camara permission is required to use the camara</string>
 
 
 </resources>

@@ -61,4 +61,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:19.2.0'// added for google sign in option
     implementation 'com.google.firebase:firebase-firestore'
 
+    implementation 'pub.devrel:easypermissions:3.0.0'/// library to requests permissions
+
+
 }

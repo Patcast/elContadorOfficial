@@ -1,9 +1,9 @@
 package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
 
+import android.Manifest;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +24,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import java.util.List;
+
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
@@ -31,13 +33,17 @@ import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
 
 //Todo: Improvement of Categories and programming limit words for notes and title. Also remove mandatory Stakeholder.
-public class TransactionNew extends Fragment {
+public class TransactionNew extends Fragment implements EasyPermissions.PermissionCallbacks{
+    public static final int CAMARA_PERM_CODE = 2901;
     private static final String TAG = "TransactionNew";
     RadioGroup radGroup;
     TextView txtWordsCounterTitle,accountSelected,txtEmojiCategory,txtStakeHolder,txtWordsCounterNotes,txtMustHaveAmount;
-    ImageButton btnAddCategory;
+    ImageButton btnAddCategory,btnAddPicture;
     EditText txtAmount,txtTitle,txtNotes;
     MainActivity mainActivity;
     NavController navController;
@@ -67,6 +73,7 @@ public class TransactionNew extends Fragment {
         navController = Navigation.findNavController(view);
 
 ///      Initialize views
+        btnAddPicture =view.findViewById(R.id.imageButton_addPicture);
         accountSelected = view.findViewById(R.id.textView_currentAccount);
         radGroup = view.findViewById(R.id.radioGroup);
         btnAddCategory = view.findViewById(R.id.imageButton_chooseCategory);
@@ -84,10 +91,12 @@ public class TransactionNew extends Fragment {
         txtStakeHolder.setOnClickListener(v -> { navController.navigate(R.id.action_newTransaction_to_chooseStakeHolderDialog); });
         confirmButton.setOnClickListener(v -> confirmTransaction());
         btnAddCategory.setOnClickListener(v-> navController.navigate(R.id.action_newTransaction_to_chooseCategory));
+        btnAddPicture.setOnClickListener(v -> askForCamaraPermission());
         txtEmojiCategory.setOnClickListener(v-> navController.navigate(R.id.action_newTransaction_to_chooseCategory));
         setWordCounters();
         accountSelected.setText(Caching.INSTANCE.getAccountName());
     }
+
 
     private void setWordCounters() {
         new MaxWordsCounter(30,txtTitle,txtWordsCounterTitle,getContext());
@@ -166,11 +175,77 @@ public class TransactionNew extends Fragment {
         newTrans.SendTransaction(newTrans);
     }
 
+    ////// CAMARA
 
+   /* private void AskForCamaraPermission() {
+        //Toast.makeText(getContext(), "Camara will open", Toast.LENGTH_SHORT).show();
 
+        if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(requireActivity(),new String[]{Manifest.permission.CAMERA},CAMARA_PERM_CODE);
+        }
+        else {
+            openCamara();
+        }
+    }
 
+    private void openCamara() {
+        Toast.makeText(getContext(), "Camara will open", Toast.LENGTH_SHORT).show();
 
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == CAMARA_PERM_CODE){
+            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                openCamara();
+            }
+            else{
+                Toast.makeText(getContext(), R.string.camara_permission_denied, Toast.LENGTH_SHORT).show();
+            }
 
+        }
+        Toast.makeText(getContext(), "Camara will open", Toast.LENGTH_SHORT).show();
+    }*/
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
+    }
+
+    @AfterPermissionGranted(CAMARA_PERM_CODE)
+    private void askForCamaraPermission() {
+        String[] perms= {Manifest.permission.CAMERA};
+        if(EasyPermissions.hasPermissions(requireContext(),perms)){
+            openCamara();
+        }
+        else{
+            EasyPermissions.requestPermissions(this,getString(R.string.camara_permission_denied),CAMARA_PERM_CODE,perms);
+        }
+
+    }
+
+    private void openCamara() {
+        Intent
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        if(EasyPermissions.somePermissionPermanentlyDenied(this,perms)){
+            new AppSettingsDialog.Builder(this).build().show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE){
+
+        }
+    }
 }
