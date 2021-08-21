@@ -48,14 +48,17 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
+import be.kuleuven.elcontador10.background.model.ImageFireBase;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.Categories.CategoriesBottomMenu;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -75,10 +78,13 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
     MainActivity mainActivity;
     NavController navController;
     NewTransactionViewModel viewModel;
+    ImageFireBase imageFireBase;
     StakeHolder selectedStakeHolder;
     String idCatSelected;
     String currentPhotoPath;
     StorageReference storageReference;
+    PicturesBottomMenu bottomSheet;
+
 
 
     @Override
@@ -116,10 +122,8 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         txtNotes = view.findViewById(R.id.ed_txt_notes);
         txtWordsCounterNotes = view.findViewById(R.id.text_newTransaction_wordCounter_notes);
         txtMustHaveAmount = view.findViewById(R.id.textView_fillAmount);
-        Button galleryButton = view.findViewById(R.id.btn_add_pictureFromGallery);
         Button confirmButton = view.findViewById(R.id.btn_confirm_NewTransaction);
         // listeners
-        galleryButton.setOnClickListener(v->useGallery());
         txtStakeHolder.setOnClickListener(v -> { navController.navigate(R.id.action_newTransaction_to_chooseStakeHolderDialog); });
         confirmButton.setOnClickListener(v -> confirmTransaction());
         btnAddCategory.setOnClickListener(v-> navController.navigate(R.id.action_newTransaction_to_chooseCategory));
@@ -142,7 +146,9 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         super.onStart();
         viewModel.getChosenStakeholder().observe(getViewLifecycleOwner(), this::setStakeChosenText);
         viewModel.getChosenCategory().observe(getViewLifecycleOwner(), this::setCategoryChosen);
+        viewModel.getChosenImage().observe(getViewLifecycleOwner(),this::setImageChosen);
     }
+
     @Override
     public void onStop() {
         super.onStop();
@@ -152,6 +158,20 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         super.onDestroy();
         viewModel.reset();
         viewModel.resetCategory();
+        viewModel.resetImage();
+    }
+
+    private void setImageChosen(ImageFireBase imageFireBase) {
+        if(imageFireBase==null){
+            imageFinal.setVisibility(View.GONE);
+            btnAddPicture.setVisibility(View.VISIBLE);
+        }
+        else{
+            btnAddPicture.setVisibility(View.GONE);
+            imageFinal.setVisibility(View.VISIBLE);
+            this.imageFireBase = imageFireBase;
+            imageFinal.setImageURI(this.imageFireBase.getContentUri());
+        }
     }
     private void setCategoryChosen(EmojiCategory emojiCategory){
         if(emojiCategory==null){
@@ -190,8 +210,9 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
                 txtWordsCounterTitle.setTextColor(getResources().getColor(R.color.light_red_warning));
             }
             else{
-                navController.popBackStack();
-                makeNewTrans();
+               // navController.popBackStack();
+                uploadImageToFireBase();
+                //makeNewTrans();
             }
         }
     }
@@ -210,35 +231,6 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
 
     ////// CAMARA
 
-   /* private void AskForCamaraPermission() {
-        //Toast.makeText(getContext(), "Camara will open", Toast.LENGTH_SHORT).show();
-
-        if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(requireActivity(),new String[]{Manifest.permission.CAMERA},CAMARA_PERM_CODE);
-        }
-        else {
-            openCamara();
-        }
-    }
-
-    private void openCamara() {
-        Toast.makeText(getContext(), "Camara will open", Toast.LENGTH_SHORT).show();
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == CAMARA_PERM_CODE){
-            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                openCamara();
-            }
-            else{
-                Toast.makeText(getContext(), R.string.camara_permission_denied, Toast.LENGTH_SHORT).show();
-            }
-
-        }
-        Toast.makeText(getContext(), "Camara will open", Toast.LENGTH_SHORT).show();
-    }*/
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -251,65 +243,57 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
     private void askForCamaraPermission() {
         String[] perms= {Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE};
         if(EasyPermissions.hasPermissions(requireContext(),perms)){
-            //openCamara();
-            dispatchTakePictureIntent();
+            chooseImageOptions();
         }
         else{
             EasyPermissions.requestPermissions(this,getString(R.string.camara_permission_denied),CAMARA_PERM_CODE,perms);
         }
-
     }
 
-
-    @Override
-    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-
+    private void chooseImageOptions() {
+      bottomSheet = new PicturesBottomMenu(new PicturesBottomMenu.PicturesBottomSheetListener() {
+           @Override
+           public void onGalleryClick() {
+               useGallery();
+               bottomSheet.dismiss();
+           }
+           @RequiresApi(api = Build.VERSION_CODES.R)
+           @Override
+           public void onTakePictureClick() {
+               dispatchTakePictureIntent();
+               bottomSheet.dismiss();
+           }
+       });
+        bottomSheet.show(getParentFragmentManager(),"PicturesBottomSheet");
     }
 
-    @Override
-    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-        if(EasyPermissions.somePermissionPermanentlyDenied(this,perms)){
-            new AppSettingsDialog.Builder(this).build().show();
-        }
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-      /*  if(requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE){
-
-        }*/
         if(requestCode==CAMARA_REQUEST_CODE){
-            /*Bitmap image = (Bitmap) data.getExtras().get("data");
-            btnAddPicture.setImageBitmap(image);*/
+
             if(resultCode== Activity.RESULT_OK){
                 File f = new  File(currentPhotoPath);
-                //imageFinal.setImageURI(Uri.fromFile(f));
+                imageFinal.setImageURI(Uri.fromFile(f));
                 galleryAddPic(f);
             }
         }
         if(requestCode==GALLERY_REQUEST_CODE){
-            /*Bitmap image = (Bitmap) data.getExtras().get("data");
-            btnAddPicture.setImageBitmap(image);*/
+
             if(resultCode== Activity.RESULT_OK){
                 Uri contentUri = data.getData();
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 String imageFileName = "JPEG_"+timeStamp+"."+getFileExt(contentUri);
                 Log.d("tag","onActivityResult: Gallery Image Uri: "+imageFileName);
-                //imageFinal.setImageURI(contentUri);
-                uploadImageToFireBase(imageFileName,contentUri);
+                imageFinal.setImageURI(contentUri);
+                ImageFireBase imageFireBase = new ImageFireBase(imageFileName,contentUri);
+                viewModel.selectImage(imageFireBase);
+                //uploadImageToFireBase(imageFileName,contentUri);
 
             }
         }
 
-    }
-
-
-
-    private String getFileExt(Uri contentUri) {
-        ContentResolver c = requireActivity().getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(c.getType(contentUri));
     }
 
     private void galleryAddPic(File f) {
@@ -317,22 +301,36 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         getActivity().sendBroadcast(mediaScanIntent);
-        uploadImageToFireBase(f.getName(),contentUri);
+        ImageFireBase imageFireBase = new ImageFireBase(f.getName(),contentUri);
+        viewModel.selectImage(imageFireBase);
+        //uploadImageToFireBase(f.getName(),contentUri);
 
     }
 
-    private void uploadImageToFireBase(String name, Uri contentUri) {
-        StorageReference image = storageReference.child("pictures/"+name);
-        image.putFile(contentUri).addOnSuccessListener(taskSnapshot -> {
-            image.getDownloadUrl().addOnSuccessListener(uri -> {
+    private String getFileExt(Uri contentUri) {
+        ContentResolver c = requireActivity().getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(c.getType(contentUri));
+    }
+
+
+
+    private void uploadImageToFireBase() {
+        StringBuilder saveUrl = new StringBuilder();
+        saveUrl.append(Caching.INSTANCE.getChosenAccountId());
+        saveUrl.append("/");
+        saveUrl.append(imageFireBase.getNameOfImage());
+        StorageReference image = storageReference.child(saveUrl.toString());
+        image.putFile(imageFireBase.getContentUri()).addOnSuccessListener(taskSnapshot -> {
+           /* image.getDownloadUrl().addOnSuccessListener(uri -> {
                         Picasso.get().load(uri).into(imageFinal);
 
             }
-            );
+            );*/
             Toast.makeText(getContext(), getString(R.string.image_uploaded), Toast.LENGTH_SHORT).show();
 
         }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), getString(R.string.upload_failed), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),  getString(R.string.upload_failed), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -348,7 +346,6 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
-
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
@@ -381,6 +378,16 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
     private void useGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(gallery, GALLERY_REQUEST_CODE);
+    }
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+    }
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        if(EasyPermissions.somePermissionPermanentlyDenied(this,perms)){
+            new AppSettingsDialog.Builder(this).build().show();
+        }
     }
 
 }

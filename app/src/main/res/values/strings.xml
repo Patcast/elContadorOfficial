@@ -195,6 +195,8 @@
     <string name="camara_permission_denied">Camara permission is required to use the camara</string>
     <string name="upload_failed">Upload has failed</string>
     <string name="image_uploaded">Image Uploaded</string>
+    <string name="select_from_gallery">Select From Gallery</string>
+    <string name="take_a_picture">Take A Picture</string>
 
 
 </resources>

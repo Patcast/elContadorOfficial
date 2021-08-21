@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
+package be.kuleuven.elcontador10.fragments.transactions.NewTransaction.Categories;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -25,9 +25,9 @@ import java.util.List;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.CategoriesRecViewAdapter;
-import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.NewTransactionViewModel;
 
 public class ChooseCategory extends Fragment implements Caching.CategoriesObserver, MainActivity.MenuClicker, CategoriesBottomMenu.CategoriesBottomSheetListener, CategoryDialog.DialogCategoriesListener {
     private CategoriesBottomMenu bottomSheet;

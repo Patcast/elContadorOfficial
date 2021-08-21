@@ -1,13 +1,9 @@
 package be.kuleuven.elcontador10.background.adapters;
 
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,7 +23,7 @@ import java.util.List;
 import be.kuleuven.elcontador10.R;
 
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
-import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.CategoryDialog;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.Categories.CategoryDialog;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.NewTransactionViewModel;
 
 public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRecViewAdapter.ViewHolder> {

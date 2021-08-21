@@ -31,6 +31,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/bottom_menu_accounts.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/bottom_menu_categories.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/bottom_menu_pick_gallery_or_camara.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/cardview_row.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/dialoge_category_editing.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_accounts_bottom_menu.xml" value="0.2578125" />
@@ -45,7 +46,7 @@
         <entry key="app/src/main/res/layout/fragment_micro_account_view_holder.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_transaction_display.xml" value="0.31375064168012506" />
-        <entry key="app/src/main/res/layout/fragment_transaction_new.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_transaction_new.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_view_pager_holder.xml" value="0.18796296296296297" />
         <entry key="app/src/main/res/layout/rec_view_contracts.xml" value="0.1328125" />
         <entry key="app/src/main/res/layout/rec_view_item_accounts.xml" value="0.38368905582062923" />
