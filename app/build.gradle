@@ -55,13 +55,16 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     ////
-    implementation platform('com.google.firebase:firebase-bom:28.2.0')// Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:28.4.0')// Import the Firebase BoM
     implementation 'com.google.firebase:firebase-analytics'// Declare the dependency for the Firebase SDK for Google Analytics
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.android.gms:play-services-auth:19.2.0'// added for google sign in option
     implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-storage'
 
-    implementation 'pub.devrel:easypermissions:3.0.0'/// library to requests permissions
-
+    /// library to requests permissions
+    implementation 'pub.devrel:easypermissions:3.0.0'
+    //downLoad images from the internet
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
 }

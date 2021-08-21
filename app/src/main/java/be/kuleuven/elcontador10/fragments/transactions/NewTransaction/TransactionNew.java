@@ -23,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,6 +66,7 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
     private static final String TAG = "TransactionNew";
     public static final int CAMARA_REQUEST_CODE = 1382;
     public static final int GALLERY_REQUEST_CODE = 3892;
+
     RadioGroup radGroup;
     TextView txtWordsCounterTitle,accountSelected,txtEmojiCategory,txtStakeHolder,txtWordsCounterNotes,txtMustHaveAmount;
     ImageButton btnAddCategory,btnAddPicture;
@@ -69,11 +78,13 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
     StakeHolder selectedStakeHolder;
     String idCatSelected;
     String currentPhotoPath;
+    StorageReference storageReference;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        storageReference = FirebaseStorage.getInstance().getReference();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,7 +94,7 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         mainActivity.displayTopMenu(false);
         return inflater.inflate(R.layout.fragment_transaction_new, container, false);
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -273,7 +284,7 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
             btnAddPicture.setImageBitmap(image);*/
             if(resultCode== Activity.RESULT_OK){
                 File f = new  File(currentPhotoPath);
-                imageFinal.setImageURI(Uri.fromFile(f));
+                //imageFinal.setImageURI(Uri.fromFile(f));
                 galleryAddPic(f);
             }
         }
@@ -285,12 +296,15 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 String imageFileName = "JPEG_"+timeStamp+"."+getFileExt(contentUri);
                 Log.d("tag","onActivityResult: Gallery Image Uri: "+imageFileName);
-                imageFinal.setImageURI(contentUri);
+                //imageFinal.setImageURI(contentUri);
+                uploadImageToFireBase(imageFileName,contentUri);
 
             }
         }
 
     }
+
+
 
     private String getFileExt(Uri contentUri) {
         ContentResolver c = requireActivity().getContentResolver();
@@ -303,6 +317,23 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         getActivity().sendBroadcast(mediaScanIntent);
+        uploadImageToFireBase(f.getName(),contentUri);
+
+    }
+
+    private void uploadImageToFireBase(String name, Uri contentUri) {
+        StorageReference image = storageReference.child("pictures/"+name);
+        image.putFile(contentUri).addOnSuccessListener(taskSnapshot -> {
+            image.getDownloadUrl().addOnSuccessListener(uri -> {
+                        Picasso.get().load(uri).into(imageFinal);
+
+            }
+            );
+            Toast.makeText(getContext(), getString(R.string.image_uploaded), Toast.LENGTH_SHORT).show();
+
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getContext(), getString(R.string.upload_failed), Toast.LENGTH_SHORT).show();
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
