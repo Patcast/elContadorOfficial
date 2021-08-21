@@ -116,7 +116,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/text_newTransaction_title"
             android:background="@drawable/new_account_category_outline"
-            android:padding="2dp">
+            android:padding="1dp">
 
             <ImageButton
                 android:id="@+id/imageButton_addPicture"
@@ -232,15 +232,33 @@
         android:textColor="@color/light_grey"
         android:layout_marginLeft="4dp"
         android:layout_marginStart="4dp" />
-
+    <ImageView
+        android:layout_marginTop="20dp"
+        android:maxWidth="80dp"
+        android:maxHeight="80dp"
+        android:id="@+id/imageView_final"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:srcCompat="@tools:sample/avatars" />
     <Button
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="20dp"
         android:id="@+id/btn_confirm_NewTransaction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_buttons"
         android:text="@string/confirm"
      />
+
+    <Button
+        android:layout_marginTop="20dp"
+        android:id="@+id/btn_add_pictureFromGallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_buttons"
+        android:text="Add pic from Gallery"
+        />
+
+
 
 
 </LinearLayout>
