@@ -33,10 +33,11 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.tools.DateFormatter;
+import be.kuleuven.elcontador10.background.tools.LoadingBar;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.Transaction;
 
-public class TransactionDisplay extends Fragment  {
+public class TransactionDisplay extends Fragment  implements LoadingBar.ProgressBarImplementation {
     private MainActivity mainActivity;
     TextView concerning, registeredBy, idText ,account, amount, category,emojiCategory, date,time, notes;
     Transaction selectedTrans;
@@ -50,7 +51,6 @@ public class TransactionDisplay extends Fragment  {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Toast.makeText(requireContext(), "new Fragment", Toast.LENGTH_SHORT).show();
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_DisplayTransaction.class);
 
 
@@ -83,30 +83,67 @@ public class TransactionDisplay extends Fragment  {
         layoutDownloadPhotoHolder.setOnClickListener(v->navController.navigate(R.id.action_transactionDisplay_to_displayPhoto2));
     }
 
-    private void openPhoto(String imageName) {
+    private void openPhoto(String imageName) throws InterruptedException {
         if(viewModel.getChosenBitMap().getValue()!=null){
             imViewPhotoIn.setImageBitmap(viewModel.getChosenBitMap().getValue());
             setUiForPhoto(true);
         }
         else{
-            StringBuilder downloadUrl = new StringBuilder();
-            downloadUrl.append(Caching.INSTANCE.getChosenAccountId());
-            downloadUrl.append("/");
-            downloadUrl.append(imageName);
-            storage.getReference().child(downloadUrl.toString()).getDownloadUrl().addOnSuccessListener(uri -> {
-                Picasso.get().load(uri).into(target);
-                setUiForPhoto(true);
-            }).addOnFailureListener(exception -> {
-                Toast.makeText(getContext(), "Error loading photo.", Toast.LENGTH_SHORT).show();
-                setUiForPhoto(false);
-            });
+
+            downloadImage(imageName);
         }
 
     }
+
+    private void downloadImage(String imageName) throws InterruptedException {
+        final LoadingBar loadingBar = new LoadingBar();
+        loadingBar.setImplementation(this);
+        Thread t1 = new Thread(() -> {
+            try{
+                loadingBar.produce(imageName);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        Thread t2 = new Thread(() -> {
+            try{
+                loadingBar.consume();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+    }
+    @Override
+    public void runWithProgressBar(String imageName) {
+        StringBuilder downloadUrl = new StringBuilder();
+        downloadUrl.append(Caching.INSTANCE.getChosenAccountId());
+        downloadUrl.append("/");
+        downloadUrl.append(imageName);
+        storage.getReference().child(downloadUrl.toString()).getDownloadUrl().addOnSuccessListener(uri -> {
+            Picasso.get().load(uri).into(target);
+
+
+        }).addOnFailureListener(exception -> {
+            Toast.makeText(getContext(), "Error loading photo.", Toast.LENGTH_SHORT).show();
+            setUiForPhoto(false);
+        });
+    }
+
+    @Override
+    public void runAfterProgressBar(Bitmap imageBitmap) {
+
+        setUiForPhoto(true);
+        imViewPhotoIn.setImageBitmap(viewModel.getChosenBitMap().getValue());
+    }
+
+
     private Target target = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            imViewPhotoIn.setImageBitmap(bitmap);
             viewModel.selectBitMap(bitmap);
         }
 
@@ -178,7 +215,7 @@ public class TransactionDisplay extends Fragment  {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void displayInformation(String idOfTransaction) {
+    private void displayInformation(String idOfTransaction) throws InterruptedException {
         selectedTrans = Caching.INSTANCE.getTransaction(idOfTransaction);
         if(selectedTrans.equals(null))Toast.makeText(getContext(),"error getting Transaction",Toast.LENGTH_SHORT);
         else {
@@ -208,6 +245,7 @@ public class TransactionDisplay extends Fragment  {
 
         }
     }
+
 
 
 }
