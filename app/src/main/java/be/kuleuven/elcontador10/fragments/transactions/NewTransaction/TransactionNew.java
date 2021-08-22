@@ -23,7 +23,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -36,19 +35,14 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
@@ -58,7 +52,6 @@ import be.kuleuven.elcontador10.background.model.ImageFireBase;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
-import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.Categories.CategoriesBottomMenu;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -78,11 +71,10 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
     MainActivity mainActivity;
     NavController navController;
     NewTransactionViewModel viewModel;
-    ImageFireBase imageFireBase;
+    ImageFireBase imageSelected;
     StakeHolder selectedStakeHolder;
     String idCatSelected;
     String currentPhotoPath;
-    StorageReference storageReference;
     PicturesBottomMenu bottomSheet;
 
 
@@ -90,7 +82,6 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        storageReference = FirebaseStorage.getInstance().getReference();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -169,12 +160,13 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         else{
             btnAddPicture.setVisibility(View.GONE);
             imageFinal.setVisibility(View.VISIBLE);
-            this.imageFireBase = imageFireBase;
-            imageFinal.setImageURI(this.imageFireBase.getContentUri());
+            this.imageSelected = imageFireBase;
+            imageFinal.setImageURI(this.imageSelected.getContentUri());
         }
     }
     private void setCategoryChosen(EmojiCategory emojiCategory){
         if(emojiCategory==null){
+            idCatSelected= null;
             txtEmojiCategory.setVisibility(View.GONE);
             btnAddCategory.setVisibility(View.VISIBLE);
         }
@@ -210,23 +202,25 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
                 txtWordsCounterTitle.setTextColor(getResources().getColor(R.color.light_red_warning));
             }
             else{
-               // navController.popBackStack();
-                uploadImageToFireBase();
-                //makeNewTrans();
+                makeNewTrans();
             }
         }
     }
 
     private void makeNewTrans(){
-        boolean cashOut = radGroup.getCheckedRadioButtonId() == R.id.radio_CashOut;
-        String title = txtTitle.getText().toString();
-        int amount = Integer.parseInt(txtAmount.getText().toString());
-        if(cashOut) amount = amount*-1;
-        String idCatFinal=(idCatSelected!=null)?idCatSelected: " ";
-        String notes = txtNotes.getText().toString();
-        String idStakeHolder =(selectedStakeHolder!=null)?selectedStakeHolder.getId():"";
-        Transaction newTrans= new Transaction(title,amount, mainActivity.returnSavedLoggedEmail(), idStakeHolder,idCatFinal,notes);
-        newTrans.SendTransaction(newTrans);
+
+        Transaction newTransaction = new Transaction(
+                txtTitle.getText().toString(),
+                (radGroup.getCheckedRadioButtonId() == R.id.radio_CashOut)?Integer.parseInt(txtAmount.getText().toString())*-1:Integer.parseInt(txtAmount.getText().toString()),
+                mainActivity.returnSavedLoggedEmail(),
+                (selectedStakeHolder!=null)?selectedStakeHolder.getId():"",
+                (idCatSelected!=null)?idCatSelected:"",
+                txtNotes.getText().toString(),
+                (imageSelected!=null)?imageSelected.getNameOfImage():""
+                );
+        if (imageSelected!=null)newTransaction.uploadImageToFireBase(newTransaction,imageSelected,requireContext());
+        else newTransaction.sendTransaction(newTransaction,requireContext());
+        navController.popBackStack();
     }
 
     ////// CAMARA
@@ -276,7 +270,13 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
             if(resultCode== Activity.RESULT_OK){
                 File f = new  File(currentPhotoPath);
                 imageFinal.setImageURI(Uri.fromFile(f));
-                galleryAddPic(f);
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(f);
+                mediaScanIntent.setData(contentUri);
+                getActivity().sendBroadcast(mediaScanIntent);
+                ImageFireBase imageFireBase = new ImageFireBase(f.getName(),contentUri);
+                viewModel.selectImage(imageFireBase);
+
             }
         }
         if(requestCode==GALLERY_REQUEST_CODE){
@@ -286,26 +286,14 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 String imageFileName = "JPEG_"+timeStamp+"."+getFileExt(contentUri);
                 Log.d("tag","onActivityResult: Gallery Image Uri: "+imageFileName);
-                imageFinal.setImageURI(contentUri);
                 ImageFireBase imageFireBase = new ImageFireBase(imageFileName,contentUri);
                 viewModel.selectImage(imageFireBase);
-                //uploadImageToFireBase(imageFileName,contentUri);
 
             }
         }
 
     }
 
-    private void galleryAddPic(File f) {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        getActivity().sendBroadcast(mediaScanIntent);
-        ImageFireBase imageFireBase = new ImageFireBase(f.getName(),contentUri);
-        viewModel.selectImage(imageFireBase);
-        //uploadImageToFireBase(f.getName(),contentUri);
-
-    }
 
     private String getFileExt(Uri contentUri) {
         ContentResolver c = requireActivity().getContentResolver();
@@ -315,24 +303,6 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
 
 
 
-    private void uploadImageToFireBase() {
-        StringBuilder saveUrl = new StringBuilder();
-        saveUrl.append(Caching.INSTANCE.getChosenAccountId());
-        saveUrl.append("/");
-        saveUrl.append(imageFireBase.getNameOfImage());
-        StorageReference image = storageReference.child(saveUrl.toString());
-        image.putFile(imageFireBase.getContentUri()).addOnSuccessListener(taskSnapshot -> {
-           /* image.getDownloadUrl().addOnSuccessListener(uri -> {
-                        Picasso.get().load(uri).into(imageFinal);
-
-            }
-            );*/
-            Toast.makeText(getContext(), getString(R.string.image_uploaded), Toast.LENGTH_SHORT).show();
-
-        }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(),  getString(R.string.upload_failed), Toast.LENGTH_SHORT).show();
-        });
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     private File createImageFile() throws IOException {

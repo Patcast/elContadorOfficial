@@ -1,13 +1,13 @@
-package be.kuleuven.elcontador10.fragments.transactions;
+package be.kuleuven.elcontador10.fragments.transactions.DisplayTransaction;
 
 import android.app.AlertDialog;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -17,8 +17,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.firebase.storage.FirebaseStorage;
+import com.squareup.picasso.Picasso;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
@@ -32,16 +36,15 @@ public class TransactionDisplay extends Fragment  {
     TextView concerning, registeredBy, idText ,account, amount, category,emojiCategory, date,time, notes;
     Transaction selectedTrans;
     NavController navController;
-
-
+    ConstraintLayout layoutAddPhotoIcon,layoutDownloadPhotoHolder;
+    ImageView imViewPhotoIn;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle(getString(R.string.transaction_display));
-
-
         return inflater.inflate(R.layout.fragment_transaction_display, container, false);
     }
 
@@ -54,9 +57,8 @@ public class TransactionDisplay extends Fragment  {
         navController = Navigation.findNavController(view);
         try {
             TransactionDisplayArgs args = TransactionDisplayArgs.fromBundle(getArguments());
-            String idOfTransaction = args.getId();
             initializeViews(view);
-            displayInformation(idOfTransaction);
+            displayInformation(args.getId());
 
         }
         catch (Exception e) {
@@ -66,6 +68,33 @@ public class TransactionDisplay extends Fragment  {
         Button delete = requireView().findViewById(R.id.buttonDeleteTransaction);
         delete.setOnClickListener(this::onDelete_Clicked);
     }
+
+    private void openPhoto(String imageName) {
+        StringBuilder downloadUrl = new StringBuilder();
+        downloadUrl.append(Caching.INSTANCE.getChosenAccountId());
+        downloadUrl.append("/");
+        downloadUrl.append(imageName);
+        storage.getReference().child(downloadUrl.toString()).getDownloadUrl().addOnSuccessListener(uri -> {
+            Picasso.get().load(uri).into(imViewPhotoIn);
+            setUiForPhoto(true);
+        }).addOnFailureListener(exception -> {
+            Toast.makeText(getContext(), "Error loading photo.", Toast.LENGTH_SHORT).show();
+            setUiForPhoto(false);
+        });
+
+
+    }
+
+    private void setUiForPhoto(boolean photoDownloaded) {
+        if(photoDownloaded){
+            layoutDownloadPhotoHolder.setVisibility(View.VISIBLE);
+            layoutAddPhotoIcon.setVisibility(View.GONE);
+        }else{
+            layoutDownloadPhotoHolder.setVisibility(View.GONE);
+            layoutAddPhotoIcon.setVisibility(View.VISIBLE);
+        }
+    }
+
     public void initializeViews (View view) {
         amount = view.findViewById(R.id.textAmount);
         concerning = view.findViewById(R.id.textConcerningDisplay);
@@ -78,9 +107,11 @@ public class TransactionDisplay extends Fragment  {
         registeredBy = view.findViewById(R.id.txtRegisteredByDisplay);
         notes = view.findViewById(R.id.txtNotesDisplay);
         notes.setMovementMethod(new ScrollingMovementMethod());
+        layoutAddPhotoIcon = view.findViewById(R.id.layout_addPhoto);
+        layoutDownloadPhotoHolder = view.findViewById(R.id.layout_photoDownloaded_holder);
+        imViewPhotoIn = view.findViewById(R.id.image_transaction_photoDownloaded);
+
     }
-
-
 
 
     private void onDelete_Clicked(View view) {
@@ -125,6 +156,8 @@ public class TransactionDisplay extends Fragment  {
             time.setText(timeFormatter.getFormattedDate());
             registeredBy.setText(selectedTrans.getRegisteredBy());
             notes.setText(selectedTrans.getNotes());
+            if(selectedTrans.getImageName().length()>0)openPhoto(selectedTrans.getImageName());
+
         }
     }
 

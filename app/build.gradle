@@ -66,5 +66,7 @@ dependencies {
     implementation 'pub.devrel:easypermissions:3.0.0'
     //downLoad images from the internet
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.firebaseui:firebase-ui-storage:7.2.0'
+
 
 }

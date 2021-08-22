@@ -179,7 +179,7 @@
     <string name="balance">BALANCE</string>
     <string name="error_loading">Error Loading...</string>
     <string name="add_custom_category">Add Custom Category</string>
-    <string name="time">Time:</string>
+    <string name="time">Hour:</string>
     <string name="date">Date:</string>
     <string name="duration">Duration</string>
     <string name="payments_left">Payments left:</string>
@@ -197,6 +197,11 @@
     <string name="image_uploaded">Image Uploaded</string>
     <string name="select_from_gallery">Select From Gallery</string>
     <string name="take_a_picture">Take A Picture</string>
+    <string name="add_an_image">Add An Image</string>
+    <string name="photo_captured">Photo Captured</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Transaction_upload_failed">Transaction upload failed, please register the transaction again.</string>
 
 
 </resources>

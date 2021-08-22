@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_transactions_filter" />
     <fragment
         android:id="@+id/transactionDisplay"
-        android:name="be.kuleuven.elcontador10.fragments.transactions.TransactionDisplay"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.DisplayTransaction.TransactionDisplay"
         android:label="fragment_transaction_display"
         tools:layout="@layout/fragment_transaction_display" >
         <argument

@@ -41,11 +41,12 @@
         <entry key="app/src/main/res/layout/fragment_choose_stake_holder.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_contract_new.xml" value="0.1328125" />
         <entry key="app/src/main/res/layout/fragment_contract_new_payment.xml" value="0.1328125" />
+        <entry key="app/src/main/res/layout/fragment_display_photo.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25384615384615383" />
         <entry key="app/src/main/res/layout/fragment_micro_account_transactions.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_micro_account_view_holder.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/fragment_transaction_display.xml" value="0.31375064168012506" />
+        <entry key="app/src/main/res/layout/fragment_transaction_display.xml" value="0.2503718534222504" />
         <entry key="app/src/main/res/layout/fragment_transaction_new.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_view_pager_holder.xml" value="0.18796296296296297" />
         <entry key="app/src/main/res/layout/rec_view_contracts.xml" value="0.1328125" />

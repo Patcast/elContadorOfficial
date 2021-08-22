@@ -1,7 +1,9 @@
 package be.kuleuven.elcontador10.background.model;
 
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +15,8 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 
 import java.text.DateFormat;
@@ -20,11 +24,15 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 
 public class Transaction {
     private static final String TAG = "newTransaction";
+
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    StorageReference storageReference = FirebaseStorage.getInstance().getReference();
 
     private String title;
     private int amount;
@@ -35,11 +43,12 @@ public class Transaction {
     private String registeredBy;
     private String notes;
     private boolean deleted;
+    private String imageName;
 
     public Transaction() {
     }
 
-    public Transaction(String title, int amount, String registeredBy, String stakeHolder,String category, String notes) {
+    public Transaction(String title, int amount, String registeredBy, String stakeHolder, String category, String notes, String imageName) {
         this.title = title;
         this.amount = amount;
         this.registeredBy = registeredBy;
@@ -48,41 +57,36 @@ public class Transaction {
         this.date = new Timestamp(new Date());
         this.deleted = false;
         this.notes = notes;
+        this.imageName = imageName;
     }
-    public void SendTransaction(Transaction newTrans){
+
+
+    public void uploadImageToFireBase(Transaction newTransactionInput,ImageFireBase ImageSelected,Context context) {
+        StringBuilder saveUrl = new StringBuilder();
+        saveUrl.append(Caching.INSTANCE.getChosenAccountId());
+        saveUrl.append("/");
+        saveUrl.append(ImageSelected.getNameOfImage());
+        StorageReference image = storageReference.child(saveUrl.toString());
+        image.putFile(ImageSelected.getContentUri()).addOnSuccessListener(taskSnapshot -> {
+            newTransactionInput.sendTransaction(newTransactionInput,context);
+        }).addOnFailureListener(e -> {
+            Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show();
+        });
+    }
+    public void sendTransaction(Transaction newTrans,Context context){
         String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
 
         db.collection(urlNewTransactions)
                 .add(newTrans)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
+                .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId()))
+                .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show());
     }
     public void deleteTransaction(){
         String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
         db.collection(urlNewTransactions).document(getId())
                 .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error deleting document", e);
-                    }
-                });
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted!"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
     }
 
 
@@ -134,6 +138,12 @@ public class Transaction {
     public String getTitle() {
         return title;
     }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+
 }
 
 
