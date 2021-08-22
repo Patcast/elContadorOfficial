@@ -1,5 +1,6 @@
 package be.kuleuven.elcontador10.fragments.transactions.DisplayTransaction;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -50,15 +51,15 @@ public class DisplayPhoto extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        viewModel.getChosenUri().observe(getViewLifecycleOwner(), this::setImage);
+        viewModel.getChosenBitMap().observe(getViewLifecycleOwner(), this::setImage);
 
     }
 
-    private void setImage(Uri uri) {
-        if(uri!=null) {
+    private void setImage(Bitmap bitmap) {
+        if(bitmap!=null) {
 
-            PhotoView photoView = (PhotoView) view.findViewById(R.id.photo_view);
-            Picasso.get().load(uri).into(photoView);
+            PhotoView photoView = view.findViewById(R.id.photo_view);
+            photoView.setImageBitmap(bitmap);
 
         }
     }

@@ -1,6 +1,8 @@
 package be.kuleuven.elcontador10.fragments.transactions.DisplayTransaction;
 
 import android.app.AlertDialog;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
@@ -32,7 +35,6 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.tools.DateFormatter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.Transaction;
-import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 public class TransactionDisplay extends Fragment  {
     private MainActivity mainActivity;
@@ -44,6 +46,15 @@ public class TransactionDisplay extends Fragment  {
     ImageView imViewPhotoIn;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     ViewModel_DisplayTransaction viewModel;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Toast.makeText(requireContext(), "new Fragment", Toast.LENGTH_SHORT).show();
+        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_DisplayTransaction.class);
+
+
+    }
 
     @Nullable
     @Override
@@ -67,31 +78,56 @@ public class TransactionDisplay extends Fragment  {
         catch (Exception e) {
             Toast.makeText(mainActivity, "Error Loading the information.", Toast.LENGTH_SHORT).show();
         }
-        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_DisplayTransaction.class);
         Button delete = requireView().findViewById(R.id.buttonDeleteTransaction);
         delete.setOnClickListener(this::onDelete_Clicked);
         layoutDownloadPhotoHolder.setOnClickListener(v->navController.navigate(R.id.action_transactionDisplay_to_displayPhoto2));
     }
 
     private void openPhoto(String imageName) {
-        StringBuilder downloadUrl = new StringBuilder();
-        downloadUrl.append(Caching.INSTANCE.getChosenAccountId());
-        downloadUrl.append("/");
-        downloadUrl.append(imageName);
-        storage.getReference().child(downloadUrl.toString()).getDownloadUrl().addOnSuccessListener(uri -> {
-            Picasso.get().load(uri).into(imViewPhotoIn);
+        if(viewModel.getChosenBitMap().getValue()!=null){
+            imViewPhotoIn.setImageBitmap(viewModel.getChosenBitMap().getValue());
             setUiForPhoto(true);
-            viewModel.selectUri(uri);
-        }).addOnFailureListener(exception -> {
-            Toast.makeText(getContext(), "Error loading photo.", Toast.LENGTH_SHORT).show();
-            setUiForPhoto(false);
-        });
-
+        }
+        else{
+            StringBuilder downloadUrl = new StringBuilder();
+            downloadUrl.append(Caching.INSTANCE.getChosenAccountId());
+            downloadUrl.append("/");
+            downloadUrl.append(imageName);
+            storage.getReference().child(downloadUrl.toString()).getDownloadUrl().addOnSuccessListener(uri -> {
+                Picasso.get().load(uri).into(target);
+                setUiForPhoto(true);
+            }).addOnFailureListener(exception -> {
+                Toast.makeText(getContext(), "Error loading photo.", Toast.LENGTH_SHORT).show();
+                setUiForPhoto(false);
+            });
+        }
 
     }
+    private Target target = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            imViewPhotoIn.setImageBitmap(bitmap);
+            viewModel.selectBitMap(bitmap);
+        }
+
+        @Override
+        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+        }
+    };
+
+
+
+
 
     @Override
     public void onDestroy() {
+        Picasso.get().cancelRequest(target);
+
         super.onDestroy();
         viewModel.reset();
     }

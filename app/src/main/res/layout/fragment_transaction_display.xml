@@ -278,7 +278,6 @@
                             android:id="@+id/image_transaction_photoDownloaded"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:srcCompat="@drawable/test_paper"
                             />
 
                 </LinearLayout>

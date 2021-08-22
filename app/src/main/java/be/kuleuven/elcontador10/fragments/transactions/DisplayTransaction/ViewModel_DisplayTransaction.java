@@ -1,5 +1,6 @@
 package be.kuleuven.elcontador10.fragments.transactions.DisplayTransaction;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
@@ -10,15 +11,15 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 
 public class ViewModel_DisplayTransaction extends ViewModel {
     //ChosenUri
-    private final MutableLiveData<Uri> chosenUri = new MutableLiveData<>();
-    public LiveData<Uri> getChosenUri() {
-        return chosenUri;
+    private final MutableLiveData<Bitmap> chosenBitmap = new MutableLiveData<>();
+    public LiveData<Bitmap> getChosenBitMap() {
+        return chosenBitmap;
     }
-    public void selectUri(Uri uri){
-        chosenUri.setValue(uri);
+    public void selectBitMap(Bitmap bitmap){
+        chosenBitmap.setValue(bitmap);
     }
     public void reset(){
-        chosenUri.setValue(null);
+        chosenBitmap.setValue(null);
     }
 
 
