@@ -60,8 +60,6 @@ public class DisplayPhoto extends Fragment {
 
             PhotoView photoView = view.findViewById(R.id.photo_view);
             photoView.setImageBitmap(bitmap);
-           // photoView.setRotation(90);
-
         }
     }
 }
