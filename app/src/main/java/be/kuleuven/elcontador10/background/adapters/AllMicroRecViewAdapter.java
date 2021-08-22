@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
-import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.NewTransactionViewModel;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 import be.kuleuven.elcontador10.fragments.transactions.ViewPagerHolderDirections;
 
 
@@ -32,9 +32,9 @@ public class AllMicroRecViewAdapter extends RecyclerView.Adapter<AllMicroRecView
     private List<StakeHolder> microAccountsList = new ArrayList<>();
     private ArrayList<StakeHolder> microAccountsOriginal;
     private final View viewFromHostingClass;
-    private NewTransactionViewModel viewModel;
+    private ViewModel_NewTransaction viewModel;
 
-    public AllMicroRecViewAdapter(View viewFromHostingClass, NewTransactionViewModel viewModel) {
+    public AllMicroRecViewAdapter(View viewFromHostingClass, ViewModel_NewTransaction viewModel) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.viewModel = viewModel;
     }

@@ -27,12 +27,12 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.CategoriesRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
-import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.NewTransactionViewModel;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 public class ChooseCategory extends Fragment implements Caching.CategoriesObserver, MainActivity.MenuClicker, CategoriesBottomMenu.CategoriesBottomSheetListener, CategoryDialog.DialogCategoriesListener {
     private CategoriesBottomMenu bottomSheet;
     private ConstraintLayout noCategoryItem,addCustomCat;
-    private NewTransactionViewModel viewModel;
+    private ViewModel_NewTransaction viewModel;
     private RecyclerView recyclerCategories_custom;
     private CategoriesRecViewAdapter adapter_custom;
     private final List<EmojiCategory> customCategories = new ArrayList<>();
@@ -49,7 +49,7 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         mainActivity.setCurrentMenuClicker(this);
         noCategoryItem = view.findViewById(R.id.choose_noCat);
         addCustomCat = view.findViewById(R.id.layout_addCategory);
-        viewModel = new ViewModelProvider(requireActivity()).get(NewTransactionViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
         startDefaultRecViews(view);
         startCustomRecycler(view);
         return view;

@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.firebase.storage.FirebaseStorage;
@@ -30,15 +32,18 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.tools.DateFormatter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.Transaction;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 public class TransactionDisplay extends Fragment  {
     private MainActivity mainActivity;
     TextView concerning, registeredBy, idText ,account, amount, category,emojiCategory, date,time, notes;
     Transaction selectedTrans;
     NavController navController;
-    ConstraintLayout layoutAddPhotoIcon,layoutDownloadPhotoHolder;
+    ConstraintLayout layoutAddPhotoIcon;
+    LinearLayout layoutDownloadPhotoHolder;
     ImageView imViewPhotoIn;
     FirebaseStorage storage = FirebaseStorage.getInstance();
+    ViewModel_DisplayTransaction viewModel;
 
     @Nullable
     @Override
@@ -48,25 +53,24 @@ public class TransactionDisplay extends Fragment  {
         return inflater.inflate(R.layout.fragment_transaction_display, container, false);
     }
 
-
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
+
         try {
             TransactionDisplayArgs args = TransactionDisplayArgs.fromBundle(getArguments());
             initializeViews(view);
             displayInformation(args.getId());
-
         }
         catch (Exception e) {
-            Toast.makeText(mainActivity, "Nothing to show", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mainActivity, "Error Loading the information.", Toast.LENGTH_SHORT).show();
         }
-
+        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_DisplayTransaction.class);
         Button delete = requireView().findViewById(R.id.buttonDeleteTransaction);
         delete.setOnClickListener(this::onDelete_Clicked);
+        layoutDownloadPhotoHolder.setOnClickListener(v->navController.navigate(R.id.action_transactionDisplay_to_displayPhoto2));
     }
 
     private void openPhoto(String imageName) {
@@ -77,12 +81,19 @@ public class TransactionDisplay extends Fragment  {
         storage.getReference().child(downloadUrl.toString()).getDownloadUrl().addOnSuccessListener(uri -> {
             Picasso.get().load(uri).into(imViewPhotoIn);
             setUiForPhoto(true);
+            viewModel.selectUri(uri);
         }).addOnFailureListener(exception -> {
             Toast.makeText(getContext(), "Error loading photo.", Toast.LENGTH_SHORT).show();
             setUiForPhoto(false);
         });
 
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.reset();
     }
 
     private void setUiForPhoto(boolean photoDownloaded) {
@@ -157,6 +168,7 @@ public class TransactionDisplay extends Fragment  {
             registeredBy.setText(selectedTrans.getRegisteredBy());
             notes.setText(selectedTrans.getNotes());
             if(selectedTrans.getImageName().length()>0)openPhoto(selectedTrans.getImageName());
+            else setUiForPhoto(false);
 
         }
     }

@@ -41,7 +41,7 @@ public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersO
         txtSearch = view.findViewById(R.id.searchChosenStake);
         txtSearch.setOnQueryTextListener(this);
         recyclerStakeHolds.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        NewTransactionViewModel viewModel = new ViewModelProvider(requireActivity()).get(NewTransactionViewModel.class);
+        ViewModel_NewTransaction viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
         adapter = new StakeHolderRecViewAdapter(view,viewModel);
         Caching.INSTANCE.attachStakeholdersObservers(this);
         if(stakeHolders.size()>0) adapter.setStakeholdersList(stakeHolders);

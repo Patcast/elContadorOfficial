@@ -24,17 +24,17 @@ import be.kuleuven.elcontador10.R;
 
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.Categories.CategoryDialog;
-import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.NewTransactionViewModel;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRecViewAdapter.ViewHolder> {
 
     private final List<EmojiCategory> categories = new ArrayList<>();
     private final View viewFromHostingClass;
-    private final NewTransactionViewModel viewModel;
+    private final ViewModel_NewTransaction viewModel;
     private boolean editMode;
     private Fragment hostFragment;
 
-    public CategoriesRecViewAdapter(View viewFromHostingClass, NewTransactionViewModel viewModel,Fragment hostFragment) {
+    public CategoriesRecViewAdapter(View viewFromHostingClass, ViewModel_NewTransaction viewModel, Fragment hostFragment) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.viewModel = viewModel;
         this.hostFragment = hostFragment;

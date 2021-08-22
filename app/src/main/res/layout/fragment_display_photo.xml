@@ -6,11 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".fragments.transactions.DisplayTransaction.DisplayPhoto">
 
-
+<!--
     <ImageView
         android:id="@+id/displayPhoto"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        tools:src="@drawable/test_paper" />
+        tools:src="@drawable/test_paper" />-->
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/photo_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </LinearLayout>

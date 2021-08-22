@@ -78,7 +78,9 @@ public class Transaction {
 
         db.collection(urlNewTransactions)
                 .add(newTrans)
-                .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId()))
+                .addOnSuccessListener(documentReference -> {
+                    documentReference.update("id",documentReference.getId());
+                })
                 .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show());
     }
     public void deleteTransaction(){

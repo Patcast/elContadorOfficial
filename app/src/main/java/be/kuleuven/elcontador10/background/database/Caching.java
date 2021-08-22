@@ -373,7 +373,7 @@ public enum Caching {
 
                     for (QueryDocumentSnapshot doc : value) {
                         Transaction myTransaction = doc.toObject(Transaction.class);
-                        myTransaction.setId(doc.getId());
+                        //myTransaction.setId(doc.getId());//new transactions don't need it.
                         microAccountTransactions.add(myTransaction);
                     }
 

@@ -18,6 +18,9 @@
         <argument
             android:name="id"
             app:argType="string" />
+        <action
+            android:id="@+id/action_transactionDisplay_to_displayPhoto2"
+            app:destination="@id/displayPhoto2" />
     </fragment>
     <fragment
         android:id="@+id/newTransaction"
@@ -210,4 +213,9 @@
         android:name="be.kuleuven.elcontador10.fragments.transactions.NewTransaction.Categories.ChooseCategory"
         android:label="fragment_choose_category"
         tools:layout="@layout/fragment_choose_category" />
+    <fragment
+        android:id="@+id/displayPhoto2"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.DisplayTransaction.DisplayPhoto"
+        android:label="fragment_display_photo"
+        tools:layout="@layout/fragment_display_photo" />
 </navigation>

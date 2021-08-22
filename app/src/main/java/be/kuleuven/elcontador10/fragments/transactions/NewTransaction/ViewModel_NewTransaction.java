@@ -8,7 +8,7 @@ import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.ImageFireBase;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 
-public class NewTransactionViewModel extends ViewModel {
+public class ViewModel_NewTransaction extends ViewModel {
     //ChosenStakeholder
     private final MutableLiveData<StakeHolder> chosenStakeholder = new MutableLiveData<>();
     public LiveData<StakeHolder> getChosenStakeholder() {

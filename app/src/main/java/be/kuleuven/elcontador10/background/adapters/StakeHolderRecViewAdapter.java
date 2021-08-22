@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.NewTransactionViewModel;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 
 
@@ -28,9 +28,9 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
     private List<StakeHolder> stakeholdersList = new ArrayList<>();
     private ArrayList<StakeHolder> stakeHoldersOriginal;
     private final View viewFromHostingClass;
-    private NewTransactionViewModel viewModel;
+    private ViewModel_NewTransaction viewModel;
 
-    public StakeHolderRecViewAdapter(View viewFromHostingClass, NewTransactionViewModel viewModel) {
+    public StakeHolderRecViewAdapter(View viewFromHostingClass, ViewModel_NewTransaction viewModel) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.viewModel = viewModel;
     }

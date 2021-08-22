@@ -35,9 +35,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -70,7 +67,7 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
     EditText txtAmount,txtTitle,txtNotes;
     MainActivity mainActivity;
     NavController navController;
-    NewTransactionViewModel viewModel;
+    ViewModel_NewTransaction viewModel;
     ImageFireBase imageSelected;
     StakeHolder selectedStakeHolder;
     String idCatSelected;
@@ -96,7 +93,7 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(requireActivity()).get(NewTransactionViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
         navController = Navigation.findNavController(view);
 
 ///      Initialize views

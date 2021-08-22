@@ -267,8 +267,8 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 <LinearLayout
                     android:id="@+id/layout_photoDownloaded_holder"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
+                    android:visibility="gone"
                     android:layout_height="240dp"
                     android:orientation="horizontal"
                     android:padding="10dp"
