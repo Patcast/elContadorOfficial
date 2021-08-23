@@ -47,6 +47,7 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         mainActivity.setHeaderText(getString(R.string.choose_category));
         mainActivity.displayTopMenu(true);
         mainActivity.setCurrentMenuClicker(this);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.action_bottom_sheet,true);
         noCategoryItem = view.findViewById(R.id.choose_noCat);
         addCustomCat = view.findViewById(R.id.layout_addCategory);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);

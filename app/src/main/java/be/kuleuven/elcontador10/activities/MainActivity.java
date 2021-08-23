@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("loggedInDetails",MODE_PRIVATE);
         editor = sharedPreferences.edit();
         setContentView(R.layout.activity_main);
-
         toolbar = findViewById(R.id.toolbar);
         tabLayout = findViewById(R.id.tabLayout);
         stakeholderDetails = findViewById(R.id.stakeHolderDetails);
@@ -94,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
         FirebaseAuth.getInstance().signOut();
         Caching.INSTANCE.signOut();
-
     }
 
     public void displayTopMenu(boolean b) {
@@ -155,6 +153,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void modifyVisibilityOfMenuItem(int itemId,boolean display){
+        topRightMenu.findItem(itemId)
+                .setVisible(display);
 
-
+    }
 }

@@ -19,33 +19,11 @@ import be.kuleuven.elcontador10.background.database.Caching;
 
 public class ViewModel_DisplayTransaction extends ViewModel {
     FirebaseStorage storage = FirebaseStorage.getInstance();
-    Boolean successfulLoading;
-    //ChosenUri
-    private final MutableLiveData<Bitmap> chosenBitmap = new MutableLiveData<>();
-    public LiveData<Bitmap> getChosenBitMap() {
-        return chosenBitmap;
-    }
-    public void selectBitMap(String imageName, Context context){
-        successfulLoading=false;
-        StringBuilder downloadUrl = new StringBuilder();
-        downloadUrl.append(Caching.INSTANCE.getChosenAccountId());
-        downloadUrl.append("/");
-        downloadUrl.append(imageName);
-        storage.getReference().child(downloadUrl.toString()).getDownloadUrl().addOnSuccessListener(uri -> {
-            Picasso.get().load(uri).into(target);
-            successfulLoading = true;
-        }).addOnFailureListener(exception -> {
-            Toast.makeText(context, "Error loading photo.", Toast.LENGTH_SHORT).show();
-        });
-    }
-    public void reset(){
-        chosenBitmap.setValue(null);
-        Picasso.get().cancelRequest(target);
-    }
     private Target target = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             chosenBitmap.setValue(bitmap);
+           isLoading.setValue(false);
         }
 
         @Override
@@ -56,7 +34,43 @@ public class ViewModel_DisplayTransaction extends ViewModel {
         @Override
         public void onPrepareLoad(Drawable placeHolderDrawable) {
         }
+
     };
 
+
+    public ViewModel_DisplayTransaction() {
+        setIsLoading(false);
+    }
+
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    public LiveData<Boolean> getIsLoading() {
+        return isLoading;
+    }
+    public void setIsLoading(boolean value){
+        isLoading.setValue(value);
+    }
+
+    //Chosen Bitmap
+    private final MutableLiveData<Bitmap> chosenBitmap = new MutableLiveData<>();
+    public LiveData<Bitmap> getChosenBitMap() {
+        return chosenBitmap;
+    }
+    public void selectBitMap(String imageName, Context context) {
+            isLoading.setValue(true);
+            StringBuilder downloadUrl = new StringBuilder();
+            downloadUrl.append(Caching.INSTANCE.getChosenAccountId());
+            downloadUrl.append("/");
+            downloadUrl.append(imageName);
+            storage.getReference().child(downloadUrl.toString()).getDownloadUrl().addOnSuccessListener(uri -> {
+                Picasso.get().load(uri).into(target);
+            }).addOnFailureListener(exception -> {
+                Toast.makeText(context, "Error loading photo.", Toast.LENGTH_SHORT).show();
+            });
+    }
+    public void reset(){
+        chosenBitmap.setValue(null);
+        isLoading.setValue(false);
+        Picasso.get().cancelRequest(target);
+    }
 
 }

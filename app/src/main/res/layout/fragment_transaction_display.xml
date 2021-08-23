@@ -265,24 +265,28 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <LinearLayout
                     android:id="@+id/layout_photoDownloaded_holder"
                     android:layout_width="match_parent"
-                    android:visibility="gone"
-                    android:layout_height="240dp"
+                    android:layout_height="200dp"
                     android:orientation="horizontal"
                     android:padding="10dp"
                     android:gravity="center">
+                        <com.google.android.material.progressindicator.CircularProgressIndicator
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:indeterminate="true"
+                            app:indicatorColor="@color/white"
+                            android:id="@+id/progress_indicator_displayTrans"
+                            />
+
                         <ImageView
                             android:layout_marginVertical="10dp"
                             android:id="@+id/image_transaction_photoDownloaded"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             />
-
-                </LinearLayout>
-
-
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/layout_addPhoto"
                             android:layout_width="match_parent"
@@ -316,6 +320,11 @@
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
+                </LinearLayout>
+
+
+
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
@@ -325,6 +334,7 @@
                 <Button
                             android:id="@+id/buttonDeleteTransaction"
                             android:layout_width="180dp"
+                                android:visibility="gone"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="30dp"
                             android:text="@string/delete"

@@ -21,9 +21,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+
 import android.widget.TextView;
 import android.widget.Toast;
+
+
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
@@ -38,15 +41,18 @@ public class TransactionDisplay extends Fragment  {
     Transaction selectedTrans;
     NavController navController;
     ConstraintLayout layoutAddPhotoIcon;
-    LinearLayout layoutDownloadPhotoHolder;
+    CircularProgressIndicator progressIndicator;
     ImageView imViewPhotoIn;
     View view;
     ViewModel_DisplayTransaction viewModel;
+    boolean isLoading;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_DisplayTransaction.class);
+        viewModel.reset();
+        isLoading=false;
     }
 
     @Nullable
@@ -63,7 +69,6 @@ public class TransactionDisplay extends Fragment  {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
-
         try {
             TransactionDisplayArgs args = TransactionDisplayArgs.fromBundle(getArguments());
             initializeViews(view);
@@ -74,48 +79,46 @@ public class TransactionDisplay extends Fragment  {
         }
         Button delete = requireView().findViewById(R.id.buttonDeleteTransaction);
         delete.setOnClickListener(this::onDelete_Clicked);
-        layoutDownloadPhotoHolder.setOnClickListener(v->navController.navigate(R.id.action_transactionDisplay_to_displayPhoto2));
+        imViewPhotoIn.setOnClickListener(v->navController.navigate(R.id.action_transactionDisplay_to_displayPhoto2));
     }
 
     @Override
     public void onStart() {
         super.onStart();
         viewModel.getChosenBitMap().observe(getViewLifecycleOwner(), this::setImage);
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(),this::setLoadingBar);
     }
+
+    private void setLoadingBar(Boolean aBoolean) {
+        if (aBoolean){
+            progressIndicator.setVisibility(View.VISIBLE);
+            isLoading=true;
+            layoutAddPhotoIcon.setVisibility(View.GONE);
+        }
+        else{
+            progressIndicator.setVisibility(View.GONE);
+            isLoading=false;
+        }
+    }
+
     private void setImage(Bitmap bitmap) {
         if(bitmap!=null) {
             setUiForPhoto(true);
             imViewPhotoIn.setImageBitmap(bitmap);
         }
-        else setUiForPhoto(false);
-    }
+        else {
+            setUiForPhoto(false);
 
-    private void openPhoto(String imageName)  {
-        if(viewModel.getChosenBitMap().getValue()!=null){
-            imViewPhotoIn.setImageBitmap(viewModel.getChosenBitMap().getValue());
-            setUiForPhoto(true);
         }
-        else{
-           viewModel.selectBitMap(imageName,requireContext());
-        }
-
     }
 
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        viewModel.reset();
-        //Picasso.get().cancelRequest(target);
-
-    }
 
     private void setUiForPhoto(boolean photoDownloaded) {
         if(photoDownloaded){
-            layoutDownloadPhotoHolder.setVisibility(View.VISIBLE);
+            imViewPhotoIn.setVisibility(View.VISIBLE);
             layoutAddPhotoIcon.setVisibility(View.GONE);
         }else{
-            layoutDownloadPhotoHolder.setVisibility(View.GONE);
+            imViewPhotoIn.setVisibility(View.GONE);
             layoutAddPhotoIcon.setVisibility(View.VISIBLE);
         }
     }
@@ -133,8 +136,9 @@ public class TransactionDisplay extends Fragment  {
         notes = view.findViewById(R.id.txtNotesDisplay);
         notes.setMovementMethod(new ScrollingMovementMethod());
         layoutAddPhotoIcon = view.findViewById(R.id.layout_addPhoto);
-        layoutDownloadPhotoHolder = view.findViewById(R.id.layout_photoDownloaded_holder);
         imViewPhotoIn = view.findViewById(R.id.image_transaction_photoDownloaded);
+        progressIndicator = view.findViewById(R.id.progress_indicator_displayTrans);
+
 
     }
 
@@ -163,7 +167,6 @@ public class TransactionDisplay extends Fragment  {
             NumberFormatter formatter = new NumberFormatter(selectedTrans.getAmount());
             DateFormatter dateFormatter = new DateFormatter(selectedTrans.getDate(),"f");
             DateFormatter timeFormatter = new DateFormatter(selectedTrans.getDate(),"t");
-
             amount.setText(formatter.getFinalNumber());
             String startPhrase=(formatter.isNegative())? getString(R.string.paid_to): getString(R.string.paid_by);
             String concerningText= startPhrase+" "+Caching.INSTANCE.getStakeholderName(selectedTrans.getStakeHolder());
@@ -181,9 +184,12 @@ public class TransactionDisplay extends Fragment  {
             time.setText(timeFormatter.getFormattedDate());
             registeredBy.setText(selectedTrans.getRegisteredBy());
             notes.setText(selectedTrans.getNotes());
-            if(selectedTrans.getImageName().length()>0)openPhoto(selectedTrans.getImageName());
+            if(selectedTrans.getImageName().length()>0){
+                if(viewModel.getChosenBitMap().getValue()==null){
+                    viewModel.selectBitMap(selectedTrans.getImageName(),requireContext());
+                }
+            }
             else setUiForPhoto(false);
-
         }
     }
 

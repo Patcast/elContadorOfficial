@@ -66,8 +66,6 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
         checkLogIn(mainActivity.returnSavedLoggedEmail());
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> mainActivity.displayToolBar(true));
-        //newAccountButton.setOnClickListener(v -> navController.navigate(R.id.action_accounts_to_addNewAccount));
-
     }
 
     private void startRecyclerView(View view){
