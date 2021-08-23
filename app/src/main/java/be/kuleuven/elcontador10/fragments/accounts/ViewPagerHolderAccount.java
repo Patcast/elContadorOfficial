@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -137,7 +138,7 @@ public class ViewPagerHolderAccount extends Fragment implements Caching.Accounts
     }
 
     @Override
-    public void onSearchClick() {
+    public void onSearchClick(SearchView searchView) {
 
     }
 

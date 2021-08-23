@@ -26,8 +26,9 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.Transaction;
+import be.kuleuven.elcontador10.fragments.accounts.ViewPagerHolderAccountDirections;
 import be.kuleuven.elcontador10.fragments.microaccounts.MicroAccountViewPagerHolderDirections;
-import be.kuleuven.elcontador10.fragments.transactions.ViewPagerHolderDirections;
+
 
 
 public class TransactionsRecViewAdapter extends RecyclerView.Adapter<TransactionsRecViewAdapter.ViewHolder>  {
@@ -66,7 +67,7 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         holder.parent.setOnClickListener(v->{
             try {
                 // from Account ViewHolder
-                ViewPagerHolderDirections.ActionViewPagerHolderToTransactionDisplay action = ViewPagerHolderDirections.actionViewPagerHolderToTransactionDisplay(idOfTransaction);
+                ViewPagerHolderAccountDirections.ActionViewPagerHolderToTransactionDisplay action = ViewPagerHolderAccountDirections.actionViewPagerHolderToTransactionDisplay(idOfTransaction);
                 navController.navigate(action);
             } catch (Exception e) {
                 // from MicroAccount ViewHolder

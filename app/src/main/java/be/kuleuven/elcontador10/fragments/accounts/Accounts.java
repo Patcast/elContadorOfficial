@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -155,7 +156,7 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
     }
 
     @Override
-    public void onSearchClick() {
+    public void onSearchClick(SearchView searchView) {
 
     }
 

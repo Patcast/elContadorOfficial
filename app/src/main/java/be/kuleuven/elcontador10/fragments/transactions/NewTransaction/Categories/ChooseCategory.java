@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -145,7 +146,7 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
     }
 
     @Override
-    public void onSearchClick() {
+    public void onSearchClick(SearchView searchView) {
 
     }
 

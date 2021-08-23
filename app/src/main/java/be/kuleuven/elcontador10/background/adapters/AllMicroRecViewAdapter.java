@@ -23,8 +23,9 @@ import java.util.stream.Collectors;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
+import be.kuleuven.elcontador10.fragments.accounts.ViewPagerHolderAccountDirections;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
-import be.kuleuven.elcontador10.fragments.transactions.ViewPagerHolderDirections;
+
 
 
 public class AllMicroRecViewAdapter extends RecyclerView.Adapter<AllMicroRecViewAdapter.ViewHolder> {
@@ -56,8 +57,8 @@ public class AllMicroRecViewAdapter extends RecyclerView.Adapter<AllMicroRecView
         holder.parent.setOnClickListener(v -> {
                     viewModel.selectStakeholder(microAccountsList.get(position));
                     NavController navController = Navigation.findNavController(viewFromHostingClass);
-                    ViewPagerHolderDirections.ActionViewPagerHolderToMicroAccountViewPagerHolder action =
-                        ViewPagerHolderDirections.actionViewPagerHolderToMicroAccountViewPagerHolder(microAccountsList.get(position));
+                    ViewPagerHolderAccountDirections.ActionViewPagerHolderToMicroAccountViewPagerHolder action =
+                            ViewPagerHolderAccountDirections.actionViewPagerHolderToMicroAccountViewPagerHolder(microAccountsList.get(position));
                     navController.navigate(action);
                 }
         );
@@ -73,7 +74,6 @@ public class AllMicroRecViewAdapter extends RecyclerView.Adapter<AllMicroRecView
         private TextView textName;
         private TextView textRole;
         private TextView textBalance;
-        private ImageView buttonNewTransaction;
         private ConstraintLayout parent;
 
         public ViewHolder(@NonNull View itemView) {

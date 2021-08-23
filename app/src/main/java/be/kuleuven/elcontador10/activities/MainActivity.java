@@ -3,6 +3,7 @@ package be.kuleuven.elcontador10.activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -29,10 +30,10 @@ public class MainActivity extends AppCompatActivity {
         void onDeleteClick();
         void onEditingClick();
         void onAddClick();
-        void onSearchClick();
+        void onSearchClick(SearchView searchView);
         void onFilterClick();
     }
-
+    SearchView searchView;
     private Menu topRightMenu;
     private TabLayout tabLayout;
     private Toolbar toolbar;
@@ -116,9 +117,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         topRightMenu = menu;
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.top_three_buttons_menu,menu);
-        return true;
+        getMenuInflater().inflate(R.menu.top_three_buttons_menu, menu);
+        MenuItem item = menu.findItem(R.id.menu_search);
+        searchView = (SearchView) item.getActionView();
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -137,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 currentTopMenuHandler.onAddClick();
                 return true;
             case R.id.menu_search:
-                currentTopMenuHandler.onSearchClick();
+                currentTopMenuHandler.onSearchClick(searchView);
                 return true;
             case R.id.menu_filter:
                 currentTopMenuHandler.onFilterClick();

@@ -56,7 +56,7 @@
         <entry key="app/src/main/res/layout/rec_view_item_all_transactions.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/rec_view_item_categories.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/rec_view_payments.xml" value="0.1328125" />
-        <entry key="app/src/main/res/menu/top_three_buttons_menu.xml" value="0.25" />
+        <entry key="app/src/main/res/menu/top_three_buttons_menu.xml" value="0.1" />
         <entry key="app/src/main/res/xml/file_paths.xml" value="0.1" />
       </map>
     </option>
