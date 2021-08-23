@@ -3,6 +3,8 @@ package be.kuleuven.elcontador10.fragments.accounts;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
@@ -36,14 +38,11 @@ public class ViewPagerHolderAccount extends Fragment implements Caching.Accounts
    MainActivity mainActivity;
     private TextView textBalanceAccount;
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) requireActivity();
         mainActivity.displayToolBar(true);
-        String name = Caching.INSTANCE.getAccountName();
-        mainActivity.setHeaderText(name);
         mainActivity.displayTabLayout(true);
 
     }
@@ -58,6 +57,14 @@ public class ViewPagerHolderAccount extends Fragment implements Caching.Accounts
         addFragments();
         viewPager2.setPageTransformer(new ZoomOutPageTransformer(this));
         return view;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        String name = Caching.INSTANCE.getAccountName();
+        mainActivity.setHeaderText(name);
     }
 
     private void addFragments() {

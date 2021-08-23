@@ -6,6 +6,7 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -64,6 +65,7 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         holder.textDate.setText(allTransactions.get(position).getShortDate());
         holder.textTitle.setText(allTransactions.get(position).getTitle());
         holder.txtEmojiCategory.setText(Caching.INSTANCE.getCategoryEmoji(allTransactions.get(position).getCategory()));
+        if(!(allTransactions.get(position).getImageName().length()>0))holder.camaraIcon.setVisibility(View.GONE);
         holder.parent.setOnClickListener(v->{
             try {
                 // from Account ViewHolder
@@ -86,9 +88,11 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
     public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView textTitle,textAmount,textDate,textNameOfParticipant,textPaidBy,txtEmojiCategory;
         private ConstraintLayout parent;
+        private ImageView camaraIcon;
 
         public ViewHolder(@NonNull  View itemView) {
             super(itemView);
+            camaraIcon = itemView.findViewById(R.id.imageView_camara_icon);
             txtEmojiCategory = itemView.findViewById(R.id.textView_transaction_emoji);
             textTitle = itemView.findViewById(R.id.text_title_allTrans);
             parent = itemView.findViewById(R.id.recVew_Item_AllTransactions);
