@@ -36,6 +36,7 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
     private RecyclerView recyclerCategories_custom;
     private CategoriesRecViewAdapter adapter_custom;
     private final List<EmojiCategory> customCategories = new ArrayList<>();
+    MainActivity mainActivity;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -43,11 +44,9 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_choose_category, container, false);
-        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity = (MainActivity) requireActivity();
         mainActivity.setHeaderText(getString(R.string.choose_category));
-        mainActivity.displayTopMenu(true);
         mainActivity.setCurrentMenuClicker(this);
-        mainActivity.modifyVisibilityOfMenuItem(R.id.action_bottom_sheet,true);
         noCategoryItem = view.findViewById(R.id.choose_noCat);
         addCustomCat = view.findViewById(R.id.layout_addCategory);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
@@ -94,6 +93,7 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
     @Override
     public void onStart() {
         super.onStart();
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_edit,true);
         Caching.INSTANCE.attachCatObserver(this);
         if(customCategories.size()>0) adapter_custom.setDefCategories(customCategories);
         recyclerCategories_custom.setAdapter(adapter_custom);
@@ -102,6 +102,7 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
     @Override
     public void onStop() {
         super.onStop();
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_edit,false);
         Caching.INSTANCE.deAttachCatObserver(this);
     }
 

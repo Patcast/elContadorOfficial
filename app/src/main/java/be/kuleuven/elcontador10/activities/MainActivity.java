@@ -95,9 +95,9 @@ public class MainActivity extends AppCompatActivity {
         Caching.INSTANCE.signOut();
     }
 
-    public void displayTopMenu(boolean b) {
+  /*  public void displayTopMenu(boolean b) {
        topRightMenu.setGroupVisible(R.id.basic_menu_options,b);
-    }
+    }*/
     public void displayToolBar(Boolean display){
         int visibility = (display)? View.VISIBLE :View.INVISIBLE;
         toolbar.setVisibility(visibility);
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.action_bottom_sheet:
+            case R.id.menu_bottom_sheet:
                 try{
                     currentMenuClicker.onBottomSheetClick();
                 }
@@ -156,6 +156,5 @@ public class MainActivity extends AppCompatActivity {
     public void modifyVisibilityOfMenuItem(int itemId,boolean display){
         topRightMenu.findItem(itemId)
                 .setVisible(display);
-
     }
 }

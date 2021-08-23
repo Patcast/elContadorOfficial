@@ -18,17 +18,23 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Picasso;
 
 import be.kuleuven.elcontador10.R;
+import be.kuleuven.elcontador10.activities.MainActivity;
 
 
 public class DisplayPhoto extends Fragment {
 
-    ImageView imViewPhoto;
+
     ViewModel_DisplayTransaction viewModel;
     View view;
+    MainActivity mainActivity;
+    PhotoView photoView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mainActivity = (MainActivity) getActivity();
+        assert mainActivity != null;
+        mainActivity.setHeaderText(getString(R.string.image_captured));
 
     }
 
@@ -36,7 +42,7 @@ public class DisplayPhoto extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_display_photo, container, false);
-        //imViewPhoto = view.findViewById(R.id.displayPhoto);
+        photoView = view.findViewById(R.id.photo_view);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_DisplayTransaction.class);
 
         return view;
@@ -52,13 +58,19 @@ public class DisplayPhoto extends Fragment {
     public void onStart() {
         super.onStart();
         viewModel.getChosenBitMap().observe(getViewLifecycleOwner(), this::setImage);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_delete,true);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add,true);
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_delete,false);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add,false);
     }
 
     private void setImage(Bitmap bitmap) {
         if(bitmap!=null) {
-
-            PhotoView photoView = view.findViewById(R.id.photo_view);
             photoView.setImageBitmap(bitmap);
         }
     }

@@ -6,30 +6,36 @@
     tools:context=".MainActivity">
     <group android:id="@+id/basic_menu_options">
 
-        <item android:id="@+id/action_delete"
+        <item android:id="@+id/menu_delete"
             android:icon="@drawable/ic_baseline_delete_24"
             android:title="@string/delete"
-            app:showAsAction="always"/>
-        <item android:id="@+id/action_edit"
+            android:visible="false"
+            app:showAsAction="ifRoom"/>
+        <item android:id="@+id/menu_edit"
             android:icon="@drawable/ic_baseline_edit_24"
             android:title="@string/edit"
-            app:showAsAction="always"/>
-        <item android:id="@+id/action_add"
+            android:visible="false"
+            app:showAsAction="ifRoom"/>
+        <item android:id="@+id/menu_add"
             android:icon="@drawable/ic_baseline_add_24"
             android:title="add"
-            app:showAsAction="always"/>
-        <item android:id="@+id/action_search"
+            android:visible="true"
+            app:showAsAction="ifRoom"/>
+        <item android:id="@+id/menu_search"
             android:icon="@drawable/ic_baseline_search_24"
             android:title="@string/search"
-            app:showAsAction="always"/>
-        <item android:id="@+id/action_filter"
+            android:visible="false"
+            app:showAsAction="ifRoom"/>
+        <item android:id="@+id/menu_filter"
             android:icon="@drawable/ic_baseline_filter_alt_24"
             android:title="@string/filter"
+            android:visible="false"
             app:showAsAction="always"/>
-        <item android:id="@+id/action_bottom_sheet"
+        <item android:id="@+id/menu_bottom_sheet"
             android:icon="@drawable/ic_baseline_menu_24"
             android:title="bottonSheet"
-            app:showAsAction="always"/>
+            android:visible="true"
+            app:showAsAction="ifRoom"/>
 
 
     </group>

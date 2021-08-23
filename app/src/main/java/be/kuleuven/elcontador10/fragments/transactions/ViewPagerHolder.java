@@ -22,11 +22,12 @@ import be.kuleuven.elcontador10.background.adapters.ViewPagerAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Account;
 import be.kuleuven.elcontador10.background.model.Transaction;
+import be.kuleuven.elcontador10.background.tools.ZoomOutPageTransformer;
 import be.kuleuven.elcontador10.fragments.microaccounts.AllMicroAccounts;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
 
 
-public class ViewPagerHolder extends Fragment implements Caching.AccountsObserver {
+public class ViewPagerHolder extends Fragment implements Caching.AccountsObserver, ZoomOutPageTransformer.PageChangeListener {
 
    ViewPagerAdapter mAdapter;
    ViewPager2 viewPager2;
@@ -52,25 +53,25 @@ public class ViewPagerHolder extends Fragment implements Caching.AccountsObserve
         viewPager2 =view.findViewById(R.id.viewPagerHolder);
         textBalanceAccount = view.findViewById(R.id.textView_allTransactions_balance);
         mAdapter = new ViewPagerAdapter(mainActivity.getSupportFragmentManager(),getLifecycle());
-        addFragments(view);
+        addFragments();
+        viewPager2.setPageTransformer(new ZoomOutPageTransformer(this));
         return view;
     }
 
-    private void addFragments(View view) {
+    private void addFragments() {
         mAdapter.addFragment(new AllTransactions());
         mAdapter.addFragment(new AllMicroAccounts());
         viewPager2.setAdapter(mAdapter);
         new TabLayoutMediator(mainActivity.getTabLayout(),viewPager2,(t,p)->{
             switch(p){
                 case 0:
-                    t.setText("Transactions");
+                    t.setText(getString(R.string.transactions));
                     t.setIcon(R.drawable.icon_transaction);
                     break;
                 case 1:
-                    t.setText("Micro Accounts");
+                    t.setText(getString(R.string.stakeholders));
                     t.setIcon(R.drawable.ic_baseline_people_alt_24);
                     break;
-
             }
         }).attach();
     }
@@ -88,11 +89,28 @@ public class ViewPagerHolder extends Fragment implements Caching.AccountsObserve
         super.onStop();
         mainActivity.displayToolBar(true);
         mainActivity.displayTabLayout(false);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,false);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,false);
         Caching.INSTANCE.deAttachAccountsObservers(this);
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void notifyAccountsObserver(List<Account> accounts) {
         textBalanceAccount.setText(Caching.INSTANCE.getAccountBalance());
+    }
+
+
+    @Override
+    public void onPageChange() {
+        switch(viewPager2.getCurrentItem()){
+            case 0:
+                mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,true);
+                mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,false);
+                break;
+            case 1:
+                mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,false);
+                mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,true);
+                break;
+        }
     }
 }

@@ -35,7 +35,6 @@ public class AddNewAccount extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity =(MainActivity) getActivity();
-        mainActivity.displayTopMenu(false);
         mainActivity.setHeaderText(getString(R.string.add_account));
     }
 
@@ -82,9 +81,5 @@ public class AddNewAccount extends Fragment {
         navController.popBackStack();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        mainActivity.displayTopMenu(true);
-    }
+
 }

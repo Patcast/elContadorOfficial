@@ -85,8 +85,16 @@ public class TransactionDisplay extends Fragment  {
     @Override
     public void onStart() {
         super.onStart();
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_delete,true);
         viewModel.getChosenBitMap().observe(getViewLifecycleOwner(), this::setImage);
         viewModel.getIsLoading().observe(getViewLifecycleOwner(),this::setLoadingBar);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_delete,false);
+
     }
 
     private void setLoadingBar(Boolean aBoolean) {

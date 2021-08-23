@@ -47,7 +47,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_transactions, container, false);
         mainActivity = (MainActivity) getActivity();
-        mainActivity.displayTopMenu(false);
+
 
         fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
         startRecycler(view);

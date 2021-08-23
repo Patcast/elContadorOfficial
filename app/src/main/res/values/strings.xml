@@ -202,6 +202,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Transaction_upload_failed">Transaction upload failed, please register the transaction again.</string>
+    <string name="stakeholders">Stakeholder</string>
+    <string name="image_captured">Image Captured</string>
 
 
 </resources>
