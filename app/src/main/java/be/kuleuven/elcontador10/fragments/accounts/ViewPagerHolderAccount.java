@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.transactions;
+package be.kuleuven.elcontador10.fragments.accounts;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -27,7 +28,7 @@ import be.kuleuven.elcontador10.fragments.microaccounts.AllMicroAccounts;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
 
 
-public class ViewPagerHolder extends Fragment implements Caching.AccountsObserver, ZoomOutPageTransformer.PageChangeListener {
+public class ViewPagerHolderAccount extends Fragment implements Caching.AccountsObserver, ZoomOutPageTransformer.PageChangeListener, MainActivity.TopMenuHandler {
 
    ViewPagerAdapter mAdapter;
    ViewPager2 viewPager2;
@@ -112,5 +113,36 @@ public class ViewPagerHolder extends Fragment implements Caching.AccountsObserve
                 mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,true);
                 break;
         }
+    }
+
+    ///// TopMenuHandler Details
+    @Override
+    public void onBottomSheetClick() {
+
+    }
+
+    @Override
+    public void onDeleteClick() {
+
+    }
+
+    @Override
+    public void onEditingClick() {
+
+    }
+
+    @Override
+    public void onAddClick() {
+
+    }
+
+    @Override
+    public void onSearchClick() {
+
+    }
+
+    @Override
+    public void onFilterClick() {
+        Toast.makeText(requireContext(), "Filter coming soon...", Toast.LENGTH_SHORT).show();
     }
 }

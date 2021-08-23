@@ -21,7 +21,7 @@ import be.kuleuven.elcontador10.R;
 public class AccountsBottomMenu extends BottomSheetDialogFragment {
 
     public interface AccountsBottomSheetListener{
-        void onAddAccountClick();
+        void onMySettingsClick();
         void onLogOut();
     }
 
@@ -39,7 +39,7 @@ public class AccountsBottomMenu extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.bottom_menu_accounts, container, false);
-        addNewAccountButton = view.findViewById(R.id.bs_account_addNew);
+        addNewAccountButton = view.findViewById(R.id.bs_my_settings);
         logOutButton = view.findViewById(R.id.bs_account_log_out);
         return view;
     }
@@ -47,7 +47,7 @@ public class AccountsBottomMenu extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        addNewAccountButton.setOnClickListener(v -> attachedListener.onAddAccountClick());
+        addNewAccountButton.setOnClickListener(v -> attachedListener.onMySettingsClick());
         logOutButton.setOnClickListener(v -> attachedListener.onLogOut());
     }
 

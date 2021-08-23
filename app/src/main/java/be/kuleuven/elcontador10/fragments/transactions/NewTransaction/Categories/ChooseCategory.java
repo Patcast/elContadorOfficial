@@ -29,8 +29,8 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
-public class ChooseCategory extends Fragment implements Caching.CategoriesObserver, MainActivity.MenuClicker, CategoriesBottomMenu.CategoriesBottomSheetListener, CategoryDialog.DialogCategoriesListener {
-    private CategoriesBottomMenu bottomSheet;
+public class ChooseCategory extends Fragment implements Caching.CategoriesObserver, MainActivity.TopMenuHandler, CategoryDialog.DialogCategoriesListener {
+//Todo: Delete BottomSheet class and layout
     private ConstraintLayout noCategoryItem,addCustomCat;
     private ViewModel_NewTransaction viewModel;
     private RecyclerView recyclerCategories_custom;
@@ -114,29 +114,44 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         adapter_custom.setDefCategories(customCategories);
     }
 
-    @Override
-    public void onBottomSheetClick() {
-        bottomSheet = new CategoriesBottomMenu(this);
-        bottomSheet.show(getParentFragmentManager(),"CategoriesBottomSheet");
-    }
-
-    @Override
-    public void onAddCategoryClick() {
-        bottomSheet.dismiss();
-        startDialogForAdding();
-    }
 
 
 
-    @Override
-    public void onEditClick() {
-        bottomSheet.dismiss();
-        adapter_custom.setEditMode(true);
-    }
 
     @Override
     public void closeDialog() {
         adapter_custom.setEditMode(false);
+    }
+
+//////              MenuHandlerSettings
+    @Override
+    public void onBottomSheetClick() {
+
+    }
+
+    @Override
+    public void onEditingClick() {
+        adapter_custom.setEditMode(true);
+    }
+    @Override
+    public void onDeleteClick() {
+
+    }
+
+
+    @Override
+    public void onAddClick() {
+
+    }
+
+    @Override
+    public void onSearchClick() {
+
+    }
+
+    @Override
+    public void onFilterClick() {
+
     }
 
 }

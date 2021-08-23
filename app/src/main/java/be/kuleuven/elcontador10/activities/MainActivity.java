@@ -3,13 +3,8 @@ package be.kuleuven.elcontador10.activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.FragmentActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -19,29 +14,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.interfaces.CachingObserver;
-import be.kuleuven.elcontador10.background.parcels.StakeholderLoggedIn;
-import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.model.TransactionType;
 
 public class MainActivity extends AppCompatActivity {
 
 
-    public interface MenuClicker{
+    public interface TopMenuHandler {
         void onBottomSheetClick();
+        void onDeleteClick();
+        void onEditingClick();
+        void onAddClick();
+        void onSearchClick();
+        void onFilterClick();
     }
 
     private Menu topRightMenu;
@@ -52,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private ConstraintLayout stakeholderDetails;
     SharedPreferences.Editor editor;
     private static final String SAVED_EMAIL_KEY = "email_key";
-    MenuClicker currentMenuClicker;
+    TopMenuHandler currentTopMenuHandler;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -78,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
     }
-    public void setCurrentMenuClicker(MenuClicker currentMenuClicker) {
-        this.currentMenuClicker = currentMenuClicker;
+    public void setCurrentMenuClicker(TopMenuHandler currentTopMenuHandler) {
+        this.currentTopMenuHandler = currentTopMenuHandler;
     }
     public void saveLoggedInState(String email){
         editor.putString(SAVED_EMAIL_KEY,email);
@@ -95,9 +84,6 @@ public class MainActivity extends AppCompatActivity {
         Caching.INSTANCE.signOut();
     }
 
-  /*  public void displayTopMenu(boolean b) {
-       topRightMenu.setGroupVisible(R.id.basic_menu_options,b);
-    }*/
     public void displayToolBar(Boolean display){
         int visibility = (display)? View.VISIBLE :View.INVISIBLE;
         toolbar.setVisibility(visibility);
@@ -139,17 +125,26 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_bottom_sheet:
-                try{
-                    currentMenuClicker.onBottomSheetClick();
-                }
-                catch(Exception e){
-                    Toast.makeText(this,"refresh the page",Toast.LENGTH_SHORT).show();
-                }
-
+                currentTopMenuHandler.onBottomSheetClick();
                 return true;
+            case R.id.menu_delete:
+                currentTopMenuHandler.onDeleteClick();
+                return true;
+            case R.id.menu_edit:
+                currentTopMenuHandler.onEditingClick();
+                return true;
+            case R.id.menu_add:
+                currentTopMenuHandler.onAddClick();
+                return true;
+            case R.id.menu_search:
+                currentTopMenuHandler.onSearchClick();
+                return true;
+            case R.id.menu_filter:
+                currentTopMenuHandler.onFilterClick();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
 

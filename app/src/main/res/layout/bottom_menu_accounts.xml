@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/bs_account_addNew"
+        android:id="@+id/bs_my_settings"
         android:paddingVertical="25dp"
         >
 
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginLeft="30dp"
-            android:text="Create new Account"
+            android:text="My Settings"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -36,7 +36,7 @@
             android:id="@+id/imageView4"
             android:layout_width="35dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_baseline_post_add_24"
+            android:src="@drawable/ic_baseline_person_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -30,7 +30,7 @@ import be.kuleuven.elcontador10.background.model.Account;
 
 
 
-public class Accounts extends Fragment implements Caching.AccountsObserver, MainActivity.MenuClicker, AccountsBottomMenu.AccountsBottomSheetListener {
+public class Accounts extends Fragment implements Caching.AccountsObserver, MainActivity.TopMenuHandler, AccountsBottomMenu.AccountsBottomSheetListener {
 
 
     private static final String TAG = "Accounts";
@@ -119,16 +119,11 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
             adapter.setAccounts(accountsList);
     }
 
-    @Override
-    public void onBottomSheetClick() {
-        bottomSheet = new AccountsBottomMenu(this);
-        bottomSheet.show(getParentFragmentManager(),"AccountsBottomSheet");
-    }
+
 
     @Override
-    public void onAddAccountClick() {
+    public void onMySettingsClick() {
         bottomSheet.dismiss();
-        navController.navigate(R.id.action_accounts_to_addNewAccount);
     }
 
     @Override
@@ -136,5 +131,36 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
         bottomSheet.dismiss();
         mainActivity.signOut();
         navController.navigate(R.id.signIn);
+    }
+    //Menu
+    @Override
+    public void onBottomSheetClick() {
+        bottomSheet = new AccountsBottomMenu(this);
+        bottomSheet.show(getParentFragmentManager(),"AccountsBottomSheet");
+    }
+
+    @Override
+    public void onDeleteClick() {
+
+    }
+
+    @Override
+    public void onEditingClick() {
+
+    }
+
+    @Override
+    public void onAddClick() {
+        navController.navigate(R.id.action_accounts_to_addNewAccount);
+    }
+
+    @Override
+    public void onSearchClick() {
+
+    }
+
+    @Override
+    public void onFilterClick() {
+
     }
 }
