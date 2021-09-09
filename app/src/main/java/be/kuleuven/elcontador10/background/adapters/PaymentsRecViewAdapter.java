@@ -19,13 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.background.model.contract.Payment;
+import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
 import be.kuleuven.elcontador10.background.tools.DateFormatter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecViewAdapter.ViewHolder> {
-    private List<Payment> payments;
+    private List<SubContract> subContracts;
     private final View viewFromHostingClass;
     private Context context;
     private NavController navController;
@@ -34,7 +34,7 @@ public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecView
     public PaymentsRecViewAdapter(View viewFromHostingClass, Context context, Fragment fragment) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.context = context;
-        payments = new ArrayList<>();
+        subContracts = new ArrayList<>();
         this.fragment = fragment;
     }
 
@@ -42,34 +42,24 @@ public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecView
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         navController = Navigation.findNavController(viewFromHostingClass);
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_view_payments, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_view_sub_contracts, parent, false);
         return new ViewHolder(view);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Payment payment = payments.get(position);
+        SubContract subContract = subContracts.get(position);
 
         // set texts
-        holder.title.setText(payment.getTitle());
+        holder.title.setText(subContract.getTitle());
 
-        long amount = payment.getAmount();
+        long amount = subContract.getAmount();
         String absolute_amount = new NumberFormatter(Math.abs(amount)).getFinalNumber();
         String amount_text = ((amount > 0)? context.getString(R.string.in) : context.getString(R.string.out)) + " " + absolute_amount;
         holder.amount.setText(amount_text);
 
-        holder.period.setText(payment.getPeriod());
-
-        String frequency_text = context.getString(R.string.frequency) + ": " + DatabaseDatesFunctions.INSTANCE.frequencyDecoder(payment.getFrequency(), context);
-        holder.frequency.setText(frequency_text);
-
-        String next_string = context.getString(R.string.next_payment) + " " +
-                ((payment.getNextPaymentDate() == null)? "N/A" :  new DateFormatter(payment.getNextPaymentDate(), "f").getFormattedDate());
-        holder.next.setText(next_string);
-
-        String paymentsLeft = context.getString(R.string.payments_left) + " " + payment.getPaymentsLeft();
-        holder.left.setText(paymentsLeft);
+        holder.period.setText(DatabaseDatesFunctions.INSTANCE.timestampToPeriod(subContract.getStartDate(), subContract.getEndDate()));
 
         // TODO go to payment fragment
         holder.layout.setOnClickListener(v -> {
@@ -82,11 +72,11 @@ public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecView
 
     @Override
     public int getItemCount() {
-        return payments.size();
+        return subContracts.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView title, amount, period, next, frequency, left;
+        private final TextView title, amount, period;
         private final View divider;
         private final ConstraintLayout layout;
 
@@ -95,16 +85,13 @@ public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecView
             title = itemView.findViewById(R.id.payment_title);
             amount = itemView.findViewById(R.id.payment_amount);
             period = itemView.findViewById(R.id.payment_period);
-            next = itemView.findViewById(R.id.payment_nextPayment);
-            frequency = itemView.findViewById(R.id.payment_frequency);
-            left = itemView.findViewById(R.id.payment_paymentsLeft);
             layout = itemView.findViewById(R.id.payment_layout);
             divider = itemView.findViewById(R.id.payment_divider);
         }
     }
 
-    public void setPayments(List<Payment> payments) {
-        this.payments = payments;
+    public void setPayments(List<SubContract> subContracts) {
+        this.subContracts = subContracts;
         notifyDataSetChanged();
     }
 }

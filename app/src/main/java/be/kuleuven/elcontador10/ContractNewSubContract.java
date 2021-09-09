@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -39,10 +40,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.model.contract.Payment;
+import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
 
-public class ContractNewPayment extends Fragment {
+public class ContractNewSubContract extends Fragment {
     private NavController navController;
 
     //views
@@ -63,7 +64,7 @@ public class ContractNewPayment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_contract_new_payment, container, false);
+        return inflater.inflate(R.layout.fragment_contract_new_sub_contract, container, false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -75,7 +76,7 @@ public class ContractNewPayment extends Fragment {
         navController = Navigation.findNavController(view);
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setHeaderText("New Payment");
-        contractId = ContractNewPaymentArgs.fromBundle(getArguments()).getContractId();
+        contractId = ContractNewSubContractArgs.fromBundle(getArguments()).getContractId();
 
         // set views
         title = view.findViewById(R.id.payment_new_title);
@@ -129,18 +130,22 @@ public class ContractNewPayment extends Fragment {
             long amount_value = Long.parseLong(amount_text);
             if (out.isChecked()) amount_value = - amount_value;
 
-            Timestamp next_payment;
+            Timestamp startDate;
+            Timestamp endDate;
 
             int frequency_value = frequency_spinner.getSelectedItemPosition();
 
             if (frequency_value == 0) {
-                next_payment = null;
+                startDate = null;
+                endDate = null;
+
                 period_text = "N/A";
                 paymentsLeft = 0;
             } else {
                 String start_text = start.getText().toString();
 
-                next_payment = DatabaseDatesFunctions.INSTANCE.stringToTimestamp(start_text); // initial payment at the start of contract
+                startDate = DatabaseDatesFunctions.INSTANCE.stringToTimestamp(start_text); // initial payment at the start of contract
+                endDate = DatabaseDatesFunctions.INSTANCE.stringToTimestamp(period_text.split(" - ")[1]);
 
                 if (paymentsLeft == 0) {
                     Toast.makeText(mainActivity, R.string.error_no_payments_can_be_made, Toast.LENGTH_SHORT).show();
@@ -148,10 +153,9 @@ public class ContractNewPayment extends Fragment {
                 }
             }
             String note_text = notes.getText().toString();
-            Payment newPayment = new Payment(title_text, amount_value, next_payment, paymentsLeft,
-                    period_text, frequency_text, note_text, mainActivity.returnSavedLoggedEmail());
+            SubContract newSubContract = new SubContract(title_text, amount_value, startDate, endDate, note_text, mainActivity.returnSavedLoggedEmail());
 
-            Payment.newPayment(newPayment, contractId);
+            SubContract.newPayment(newSubContract, contractId);
             navController.popBackStack();
         }
     }
@@ -168,7 +172,7 @@ public class ContractNewPayment extends Fragment {
                 (view1, year, month, dayOfMonth) -> {
                     month += 1;
 
-                    String date = dayOfMonth + "/" + ((month < 10)? "0" : "") + month + "/" + year;
+                    String date = ((dayOfMonth < 10)? "0" : "" ) + dayOfMonth + "/" + ((month < 10)? "0" : "") + month + "/" + year;
                     LocalDate dateChosen = DatabaseDatesFunctions.INSTANCE.stringToDate(date);
 
                     // time chosen before now

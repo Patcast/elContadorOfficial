@@ -14,14 +14,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.core.OrderBy;
 
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.sql.Timestamp;
 
 import be.kuleuven.elcontador10.R;
 
@@ -32,9 +30,9 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 import be.kuleuven.elcontador10.background.model.User;
+import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.contract.Contract;
-import be.kuleuven.elcontador10.background.model.contract.Payment;
 
 public enum Caching {
     INSTANCE;
@@ -400,7 +398,7 @@ public enum Caching {
 
                        myContract.setId(doc.getId());
                        myContract.setMicroAccount(microAccountId);
-                       myContract.setPayments(getMicroAccountPayments(chosenAccountId, microAccountId, doc.getId()));
+                       myContract.setSubContracts(getMicroAccountSubContracts(chosenAccountId, microAccountId, doc.getId()));
 
                        microAccountContracts.add(myContract);
                    }
@@ -409,9 +407,9 @@ public enum Caching {
                 });
     }
 
-    private ArrayList<Payment> getMicroAccountPayments(String chosenAccountId, String microAccountId, String contractId) {
-        String url = "/accounts/" + chosenAccountId + "/stakeHolders/" + microAccountId + "/contracts/" + contractId + "/payments";
-        ArrayList<Payment> payments = new ArrayList<>();
+    private ArrayList<SubContract> getMicroAccountSubContracts(String chosenAccountId, String microAccountId, String contractId) {
+        String url = "/accounts/" + chosenAccountId + "/stakeHolders/" + microAccountId + "/contracts/" + contractId + "/subcontracts";
+        ArrayList<SubContract> subContracts = new ArrayList<>();
 
         db.collection(url)
                 .addSnapshotListener((value, e) -> {
@@ -421,13 +419,13 @@ public enum Caching {
                    }
 
                    for (QueryDocumentSnapshot doc : value) {
-                       Payment myPayment = doc.toObject(Payment.class);
-                       myPayment.setId(doc.getId());
-                       payments.add(myPayment);
+                       SubContract mySubContract = doc.toObject(SubContract.class);
+                       mySubContract.setId(doc.getId());
+                       subContracts.add(mySubContract);
                    }
                 });
 
-        return payments;
+        return subContracts;
     }
 
 //////************** end of db

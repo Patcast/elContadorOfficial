@@ -9,15 +9,6 @@
     >
 
     <TextView
-        android:id="@+id/payment_frequency"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/frequency"
-        app:layout_constraintStart_toStartOf="@+id/payment_period"
-        app:layout_constraintTop_toBottomOf="@+id/payment_period" />
-
-    <TextView
         android:id="@+id/payment_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,19 +21,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/payment_nextPayment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/next_payment"
-        app:layout_constraintStart_toStartOf="@+id/payment_title"
-        app:layout_constraintTop_toBottomOf="@+id/payment_frequency" />
-
-    <TextView
         android:id="@+id/payment_period"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:paddingBottom="16dp"
         app:layout_constraintStart_toStartOf="@+id/payment_title"
         app:layout_constraintTop_toBottomOf="@+id/payment_title" />
 
@@ -66,15 +49,6 @@
         android:background="?android:attr/listDivider"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/payment_paymentsLeft" />
+        app:layout_constraintTop_toBottomOf="@+id/payment_period" />
 
-    <TextView
-        android:id="@+id/payment_paymentsLeft"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:paddingBottom="16dp"
-        android:text="@string/payments_left"
-        app:layout_constraintStart_toStartOf="@+id/payment_nextPayment"
-        app:layout_constraintTop_toBottomOf="@+id/payment_nextPayment" />
 </androidx.constraintlayout.widget.ConstraintLayout>

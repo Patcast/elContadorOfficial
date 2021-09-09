@@ -1,7 +1,6 @@
 package be.kuleuven.elcontador10.background.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,9 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.contract.Contract;
-import be.kuleuven.elcontador10.background.model.contract.Payment;
+import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.fragments.microaccounts.MicroAccountViewPagerHolderDirections;
 
 public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecViewAdapter.ViewHolder> {
@@ -65,9 +62,9 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
 
                     // set up Payments recycler view
                     holder.payments.setLayoutManager(new LinearLayoutManager(context));
-                    ArrayList<Payment> payments = contract.getPayments();
+                    ArrayList<SubContract> subContracts = contract.getPayments();
                     PaymentsRecViewAdapter adapter = new PaymentsRecViewAdapter(viewFromHostingClass, context, fragment);
-                    adapter.setPayments(payments);
+                    adapter.setPayments(subContracts);
                     holder.payments.setAdapter(adapter);
 
                     holder.divider.setVisibility(View.VISIBLE);

@@ -35,6 +35,13 @@ public enum DatabaseDatesFunctions {
         return new Timestamp(Date.from(stringToDate(text).atStartOfDay(zone).toInstant()));
     }
 
+    public String timestampToPeriod(Timestamp start, Timestamp end) {
+        LocalDate startDate = start.toDate().toInstant().atZone(zone).toLocalDate();
+        LocalDate endDate = end.toDate().toInstant().atZone(zone).toLocalDate();
+
+        return startDate.format(formatter) + " - " + endDate.format(formatter);
+    }
+
     public LocalDate stringToDate(@NonNull String text) {
         return LocalDate.parse(text, formatter);
     }
@@ -118,7 +125,7 @@ public enum DatabaseDatesFunctions {
      * @return first: first-second last: payment dates, last: start date - end date
      */
     public LinkedList<String> customPeriod(String start, int nrOfPayments, String frequencyCode) {
-        String[] split = frequencyCode.split("-");
+        String[] split = frequencyCode.split(" - ");
         int value = Integer.parseInt(split[0]);
         int unit = Integer.parseInt(split[1]);
 
@@ -141,20 +148,5 @@ public enum DatabaseDatesFunctions {
         result.add(startDate.format(formatter) + " - " + j.format(formatter));
 
         return result;
-    }
-
-    /**
-     *
-     * @param frequency With unit (value-unit) or without (unit)
-     * @param context context for getting string
-     * @return Every VALUE weeks, months...
-     */
-    public String frequencyDecoder(String frequency, Context context) {
-        if (frequency.contains("-")) {
-            String[] split = frequency.split("-");
-            String unit = context.getResources().getStringArray(R.array.frequency_names)[Integer.parseInt(split[1])];
-
-            return context.getString(R.string.every) + " " + split[0] + " " + unit;
-        } else return context.getResources().getStringArray(R.array.frequency)[Integer.parseInt(frequency)];
     }
 }

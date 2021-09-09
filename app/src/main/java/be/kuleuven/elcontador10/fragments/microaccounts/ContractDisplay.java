@@ -1,7 +1,6 @@
 package be.kuleuven.elcontador10.fragments.microaccounts;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -30,7 +29,7 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.PaymentsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.contract.Contract;
-import be.kuleuven.elcontador10.background.model.contract.Payment;
+import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.DateFormatter;
 
 public class ContractDisplay extends Fragment implements Caching.MicroAccountContractObserver {
@@ -43,7 +42,7 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
     private PaymentsRecViewAdapter adapter;
 
     // variables
-    private List<Payment> paymentsList;
+    private List<SubContract> paymentsList;
     private Contract contract;
     private String contractId;
     private MainActivity mainActivity;
