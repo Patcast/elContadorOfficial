@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -40,6 +39,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
 
@@ -60,6 +61,7 @@ public class ContractNewSubContract extends Fragment {
     private String period_text;
     private String frequency_text;
     private int paymentsLeft;
+    private ArrayList<ScheduledTransaction> transactions;
 
     @Nullable
     @Override
@@ -153,9 +155,31 @@ public class ContractNewSubContract extends Fragment {
                 }
             }
             String note_text = notes.getText().toString();
-            SubContract newSubContract = new SubContract(title_text, amount_value, startDate, endDate, note_text, mainActivity.returnSavedLoggedEmail());
 
-            SubContract.newPayment(newSubContract, contractId);
+            // create sub contract
+            SubContract newSubContract = new SubContract(title_text, amount_value, startDate, endDate, note_text, mainActivity.returnSavedLoggedEmail());
+            String subContractId = SubContract.newSubContract(newSubContract, contractId);
+
+            // create scheduled payments
+            if (subContractId != null) {
+                if (frequency_value == 0) {
+                    ScheduledTransaction transaction = new ScheduledTransaction(amount_value, 0,
+                            DatabaseDatesFunctions.INSTANCE.localDateToTimestamp(LocalDate.now()), Caching.INSTANCE.getChosenMicroAccountId());
+
+                    ScheduledTransaction.newScheduledTransaction(transaction, contractId, subContractId);
+                } else {
+                    // final copies of variables for foreach
+                    final long final_amount = amount_value;
+                    final String final_ID = Caching.INSTANCE.getChosenMicroAccountId();
+
+                    transactions.forEach(e -> e.setAmountPaid(final_amount));
+                    transactions.forEach(e -> e.setIdOfStakeholder(final_ID));
+
+                    // add all scheduled transactions
+                    transactions.forEach(e -> ScheduledTransaction.newScheduledTransaction(e, contractId, subContractId));
+                }
+            }
+
             navController.popBackStack();
         }
     }
@@ -209,14 +233,14 @@ public class ContractNewSubContract extends Fragment {
 
                     period_text = DatabaseDatesFunctions.INSTANCE.getPeriod(start_date, frequencyID, durationValue, durationUnit);
 
-                    ArrayList<String> dates = DatabaseDatesFunctions.INSTANCE.getPaymentDates(period_text, frequencyID);
+                    transactions = DatabaseDatesFunctions.INSTANCE.getScheduledTransactions(period_text, frequencyID);
 
-                    if (dates != null) {
-                        paymentsLeft = dates.size();
+                    if (transactions != null) {
+                        paymentsLeft = transactions.size();
 
                         String info_text = period_text + "\n\nPayment dates:\n" +
-                                dates.stream()
-                                        .map(String::toString)
+                                transactions.stream()
+                                        .map(e -> DatabaseDatesFunctions.INSTANCE.timestampToString(e.getDueDate()))
                                         .collect(Collectors.joining("\n"));
 
                         info.setText(info_text);

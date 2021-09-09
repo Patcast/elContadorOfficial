@@ -1,6 +1,5 @@
 package be.kuleuven.elcontador10.background.tools;
 
-import android.content.Context;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
@@ -10,14 +9,12 @@ import com.google.firebase.Timestamp;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import be.kuleuven.elcontador10.R;
-import io.perfmark.Link;
+import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public enum DatabaseDatesFunctions {
@@ -32,14 +29,20 @@ public enum DatabaseDatesFunctions {
      * @return Timestamp
      */
     public Timestamp stringToTimestamp(@NonNull String text) {
-        return new Timestamp(Date.from(stringToDate(text).atStartOfDay(zone).toInstant()));
+        return localDateToTimestamp(stringToDate(text));
+    }
+
+    public Timestamp localDateToTimestamp(LocalDate date) {
+        return new Timestamp(Date.from(date.atStartOfDay(zone).toInstant()));
     }
 
     public String timestampToPeriod(Timestamp start, Timestamp end) {
-        LocalDate startDate = start.toDate().toInstant().atZone(zone).toLocalDate();
-        LocalDate endDate = end.toDate().toInstant().atZone(zone).toLocalDate();
+        return timestampToString(start) + " - " + timestampToString(end);
+    }
 
-        return startDate.format(formatter) + " - " + endDate.format(formatter);
+    public String timestampToString(Timestamp date) {
+        LocalDate localDate = date.toDate().toInstant().atZone(zone).toLocalDate();
+        return  localDate.format(formatter);
     }
 
     public LocalDate stringToDate(@NonNull String text) {
@@ -86,15 +89,15 @@ public enum DatabaseDatesFunctions {
      * Gets a list of dates in a given period with the frequency code
      * @param period String "start - end"
      * @param frequency 1 - daily, 2 - weekly, 3 - monthly, 4 - quarterly, 5 - yearly
-     * @return ArrayList of strings of payment dates. size() is the amount of payments,
+     * @return ArrayList of ScheduledTransaction. size() is the amount of payments,
      *          null if last payment is after end date
      */
-    public ArrayList<String> getPaymentDates(String period, int frequency) {
+    public ArrayList<ScheduledTransaction> getScheduledTransactions(String period, int frequency) {
         String[] dates = period.split(" - ");
         LocalDate startDate = stringToDate(dates[0]);
         LocalDate endDate = stringToDate(dates[1]);
 
-        ArrayList<String> paymentDates = new ArrayList<>();
+        ArrayList<ScheduledTransaction> transactions = new ArrayList<>();
         LocalDate j = startDate;
         int i = 0;
 
@@ -107,13 +110,16 @@ public enum DatabaseDatesFunctions {
             else if (frequency == 5) j = startDate.plusYears((long) i);
             else return null;
 
+            // set totalAmount and idOfStakeholder later
+            ScheduledTransaction transaction = new ScheduledTransaction(0, 0, localDateToTimestamp(j), null);
+
             if (j.isEqual(endDate)) break; // successful
             else if (j.isAfter(endDate)) return null; // unsuccessful - period not full
             i++;
-            paymentDates.add("Payment " + i + ": " + j.format(formatter));
+            transactions.add(transaction);
         }
 
-        return paymentDates;
+        return transactions;
     }
 
     /**

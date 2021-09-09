@@ -21,17 +21,16 @@ import java.util.List;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
-import be.kuleuven.elcontador10.background.tools.DateFormatter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
-public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecViewAdapter.ViewHolder> {
+public class SubContractsRecViewAdapter extends RecyclerView.Adapter<SubContractsRecViewAdapter.ViewHolder> {
     private List<SubContract> subContracts;
     private final View viewFromHostingClass;
     private Context context;
     private NavController navController;
-    private Fragment fragment;
+    private final Fragment fragment;
 
-    public PaymentsRecViewAdapter(View viewFromHostingClass, Context context, Fragment fragment) {
+    public SubContractsRecViewAdapter(View viewFromHostingClass, Context context, Fragment fragment) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.context = context;
         subContracts = new ArrayList<>();
@@ -59,9 +58,12 @@ public class PaymentsRecViewAdapter extends RecyclerView.Adapter<PaymentsRecView
         String amount_text = ((amount > 0)? context.getString(R.string.in) : context.getString(R.string.out)) + " " + absolute_amount;
         holder.amount.setText(amount_text);
 
-        holder.period.setText(DatabaseDatesFunctions.INSTANCE.timestampToPeriod(subContract.getStartDate(), subContract.getEndDate()));
+        if (subContract.getStartDate() != null)
+            holder.period.setText(DatabaseDatesFunctions.INSTANCE.timestampToPeriod(subContract.getStartDate(), subContract.getEndDate()));
+        else
+            holder.period.setText("N/A");
 
-        // TODO go to payment fragment
+        // TODO go to subcontract fragment
         holder.layout.setOnClickListener(v -> {
 
         });

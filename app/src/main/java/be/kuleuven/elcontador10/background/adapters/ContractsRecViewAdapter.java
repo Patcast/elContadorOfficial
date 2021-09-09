@@ -63,7 +63,7 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
                     // set up Payments recycler view
                     holder.payments.setLayoutManager(new LinearLayoutManager(context));
                     ArrayList<SubContract> subContracts = contract.getPayments();
-                    PaymentsRecViewAdapter adapter = new PaymentsRecViewAdapter(viewFromHostingClass, context, fragment);
+                    SubContractsRecViewAdapter adapter = new SubContractsRecViewAdapter(viewFromHostingClass, context, fragment);
                     adapter.setPayments(subContracts);
                     holder.payments.setAdapter(adapter);
 

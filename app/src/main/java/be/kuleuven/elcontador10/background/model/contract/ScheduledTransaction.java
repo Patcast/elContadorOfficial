@@ -1,7 +1,12 @@
 package be.kuleuven.elcontador10.background.model.contract;
 
+import android.util.Log;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import be.kuleuven.elcontador10.background.database.Caching;
 
 public class ScheduledTransaction {
     private String id;
@@ -10,8 +15,9 @@ public class ScheduledTransaction {
     private Timestamp dueDate;
     private String idOfStakeholder;
 
-    public ScheduledTransaction(String id, long totalAmount, long amountPaid, Timestamp dueDate, String idOfStakeholder) {
-        this.id = id;
+    private static final String TAG = "scheduledTransaction";
+
+    public ScheduledTransaction(long totalAmount, long amountPaid, Timestamp dueDate, String idOfStakeholder) {
         this.totalAmount = totalAmount;
         this.amountPaid = amountPaid;
         this.dueDate = dueDate;
@@ -23,6 +29,16 @@ public class ScheduledTransaction {
 
     // database
     // TODO database functions
+    public static void newScheduledTransaction(ScheduledTransaction transaction, String contractId, String subContractId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + Caching.INSTANCE.getChosenMicroAccountId() +
+                "/contracts/" + contractId + "/subcontracts/" + subContractId + "/scheduledTransactions";
+
+        db.collection(url)
+                .add(transaction)
+                .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId()))
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+    }
 
     @Exclude
     public String getId() {

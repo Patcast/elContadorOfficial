@@ -3,8 +3,11 @@ package be.kuleuven.elcontador10.background.model.contract;
 import android.util.Log;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 import be.kuleuven.elcontador10.background.database.Caching;
 
@@ -38,15 +41,16 @@ public class SubContract {
 
     public SubContract() {}
 
-    public static void newPayment(SubContract subContract, String contractId) {
+    public static String newSubContract(SubContract subContract, String contractId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + Caching.INSTANCE.getChosenMicroAccountId() +
                 "/contracts/" + contractId + "/subcontracts";
 
-        db.collection(url)
-                .add(subContract)
-                .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId()))
-                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+        DocumentReference doc = db.collection(url).document();
+
+        doc.set(subContract);
+
+        return doc.getId();
     }
 
     // TODO add psv edit/delete
