@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
-import be.kuleuven.elcontador10.fragments.accounts.ViewPagerHolderAccountDirections;
+import be.kuleuven.elcontador10.fragments.microaccounts.AllMicroAccountsDirections;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 
@@ -57,8 +57,7 @@ public class AllMicroRecViewAdapter extends RecyclerView.Adapter<AllMicroRecView
         holder.parent.setOnClickListener(v -> {
                     viewModel.selectStakeholder(microAccountsList.get(position));
                     NavController navController = Navigation.findNavController(viewFromHostingClass);
-                    ViewPagerHolderAccountDirections.ActionViewPagerHolderToMicroAccountViewPagerHolder action =
-                            ViewPagerHolderAccountDirections.actionViewPagerHolderToMicroAccountViewPagerHolder(microAccountsList.get(position));
+                    AllMicroAccountsDirections.ActionStakeholdersToStakeholder action  = AllMicroAccountsDirections.actionStakeholdersToStakeholder(microAccountsList.get(position));
                     navController.navigate(action);
                 }
         );

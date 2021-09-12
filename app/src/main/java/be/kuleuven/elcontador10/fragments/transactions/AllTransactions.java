@@ -47,6 +47,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_transactions, container, false);
         mainActivity = (MainActivity) getActivity();
+        mainActivity.displayBottomNavigationMenu(true);
 
 
         fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
@@ -89,6 +90,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     public void onStop() {
         super.onStop();
         Caching.INSTANCE.deAttachAllTransactionsObserver(this);
+        mainActivity.displayBottomNavigationMenu(false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -101,6 +103,6 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
 
     public void onFAB_Clicked(View view) {
         NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.action_viewPagerHolder_to_newTransaction2);
+        navController.navigate(R.id.action_allTransactions2_to_newTransaction);
     }
 }

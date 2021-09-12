@@ -207,6 +207,7 @@
     <string name="summary">Summary</string>
     <string name="properties">Properties</string>
     <string name="analytics">Analytics</string>
+    <string name="stakeholdersPlural">Stakeholders</string>
 
 
 </resources>

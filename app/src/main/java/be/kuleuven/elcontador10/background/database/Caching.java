@@ -325,16 +325,16 @@ public enum Caching {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestAccountTransactions(String chosenAccountId){
         String urlGetAccountTransactions = "/accounts/"+chosenAccountId+"/transactions";
-        String  category = "CbtlZurprwkzlCZ5FIp3";
+        //String  category = "CbtlZurprwkzlCZ5FIp3";
         Query query = null;
 
         CollectionReference transactionsFromOneAccount = db.collection(urlGetAccountTransactions);
-         if(category.length()>0) {
+        /* if(category.length()>0) {
            query =  transactionsFromOneAccount.whereEqualTo("category",category );
-         }
+         }*/
                /*  whereLessThan("amount", 900).
                 whereGreaterThan("amount", 200);*/
-        query.addSnapshotListener((value, e) -> {
+        transactionsFromOneAccount.addSnapshotListener((value, e) -> {
                     if (e != null) {
                         Log.w(TAG, "Listen failed.", e);
                         return;

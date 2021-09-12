@@ -64,6 +64,7 @@ public class AllMicroAccounts extends Fragment implements Caching.StakeholdersOb
         @Override
         public void onViewCreated(@NonNull  View view, @Nullable  Bundle savedInstanceState) {
                 super.onViewCreated(view, savedInstanceState);
+                mainActivity.displayBottomNavigationMenu(true);
         }
 
         @Override
@@ -79,6 +80,7 @@ public class AllMicroAccounts extends Fragment implements Caching.StakeholdersOb
         public void onStop() {
                 super.onStop();
                 Caching.INSTANCE.deAttachStakeholdersObservers(this);
+                mainActivity.displayBottomNavigationMenu(false);
         }
 
         @Override
@@ -102,7 +104,7 @@ public class AllMicroAccounts extends Fragment implements Caching.StakeholdersOb
 
         public void onFAB_Clicked(View view) {
                 NavController navController = Navigation.findNavController(view);
-                navController.navigate(R.id.action_viewPagerHolder_to_newMicroAccount);
+                navController.navigate(R.id.action_allMicroAccounts2_to_newMicroAccount);
         }
 
         @Override
