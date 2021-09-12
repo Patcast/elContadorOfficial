@@ -156,6 +156,9 @@
         <action
             android:id="@+id/action_accounts_to_addNewAccount"
             app:destination="@id/addNewAccount" />
+        <action
+            android:id="@+id/action_accounts_to_allTransactions2"
+            app:destination="@id/allTransactions2" />
     </fragment>
     <fragment
         android:id="@+id/addNewAccount"
@@ -218,4 +221,19 @@
         android:name="be.kuleuven.elcontador10.fragments.transactions.DisplayTransaction.DisplayPhoto"
         android:label="fragment_display_photo"
         tools:layout="@layout/fragment_display_photo" />
+    <fragment
+        android:id="@+id/allTransactions2"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.AllTransactions"
+        android:label="fragment_all_transactions"
+        tools:layout="@layout/fragment_all_transactions" />
+    <fragment
+        android:id="@+id/allMicroAccounts2"
+        android:name="be.kuleuven.elcontador10.fragments.microaccounts.AllMicroAccounts"
+        android:label="fragment_all_micro_acounts"
+        tools:layout="@layout/fragment_all_micro_acounts" />
+    <fragment
+        android:id="@+id/properties"
+        android:name="be.kuleuven.elcontador10.fragments.properties.Properties"
+        android:label="fragment_properties"
+        tools:layout="@layout/fragment_properties" />
 </navigation>
