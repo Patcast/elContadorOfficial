@@ -173,7 +173,7 @@ public class ContractNewSubContract extends Fragment {
                     final long final_amount = amount_value;
                     final String final_ID = Caching.INSTANCE.getChosenMicroAccountId();
 
-                    transactions.forEach(e -> e.setAmountPaid(final_amount));
+                    transactions.forEach(e -> e.setTotalAmount(final_amount));
                     transactions.forEach(e -> e.setIdOfStakeholder(final_ID));
 
                     // add all scheduled transactions
