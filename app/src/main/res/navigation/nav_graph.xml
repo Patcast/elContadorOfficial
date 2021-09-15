@@ -198,6 +198,9 @@
             app:destination="@id/contractNewPayment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_contractDisplay_to_subContractDisplay"
+            app:destination="@id/subContractDisplay" />
     </fragment>
     <fragment
         android:id="@+id/contractNewPayment"
@@ -218,4 +221,12 @@
         android:name="be.kuleuven.elcontador10.fragments.transactions.DisplayTransaction.DisplayPhoto"
         android:label="fragment_display_photo"
         tools:layout="@layout/fragment_display_photo" />
+    <fragment
+        android:id="@+id/subContractDisplay"
+        android:name="be.kuleuven.elcontador10.fragments.microaccounts.SubContractDisplay"
+        android:label="SubContractDisplay" >
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
 </navigation>
