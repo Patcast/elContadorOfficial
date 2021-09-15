@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.motion.widget.MotionLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout8"
@@ -31,13 +30,14 @@
         android:contentDescription="@string/settings"
         app:backgroundTint="@color/fb_color"
         app:fabCustomSize="60dp"
-        app:srcCompat="@drawable/ic_baseline_add_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="40dp" />
+        app:maxImageSize="40dp"
+        app:srcCompat="@drawable/ic_baseline_add_24" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_container"
+        android:contentDescription="container"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/black"
@@ -51,6 +51,7 @@
         android:id="@+id/text_currentBalance"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:ellipsize="end"
         android:maxLines="1"
@@ -67,25 +68,25 @@
         android:id="@+id/text_currentBalanceFix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:text="Current Balance:"
         app:layout_constraintBottom_toBottomOf="@+id/main_container"
         app:layout_constraintStart_toStartOf="@+id/main_container"
-        app:layout_constraintTop_toTopOf="@+id/main_container" />
+        app:layout_constraintTop_toTopOf="@+id/main_container"
+
+        />
 
     <TextView
         android:id="@+id/text_startingBalance"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
         android:alpha="0"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="$2,000.00 MX"
-        android:textColor="@color/white"
-        android:textSize="20sp"
+        android:text="$2,000.00"
         android:textStyle="bold"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/text_startBalanceFix"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="@+id/text_startBalanceFix" />
@@ -98,21 +99,18 @@
         android:alpha="0"
         android:text="Starting Balance:"
         app:layout_constraintBottom_toTopOf="@+id/text_currentBalanceFix"
-        app:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
-        app:layout_constraintStart_toStartOf="@id/text_currentBalanceFix" />
+        app:layout_constraintStart_toStartOf="@+id/guidelineHeaders"
+        />
 
     <TextView
         android:id="@+id/text_receivables"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
         android:alpha="0"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="$9,000.00 MX"
-        android:textColor="@color/white"
-        android:textSize="20sp"
+        android:text="$9,000.00"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/text_receivablesFix"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
@@ -124,23 +122,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:alpha="0"
-        android:text="Starting Balance:"
-        app:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
-        app:layout_constraintStart_toStartOf="@id/text_currentBalanceFix"
+        android:text="Sum of Receivables:"
+        app:layout_constraintStart_toStartOf="@+id/guidelineHeaders"
         app:layout_constraintTop_toBottomOf="@+id/text_currentBalanceFix" />
 
     <TextView
         android:id="@+id/text_payables"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
         android:alpha="0"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="-$5,000.00 MX"
-        android:textColor="@color/white"
-        android:textSize="20sp"
+        android:text="-$5,000.00"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/text_payablesFix"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
@@ -152,23 +146,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:alpha="0"
-        android:text="Starting Balance:"
-        app:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
-        app:layout_constraintStart_toStartOf="@id/text_currentBalanceFix"
+        android:text="Sum of Payables:"
+        app:layout_constraintStart_toStartOf="@+id/guidelineHeaders"
         app:layout_constraintTop_toBottomOf="@+id/text_receivablesFix" />
 
     <TextView
         android:id="@+id/text_futureBalance"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
         android:alpha="0"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="-$5,000.00 MX"
+        android:text="$8,000.00"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/text_futureBalanceFix"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
@@ -180,9 +171,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:alpha="0"
-        android:text="Starting Balance:"
-        app:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
-        app:layout_constraintStart_toStartOf="@id/text_currentBalanceFix"
+        android:text="Schedule Balance:"
+        app:layout_constraintStart_toStartOf="@+id/guidelineHeaders"
         app:layout_constraintTop_toBottomOf="@+id/text_payablesFix" />
 
     <ImageView
@@ -191,8 +181,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
         android:alpha="1"
+        app:layout_constraintTop_toTopOf="@id/main_container"
         app:layout_constraintBottom_toBottomOf="@id/main_container"
         app:layout_constraintEnd_toEndOf="@id/main_container"
         app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24" />
@@ -201,10 +191,10 @@
         android:id="@+id/arrow_to_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:alpha="0"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
+        android:alpha="0"
         app:layout_constraintBottom_toBottomOf="@id/main_container"
         app:layout_constraintEnd_toEndOf="@id/main_container"
         app:srcCompat="@drawable/ic_baseline_arrow_drop_up_24" />
@@ -214,7 +204,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="239dp" />
+        app:layout_constraintGuide_begin="195dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineHeaders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
 
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

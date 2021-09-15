@@ -6,7 +6,7 @@
     <Transition
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
-        motion:duration="1000">
+        motion:duration="400">
        <KeyFrameSet>
            <KeyAttribute
                motion:motionTarget="@+id/text_startingBalance"
@@ -104,7 +104,6 @@
             motion:layout_constraintStart_toStartOf="@+id/guideline12" />
         <Constraint
             android:id="@+id/text_receivablesFix"
-            motion:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             motion:layout_constraintTop_toBottomOf="@+id/text_currentBalanceFix"
@@ -123,7 +122,6 @@
             motion:layout_constraintStart_toStartOf="@+id/guideline12" />
         <Constraint
             android:id="@+id/text_payablesFix"
-            motion:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             motion:layout_constraintTop_toBottomOf="@+id/text_receivablesFix"
@@ -142,7 +140,6 @@
             motion:layout_constraintStart_toStartOf="@+id/guideline12" />
         <Constraint
             android:id="@+id/text_futureBalanceFix"
-            motion:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             motion:layout_constraintTop_toBottomOf="@+id/text_payablesFix"

@@ -42,14 +42,14 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_transactions, container, false);
         mainActivity = (MainActivity) getActivity();
         mainActivity.displayBottomNavigationMenu(true);
-
-
+        mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
         startRecycler(view);
 
