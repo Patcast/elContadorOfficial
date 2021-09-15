@@ -183,7 +183,7 @@
     </fragment>
     <fragment
         android:id="@+id/contractNewPayment"
-        android:name="be.kuleuven.elcontador10.ContractNewSubContract"
+        android:name="be.kuleuven.elcontador10.fragments.microaccounts.ContractNewSubContract"
         android:label="fragment_contract_new_payment"
         tools:layout="@layout/fragment_contract_new_sub_contract" >
         <argument

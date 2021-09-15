@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10;
+package be.kuleuven.elcontador10.fragments.microaccounts;
 
 
 import android.app.DatePickerDialog;
@@ -38,6 +38,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
