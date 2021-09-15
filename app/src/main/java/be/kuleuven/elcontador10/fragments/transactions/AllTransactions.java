@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,9 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     FloatingActionButton fabNewTransaction;
     FloatingActionButton fabPayableOrReceivable;
     FloatingActionButton fabNew;
+    TextView textFabNewTransaction;
+    TextView textFabReceivable;
+
     boolean isClicked;
 
 
@@ -61,6 +65,8 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         mainActivity = (MainActivity) getActivity();
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
+        textFabNewTransaction = view.findViewById(R.id.text_fabNewTransaction);
+        textFabReceivable = view.findViewById(R.id.text_fabReceivable);
         fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
         fabPayableOrReceivable = view.findViewById(R.id.btn_new_ReceivableOrPayable);
         fabNew = view.findViewById(R.id.btn_newFAB);
@@ -79,7 +85,9 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) fabNew.setVisibility(View.GONE);
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    fabNew.setVisibility(View.INVISIBLE);
+                }
                 else fabNew.setVisibility(View.VISIBLE);
             }
         });
@@ -99,11 +107,15 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
 
     private void setAnimation(boolean addButtonClicked) {
         if(!addButtonClicked){
+            textFabNewTransaction.startAnimation(popOpen);
+            textFabReceivable.startAnimation(popOpen);
             fabNewTransaction.startAnimation(popOpen);
             fabPayableOrReceivable.startAnimation(popOpen);
             fabNew.startAnimation(rotateOpen);
         }
         else{
+            textFabNewTransaction.startAnimation(popClose);
+            textFabReceivable.startAnimation(popClose);
             fabNewTransaction.startAnimation(popClose);
             fabPayableOrReceivable.startAnimation(popClose);
             fabNew.startAnimation(rotateClose);
@@ -113,10 +125,14 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
 
     private void setVisibility(boolean addButtonClicked) {
         if(!addButtonClicked){
+            textFabReceivable.setVisibility(View.VISIBLE);
+            textFabNewTransaction.setVisibility(View.VISIBLE);
             fabNewTransaction.setVisibility(View.VISIBLE);
             fabPayableOrReceivable.setVisibility(View.VISIBLE);
         }
         else{
+            textFabNewTransaction.setVisibility(View.INVISIBLE);
+            textFabReceivable.setVisibility(View.INVISIBLE);
             fabNewTransaction.setVisibility(View.INVISIBLE);
             fabPayableOrReceivable.setVisibility(View.INVISIBLE);
         }

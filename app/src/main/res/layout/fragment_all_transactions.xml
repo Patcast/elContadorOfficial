@@ -26,14 +26,13 @@
         android:alpha="1"
         android:contentDescription="@string/settings"
         android:visibility="invisible"
-        app:backgroundTint="@color/FabColor2"
+        app:backgroundTint="@color/black"
         app:fabCustomSize="60dp"
         app:layout_constraintBottom_toTopOf="@+id/btn_newFAB"
         app:layout_constraintEnd_toEndOf="@+id/btn_newFAB"
         app:layout_constraintStart_toStartOf="@+id/btn_newFAB"
         app:maxImageSize="40dp"
         app:srcCompat="@drawable/ic_baseline_add_24" />
-
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -44,7 +43,7 @@
         android:alpha="1"
         android:contentDescription="@string/settings"
         android:visibility="invisible"
-        app:backgroundTint="@color/FabColor2"
+        app:backgroundTint="@color/black"
         app:fabCustomSize="60dp"
         app:layout_constraintBottom_toTopOf="@+id/btn_new_TransactionFAB"
         app:layout_constraintEnd_toEndOf="@+id/btn_newFAB"
@@ -278,6 +277,37 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="20dp" />
 
+    <TextView
+        android:id="@+id/text_fabNewTransaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/backgorund_fab_titles"
+        android:padding="10dp"
+        android:text="New Transaction"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_new_TransactionFAB"
+        app:layout_constraintEnd_toStartOf="@+id/btn_new_TransactionFAB"
+        app:layout_constraintTop_toTopOf="@+id/btn_new_TransactionFAB" />
+
+    <TextView
+        android:id="@+id/text_fabReceivable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/backgorund_fab_titles"
+        android:padding="10dp"
+        android:visibility="invisible"
+        android:text="Payables and Receivables"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_new_ReceivableOrPayable"
+        app:layout_constraintEnd_toStartOf="@+id/btn_new_ReceivableOrPayable"
+        app:layout_constraintTop_toTopOf="@+id/btn_new_ReceivableOrPayable" />
 
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

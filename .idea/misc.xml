@@ -18,12 +18,15 @@
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/menu/top_three_buttons_menu.xml" value="0.36666666666666664" />
         <entry key="app/src/main/res/drawable/accounts_first_background.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/accounts_second_background.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/backgorund_fab_titles.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/background_accounts_first.xml" value="0.22870370370370371" />
         <entry key="app/src/main/res/drawable/background_accounts_second.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/background_bottom_menu.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/background_buttons.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/background_buttons_white_outline.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/background_transaction_display.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/buttons.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/ic_baseline_add_24_yellow.xml" value="0.2564814814814815" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_a_photo_24.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/ic_baseline_business_24.xml" value="0.24259259259259258" />
         <entry key="app/src/main/res/drawable/ic_tag.xml" value="0.27395833333333336" />
@@ -38,7 +41,7 @@
         <entry key="app/src/main/res/layout/fragment_accounts_bottom_menu.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_add_new_account.xml" value="0.14907407407407408" />
         <entry key="app/src/main/res/layout/fragment_all_micro_acounts.xml" value="0.2578125" />
-        <entry key="app/src/main/res/layout/fragment_all_transactions.xml" value="0.2518914438302841" />
+        <entry key="app/src/main/res/layout/fragment_all_transactions.xml" value="0.2857760075781296" />
         <entry key="app/src/main/res/layout/fragment_choose_category.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_choose_stake_holder.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_contract_new.xml" value="0.1328125" />
