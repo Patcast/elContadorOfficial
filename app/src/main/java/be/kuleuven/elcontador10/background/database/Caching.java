@@ -9,11 +9,15 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.core.OrderBy;
 
 
 import java.util.ArrayList;
@@ -319,8 +323,31 @@ public enum Caching {
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestAccountTransactions(String chosenAccountId){
+        String urlGetAccountTransactions = "/accounts/"+chosenAccountId+"/transactions";
+        //String  category = "CbtlZurprwkzlCZ5FIp3";
+        Query query = null;
 
-    String urlGetAccountTransactions = "/accounts/"+chosenAccountId+"/transactions";
+        CollectionReference transactionsFromOneAccount = db.collection(urlGetAccountTransactions);
+        /* if(category.length()>0) {
+           query =  transactionsFromOneAccount.whereEqualTo("category",category );
+         }*/
+               /*  whereLessThan("amount", 900).
+                whereGreaterThan("amount", 200);*/
+        transactionsFromOneAccount.addSnapshotListener((value, e) -> {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
+                    }
+                    transactions.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        Transaction myTransaction =  doc.toObject(Transaction.class);
+                        myTransaction.setId( doc.getId());
+                        transactions.add(myTransaction);
+                    }
+                    allTransactionsObservers.forEach(t->t.notifyAllTransactionsObserver(getTransactions()));
+                });
+
+   /* String urlGetAccountTransactions = "/accounts/"+chosenAccountId+"/transactions";
         db.collection(urlGetAccountTransactions).
                 orderBy("date", Query.Direction.DESCENDING).
                 addSnapshotListener((value, e) -> {
@@ -335,7 +362,7 @@ public enum Caching {
                         transactions.add(myTransaction);
                     }
                     allTransactionsObservers.forEach(t->t.notifyAllTransactionsObserver(getTransactions()));
-                });
+                });*/
     }
     User requestedUser;
     public User requestUser(String userEmail){

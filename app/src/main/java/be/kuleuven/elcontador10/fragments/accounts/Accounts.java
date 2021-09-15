@@ -94,9 +94,9 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
         super.onStart();
         Caching.INSTANCE.attachAccountsObservers(this, mainActivity.returnSavedLoggedEmail());
         try{
+            mainActivity.displayBottomNavigationMenu(false);
             mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add,true);
             mainActivity.modifyVisibilityOfMenuItem(R.id.menu_bottom_sheet,true);
-
         }
         catch(Exception e){}
     }

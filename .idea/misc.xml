@@ -30,6 +30,7 @@
         <entry key="app/src/main/res/drawable/background_transaction_display.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/buttons.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_a_photo_24.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/ic_baseline_business_24.xml" value="0.24259259259259258" />
         <entry key="app/src/main/res/drawable/ic_tag.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/new_account_category_outline.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/rec_view_item_accounts_test.xml" value="0.22870370370370371" />
@@ -51,6 +52,7 @@
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25384615384615383" />
         <entry key="app/src/main/res/layout/fragment_micro_account_transactions.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_micro_account_view_holder.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/fragment_properties.xml" value="0.2014388489208633" />
         <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_transaction_display.xml" value="0.2503718534222504" />
         <entry key="app/src/main/res/layout/fragment_transaction_new.xml" value="0.25" />
@@ -62,6 +64,7 @@
         <entry key="app/src/main/res/layout/rec_view_item_all_transactions.xml" value="0.38599314908689375" />
         <entry key="app/src/main/res/layout/rec_view_item_categories.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/rec_view_payments.xml" value="0.1328125" />
+        <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.2578125" />
         <entry key="app/src/main/res/menu/top_three_buttons_menu.xml" value="0.1" />
         <entry key="app/src/main/res/xml/file_paths.xml" value="0.1" />
       </map>

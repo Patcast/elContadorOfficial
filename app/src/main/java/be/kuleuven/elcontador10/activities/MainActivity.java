@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -16,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     SearchView searchView;
     private Menu topRightMenu;
     private TabLayout tabLayout;
+    private BottomNavigationView bottomMenu;
     private Toolbar toolbar;
     private SharedPreferences sharedPreferences;
     private TextView stakeHolderBalance, stakeholderRole;
@@ -60,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
 
         Caching.INSTANCE.setContext(this);
         setSupportActionBar(toolbar);
+
+        bottomMenu = findViewById(R.id.bottomNavigationView);
+        NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
+        NavigationUI.setupWithNavController(bottomMenu,navController);
 
     }
 
@@ -92,6 +101,10 @@ public class MainActivity extends AppCompatActivity {
     public void displayTabLayout(Boolean display){
         int visibility = (display)? View.VISIBLE :View.GONE;
         tabLayout.setVisibility(visibility);
+    }
+    public void displayBottomNavigationMenu(Boolean display){
+        int visibility = (display)? View.VISIBLE :View.GONE;
+        bottomMenu.setVisibility(visibility);
     }
 
     public void displayStakeHolderDetails(boolean display, String balance, String role) {

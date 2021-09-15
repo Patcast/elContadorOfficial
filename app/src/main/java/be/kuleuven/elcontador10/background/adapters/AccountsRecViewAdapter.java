@@ -53,7 +53,7 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
         holder.parent.setOnClickListener(v -> {
             String chosenAccount = accounts.get(position).getId();
             Caching.INSTANCE.openAccountFully(chosenAccount);
-            navController.navigate(R.id.action_accounts_to_viewPagerHolder);
+            navController.navigate(R.id.action_accounts_to_allTransactions2);
             }
         );
 
