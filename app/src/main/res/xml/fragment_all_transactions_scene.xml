@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:duration="1000">
+       <KeyFrameSet>
+           <KeyAttribute
+               motion:motionTarget="@+id/text_startingBalance"
+               motion:framePosition="90"
+               android:alpha="0.5" />
+           <KeyAttribute
+               motion:motionTarget="@+id/text_startBalanceFix"
+               motion:framePosition="90"
+               android:alpha="0.5" />
+           <KeyAttribute
+               motion:motionTarget="@+id/text_receivables"
+               motion:framePosition="90"
+               android:alpha="0.5" />
+           <KeyAttribute
+               motion:motionTarget="@+id/text_receivablesFix"
+               motion:framePosition="90"
+               android:alpha="0.5" />
+           <KeyAttribute
+               motion:motionTarget="@+id/text_payables"
+               motion:framePosition="90"
+               android:alpha="0.5" />
+           <KeyAttribute
+               motion:motionTarget="@+id/text_payablesFix"
+               motion:framePosition="90"
+               android:alpha="0.5" />
+           <KeyAttribute
+               motion:motionTarget="@+id/text_futureBalance"
+               motion:framePosition="90"
+               android:alpha="0.5" />
+           <KeyAttribute
+               motion:motionTarget="@+id/text_futureBalanceFix"
+               motion:framePosition="90"
+               android:alpha="0.5" />
+           <KeyAttribute
+               motion:motionTarget="@+id/arrow_to_close"
+               motion:framePosition="90"
+               android:alpha="0.5" />
+           <KeyAttribute
+               motion:motionTarget="@+id/arrow_to_drop"
+               motion:framePosition="10"
+               android:alpha="0.5" />
+       </KeyFrameSet>
+        <OnClick motion:targetId="@+id/main_container" />
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/main_container"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="@+id/main_container"
+            motion:layout_constraintTop_toTopOf="@+id/main_container"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            motion:layout_constraintStart_toStartOf="@+id/main_container"
+            android:id="@+id/text_currentBalanceFix"
+            motion:layout_constraintVertical_bias="0.3" />
+        <Constraint
+            android:id="@+id/text_startingBalance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="@+id/text_startBalanceFix"
+            android:layout_marginEnd="20dp"
+            android:alpha="1"
+            motion:layout_constraintTop_toTopOf="@+id/text_startBalanceFix"
+            android:layout_marginRight="20dp"
+            motion:layout_constraintStart_toStartOf="@+id/guideline12" />
+        <Constraint
+            android:id="@+id/text_startBalanceFix"
+            motion:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            motion:layout_constraintBottom_toTopOf="@+id/text_currentBalanceFix"
+            android:alpha="1"
+            motion:layout_constraintStart_toStartOf="@id/text_currentBalanceFix" />
+        <Constraint
+            android:id="@+id/text_receivables"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="@+id/text_receivablesFix"
+            android:layout_marginEnd="20dp"
+            android:alpha="1"
+            motion:layout_constraintTop_toTopOf="@+id/text_receivablesFix"
+            android:layout_marginRight="20dp"
+            motion:layout_constraintStart_toStartOf="@+id/guideline12" />
+        <Constraint
+            android:id="@+id/text_receivablesFix"
+            motion:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@+id/text_currentBalanceFix"
+            android:alpha="1"
+            motion:layout_constraintStart_toStartOf="@id/text_currentBalanceFix"
+            android:layout_marginTop="20dp" />
+        <Constraint
+            android:id="@+id/text_payables"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="@+id/text_payablesFix"
+            android:layout_marginEnd="20dp"
+            android:alpha="1"
+            motion:layout_constraintTop_toTopOf="@+id/text_payablesFix"
+            android:layout_marginRight="20dp"
+            motion:layout_constraintStart_toStartOf="@+id/guideline12" />
+        <Constraint
+            android:id="@+id/text_payablesFix"
+            motion:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@+id/text_receivablesFix"
+            android:alpha="1"
+            motion:layout_constraintStart_toStartOf="@id/text_currentBalanceFix"
+            android:layout_marginTop="20dp" />
+        <Constraint
+            android:id="@+id/text_futureBalance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="@+id/text_futureBalanceFix"
+            android:layout_marginEnd="20dp"
+            android:alpha="1"
+            motion:layout_constraintTop_toTopOf="@+id/text_futureBalanceFix"
+            android:layout_marginRight="20dp"
+            motion:layout_constraintStart_toStartOf="@+id/guideline12" />
+        <Constraint
+            android:id="@+id/text_futureBalanceFix"
+            motion:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@+id/text_payablesFix"
+            android:alpha="1"
+            motion:layout_constraintStart_toStartOf="@id/text_currentBalanceFix"
+            android:layout_marginTop="20dp" />
+        <Constraint
+            android:id="@+id/arrow_to_drop"
+            motion:layout_constraintEnd_toEndOf="@id/main_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="@id/main_container"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:alpha="0"
+            android:layout_marginRight="10dp" />
+        <Constraint
+            android:id="@+id/arrow_to_close"
+            motion:layout_constraintEnd_toEndOf="@id/main_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="@id/main_container"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:alpha="1"
+            android:layout_marginRight="10dp" />
+
+    </ConstraintSet>
+</MotionScene>

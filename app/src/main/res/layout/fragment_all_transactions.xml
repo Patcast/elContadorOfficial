@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout8"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layoutDescription="@xml/fragment_all_transactions_scene"
     tools:context=".fragments.transactions.AllTransactions">
 
 
@@ -31,31 +33,32 @@
         app:fabCustomSize="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_baseline_add_24" />
+        app:maxImageSize="40dp" />
 
-    <androidx.constraintlayout.motion.widget.MotionLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/black"
-        app:layoutDescription="@xml/fragment_all_transactions_xml_main_container_scene"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
-    </androidx.constraintlayout.motion.widget.MotionLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/text_currentBalance"
-        android:layout_width="100dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="$4,000.00 MX"
+        android:layout_marginRight="20dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="$4,000.00"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/text_currentBalanceFix"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="@+id/text_currentBalanceFix" />
 
@@ -68,15 +71,20 @@
         app:layout_constraintBottom_toBottomOf="@+id/main_container"
         app:layout_constraintStart_toStartOf="@+id/main_container"
         app:layout_constraintTop_toTopOf="@+id/main_container" />
+
     <TextView
         android:id="@+id/text_startingBalance"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:alpha="0"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="$2,000.00 MX"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:alpha="0"
         app:layout_constraintBottom_toBottomOf="@+id/text_startBalanceFix"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="@+id/text_startBalanceFix" />
@@ -85,23 +93,26 @@
         android:id="@+id/text_startBalanceFix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Starting Balance:"
-        android:alpha="0"
-        app:layout_constraintBottom_toTopOf="@+id/text_currentBalanceFix"
         android:layout_marginBottom="20dp"
+        android:alpha="0"
+        android:text="Starting Balance:"
+        app:layout_constraintBottom_toTopOf="@+id/text_currentBalanceFix"
         app:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
-        app:layout_constraintStart_toStartOf="@id/text_currentBalanceFix"
-        />
+        app:layout_constraintStart_toStartOf="@id/text_currentBalanceFix" />
 
     <TextView
         android:id="@+id/text_receivables"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:alpha="0"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="$9,000.00 MX"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:alpha="0"
         app:layout_constraintBottom_toBottomOf="@+id/text_receivablesFix"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="@+id/text_receivablesFix" />
@@ -110,23 +121,26 @@
         android:id="@+id/text_receivablesFix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Starting Balance:"
-        android:alpha="0"
-        app:layout_constraintTop_toBottomOf="@+id/text_currentBalanceFix"
         android:layout_marginTop="20dp"
+        android:alpha="0"
+        android:text="Starting Balance:"
         app:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
         app:layout_constraintStart_toStartOf="@id/text_currentBalanceFix"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/text_currentBalanceFix" />
 
     <TextView
         android:id="@+id/text_payables"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:alpha="0"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="-$5,000.00 MX"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:alpha="0"
         app:layout_constraintBottom_toBottomOf="@+id/text_payablesFix"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="@+id/text_payablesFix" />
@@ -135,22 +149,26 @@
         android:id="@+id/text_payablesFix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Starting Balance:"
-        android:alpha="0"
-        app:layout_constraintTop_toBottomOf="@+id/text_receivablesFix"
         android:layout_marginTop="20dp"
+        android:alpha="0"
+        android:text="Starting Balance:"
         app:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
         app:layout_constraintStart_toStartOf="@id/text_currentBalanceFix"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/text_receivablesFix" />
+
     <TextView
         android:id="@+id/text_futureBalance"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:alpha="0"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="-$5,000.00 MX"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:alpha="0"
         app:layout_constraintBottom_toBottomOf="@+id/text_futureBalanceFix"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="@+id/text_futureBalanceFix" />
@@ -159,21 +177,36 @@
         android:id="@+id/text_futureBalanceFix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Starting Balance:"
-        android:alpha="0"
-        app:layout_constraintTop_toBottomOf="@+id/text_payablesFix"
         android:layout_marginTop="20dp"
+        android:alpha="0"
+        android:text="Starting Balance:"
         app:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
         app:layout_constraintStart_toStartOf="@id/text_currentBalanceFix"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/text_payablesFix" />
 
     <ImageView
         android:id="@+id/arrow_to_drop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:alpha="1"
         app:layout_constraintBottom_toBottomOf="@id/main_container"
+        app:layout_constraintEnd_toEndOf="@id/main_container"
         app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24" />
+
+    <ImageView
+        android:id="@+id/arrow_to_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="@id/main_container"
+        app:layout_constraintEnd_toEndOf="@id/main_container"
+        app:srcCompat="@drawable/ic_baseline_arrow_drop_up_24" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline12"
@@ -183,4 +216,4 @@
         app:layout_constraintGuide_begin="239dp" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>
