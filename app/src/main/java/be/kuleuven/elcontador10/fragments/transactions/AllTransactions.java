@@ -80,7 +80,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     @Override
     public void onStart() {
         super.onStart();
-
+        mainActivity.displayBottomNavigationMenu(true);
         Caching.INSTANCE.attachAllTransactionsObserver(this);
         if(transactionArrayList.size()>0) adapter.setAllTransactions(transactionArrayList);
         recyclerAllTransactions.setAdapter(adapter);

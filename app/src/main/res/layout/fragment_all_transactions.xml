@@ -22,20 +22,19 @@
 
     <Button
         android:id="@+id/btn_selectMonth"
-        android:text="September 2021"
-        android:textSize="12dp"
-        android:paddingHorizontal="5dp"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
         android:alpha="1"
         android:background="@drawable/background_buttons"
         android:contentDescription="@string/settings"
-        app:layout_constraintEnd_toEndOf="@+id/RecViewTransactionsHolder"
-        app:layout_constraintTop_toTopOf="@+id/RecViewTransactionsHolder"
-        />
+        android:paddingHorizontal="15dp"
+        android:text="September 2021"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/text_selectedMonthFix"
+        app:layout_constraintStart_toStartOf="@id/guideline12"
+        app:layout_constraintTop_toTopOf="@+id/text_selectedMonthFix"
+        android:paddingLeft="5dp" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_new_TransactionFAB"
         android:layout_width="wrap_content"
@@ -54,10 +53,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_container"
-        android:contentDescription="container"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="90dp"
         android:background="@color/black"
+        android:contentDescription="container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -90,9 +89,22 @@
         android:text="Current Balance:"
         app:layout_constraintBottom_toBottomOf="@+id/main_container"
         app:layout_constraintStart_toStartOf="@+id/main_container"
-        app:layout_constraintTop_toTopOf="@+id/main_container"
+        app:layout_constraintTop_toBottomOf="@+id/text_selectedMonthFix"
 
         />
+
+    <TextView
+        android:id="@+id/text_selectedMonthFix"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="Selected Month:"
+        app:layout_constraintBottom_toTopOf="@+id/text_currentBalanceFix"
+        app:layout_constraintStart_toStartOf="@+id/main_container"
+
+        app:layout_constraintTop_toTopOf="@+id/main_container" />
 
     <TextView
         android:id="@+id/text_startingBalance"
@@ -102,8 +114,8 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="$2,000.00"
-        android:textStyle="bold"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/text_startBalanceFix"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="@+id/text_startBalanceFix" />
@@ -116,8 +128,7 @@
         android:alpha="0"
         android:text="Starting Balance:"
         app:layout_constraintBottom_toTopOf="@+id/text_currentBalanceFix"
-        app:layout_constraintStart_toStartOf="@+id/guidelineHeaders"
-        />
+        app:layout_constraintStart_toStartOf="@+id/guidelineHeaders" />
 
     <TextView
         android:id="@+id/text_receivables"
@@ -199,9 +210,9 @@
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:alpha="1"
-        app:layout_constraintTop_toTopOf="@id/main_container"
-        app:layout_constraintBottom_toBottomOf="@id/main_container"
+        app:layout_constraintBottom_toBottomOf="@id/text_currentBalanceFix"
         app:layout_constraintEnd_toEndOf="@id/main_container"
+        app:layout_constraintTop_toTopOf="@id/text_currentBalanceFix"
         app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24" />
 
     <ImageView

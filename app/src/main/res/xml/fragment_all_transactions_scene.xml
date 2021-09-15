@@ -55,12 +55,14 @@
     <ConstraintSet android:id="@+id/start">
     </ConstraintSet>
 
-    <ConstraintSet android:id="@+id/end">
+    <ConstraintSet android:id="@+id/end"
+        motion:layout_constraintBottom_toBottomOf="@id/text_selectedMonthFix"
+        motion:layout_constraintTop_toTopOf="@id/text_selectedMonthFix">
         <Constraint
             android:id="@+id/main_container"
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="300dp"
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
         <Constraint
@@ -72,7 +74,7 @@
             android:layout_marginStart="20dp"
             motion:layout_constraintStart_toStartOf="@+id/main_container"
             android:id="@+id/text_currentBalanceFix"
-            motion:layout_constraintVertical_bias="0.3" />
+            motion:layout_constraintVertical_bias="0.4" />
         <Constraint
             android:id="@+id/text_startingBalance"
             android:layout_width="0dp"
@@ -178,14 +180,22 @@
             android:layout_marginRight="20dp" />
         <Constraint
             android:id="@+id/btn_selectMonth"
-            motion:layout_constraintEnd_toEndOf="@+id/RecViewTransactionsHolder"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginEnd="10dp"
-            android:alpha="0"
-            motion:layout_constraintTop_toTopOf="@+id/RecViewTransactionsHolder"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="20dp" />
+            android:layout_height="40dp"
+            android:alpha="1"
+            motion:layout_constraintStart_toStartOf="@id/guideline12"
+            motion:layout_constraintBottom_toBottomOf="@id/text_selectedMonthFix"
+            motion:layout_constraintTop_toTopOf="@id/text_selectedMonthFix" />
+        <Constraint
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toTopOf="@+id/text_startBalanceFix"
+            android:layout_marginStart="20dp"
+            motion:layout_constraintTop_toTopOf="@+id/main_container"
+            android:layout_marginLeft="20dp"
+            motion:layout_constraintStart_toStartOf="@+id/main_container"
+            android:id="@+id/text_selectedMonthFix"
+            />
 
     </ConstraintSet>
 </MotionScene>
