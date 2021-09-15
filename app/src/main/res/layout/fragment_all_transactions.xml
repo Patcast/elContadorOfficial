@@ -18,38 +18,60 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/main_container" />
-
-
-    <Button
-        android:id="@+id/btn_selectMonth"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:alpha="1"
-        android:background="@drawable/background_buttons"
-        android:contentDescription="@string/settings"
-        android:paddingHorizontal="15dp"
-        android:text="September 2021"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/text_selectedMonthFix"
-        app:layout_constraintStart_toStartOf="@id/guideline12"
-        app:layout_constraintTop_toTopOf="@+id/text_selectedMonthFix"
-        android:paddingLeft="5dp" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_new_TransactionFAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:alpha="1"
+        android:contentDescription="@string/settings"
+        android:visibility="invisible"
+        app:backgroundTint="@color/FabColor2"
+        app:fabCustomSize="60dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_newFAB"
+        app:layout_constraintEnd_toEndOf="@+id/btn_newFAB"
+        app:layout_constraintStart_toStartOf="@+id/btn_newFAB"
+        app:maxImageSize="40dp"
+        app:srcCompat="@drawable/ic_baseline_add_24" />
+
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_new_ReceivableOrPayable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:alpha="1"
+        android:contentDescription="@string/settings"
+        android:visibility="invisible"
+        app:backgroundTint="@color/FabColor2"
+        app:fabCustomSize="60dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_new_TransactionFAB"
+        app:layout_constraintEnd_toEndOf="@+id/btn_newFAB"
+        app:layout_constraintStart_toStartOf="@+id/btn_newFAB"
+        app:maxImageSize="40dp"
+        app:srcCompat="@drawable/ic_baseline_add_24" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_newFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
+        android:alpha="1"
         android:contentDescription="@string/settings"
         app:backgroundTint="@color/fb_color"
         app:fabCustomSize="60dp"
-        android:alpha="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="40dp"
         app:srcCompat="@drawable/ic_baseline_add_24" />
+
+    <!-- Container_________________________________________________
+    _________________________________________________________________
+    _______________________________________________________________-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_container"
@@ -62,6 +84,21 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/btn_selectMonth"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:alpha="1"
+        android:background="@drawable/background_buttons"
+        android:contentDescription="@string/settings"
+        android:paddingHorizontal="15dp"
+        android:paddingLeft="5dp"
+        android:text="September 2021"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/text_selectedMonthFix"
+        app:layout_constraintStart_toStartOf="@id/guideline12"
+        app:layout_constraintTop_toTopOf="@+id/text_selectedMonthFix"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <TextView
         android:id="@+id/text_currentBalance"

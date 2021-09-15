@@ -15,7 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -38,8 +41,16 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     private TransactionsRecViewAdapter adapter;
     ArrayList<Transaction> transactionArrayList = new ArrayList<>();
     FloatingActionButton fabNewTransaction;
-    MainActivity mainActivity;
+    FloatingActionButton fabPayableOrReceivable;
+    FloatingActionButton fabNew;
+    boolean isClicked;
 
+
+    MainActivity mainActivity;
+    private Animation rotateOpen;
+    private Animation rotateClose;
+    private Animation popOpen;
+    private Animation popClose;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -51,6 +62,8 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
+        fabPayableOrReceivable = view.findViewById(R.id.btn_new_ReceivableOrPayable);
+        fabNew = view.findViewById(R.id.btn_newFAB);
         startRecycler(view);
 
         return view;
@@ -59,16 +72,57 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        fabNew.setOnClickListener(v->fabOpenAnimation());
         fabNewTransaction.setOnClickListener(this::onFAB_Clicked);
+        fabPayableOrReceivable.setOnClickListener(v -> Toast.makeText(getContext(), "Payables Or Receivables", Toast.LENGTH_SHORT).show());
         recyclerAllTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) fabNewTransaction .setVisibility(View.GONE);
-                else fabNewTransaction.setVisibility(View.VISIBLE);
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) fabNew.setVisibility(View.GONE);
+                else fabNew.setVisibility(View.VISIBLE);
             }
         });
+
+        rotateOpen = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_open);
+        rotateClose = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_close);
+        popOpen= AnimationUtils.loadAnimation(getContext(),R.anim.pop_up_fabs);
+        popClose = AnimationUtils.loadAnimation(getContext(),R.anim.pop_down_fabs);
+        isClicked= false;
     }
+
+    private void fabOpenAnimation() {
+        setVisibility(isClicked);
+        setAnimation(isClicked);
+        isClicked = !isClicked;
+    }
+
+    private void setAnimation(boolean addButtonClicked) {
+        if(!addButtonClicked){
+            fabNewTransaction.startAnimation(popOpen);
+            fabPayableOrReceivable.startAnimation(popOpen);
+            fabNew.startAnimation(rotateOpen);
+        }
+        else{
+            fabNewTransaction.startAnimation(popClose);
+            fabPayableOrReceivable.startAnimation(popClose);
+            fabNew.startAnimation(rotateClose);
+        }
+
+    }
+
+    private void setVisibility(boolean addButtonClicked) {
+        if(!addButtonClicked){
+            fabNewTransaction.setVisibility(View.VISIBLE);
+            fabPayableOrReceivable.setVisibility(View.VISIBLE);
+        }
+        else{
+            fabNewTransaction.setVisibility(View.INVISIBLE);
+            fabPayableOrReceivable.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
     private void startRecycler(View view) {
         recyclerAllTransactions = view.findViewById(R.id.RecViewTransactionsHolder);
         recyclerAllTransactions.setLayoutManager(new LinearLayoutManager(this.getContext()));

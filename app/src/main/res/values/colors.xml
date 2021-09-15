@@ -25,6 +25,7 @@
     <color name="light_red_warning">#ff8989</color>
     <color name="toolBar_color">#212121</color>
     <color name="superDarkGrey">#141414</color>
+    <color name="FabColor2">#cf8419</color>
 
 
 </resources>
