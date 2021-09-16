@@ -220,14 +220,13 @@
         app:layout_constraintGuide_begin="20dp" />
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:id="@+id/relativeLayout"
-        app:layout_constraintTop_toBottomOf="@+id/main_container"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        >
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_container">
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -241,26 +240,26 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:alpha="0.7"
-            android:visibility="invisible"
             android:background="@color/light_grey"
-            android:orientation="horizontal" />
+            android:orientation="horizontal"
+            android:visibility="invisible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_newFAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="30dp"
             android:alpha="1"
             android:contentDescription="@string/settings"
             app:backgroundTint="@color/fb_color"
             app:fabCustomSize="60dp"
             app:maxImageSize="40dp"
-            app:srcCompat="@drawable/ic_baseline_add_24"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="30dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginEnd="20dp" />
+            app:srcCompat="@drawable/ic_baseline_add_24" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_new_ReceivableOrPayable"
@@ -271,8 +270,8 @@
             android:layout_alignRight="@+id/btn_newFAB"
             android:layout_marginBottom="30dp"
             android:alpha="1"
-            android:visibility="invisible"
             android:contentDescription="@string/settings"
+            android:visibility="invisible"
             app:backgroundTint="@color/black"
             app:fabCustomSize="60dp"
             app:maxImageSize="40dp"
@@ -287,8 +286,8 @@
             android:layout_alignRight="@+id/btn_newFAB"
             android:layout_marginBottom="30dp"
             android:alpha="1"
-            android:visibility="invisible"
             android:contentDescription="@string/settings"
+            android:visibility="invisible"
             app:backgroundTint="@color/black"
             app:fabCustomSize="60dp"
             app:maxImageSize="40dp"
@@ -307,10 +306,10 @@
             android:layout_toLeftOf="@+id/btn_new_TransactionFAB"
             android:background="@drawable/backgorund_fab_titles"
             android:padding="10dp"
-            android:visibility="invisible"
             android:text="New Transaction"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/text_fabReceivable"
@@ -324,19 +323,13 @@
             android:layout_toLeftOf="@+id/btn_new_ReceivableOrPayable"
             android:background="@drawable/backgorund_fab_titles"
             android:padding="10dp"
-            android:visibility="invisible"
             android:text="Payables and Receivables"
             android:textColor="@color/white"
-            android:textStyle="bold" />
-
+            android:textStyle="bold"
+            android:visibility="invisible" />
 
 
     </RelativeLayout>
-
-
-
-
-
 
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

@@ -1,11 +1,13 @@
 package be.kuleuven.elcontador10.fragments.transactions;
 
+import android.app.DatePickerDialog;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -17,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,10 +38,11 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Transaction;
+import be.kuleuven.elcontador10.background.tools.MonthYearPickerDialog;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 
-public class AllTransactions extends Fragment implements Caching.AllTransactionsObserver {
+public class AllTransactions extends Fragment implements Caching.AllTransactionsObserver, DatePickerDialog.OnDateSetListener {
 
     private RecyclerView recyclerAllTransactions;
     private TransactionsRecViewAdapter adapter;
@@ -48,6 +53,8 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     TextView textFabNewTransaction;
     TextView textFabReceivable;
     LinearLayout coverLayout;
+    ConstraintLayout mainContainer;
+    Button selectMonth;
 
     boolean isClicked;
 
@@ -67,6 +74,8 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         mainActivity = (MainActivity) getActivity();
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
+        selectMonth = view.findViewById(R.id.btn_selectMonth);
+        mainContainer = view.findViewById(R.id.main_container);
         coverLayout = view.findViewById(R.id.coverLayout);
         textFabNewTransaction = view.findViewById(R.id.text_fabNewTransaction);
         textFabReceivable = view.findViewById(R.id.text_fabReceivable);
@@ -80,6 +89,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        selectMonth.setOnClickListener(v->pickDate());
         coverLayout.setOnClickListener(v->closeCover());
         fabNew.setOnClickListener(v->fabOpenAnimation());
         fabNewTransaction.setOnClickListener(this::onFAB_Clicked);
@@ -102,10 +112,18 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         isClicked= false;
     }
 
-    private void closeCover() {
-        setAnimation(true);
-        setVisibility(true);
-        isClicked = false;
+    private void pickDate() {
+        MonthYearPickerDialog pd = new MonthYearPickerDialog();
+        pd.setListener(this);
+        pd.show(getParentFragmentManager(), "MonthYearPickerDialog");
+    }
+
+    public void closeCover() {
+        if(isClicked){
+            setAnimation(true);
+            setVisibility(true);
+            isClicked = false;
+        }
     }
 
     private void fabOpenAnimation() {
@@ -185,5 +203,10 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     public void onFAB_Clicked(View view) {
         NavController navController = Navigation.findNavController(view);
         navController.navigate(R.id.action_allTransactions2_to_newTransaction);
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Toast.makeText(getContext(), ""+year+"/"+month, Toast.LENGTH_SHORT).show();
     }
 }
