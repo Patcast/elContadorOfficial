@@ -9,65 +9,6 @@
     tools:context=".fragments.transactions.AllTransactions">
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/RecViewTransactionsHolder"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="2dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/main_container" />
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_new_TransactionFAB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:alpha="1"
-        android:contentDescription="@string/settings"
-        android:visibility="invisible"
-        app:backgroundTint="@color/black"
-        app:fabCustomSize="60dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_newFAB"
-        app:layout_constraintEnd_toEndOf="@+id/btn_newFAB"
-        app:layout_constraintStart_toStartOf="@+id/btn_newFAB"
-        app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_baseline_add_24" />
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_new_ReceivableOrPayable"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:alpha="1"
-        android:contentDescription="@string/settings"
-        android:visibility="invisible"
-        app:backgroundTint="@color/black"
-        app:fabCustomSize="60dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_new_TransactionFAB"
-        app:layout_constraintEnd_toEndOf="@+id/btn_newFAB"
-        app:layout_constraintStart_toStartOf="@+id/btn_newFAB"
-        app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_baseline_add_24" />
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_newFAB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:alpha="1"
-        android:contentDescription="@string/settings"
-        app:backgroundTint="@color/fb_color"
-        app:fabCustomSize="60dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_baseline_add_24" />
-
     <!-- Container_________________________________________________
     _________________________________________________________________
     _______________________________________________________________-->
@@ -83,6 +24,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <Button
         android:id="@+id/btn_selectMonth"
         android:layout_width="wrap_content"
@@ -277,37 +219,124 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="20dp" />
 
-    <TextView
-        android:id="@+id/text_fabNewTransaction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
-        android:background="@drawable/backgorund_fab_titles"
-        android:padding="10dp"
-        android:text="New Transaction"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_new_TransactionFAB"
-        app:layout_constraintEnd_toStartOf="@+id/btn_new_TransactionFAB"
-        app:layout_constraintTop_toTopOf="@+id/btn_new_TransactionFAB" />
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/relativeLayout"
+        app:layout_constraintTop_toBottomOf="@+id/main_container"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
 
-    <TextView
-        android:id="@+id/text_fabReceivable"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
-        android:background="@drawable/backgorund_fab_titles"
-        android:padding="10dp"
-        android:visibility="invisible"
-        android:text="Payables and Receivables"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_new_ReceivableOrPayable"
-        app:layout_constraintEnd_toStartOf="@+id/btn_new_ReceivableOrPayable"
-        app:layout_constraintTop_toTopOf="@+id/btn_new_ReceivableOrPayable" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RecViewTransactionsHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="2dp" />
+
+        <LinearLayout
+            android:id="@+id/coverLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.7"
+            android:visibility="invisible"
+            android:background="@color/light_grey"
+            android:orientation="horizontal" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_newFAB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="1"
+            android:contentDescription="@string/settings"
+            app:backgroundTint="@color/fb_color"
+            app:fabCustomSize="60dp"
+            app:maxImageSize="40dp"
+            app:srcCompat="@drawable/ic_baseline_add_24"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="30dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_new_ReceivableOrPayable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/btn_newFAB"
+            android:layout_alignEnd="@+id/btn_newFAB"
+            android:layout_alignRight="@+id/btn_newFAB"
+            android:layout_marginBottom="30dp"
+            android:alpha="1"
+            android:visibility="invisible"
+            android:contentDescription="@string/settings"
+            app:backgroundTint="@color/black"
+            app:fabCustomSize="60dp"
+            app:maxImageSize="40dp"
+            app:srcCompat="@drawable/ic_baseline_add_24" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_new_TransactionFAB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/btn_new_ReceivableOrPayable"
+            android:layout_alignEnd="@+id/btn_newFAB"
+            android:layout_alignRight="@+id/btn_newFAB"
+            android:layout_marginBottom="30dp"
+            android:alpha="1"
+            android:visibility="invisible"
+            android:contentDescription="@string/settings"
+            app:backgroundTint="@color/black"
+            app:fabCustomSize="60dp"
+            app:maxImageSize="40dp"
+            app:srcCompat="@drawable/ic_baseline_add_24" />
+
+
+        <TextView
+            android:id="@+id/text_fabNewTransaction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/btn_new_TransactionFAB"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_toStartOf="@+id/btn_new_TransactionFAB"
+            android:layout_toLeftOf="@+id/btn_new_TransactionFAB"
+            android:background="@drawable/backgorund_fab_titles"
+            android:padding="10dp"
+            android:visibility="invisible"
+            android:text="New Transaction"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_fabReceivable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/btn_new_ReceivableOrPayable"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_toStartOf="@+id/btn_new_ReceivableOrPayable"
+            android:layout_toLeftOf="@+id/btn_new_ReceivableOrPayable"
+            android:background="@drawable/backgorund_fab_titles"
+            android:padding="10dp"
+            android:visibility="invisible"
+            android:text="Payables and Receivables"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+
+
+    </RelativeLayout>
+
+
+
+
+
 
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

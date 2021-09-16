@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     FloatingActionButton fabNew;
     TextView textFabNewTransaction;
     TextView textFabReceivable;
+    LinearLayout coverLayout;
 
     boolean isClicked;
 
@@ -65,19 +67,20 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         mainActivity = (MainActivity) getActivity();
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
+        coverLayout = view.findViewById(R.id.coverLayout);
         textFabNewTransaction = view.findViewById(R.id.text_fabNewTransaction);
         textFabReceivable = view.findViewById(R.id.text_fabReceivable);
         fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
         fabPayableOrReceivable = view.findViewById(R.id.btn_new_ReceivableOrPayable);
         fabNew = view.findViewById(R.id.btn_newFAB);
         startRecycler(view);
-
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        coverLayout.setOnClickListener(v->closeCover());
         fabNew.setOnClickListener(v->fabOpenAnimation());
         fabNewTransaction.setOnClickListener(this::onFAB_Clicked);
         fabPayableOrReceivable.setOnClickListener(v -> Toast.makeText(getContext(), "Payables Or Receivables", Toast.LENGTH_SHORT).show());
@@ -99,6 +102,12 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         isClicked= false;
     }
 
+    private void closeCover() {
+        setAnimation(true);
+        setVisibility(true);
+        isClicked = false;
+    }
+
     private void fabOpenAnimation() {
         setVisibility(isClicked);
         setAnimation(isClicked);
@@ -107,6 +116,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
 
     private void setAnimation(boolean addButtonClicked) {
         if(!addButtonClicked){
+            coverLayout.setVisibility(View.VISIBLE);
             textFabNewTransaction.startAnimation(popOpen);
             textFabReceivable.startAnimation(popOpen);
             fabNewTransaction.startAnimation(popOpen);
@@ -114,6 +124,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
             fabNew.startAnimation(rotateOpen);
         }
         else{
+            coverLayout.setVisibility(View.INVISIBLE);
             textFabNewTransaction.startAnimation(popClose);
             textFabReceivable.startAnimation(popClose);
             fabNewTransaction.startAnimation(popClose);
