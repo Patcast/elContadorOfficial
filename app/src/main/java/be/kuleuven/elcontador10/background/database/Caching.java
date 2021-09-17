@@ -103,6 +103,11 @@ public enum Caching {
     private User logInUser;
     private String chosenMicroAccountId;
 
+    /// ******** Stakeholders Variables
+    private StakeHolder chosenStakeHolder;
+    private Contract chosenContract;
+    private SubContract chosenSubContract;
+
 ///Attach methods*************************
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void attachCatObserver(CategoriesObserver newObserver){
@@ -569,5 +574,40 @@ public enum Caching {
                 .map(EmojiCategory::getTitle)
                 .findFirst();
         return possibleEmoji.orElse("");
+    }
+
+    public StakeHolder getChosenStakeHolder() {
+        return chosenStakeHolder;
+    }
+
+    public Contract getChosenContract() {
+        return chosenContract;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public SubContract getSubContractFromID(String id) {
+        Optional<SubContract> subContract = chosenContract.getSubContracts().stream()
+                .filter(s -> s.getId().equals(id))
+                .findFirst();
+
+        return subContract.orElse(null);
+    }
+
+    public SubContract getChosenSubContract() {
+        return chosenSubContract;
+    }
+
+    // setters
+
+    public void setChosenStakeHolder(StakeHolder chosenStakeHolder) {
+        this.chosenStakeHolder = chosenStakeHolder;
+    }
+
+    public void setChosenContract(Contract chosenContract) {
+        this.chosenContract = chosenContract;
+    }
+
+    public void setChosenSubContract(SubContract chosenSubContract) {
+        this.chosenSubContract = chosenSubContract;
     }
 }
