@@ -14,4 +14,18 @@
     <string name="select_frequency">Please select frequency</string>
     <string name="number_of_payments">Number of payments</string>
     <string name="date_before_error">Date chosen is before today</string>
+    <string-array name="months_list">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
 </resources>

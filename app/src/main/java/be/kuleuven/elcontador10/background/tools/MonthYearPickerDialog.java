@@ -17,7 +17,7 @@ import be.kuleuven.elcontador10.R;
 
 public class MonthYearPickerDialog extends DialogFragment {
 
-    private static final int MAX_YEAR = 2099;
+    private static final int MAX_YEAR = 2030;
     private DatePickerDialog.OnDateSetListener listener;
 
     public void setListener(DatePickerDialog.OnDateSetListener listener) {
@@ -33,11 +33,14 @@ public class MonthYearPickerDialog extends DialogFragment {
         Calendar cal = Calendar.getInstance();
 
         View dialog = inflater.inflate(R.layout.month_year_picker, null);
-        final NumberPicker monthPicker = (NumberPicker) dialog.findViewById(R.id.picker_month);
-        final NumberPicker yearPicker = (NumberPicker) dialog.findViewById(R.id.picker_year);
-
+        final NumberPicker monthPicker = dialog.findViewById(R.id.picker_month);
         monthPicker.setMinValue(1);
         monthPicker.setMaxValue(12);
+        monthPicker.setDisplayedValues(getResources().getStringArray(R.array.months_list));
+
+        final NumberPicker yearPicker = dialog.findViewById(R.id.picker_year);
+
+
         monthPicker.setValue(cal.get(Calendar.MONTH)+1);
 
         int year = cal.get(Calendar.YEAR);
@@ -46,17 +49,11 @@ public class MonthYearPickerDialog extends DialogFragment {
         yearPicker.setValue(year);
         builder.setView(dialog)
                 // Add action buttons
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        listener.onDateSet(null, yearPicker.getValue(), monthPicker.getValue(), 0);
-                    }
-                })
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        MonthYearPickerDialog.this.getDialog().cancel();
-                    }
-                });
+                .setPositiveButton("ok", (dialog1, id) ->
+                        listener.onDateSet(null, yearPicker.getValue(), monthPicker.getValue(), 0))
+                .setNegativeButton("cancel", (dialog12, id) ->
+                        MonthYearPickerDialog.this.getDialog().cancel());
+        builder.setTitle("Select a Month");
         return builder.create();
     }
 }

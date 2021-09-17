@@ -1,6 +1,8 @@
 package be.kuleuven.elcontador10.fragments.transactions;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -8,12 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +29,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.dewinjm.monthyearpicker.MonthYearPickerDialogFragment;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.twinkle94.monthyearpicker.picker.YearMonthPickerDialog;
 
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
 
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
 import java.util.Calendar;
 import java.util.List;
 
@@ -41,7 +48,7 @@ import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.tools.MonthYearPickerDialog;
-import be.kuleuven.elcontador10.background.tools.NumberFormatter;
+
 
 
 public class AllTransactions extends Fragment implements Caching.AllTransactionsObserver, DatePickerDialog.OnDateSetListener {
@@ -52,7 +59,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     FloatingActionButton fabNewTransaction;
     FloatingActionButton fabPayableOrReceivable;
     FloatingActionButton fabNew;
-    TextView textFabNewTransaction;
+    TextView textFabNewTransaction,yearMonth;
     TextView textFabReceivable;
     LinearLayout coverLayout;
     ConstraintLayout mainContainer;
@@ -93,7 +100,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        selectMonth.setOnClickListener(v->createMonthPicker());
+        selectMonth.setOnClickListener(v -> pickDate());
         coverLayout.setOnClickListener(v->closeCover());
         fabNew.setOnClickListener(v->fabOpenAnimation());
         fabNewTransaction.setOnClickListener(this::onFAB_Clicked);
@@ -211,34 +218,16 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Toast.makeText(getContext(), ""+year+"/"+month, Toast.LENGTH_SHORT).show();
+        String monthSelected = (getResources().getStringArray(R.array.months_list))[month-1];
+        String monthYear = ""+monthSelected+" "+year;
+        selectMonth.setText(monthYear);
     }
 
-    private void createMonthPicker(){
 
-        Calendar calendar = Calendar.getInstance();
 
-        calendar.clear();
-        calendar.set(2010, 0, 1); // Set minimum date to show in dialog
-        long minDate = calendar.getTimeInMillis(); // Get milliseconds of the modified date
 
-        calendar.clear();
-        calendar.set(2018, 11, 31); // Set maximum date to show in dialog
-        long maxDate = calendar.getTimeInMillis(); // Get milliseconds of the modified date
 
-// Create instance with date ranges values
-        MonthYearPickerDialogFragment dialogFragment =  MonthYearPickerDialogFragment
-                .getInstance(monthSelected, yearSelected, minDate, maxDate);
 
-        dialogFragment.show(getParentFragmentManager(), null);
-
-        dialogFragment.show(getParentFragmentManager(), "MonthYearPicker");
-
-        dialogFragment.setOnDateSetListener((year, monthOfYear) -> {
-            Toast.makeText(getContext(), ""+monthOfYear+"/"+year, Toast.LENGTH_SHORT).show();
-        });
-
-    }
 
 
 }

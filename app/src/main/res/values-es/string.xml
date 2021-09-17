@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="Transaction_new">Nueva Transacción</string>
     <string name="Transaction_filter"> Filtro Transacciones </string>
     <string name="app_name">!A Caray¡</string>
