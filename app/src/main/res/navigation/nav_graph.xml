@@ -199,7 +199,7 @@
         tools:layout="@layout/fragment_display_photo" />
     <fragment
         android:id="@+id/allTransactions2"
-        android:name="be.kuleuven.elcontador10.fragments.transactions.AllTransactions"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.AllTransactions.AllTransactions"
         android:label="fragment_all_transactions"
         tools:layout="@layout/fragment_all_transactions" >
         <action

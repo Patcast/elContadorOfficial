@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.transactions;
+package be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -48,10 +49,10 @@ import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.tools.MonthYearPickerDialog;
+import be.kuleuven.elcontador10.fragments.accounts.AccountsBottomMenu;
 
 
-
-public class AllTransactions extends Fragment implements Caching.AllTransactionsObserver, DatePickerDialog.OnDateSetListener {
+public class AllTransactions extends Fragment implements Caching.AllTransactionsObserver, DatePickerDialog.OnDateSetListener, MainActivity.TopMenuHandler, AllTransactionsBottomMenu.AllTransactionBottomSheetListener {
 
     private RecyclerView recyclerAllTransactions;
     private TransactionsRecViewAdapter adapter;
@@ -59,22 +60,17 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     FloatingActionButton fabNewTransaction;
     FloatingActionButton fabPayableOrReceivable;
     FloatingActionButton fabNew;
-    TextView textFabNewTransaction,yearMonth;
-    TextView textFabReceivable;
+    TextView textFabNewTransaction,textFabReceivable;
     LinearLayout coverLayout;
     ConstraintLayout mainContainer;
     Button selectMonth;
+    AllTransactionsBottomMenu bottomSheetMenu;
 
-    int yearSelected;
-    int monthSelected;
     boolean isClicked;
 
 
     MainActivity mainActivity;
-    private Animation rotateOpen;
-    private Animation rotateClose;
-    private Animation popOpen;
-    private Animation popClose;
+    private Animation rotateOpen,rotateClose,popOpen,popClose;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -190,7 +186,9 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     @Override
     public void onStart() {
         super.onStart();
+        mainActivity.setCurrentMenuClicker(this);
         mainActivity.displayBottomNavigationMenu(true);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_bottom_sheet,true);
         Caching.INSTANCE.attachAllTransactionsObserver(this);
         if(transactionArrayList.size()>0) adapter.setAllTransactions(transactionArrayList);
         recyclerAllTransactions.setAdapter(adapter);
@@ -201,6 +199,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         super.onStop();
         Caching.INSTANCE.deAttachAllTransactionsObserver(this);
         mainActivity.displayBottomNavigationMenu(false);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -224,10 +223,38 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     }
 
 
+    @Override
+    public void onBottomSheetClick() {
+        bottomSheetMenu = new AllTransactionsBottomMenu(this);
+        bottomSheetMenu.show(getParentFragmentManager(),"AccountsBottomSheet");
+    }
 
+    @Override
+    public void onDeleteClick() {
 
+    }
 
+    @Override
+    public void onEditingClick() {
 
+    }
 
+    @Override
+    public void onAddClick() {
 
+    }
+
+    @Override
+    public void onSearchClick(SearchView searchView) {
+
+    }
+
+    @Override
+    public void onFilterClick() {
+    }
+
+    @Override
+    public void onOptionSelected() {
+
+    }
 }

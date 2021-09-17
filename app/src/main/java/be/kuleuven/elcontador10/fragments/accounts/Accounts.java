@@ -42,7 +42,7 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
     View view;
     NavController navController;
     AccountsBottomMenu bottomSheet;
-    FloatingActionButton newAccountButton;
+
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

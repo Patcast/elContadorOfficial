@@ -25,10 +25,9 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.ViewPagerAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Account;
-import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.tools.ZoomOutPageTransformer;
 import be.kuleuven.elcontador10.fragments.microaccounts.AllMicroAccounts;
-import be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
+import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.AllTransactions;
 
 
 public class ViewPagerHolderAccount extends Fragment implements Caching.AccountsObserver, ZoomOutPageTransformer.PageChangeListener, MainActivity.TopMenuHandler {
