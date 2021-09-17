@@ -22,7 +22,11 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
+import be.kuleuven.elcontador10.fragments.microaccounts.ContractDisplay;
 import be.kuleuven.elcontador10.fragments.microaccounts.ContractDisplayDirections;
+import be.kuleuven.elcontador10.fragments.microaccounts.MicroAccountContracts;
+import be.kuleuven.elcontador10.fragments.microaccounts.MicroAccountViewPagerHolder;
+import be.kuleuven.elcontador10.fragments.microaccounts.MicroAccountViewPagerHolderDirections;
 import be.kuleuven.elcontador10.fragments.microaccounts.SubContractDisplay;
 import be.kuleuven.elcontador10.fragments.microaccounts.SubContractDisplayArgs;
 
@@ -68,10 +72,17 @@ public class SubContractsRecViewAdapter extends RecyclerView.Adapter<SubContract
 
         // TODO go to subcontract fragment
         holder.layout.setOnClickListener(v -> {
-            ContractDisplayDirections.ActionContractDisplayToSubContractDisplay action =
-                    ContractDisplayDirections.actionContractDisplayToSubContractDisplay(subContract.getId());
+            if (fragment instanceof ContractDisplay) {
+                ContractDisplayDirections.ActionContractDisplayToSubContractDisplay action =
+                        ContractDisplayDirections.actionContractDisplayToSubContractDisplay(subContract.getId());
 
-            navController.navigate(action);
+                navController.navigate(action);
+            } else if (fragment instanceof MicroAccountContracts) {
+                MicroAccountViewPagerHolderDirections.ActionStakeholderViewPagerHolderToSubContractDisplay action =
+                        MicroAccountViewPagerHolderDirections.actionStakeholderViewPagerHolderToSubContractDisplay(subContract.getId());
+
+                navController.navigate(action);
+            }
         });
 
         // hide last divider

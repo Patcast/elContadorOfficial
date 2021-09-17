@@ -163,6 +163,9 @@
         <action
             android:id="@+id/action_microAccountViewPagerHolder_to_contractDisplay"
             app:destination="@id/contractDisplay" />
+        <action
+            android:id="@+id/action_stakeholderViewPagerHolder_to_subContractDisplay"
+            app:destination="@id/subContractDisplay" />
     </fragment>
     <fragment
         android:id="@+id/contractDisplay"
