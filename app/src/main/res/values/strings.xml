@@ -208,6 +208,8 @@
     <string name="properties">Properties</string>
     <string name="analytics">Analytics</string>
     <string name="stakeholdersPlural">Stakeholders</string>
+    <string name="month">Month</string>
+    <string name="year">Year</string>
 
 
 </resources>

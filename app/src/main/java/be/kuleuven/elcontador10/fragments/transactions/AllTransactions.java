@@ -25,12 +25,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.dewinjm.monthyearpicker.MonthYearPickerDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import be.kuleuven.elcontador10.R;
@@ -56,6 +58,8 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     ConstraintLayout mainContainer;
     Button selectMonth;
 
+    int yearSelected;
+    int monthSelected;
     boolean isClicked;
 
 
@@ -89,7 +93,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        selectMonth.setOnClickListener(v->pickDate());
+        selectMonth.setOnClickListener(v->createMonthPicker());
         coverLayout.setOnClickListener(v->closeCover());
         fabNew.setOnClickListener(v->fabOpenAnimation());
         fabNewTransaction.setOnClickListener(this::onFAB_Clicked);
@@ -209,4 +213,32 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         Toast.makeText(getContext(), ""+year+"/"+month, Toast.LENGTH_SHORT).show();
     }
+
+    private void createMonthPicker(){
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.clear();
+        calendar.set(2010, 0, 1); // Set minimum date to show in dialog
+        long minDate = calendar.getTimeInMillis(); // Get milliseconds of the modified date
+
+        calendar.clear();
+        calendar.set(2018, 11, 31); // Set maximum date to show in dialog
+        long maxDate = calendar.getTimeInMillis(); // Get milliseconds of the modified date
+
+// Create instance with date ranges values
+        MonthYearPickerDialogFragment dialogFragment =  MonthYearPickerDialogFragment
+                .getInstance(monthSelected, yearSelected, minDate, maxDate);
+
+        dialogFragment.show(getParentFragmentManager(), null);
+
+        dialogFragment.show(getParentFragmentManager(), "MonthYearPicker");
+
+        dialogFragment.setOnDateSetListener((year, monthOfYear) -> {
+            Toast.makeText(getContext(), ""+monthOfYear+"/"+year, Toast.LENGTH_SHORT).show();
+        });
+
+    }
+
+
 }
