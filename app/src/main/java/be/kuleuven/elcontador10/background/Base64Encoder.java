@@ -6,6 +6,7 @@ import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
 
+// TODO discuss
 public class Base64Encoder {
     public static String encodeImage(Bitmap image) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

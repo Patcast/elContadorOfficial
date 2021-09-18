@@ -3,6 +3,7 @@ package be.kuleuven.elcontador10.background.tools;
 
 import com.google.firebase.Timestamp;
 
+// TODO make it into static methods maybe
 public class DateFormatter {
    Timestamp inputDate;
    String code;

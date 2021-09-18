@@ -11,6 +11,7 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -18,10 +19,12 @@ import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.background.adapters.WidgetsCreation;
 import be.kuleuven.elcontador10.background.model.MicroAccount;
-import be.kuleuven.elcontador10.background.model.StakeHolder;
 
 public class NewMicroAccount extends Fragment {
     private NavController navController;
@@ -47,7 +50,7 @@ public class NewMicroAccount extends Fragment {
         inputName = view.findViewById(R.id.ed_txt_name);
 
         inputRole = view.findViewById(R.id.sp_MicroRole);
-        WidgetsCreation.INSTANCE.makeSpinnerRole(getContext(), inputRole, false);
+        makeSpinnerRole();
 
         confirm = view.findViewById(R.id.btn_confirm_NewMicro);
         confirm.setOnClickListener(this::onConfirm_Clicked);
@@ -66,5 +69,12 @@ public class NewMicroAccount extends Fragment {
             MicroAccount account = new MicroAccount(name, role);
             account.addAccount(account);
         }
+    }
+
+    public void makeSpinnerRole() {
+        List<String> roles = new ArrayList<>((Arrays.asList(this.getResources().getStringArray(R.array.roles))));
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, roles);
+        inputRole.setAdapter(adapter);
     }
 }

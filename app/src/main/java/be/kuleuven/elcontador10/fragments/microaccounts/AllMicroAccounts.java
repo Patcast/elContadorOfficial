@@ -30,7 +30,7 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
-
+// TODO make search bar at the top of list
 public class AllMicroAccounts extends Fragment implements Caching.StakeholdersObserver , androidx.appcompat.widget.SearchView.OnQueryTextListener, MainActivity.TopMenuHandler {
         private RecyclerView recyclerMicros;
         private AllMicroRecViewAdapter adapter;

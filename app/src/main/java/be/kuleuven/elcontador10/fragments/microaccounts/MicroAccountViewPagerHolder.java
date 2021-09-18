@@ -23,8 +23,9 @@ import be.kuleuven.elcontador10.background.database.Caching;
 
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
+import be.kuleuven.elcontador10.background.tools.ZoomOutPageTransformer;
 
-public class MicroAccountViewPagerHolder extends Fragment {
+public class MicroAccountViewPagerHolder extends Fragment implements ZoomOutPageTransformer.PageChangeListener {
     private ViewPagerAdapter mAdapter;
 
     private ViewPager2 viewPager;
@@ -47,6 +48,7 @@ public class MicroAccountViewPagerHolder extends Fragment {
         View view = inflater.inflate(R.layout.fragment_micro_account_view_holder, container, false);
         viewPager = view.findViewById(R.id.viewPagerHolder);
         mAdapter = new ViewPagerAdapter(mainActivity.getSupportFragmentManager(), getLifecycle());
+        viewPager.setPageTransformer(new ZoomOutPageTransformer(this));
 
         addFragments(view);
 
@@ -101,5 +103,17 @@ public class MicroAccountViewPagerHolder extends Fragment {
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         mainActivity.displayTabLayout(false);
         mainActivity.displayStakeholderDetails(false);
+    }
+
+    @Override
+    public void onPageChange() {
+//        switch(viewPager.getCurrentItem()){
+//            case 0:
+//
+//                break;
+//            case 1:
+//
+//                break;
+//        }
     }
 }

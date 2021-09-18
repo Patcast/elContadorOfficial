@@ -6,11 +6,6 @@
     app:startDestination="@id/accounts">
 
     <fragment
-        android:id="@+id/transactionsFilter"
-        android:name="be.kuleuven.elcontador10.fragments.transactions.TransactionsFilter"
-        android:label="fragment_transactions_filter"
-        tools:layout="@layout/fragment_transactions_filter" />
-    <fragment
         android:id="@+id/transactionDisplay"
         android:name="be.kuleuven.elcontador10.fragments.transactions.DisplayTransaction.TransactionDisplay"
         android:label="fragment_transaction_display"
@@ -33,66 +28,6 @@
         <action
             android:id="@+id/action_newTransaction_to_chooseCategory"
             app:destination="@id/chooseCategory" />
-    </fragment>
-    <fragment
-        android:id="@+id/stakeholderDisplay"
-        android:name="be.kuleuven.elcontador10.fragments.microaccounts.StakeholderDisplay"
-        android:label="fragment_stakeholder_display"
-        tools:layout="@layout/fragment_stakeholder_display" >
-        <argument
-            android:name="id"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_stakeholderDisplay_to_stakeholderSummary"
-            app:destination="@id/stakeholderSummary" />
-        <action
-            android:id="@+id/action_stakeholderDisplay_to_stakeholderNew"
-            app:destination="@id/stakeholderNew" />
-    </fragment>
-    <fragment
-        android:id="@+id/stakeholderFilter"
-        android:name="be.kuleuven.elcontador10.fragments.microaccounts.StakeholderFilter"
-        android:label="fragment_stakeholder_filter"
-        tools:layout="@layout/fragment_stakeholder_filter" >
-        <action
-            android:id="@+id/action_stakeholderFilter_to_stakeholderSummary"
-            app:destination="@id/stakeholderSummary" />
-    </fragment>
-    <fragment
-        android:id="@+id/stakeholderNew"
-        android:name="be.kuleuven.elcontador10.fragments.microaccounts.StakeholderNew"
-        android:label="fragment_stakeholder_new"
-        tools:layout="@layout/fragment_stakeholder_new" >
-        <action
-            android:id="@+id/action_stakeholderNew_to_stakeholderSummary"
-            app:destination="@id/stakeholderSummary" />
-        <argument
-            android:name="editStakeholder"
-            app:argType="be.kuleuven.elcontador10.background.parcels.EditStakeholderParcel"
-            app:nullable="true"
-            android:defaultValue="@null" />
-        <action
-            android:id="@+id/action_stakeholderNew_to_stakeholderDisplay"
-            app:destination="@id/stakeholderDisplay" />
-    </fragment>
-    <fragment
-        android:id="@+id/stakeholderSummary"
-        android:name="be.kuleuven.elcontador10.fragments.microaccounts.StakeholderSummary"
-        android:label="fragment_stakeholder_summary"
-        tools:layout="@layout/fragment_stakeholder_summary" >
-        <argument
-            android:name="filter"
-            app:argType="be.kuleuven.elcontador10.background.parcels.FilterStakeholdersParcel"
-            app:nullable="true" />
-        <action
-            android:id="@+id/action_stakeholderSummary_to_stakeholderFilter"
-            app:destination="@id/stakeholderFilter" />
-        <action
-            android:id="@+id/action_stakeholderSummary_to_stakeholderNew"
-            app:destination="@id/stakeholderNew" />
-        <action
-            android:id="@+id/action_stakeholderSummary_to_stakeholderDisplay"
-            app:destination="@id/stakeholderDisplay" />
     </fragment>
     <fragment
         android:id="@+id/signIn"
