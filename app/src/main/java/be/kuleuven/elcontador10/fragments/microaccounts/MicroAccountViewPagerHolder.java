@@ -25,6 +25,8 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.tools.ZoomOutPageTransformer;
 
+
+// move FAB here
 public class MicroAccountViewPagerHolder extends Fragment implements ZoomOutPageTransformer.PageChangeListener {
     private ViewPagerAdapter mAdapter;
 
