@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.microaccounts;
+package be.kuleuven.elcontador10.fragments.stakeholders.common;
 
 import android.os.Bundle;
 
@@ -26,7 +26,7 @@ import java.util.List;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.MicroAccount;
 
-public class NewMicroAccount extends Fragment {
+public class NewStakeholder extends Fragment {
     private NavController navController;
 
     private TextView inputName;

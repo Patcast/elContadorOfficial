@@ -22,13 +22,10 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
-import be.kuleuven.elcontador10.fragments.microaccounts.ContractDisplay;
-import be.kuleuven.elcontador10.fragments.microaccounts.ContractDisplayDirections;
-import be.kuleuven.elcontador10.fragments.microaccounts.MicroAccountContracts;
-import be.kuleuven.elcontador10.fragments.microaccounts.MicroAccountViewPagerHolder;
-import be.kuleuven.elcontador10.fragments.microaccounts.MicroAccountViewPagerHolderDirections;
-import be.kuleuven.elcontador10.fragments.microaccounts.SubContractDisplay;
-import be.kuleuven.elcontador10.fragments.microaccounts.SubContractDisplayArgs;
+import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolderDirections;
+import be.kuleuven.elcontador10.fragments.stakeholders.contracts.ContractDisplay;
+import be.kuleuven.elcontador10.fragments.stakeholders.contracts.ContractDisplayDirections;
+import be.kuleuven.elcontador10.fragments.stakeholders.contracts.ContractsList;
 
 public class SubContractsRecViewAdapter extends RecyclerView.Adapter<SubContractsRecViewAdapter.ViewHolder> {
     private List<SubContract> subContracts;
@@ -77,9 +74,9 @@ public class SubContractsRecViewAdapter extends RecyclerView.Adapter<SubContract
                         ContractDisplayDirections.actionContractDisplayToSubContractDisplay(subContract.getId());
 
                 navController.navigate(action);
-            } else if (fragment instanceof MicroAccountContracts) {
-                MicroAccountViewPagerHolderDirections.ActionStakeholderViewPagerHolderToSubContractDisplay action =
-                        MicroAccountViewPagerHolderDirections.actionStakeholderViewPagerHolderToSubContractDisplay(subContract.getId());
+            } else if (fragment instanceof ContractsList) {
+                StakeholderViewPageHolderDirections.ActionStakeholderViewPagerHolderToSubContractDisplay action =
+                        StakeholderViewPageHolderDirections.actionStakeholderViewPagerHolderToSubContractDisplay(subContract.getId());
 
                 navController.navigate(action);
             }

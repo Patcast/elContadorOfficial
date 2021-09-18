@@ -1,7 +1,6 @@
 package be.kuleuven.elcontador10.background.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,7 +25,7 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.Transaction;
-import be.kuleuven.elcontador10.fragments.microaccounts.MicroAccountViewPagerHolderDirections;
+import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolderDirections;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.AllTransactionsDirections;
 
 
@@ -72,8 +70,8 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
                 navController.navigate(action);
             } catch (Exception e) {
                 // from MicroAccount ViewHolder
-                MicroAccountViewPagerHolderDirections.ActionMicroAccountViewPagerHolderToTransactionDisplay action =
-                        MicroAccountViewPagerHolderDirections.actionMicroAccountViewPagerHolderToTransactionDisplay(idOfTransaction);
+                StakeholderViewPageHolderDirections.ActionMicroAccountViewPagerHolderToTransactionDisplay action =
+                        StakeholderViewPageHolderDirections.actionMicroAccountViewPagerHolderToTransactionDisplay(idOfTransaction);
                 navController.navigate(action);
             }
         });

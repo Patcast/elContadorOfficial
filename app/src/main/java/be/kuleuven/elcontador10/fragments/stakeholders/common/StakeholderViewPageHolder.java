@@ -1,12 +1,10 @@
-package be.kuleuven.elcontador10.fragments.microaccounts;
+package be.kuleuven.elcontador10.fragments.stakeholders.common;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,10 +22,12 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.tools.ZoomOutPageTransformer;
+import be.kuleuven.elcontador10.fragments.stakeholders.contracts.ContractsList;
+import be.kuleuven.elcontador10.fragments.stakeholders.transactions.StakeholderTransactionsList;
 
 
 // move FAB here
-public class MicroAccountViewPagerHolder extends Fragment implements ZoomOutPageTransformer.PageChangeListener {
+public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTransformer.PageChangeListener {
     private ViewPagerAdapter mAdapter;
 
     private ViewPager2 viewPager;
@@ -62,7 +62,7 @@ public class MicroAccountViewPagerHolder extends Fragment implements ZoomOutPage
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        StakeHolder stakeHolder = MicroAccountViewPagerHolderArgs.fromBundle(getArguments()).getStakeHolder();
+        StakeHolder stakeHolder = StakeholderViewPageHolderArgs.fromBundle(getArguments()).getStakeHolder();
         mainActivity.setHeaderText(stakeHolder.getName() + " - " + Caching.INSTANCE.getAccountName());
         mainActivity.displayTabLayout(true);
         Caching.INSTANCE.setChosenStakeHolder(stakeHolder);
@@ -78,8 +78,8 @@ public class MicroAccountViewPagerHolder extends Fragment implements ZoomOutPage
     }
 
     private void addFragments(View view) {
-        mAdapter.addFragment(new MicroAccountTransactions());
-        mAdapter.addFragment(new MicroAccountContracts());
+        mAdapter.addFragment(new StakeholderTransactionsList());
+        mAdapter.addFragment(new ContractsList());
         viewPager.setAdapter(mAdapter);
 
         new TabLayoutMediator(mainActivity.getTabLayout(), viewPager, (t, p) -> {

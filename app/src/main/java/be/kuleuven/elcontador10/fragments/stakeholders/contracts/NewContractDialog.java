@@ -1,6 +1,5 @@
-package be.kuleuven.elcontador10.fragments.microaccounts;
+package be.kuleuven.elcontador10.fragments.stakeholders.contracts;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,11 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;

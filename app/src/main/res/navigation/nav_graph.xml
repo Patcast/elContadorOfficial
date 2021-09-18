@@ -78,12 +78,12 @@
         tools:layout="@layout/fragment_add_new_account" />
     <fragment
         android:id="@+id/newMicroAccount"
-        android:name="be.kuleuven.elcontador10.fragments.microaccounts.NewMicroAccount"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.common.NewStakeholder"
         android:label="fragment_add_new_microaccount"
         tools:layout="@layout/fragment_add_new_microaccount" />
     <fragment
         android:id="@+id/stakeholderViewPagerHolder"
-        android:name="be.kuleuven.elcontador10.fragments.microaccounts.MicroAccountViewPagerHolder"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolder"
         android:label="fragment_stakeholder_view_holder"
         tools:layout="@layout/fragment_micro_account_view_holder">
         <argument
@@ -104,7 +104,7 @@
     </fragment>
     <fragment
         android:id="@+id/contractDisplay"
-        android:name="be.kuleuven.elcontador10.fragments.microaccounts.ContractDisplay"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.contracts.ContractDisplay"
         android:label="fragment_contract_display"
         tools:layout="@layout/fragment_contract_display" >
         <argument
@@ -121,7 +121,7 @@
     </fragment>
     <fragment
         android:id="@+id/contractNewPayment"
-        android:name="be.kuleuven.elcontador10.fragments.microaccounts.ContractNewSubContract"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.contracts.ContractNewSubContract"
         android:label="fragment_contract_new_payment"
         tools:layout="@layout/fragment_contract_new_sub_contract" >
         <argument
@@ -140,7 +140,7 @@
         tools:layout="@layout/fragment_display_photo" />
     <fragment
         android:id="@+id/subContractDisplay"
-        android:name="be.kuleuven.elcontador10.fragments.microaccounts.SubContractDisplay"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.contracts.subcontracts.SubContractDisplay"
         android:label="SubContractDisplay" >
         <argument
             android:name="id"
@@ -160,7 +160,7 @@
     </fragment>
     <fragment
         android:id="@+id/stakeholders"
-        android:name="be.kuleuven.elcontador10.fragments.microaccounts.AllMicroAccounts"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholdersList"
         android:label="fragment_all_micro_acounts"
         tools:layout="@layout/fragment_all_micro_acounts" >
         <action

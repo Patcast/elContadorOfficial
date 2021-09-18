@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.microaccounts;
+package be.kuleuven.elcontador10.fragments.stakeholders.transactions;
 
 import android.os.Bundle;
 
@@ -24,7 +24,7 @@ import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Transaction;
 
-public class MicroAccountTransactions extends Fragment implements Caching.MicroAccountTransactionObserver {
+public class StakeholderTransactionsList extends Fragment implements Caching.MicroAccountTransactionObserver {
     private RecyclerView recyclerView;
     private TransactionsRecViewAdapter adapter;
     private ArrayList<Transaction> transactions;

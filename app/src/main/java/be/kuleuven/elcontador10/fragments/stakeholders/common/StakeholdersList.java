@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.microaccounts;
+package be.kuleuven.elcontador10.fragments.stakeholders.common;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -25,15 +25,15 @@ import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.adapters.AllMicroRecViewAdapter;
+import be.kuleuven.elcontador10.background.adapters.StakeholderListRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 // TODO make search bar at the top of list
-public class AllMicroAccounts extends Fragment implements Caching.StakeholdersObserver , androidx.appcompat.widget.SearchView.OnQueryTextListener, MainActivity.TopMenuHandler {
+public class StakeholdersList extends Fragment implements Caching.StakeholdersObserver , androidx.appcompat.widget.SearchView.OnQueryTextListener, MainActivity.TopMenuHandler {
         private RecyclerView recyclerMicros;
-        private AllMicroRecViewAdapter adapter;
+        private StakeholderListRecViewAdapter adapter;
         private final List<StakeHolder> microsList = new ArrayList<>();
         MainActivity mainActivity;
         FloatingActionButton addNewMicro;
@@ -52,7 +52,7 @@ public class AllMicroAccounts extends Fragment implements Caching.StakeholdersOb
                 recyclerMicros = view.findViewById(R.id.recyclerViewAllMicro);
                 recyclerMicros.setLayoutManager(new LinearLayoutManager(this.getContext()));
                 ViewModel_NewTransaction viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
-                adapter = new AllMicroRecViewAdapter(view,viewModel);
+                adapter = new StakeholderListRecViewAdapter(view,viewModel);
                 Caching.INSTANCE.attachStakeholdersObservers(this);
                 if(microsList.size()>0) adapter.setMicroAccountsList(microsList);
                 recyclerMicros.setAdapter(adapter);

@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.microaccounts;
+package be.kuleuven.elcontador10.fragments.stakeholders.contracts;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,7 +22,7 @@ import be.kuleuven.elcontador10.background.adapters.ContractsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.contract.Contract;
 
-public class MicroAccountContracts extends Fragment implements Caching.MicroAccountContractObserver {
+public class ContractsList extends Fragment implements Caching.MicroAccountContractObserver {
     private RecyclerView recyclerView;
     private ContractsRecViewAdapter adapter;
     private List<Contract> contracts;

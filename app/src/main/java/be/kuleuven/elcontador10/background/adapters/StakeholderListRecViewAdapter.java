@@ -4,7 +4,6 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,19 +22,19 @@ import java.util.stream.Collectors;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
-import be.kuleuven.elcontador10.fragments.microaccounts.AllMicroAccountsDirections;
+import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholdersListDirections;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 
 
-public class AllMicroRecViewAdapter extends RecyclerView.Adapter<AllMicroRecViewAdapter.ViewHolder> {
+public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<StakeholderListRecViewAdapter.ViewHolder> {
 
     private List<StakeHolder> microAccountsList = new ArrayList<>();
     private ArrayList<StakeHolder> microAccountsOriginal;
     private final View viewFromHostingClass;
     private ViewModel_NewTransaction viewModel;
 
-    public AllMicroRecViewAdapter(View viewFromHostingClass, ViewModel_NewTransaction viewModel) {
+    public StakeholderListRecViewAdapter(View viewFromHostingClass, ViewModel_NewTransaction viewModel) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.viewModel = viewModel;
     }
@@ -44,7 +43,7 @@ public class AllMicroRecViewAdapter extends RecyclerView.Adapter<AllMicroRecView
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View viewParent = LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_view_item_all_micros,parent,false);
-        return new AllMicroRecViewAdapter.ViewHolder(viewParent);
+        return new StakeholderListRecViewAdapter.ViewHolder(viewParent);
     }
 
     @Override
@@ -57,7 +56,7 @@ public class AllMicroRecViewAdapter extends RecyclerView.Adapter<AllMicroRecView
         holder.parent.setOnClickListener(v -> {
                     viewModel.selectStakeholder(microAccountsList.get(position));
                     NavController navController = Navigation.findNavController(viewFromHostingClass);
-                    AllMicroAccountsDirections.ActionStakeholdersToStakeholder action  = AllMicroAccountsDirections.actionStakeholdersToStakeholder(microAccountsList.get(position));
+                    StakeholdersListDirections.ActionStakeholdersToStakeholder action  = StakeholdersListDirections.actionStakeholdersToStakeholder(microAccountsList.get(position));
                     navController.navigate(action);
                 }
         );

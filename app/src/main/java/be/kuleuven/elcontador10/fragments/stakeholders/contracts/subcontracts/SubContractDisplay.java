@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.microaccounts;
+package be.kuleuven.elcontador10.fragments.stakeholders.contracts.subcontracts;
 
 import android.os.Build;
 import android.os.Bundle;

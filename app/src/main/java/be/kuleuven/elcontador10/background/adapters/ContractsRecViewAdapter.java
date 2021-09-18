@@ -23,7 +23,7 @@ import java.util.List;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.contract.Contract;
 import be.kuleuven.elcontador10.background.model.contract.SubContract;
-import be.kuleuven.elcontador10.fragments.microaccounts.MicroAccountViewPagerHolderDirections;
+import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolderDirections;
 
 public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecViewAdapter.ViewHolder> {
     private List<Contract> contracts;
@@ -77,8 +77,8 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
         });
 
         holder.layout.setOnClickListener(v -> {
-            MicroAccountViewPagerHolderDirections.ActionMicroAccountViewPagerHolderToContractDisplay action =
-                    MicroAccountViewPagerHolderDirections.actionMicroAccountViewPagerHolderToContractDisplay(contract.getId());
+            StakeholderViewPageHolderDirections.ActionMicroAccountViewPagerHolderToContractDisplay action =
+                    StakeholderViewPageHolderDirections.actionMicroAccountViewPagerHolderToContractDisplay(contract.getId());
             navController.navigate(action);
         });
     }
