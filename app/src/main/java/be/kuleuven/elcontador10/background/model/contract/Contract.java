@@ -1,6 +1,9 @@
 package be.kuleuven.elcontador10.background.model.contract;
 
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
@@ -8,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Optional;
 
 import be.kuleuven.elcontador10.background.database.Caching;
 
@@ -125,7 +129,7 @@ public class Contract {
     }
 
     @Exclude
-    public ArrayList<SubContract> getPayments() {
+    public ArrayList<SubContract> getSubContracts() {
         return subContracts;
     }
 
@@ -139,5 +143,15 @@ public class Contract {
 
     public void setPropertyID(String propertyID) {
         this.propertyID = propertyID;
+    }
+
+    // functions
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public SubContract getSubContractFromId(String id) {
+        Optional<SubContract> subContract = subContracts.stream()
+                .filter(t -> t.getId().equals(id))
+                .findFirst();
+
+        return subContract.orElse(null);
     }
 }

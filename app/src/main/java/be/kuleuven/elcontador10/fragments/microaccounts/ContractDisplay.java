@@ -42,7 +42,7 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
     private SubContractsRecViewAdapter adapter;
 
     // variables
-    private List<SubContract> paymentsList;
+    private List<SubContract> subContractList;
     private Contract contract;
     private String contractId;
     private MainActivity mainActivity;
@@ -55,7 +55,7 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
         View view = inflater.inflate(R.layout.fragment_contract_display, container, false);
 
         // set up variables
-        paymentsList = new ArrayList<>();
+        subContractList = new ArrayList<>();
         mainActivity = (MainActivity) getActivity();
 
         // find views
@@ -104,7 +104,7 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
     public void onStop() {
         super.onStop();
         Caching.INSTANCE.deAttachMicroContractObserver(this);
-        paymentsList.clear();
+        subContractList.clear();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -112,6 +112,7 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
     public void notifyMicroAccountContractsObserver(List<Contract> contracts) {
         contract = Caching.INSTANCE.getContractFromId(contractId);
         if (contract != null) {
+            Caching.INSTANCE.setChosenContract(contract);
             String name = Caching.INSTANCE.getStakeholderName(contract.getMicroAccount());
 
             // set up header
@@ -128,8 +129,8 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
             notes.setText(contract.getNotes());
 
             // set up recycler view
-            paymentsList = contract.getPayments();
-            adapter.setPayments(paymentsList);
+            subContractList = contract.getSubContracts();
+            adapter.setPayments(subContractList);
         } else Toast.makeText(getContext(), "Error getting contract id = " + contractId, Toast.LENGTH_LONG).show();
     }
 

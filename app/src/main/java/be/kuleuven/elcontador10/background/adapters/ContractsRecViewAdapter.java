@@ -55,14 +55,14 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
         holder.title.setText(contract.getTitle());
 
         holder.expand.setOnClickListener(v -> {
-            if (contract.getPayments().size() != 0) {
+            if (contract.getSubContracts().size() != 0) {
                 if (holder.payments.getVisibility() == View.GONE) {
                     holder.expand.setBackground(context.getDrawable(R.drawable.icon_compress));
                     holder.payments.setVisibility(View.VISIBLE);
 
                     // set up Payments recycler view
                     holder.payments.setLayoutManager(new LinearLayoutManager(context));
-                    ArrayList<SubContract> subContracts = contract.getPayments();
+                    ArrayList<SubContract> subContracts = contract.getSubContracts();
                     SubContractsRecViewAdapter adapter = new SubContractsRecViewAdapter(viewFromHostingClass, context, fragment);
                     adapter.setPayments(subContracts);
                     holder.payments.setAdapter(adapter);

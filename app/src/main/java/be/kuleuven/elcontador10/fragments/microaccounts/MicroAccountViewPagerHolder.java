@@ -61,6 +61,7 @@ public class MicroAccountViewPagerHolder extends Fragment {
         StakeHolder stakeHolder = MicroAccountViewPagerHolderArgs.fromBundle(getArguments()).getStakeHolder();
         mainActivity.setHeaderText(stakeHolder.getName() + " - " + Caching.INSTANCE.getAccountName());
         mainActivity.displayTabLayout(true);
+        Caching.INSTANCE.setChosenStakeHolder(stakeHolder);
 
         chosenAccountId = Caching.INSTANCE.getChosenAccountId();
 
@@ -95,6 +96,7 @@ public class MicroAccountViewPagerHolder extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+
         mainActivity.displayToolBar(true);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         mainActivity.displayTabLayout(false);
