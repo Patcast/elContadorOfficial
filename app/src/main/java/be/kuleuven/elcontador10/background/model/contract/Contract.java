@@ -1,13 +1,7 @@
 package be.kuleuven.elcontador10.background.model.contract;
 
-import android.os.Build;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,23 +20,27 @@ public class Contract {
     private String registeredBy;
     private Timestamp registerDate;
     private String notes;
-    private ArrayList<Payment> payments;
+    private String propertyID;
+    private ArrayList<SubContract> subContracts;
 
     // firebase
     private static final String TAG = "contract";
-    private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    // TODO implement propertyID
     public Contract(String title, String registeredBy, String notes) {
         this.title = title;
         this.registeredBy = registeredBy;
         this.registerDate = new Timestamp(new Date()); // now
         this.notes = notes;
+        this.propertyID = null;
     }
 
     public Contract() {}
 
     // database
     public static void newContract(Contract contract) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + contract.getMicroAccount() + "/contracts";
 
         db.collection(url)
@@ -52,6 +50,8 @@ public class Contract {
     }
 
     public static void editContract(Contract contract) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + contract.getMicroAccount() + "/contracts/" +
                 contract.getId();
 
@@ -62,6 +62,8 @@ public class Contract {
     }
 
     public static void deleteContract(Contract contract) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + contract.getMicroAccount() + "/contracts/" +
                 contract.getId();
 
@@ -123,11 +125,19 @@ public class Contract {
     }
 
     @Exclude
-    public ArrayList<Payment> getPayments() {
-        return payments;
+    public ArrayList<SubContract> getPayments() {
+        return subContracts;
     }
 
-    public void setPayments(ArrayList<Payment> payments) {
-        this.payments = payments;
+    public void setSubContracts(ArrayList<SubContract> subContracts) {
+        this.subContracts = subContracts;
+    }
+
+    public String getPropertyID() {
+        return propertyID;
+    }
+
+    public void setPropertyID(String propertyID) {
+        this.propertyID = propertyID;
     }
 }

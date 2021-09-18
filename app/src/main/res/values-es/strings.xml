@@ -4,15 +4,15 @@
     <string name="end">End:</string>
     <string name="frequency">Frequency:</string>
     <string name="made_date">Registered date:</string>
-    <string name="payments">Payments:</string>
+    <string name="subContracts">Payments:</string>
     <string name="cancel">Cancel</string>
     <string name="out">Rent</string>
     <string name="duration">Duration</string>
     <string name="payments_left">Payments left:</string>
-    <string name="next_payment">Next payment:</string>
+    <string name="next_payment">Next subContract:</string>
     <string name="please_fill_in_duration">Please fill in duration</string>
     <string name="select_frequency">Please select frequency</string>
-    <string name="number_of_payments">Number of payments</string>
+    <string name="number_of_payments">Number of subContracts</string>
     <string name="date_before_error">Date chosen is before today</string>
     <string-array name="months_list">
         <item>January</item>

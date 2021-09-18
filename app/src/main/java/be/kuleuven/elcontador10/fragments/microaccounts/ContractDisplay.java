@@ -1,7 +1,6 @@
 package be.kuleuven.elcontador10.fragments.microaccounts;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -27,10 +26,10 @@ import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.adapters.PaymentsRecViewAdapter;
+import be.kuleuven.elcontador10.background.adapters.SubContractsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.contract.Contract;
-import be.kuleuven.elcontador10.background.model.contract.Payment;
+import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.DateFormatter;
 
 public class ContractDisplay extends Fragment implements Caching.MicroAccountContractObserver {
@@ -40,10 +39,10 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
     private FloatingActionButton add_btn, edit_btn, delete_btn;
 
     // adapters
-    private PaymentsRecViewAdapter adapter;
+    private SubContractsRecViewAdapter adapter;
 
     // variables
-    private List<Payment> paymentsList;
+    private List<SubContract> paymentsList;
     private Contract contract;
     private String contractId;
     private MainActivity mainActivity;
@@ -80,7 +79,7 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
         delete_btn.setOnClickListener(this::onDelete_Clicked);
 
         // adapters
-        adapter = new PaymentsRecViewAdapter(view, getContext(), this);
+        adapter = new SubContractsRecViewAdapter(view, getContext(), this);
         paymentsView.setAdapter(adapter);
 
         return view;

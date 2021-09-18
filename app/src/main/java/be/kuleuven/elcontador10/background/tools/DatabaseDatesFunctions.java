@@ -1,6 +1,5 @@
 package be.kuleuven.elcontador10.background.tools;
 
-import android.content.Context;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
@@ -10,14 +9,12 @@ import com.google.firebase.Timestamp;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import be.kuleuven.elcontador10.R;
-import io.perfmark.Link;
+import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public enum DatabaseDatesFunctions {
@@ -32,7 +29,20 @@ public enum DatabaseDatesFunctions {
      * @return Timestamp
      */
     public Timestamp stringToTimestamp(@NonNull String text) {
-        return new Timestamp(Date.from(stringToDate(text).atStartOfDay(zone).toInstant()));
+        return localDateToTimestamp(stringToDate(text));
+    }
+
+    public Timestamp localDateToTimestamp(LocalDate date) {
+        return new Timestamp(Date.from(date.atStartOfDay(zone).toInstant()));
+    }
+
+    public String timestampToPeriod(Timestamp start, Timestamp end) {
+        return timestampToString(start) + " - " + timestampToString(end);
+    }
+
+    public String timestampToString(Timestamp date) {
+        LocalDate localDate = date.toDate().toInstant().atZone(zone).toLocalDate();
+        return  localDate.format(formatter);
     }
 
     public LocalDate stringToDate(@NonNull String text) {
@@ -79,15 +89,15 @@ public enum DatabaseDatesFunctions {
      * Gets a list of dates in a given period with the frequency code
      * @param period String "start - end"
      * @param frequency 1 - daily, 2 - weekly, 3 - monthly, 4 - quarterly, 5 - yearly
-     * @return ArrayList of strings of payment dates. size() is the amount of payments,
+     * @return ArrayList of ScheduledTransaction. size() is the amount of payments,
      *          null if last payment is after end date
      */
-    public ArrayList<String> getPaymentDates(String period, int frequency) {
+    public ArrayList<ScheduledTransaction> getScheduledTransactions(String period, int frequency) {
         String[] dates = period.split(" - ");
         LocalDate startDate = stringToDate(dates[0]);
         LocalDate endDate = stringToDate(dates[1]);
 
-        ArrayList<String> paymentDates = new ArrayList<>();
+        ArrayList<ScheduledTransaction> transactions = new ArrayList<>();
         LocalDate j = startDate;
         int i = 0;
 
@@ -100,13 +110,16 @@ public enum DatabaseDatesFunctions {
             else if (frequency == 5) j = startDate.plusYears((long) i);
             else return null;
 
+            // set totalAmount and idOfStakeholder later
+            ScheduledTransaction transaction = new ScheduledTransaction(0, 0, localDateToTimestamp(j), null);
+
             if (j.isEqual(endDate)) break; // successful
             else if (j.isAfter(endDate)) return null; // unsuccessful - period not full
             i++;
-            paymentDates.add("Payment " + i + ": " + j.format(formatter));
+            transactions.add(transaction);
         }
 
-        return paymentDates;
+        return transactions;
     }
 
     /**
@@ -118,7 +131,7 @@ public enum DatabaseDatesFunctions {
      * @return first: first-second last: payment dates, last: start date - end date
      */
     public LinkedList<String> customPeriod(String start, int nrOfPayments, String frequencyCode) {
-        String[] split = frequencyCode.split("-");
+        String[] split = frequencyCode.split(" - ");
         int value = Integer.parseInt(split[0]);
         int unit = Integer.parseInt(split[1]);
 
@@ -141,20 +154,5 @@ public enum DatabaseDatesFunctions {
         result.add(startDate.format(formatter) + " - " + j.format(formatter));
 
         return result;
-    }
-
-    /**
-     *
-     * @param frequency With unit (value-unit) or without (unit)
-     * @param context context for getting string
-     * @return Every VALUE weeks, months...
-     */
-    public String frequencyDecoder(String frequency, Context context) {
-        if (frequency.contains("-")) {
-            String[] split = frequency.split("-");
-            String unit = context.getResources().getStringArray(R.array.frequency_names)[Integer.parseInt(split[1])];
-
-            return context.getString(R.string.every) + " " + split[0] + " " + unit;
-        } else return context.getResources().getStringArray(R.array.frequency)[Integer.parseInt(frequency)];
     }
 }
