@@ -1,8 +1,6 @@
 package be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -11,14 +9,13 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,10 +33,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.jetbrains.annotations.NotNull;
 
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import be.kuleuven.elcontador10.R;
@@ -48,29 +44,20 @@ import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.tools.MonthYearPickerDialog;
-import be.kuleuven.elcontador10.fragments.accounts.AccountsBottomMenu;
 
 
-public class AllTransactions extends Fragment implements Caching.AllTransactionsObserver, DatePickerDialog.OnDateSetListener, MainActivity.TopMenuHandler, AllTransactionsBottomMenu.AllTransactionBottomSheetListener {
+public class AllTransactions extends Fragment implements  DatePickerDialog.OnDateSetListener, MainActivity.TopMenuHandler {
 
     private RecyclerView recyclerAllTransactions;
     private TransactionsRecViewAdapter adapter;
-    ArrayList<Transaction> transactionArrayList = new ArrayList<>();
-    FloatingActionButton fabNewTransaction;
-    FloatingActionButton fabPayableOrReceivable;
-    FloatingActionButton fabNew;
-    TextView textFabNewTransaction,textFabReceivable;
-    LinearLayout coverLayout;
-    ConstraintLayout mainContainer;
-    Button selectMonth;
-    AllTransactionsBottomMenu bottomSheetMenu;
-
+    private FloatingActionButton fabNewTransaction,fabPayableOrReceivable,fabNew;
+    private TextView textFabNewTransaction,textFabReceivable;
+    private LinearLayout coverLayout;
+    private Button selectMonth;
     boolean isClicked;
-
-
-    MainActivity mainActivity;
+    private MainActivity mainActivity;
     private Animation rotateOpen,rotateClose,popOpen,popClose;
-
+    private ViewModel_AllTransactions viewModel;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -81,15 +68,34 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         selectMonth = view.findViewById(R.id.btn_selectMonth);
-        mainContainer = view.findViewById(R.id.main_container);
         coverLayout = view.findViewById(R.id.coverLayout);
         textFabNewTransaction = view.findViewById(R.id.text_fabNewTransaction);
         textFabReceivable = view.findViewById(R.id.text_fabReceivable);
         fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
         fabPayableOrReceivable = view.findViewById(R.id.btn_new_ReceivableOrPayable);
         fabNew = view.findViewById(R.id.btn_newFAB);
+        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
+        viewModel.setTypesOfTransactions(makeMapOfTransTypes());
+        viewModel.getChosenTypesOfTransactions().observe(getViewLifecycleOwner(), i ->updateTransactionTypesDisplayed());
+        viewModel.getMonthlyListOfTransactions().observe(getViewLifecycleOwner(),i->updateListOfTransactions(i));
         startRecycler(view);
         return view;
+    }
+
+    private void updateListOfTransactions(List<Transaction> listUpdated) {
+        adapter.setAllTransactions(listUpdated);
+    }
+
+
+    private HashMap<String, Boolean> makeMapOfTransTypes() {
+        HashMap<String, Boolean> transTypes = new HashMap<>();
+        transTypes.put("transaction",true);
+        transTypes.put("receivable",false);
+        transTypes.put("payable",false);
+        return transTypes;
+    }
+    private void updateTransactionTypesDisplayed() {
+
     }
 
     @Override
@@ -116,7 +122,24 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         popOpen= AnimationUtils.loadAnimation(getContext(),R.anim.pop_up_fabs);
         popClose = AnimationUtils.loadAnimation(getContext(),R.anim.pop_down_fabs);
         isClicked= false;
+        viewModel.selectMonthlyList();
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        mainActivity.setCurrentMenuClicker(this);
+        mainActivity.displayBottomNavigationMenu(true);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,true);
+        recyclerAllTransactions.setAdapter(adapter);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mainActivity.displayBottomNavigationMenu(false);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,false);
+    }
+
 
     private void pickDate() {
         MonthYearPickerDialog pd = new MonthYearPickerDialog();
@@ -178,36 +201,9 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         recyclerAllTransactions = view.findViewById(R.id.RecViewTransactionsHolder);
         recyclerAllTransactions.setLayoutManager(new LinearLayoutManager(this.getContext()));
         adapter = new TransactionsRecViewAdapter(view,getContext());
-        Caching.INSTANCE.attachAllTransactionsObserver(this);
-        if(transactionArrayList.size()>0) adapter.setAllTransactions(transactionArrayList);
-        recyclerAllTransactions.setAdapter(adapter);
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        mainActivity.setCurrentMenuClicker(this);
-        mainActivity.displayBottomNavigationMenu(true);
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_bottom_sheet,true);
-        Caching.INSTANCE.attachAllTransactionsObserver(this);
-        if(transactionArrayList.size()>0) adapter.setAllTransactions(transactionArrayList);
         recyclerAllTransactions.setAdapter(adapter);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        Caching.INSTANCE.deAttachAllTransactionsObserver(this);
-        mainActivity.displayBottomNavigationMenu(false);
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,false);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void notifyAllTransactionsObserver(List<Transaction> allTransactions) {
-        transactionArrayList.clear();
-        transactionArrayList.addAll(allTransactions);
-        adapter.setAllTransactions(transactionArrayList);
-    }
 
     public void onFAB_Clicked(View view) {
         NavController navController = Navigation.findNavController(view);
@@ -224,8 +220,6 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
 
     @Override
     public void onBottomSheetClick() {
-        bottomSheetMenu = new AllTransactionsBottomMenu(this);
-        bottomSheetMenu.show(getParentFragmentManager(),"AccountsBottomSheet");
     }
 
     @Override
@@ -250,10 +244,9 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
 
     @Override
     public void onFilterClick() {
+        DialogFilterAllTransactions filterDialog = new DialogFilterAllTransactions(getViewLifecycleOwner());
+        filterDialog.show(getParentFragmentManager(),"AccountsBottomSheet");
     }
 
-    @Override
-    public void onOptionSelected() {
 
-    }
 }
