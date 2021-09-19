@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -15,6 +16,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -28,8 +31,7 @@ public class DialogFilterAllTransactions extends DialogFragment {
 
 
 
-    ConstraintLayout transactions,receivables,payables;
-    ImageView iconTransaction,iconReceivable,iconPayable;
+    CheckBox transactions,receivables,payables;
     ViewModel_AllTransactions viewModel;
     HashMap<String,Boolean> typeOfTransactions;
 
@@ -43,18 +45,13 @@ public class DialogFilterAllTransactions extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         View view =inflater.inflate(R.layout.bottom_menu_all_transactions, container, false);
-        iconTransaction = view.findViewById(R.id.bs_icon_transaction);
-        iconReceivable = view.findViewById(R.id.icon_receivable);
-        iconPayable = view.findViewById(R.id.icon_payable);
-        transactions = view.findViewById(R.id.bs_layout_transaction);
-        receivables = view.findViewById(R.id.bs_layout_Receivables);
-        payables = view.findViewById(R.id.bs_layout_Payables);
+
+        transactions = view.findViewById(R.id.check_box_transaction);
+        receivables = view.findViewById(R.id.check_box_receivables);
+        payables = view.findViewById(R.id.check_box_payables);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
         viewModel.getChosenTypesOfTransactions().observe(getViewLifecycleOwner(), this::setUi);
-        iconTransaction.setImageResource(R.drawable.icon_transaction);
-
         return view;
     }
 

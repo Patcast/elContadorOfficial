@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingHorizontal="20dp"
     android:paddingVertical="20dp"
@@ -10,102 +8,28 @@
     android:orientation="vertical"
     >
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bs_layout_transaction"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingVertical="15dp">
 
-        <ImageView
-            android:id="@+id/bs_icon_transaction"
-            android:layout_width="35dp"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_baseline_radio_button_checked_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="VectorDrawableCompat" />
-
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Transactions"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:layout_marginLeft="20dp"
-            app:layout_constraintBottom_toBottomOf="@+id/bs_icon_transaction"
-            app:layout_constraintStart_toEndOf="@+id/bs_icon_transaction"
-            app:layout_constraintTop_toTopOf="@+id/bs_icon_transaction"
-            android:layout_marginStart="20dp" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bs_layout_Receivables"
+    <CheckBox
+        android:id="@+id/check_box_transaction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="15dp"
-        >
-
-        <ImageView
-            android:id="@+id/icon_receivable"
-            android:layout_width="35dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_radio_button_unchecked_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="VectorDrawableCompat" />
-
-        <TextView
-            android:id="@+id/textView83"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Receivables"
-            android:textSize="20sp"
-            android:layout_marginLeft="20dp"
-            app:layout_constraintBottom_toBottomOf="@+id/icon_receivable"
-            app:layout_constraintStart_toEndOf="@+id/icon_receivable"
-            app:layout_constraintTop_toTopOf="@+id/icon_receivable"
-            android:layout_marginStart="20dp" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bs_layout_Payables"
+        android:text="@string/transactions"
+        android:textSize="18sp" />
+    <CheckBox
+        android:id="@+id/check_box_receivables"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="15dp"
-       >
-
-        <ImageView
-            android:id="@+id/icon_payable"
-            android:layout_width="35dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_radio_button_unchecked_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="VectorDrawableCompat" />
-
-        <TextView
-            android:id="@+id/textViewe8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Transactions"
-            android:textSize="20sp"
-            android:layout_marginLeft="20dp"
-            app:layout_constraintBottom_toBottomOf="@+id/icon_payable"
-            app:layout_constraintStart_toEndOf="@+id/icon_payable"
-            app:layout_constraintTop_toTopOf="@+id/icon_payable"
-            android:layout_marginStart="20dp" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-
-
-
+        android:text="@string/receivables"
+        android:textSize="18sp" />
+    <CheckBox
+        android:id="@+id/check_box_payables"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="15dp"
+        android:text="@string/payables"
+        android:textSize="18sp" />
 
 
 
