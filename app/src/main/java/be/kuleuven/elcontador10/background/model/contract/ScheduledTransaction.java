@@ -14,6 +14,7 @@ public class ScheduledTransaction {
     private long amountPaid;
     private Timestamp dueDate;
     private String idOfStakeholder;
+    private String title;
 
     private static final String TAG = "scheduledTransaction";
 
@@ -79,5 +80,14 @@ public class ScheduledTransaction {
 
     public void setIdOfStakeholder(String idOfStakeholder) {
         this.idOfStakeholder = idOfStakeholder;
+    }
+
+    @Exclude
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

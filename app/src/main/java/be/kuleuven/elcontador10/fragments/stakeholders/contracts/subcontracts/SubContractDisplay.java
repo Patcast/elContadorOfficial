@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
@@ -21,13 +22,16 @@ import be.kuleuven.elcontador10.background.model.contract.Contract;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.model.contract.SubContract;
 
-public class SubContractDisplay extends Fragment {
+public class SubContractDisplay extends Fragment implements Caching.SubContractObserver {
+
+    //views
+
 
     // variables
     private MainActivity mainActivity;
     private ArrayList<ScheduledTransaction> scheduledTransactions;
     private SubContract subContract;
-    private String id;
+    private String idSubcontract;
 
     @Nullable
     @Override
@@ -36,6 +40,7 @@ public class SubContractDisplay extends Fragment {
 
         // set variables
         mainActivity = (MainActivity) getActivity();
+        scheduledTransactions = new ArrayList<>();
 
         return view;
     }
@@ -46,13 +51,19 @@ public class SubContractDisplay extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // get arguments
-        id = SubContractDisplayArgs.fromBundle(getArguments()).getId();
+        idSubcontract = SubContractDisplayArgs.fromBundle(getArguments()).getSubcontractId();
 
+        Caching.INSTANCE.getSubContract(idSubcontract);
+        Caching.INSTANCE.attachSubcontractObserver(this);
+    }
+
+    @Override
+    public void notify(SubContract contract, List<ScheduledTransaction> scheduledTransactionList) {
+        subContract = contract;
         StakeHolder stakeHolder = Caching.INSTANCE.getChosenStakeHolder();
-        Contract contract = Caching.INSTANCE.getChosenContract();
-        subContract = contract.getSubContractFromId(id);
-        Caching.INSTANCE.setChosenSubContract(subContract);
-
         mainActivity.setHeaderText(stakeHolder.getName() + " - " + subContract.getTitle());
+
+        scheduledTransactions.clear();
+        scheduledTransactions.addAll(scheduledTransactionList);
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -23,12 +25,16 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Transaction;
+import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewModel;
 
 public class StakeholderTransactionsList extends Fragment implements Caching.MicroAccountTransactionObserver {
     private RecyclerView recyclerView;
+    private LinearLayout coverLayout;
     private TransactionsRecViewAdapter adapter;
     private ArrayList<Transaction> transactions;
-    private FloatingActionButton fab;
+
+    private StakeholderViewModel viewModel;
+    private boolean fabClicked;
 
     @Nullable
     @Override
@@ -37,11 +43,11 @@ public class StakeholderTransactionsList extends Fragment implements Caching.Mic
 
         transactions = new ArrayList<>();
 
-        fab = view.findViewById(R.id.btn_new_TransactionFAB);
-        fab.setOnClickListener(this::onFAB_Clicked);
-
         recyclerView = view.findViewById(R.id.RecViewTransactionsHolder);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
+        coverLayout = view.findViewById(R.id.coverLayout);
+        coverLayout.setOnClickListener(this::on_Cover_Clicked);
 
         adapter = new TransactionsRecViewAdapter(view, getContext());
         Caching.INSTANCE.attachMicroTransactionsObserver(this);
@@ -56,13 +62,12 @@ public class StakeholderTransactionsList extends Fragment implements Caching.Mic
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) fab .setVisibility(View.GONE);
-                else fab.setVisibility(View.VISIBLE);
-            }
+        viewModel = new ViewModelProvider(requireActivity()).get(StakeholderViewModel.class);
+        viewModel.getFabClicked().observe(getViewLifecycleOwner(), item -> {
+            fabClicked = item;
+
+            if (!fabClicked) coverLayout.setVisibility(View.VISIBLE);
+            else coverLayout.setVisibility(View.GONE);
         });
     }
 
@@ -88,8 +93,12 @@ public class StakeholderTransactionsList extends Fragment implements Caching.Mic
         adapter.setAllTransactions(this.transactions);
     }
 
-    public void onFAB_Clicked(View view) {
-        NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.action_microAccountViewPagerHolder_to_newTransaction);
+    public void on_Cover_Clicked(View view) {
+        if (!fabClicked) coverLayout.setVisibility(View.VISIBLE);
+        else coverLayout.setVisibility(View.GONE);
+
+        fabClicked = !fabClicked;
+
+        viewModel.setFabClicked(fabClicked);
     }
 }

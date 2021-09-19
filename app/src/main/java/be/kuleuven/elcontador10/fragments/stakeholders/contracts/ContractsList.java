@@ -26,7 +26,6 @@ public class ContractsList extends Fragment implements Caching.MicroAccountContr
     private RecyclerView recyclerView;
     private ContractsRecViewAdapter adapter;
     private List<Contract> contracts;
-    private FloatingActionButton fab;
 
     @Nullable
     @Override
@@ -34,9 +33,6 @@ public class ContractsList extends Fragment implements Caching.MicroAccountContr
         View view = inflater.inflate(R.layout.fragment_micro_account_contracts, container, false);
 
         contracts = new ArrayList<>();
-
-        fab = view.findViewById(R.id.btn_new_Contracts);
-        fab.setOnClickListener(this::onFAB_Clicked);
 
         recyclerView = view.findViewById(R.id.RecViewContracts);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -61,10 +57,5 @@ public class ContractsList extends Fragment implements Caching.MicroAccountContr
     public void notifyMicroAccountContractsObserver(List<Contract> contracts) {
         this.contracts = contracts;
         adapter.setContracts(contracts);
-    }
-
-    public void onFAB_Clicked(View view) {
-        NewContractDialog dialog = new NewContractDialog((MainActivity) getActivity());
-        dialog.show();
     }
 }

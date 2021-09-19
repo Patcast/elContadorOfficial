@@ -41,6 +41,8 @@ public class SubContract {
 
     public SubContract() {}
 
+    // database functions
+
     public static String newSubContract(SubContract subContract, String contractId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + Caching.INSTANCE.getChosenMicroAccountId() +
@@ -54,6 +56,8 @@ public class SubContract {
     }
 
     // TODO add psv edit/delete
+
+    // setters & getters
 
     @Exclude
     public String getId() {

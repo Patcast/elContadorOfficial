@@ -27,6 +27,6 @@
     <color name="superDarkGrey">#141414</color>
     <color name="FabColor2">#cf8419</color>
     <color name="blur_background">#B9000000</color>
-
+    <color name="rec_view_scheduled_title">#008fb3</color>
 
 </resources>
