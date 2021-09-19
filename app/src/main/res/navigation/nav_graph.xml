@@ -140,7 +140,7 @@
         tools:layout="@layout/fragment_display_photo" />
     <fragment
         android:id="@+id/subContractDisplay"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.contracts.subcontracts.SubContractDisplay"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.contracts.SubContractDisplay"
         android:label="SubContractDisplay" >
         <argument
             android:name="subcontractId"

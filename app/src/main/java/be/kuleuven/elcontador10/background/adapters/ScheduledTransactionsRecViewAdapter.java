@@ -35,6 +35,7 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
     NavController navController;
     View viewFromHostingClass;
     Context context;
+
     public ScheduledTransactionsRecViewAdapter(View viewFromHostingClass, Context context) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.context = context;
@@ -45,7 +46,7 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
     @Override
     public ScheduledTransactionsRecViewAdapter.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         navController = Navigation.findNavController(viewFromHostingClass);
-        View viewParent = LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_view_item_all_transactions,parent,false);
+        View viewParent = LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_view_scheduled_payments,parent,false);
         return new ScheduledTransactionsRecViewAdapter.ViewHolder(viewParent);
     }
 
@@ -92,7 +93,7 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
         return allTransactions.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textTitle,textAmount,textDate,textNameOfParticipant,textPaidBy,txtEmojiCategory;
         private ConstraintLayout parent;
         private ImageView camaraIcon;

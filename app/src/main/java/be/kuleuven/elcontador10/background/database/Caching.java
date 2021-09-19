@@ -499,8 +499,10 @@ public enum Caching {
     public void getScheduledTransactions(String subContractURL, String subContractTitle) {
         String url = subContractURL + "/scheduledTransactions";
 
-        db.collection(url)
-                .addSnapshotListener((value, error) -> {
+        Query query = db.collection(url)
+                .orderBy("dueDate", Query.Direction.ASCENDING);
+
+        query.addSnapshotListener((value, error) -> {
                     if (error!= null && value == null) {
                         Log.w(TAG, "Listen failed", error);
                         return;
