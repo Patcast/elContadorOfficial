@@ -46,11 +46,10 @@ import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.tools.MonthYearPickerDialog;
 
 
-public class AllTransactions extends Fragment implements Caching.AllTransactionsObserver, DatePickerDialog.OnDateSetListener, MainActivity.TopMenuHandler {
+public class AllTransactions extends Fragment implements  DatePickerDialog.OnDateSetListener, MainActivity.TopMenuHandler {
 
     private RecyclerView recyclerAllTransactions;
     private TransactionsRecViewAdapter adapter;
-    private ArrayList<Transaction> transactionArrayList = new ArrayList<>();
     private FloatingActionButton fabNewTransaction,fabPayableOrReceivable,fabNew;
     private TextView textFabNewTransaction,textFabReceivable;
     private LinearLayout coverLayout;
@@ -75,12 +74,18 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
         fabPayableOrReceivable = view.findViewById(R.id.btn_new_ReceivableOrPayable);
         fabNew = view.findViewById(R.id.btn_newFAB);
-        startRecycler(view);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
         viewModel.setTypesOfTransactions(makeMapOfTransTypes());
         viewModel.getChosenTypesOfTransactions().observe(getViewLifecycleOwner(), i ->updateTransactionTypesDisplayed());
+        viewModel.getMonthlyListOfTransactions().observe(getViewLifecycleOwner(),i->updateListOfTransactions(i));
+        startRecycler(view);
         return view;
     }
+
+    private void updateListOfTransactions(List<Transaction> listUpdated) {
+        adapter.setAllTransactions(listUpdated);
+    }
+
 
     private HashMap<String, Boolean> makeMapOfTransTypes() {
         HashMap<String, Boolean> transTypes = new HashMap<>();
@@ -117,6 +122,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         popOpen= AnimationUtils.loadAnimation(getContext(),R.anim.pop_up_fabs);
         popClose = AnimationUtils.loadAnimation(getContext(),R.anim.pop_down_fabs);
         isClicked= false;
+        viewModel.selectMonthlyList();
     }
     @Override
     public void onStart() {
@@ -124,15 +130,12 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         mainActivity.setCurrentMenuClicker(this);
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,true);
-        Caching.INSTANCE.attachAllTransactionsObserver(this);
-        if(transactionArrayList.size()>0) adapter.setAllTransactions(transactionArrayList);
         recyclerAllTransactions.setAdapter(adapter);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Caching.INSTANCE.deAttachAllTransactionsObserver(this);
         mainActivity.displayBottomNavigationMenu(false);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,false);
     }
@@ -198,19 +201,9 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         recyclerAllTransactions = view.findViewById(R.id.RecViewTransactionsHolder);
         recyclerAllTransactions.setLayoutManager(new LinearLayoutManager(this.getContext()));
         adapter = new TransactionsRecViewAdapter(view,getContext());
-        Caching.INSTANCE.attachAllTransactionsObserver(this);
-        if(transactionArrayList.size()>0) adapter.setAllTransactions(transactionArrayList);
         recyclerAllTransactions.setAdapter(adapter);
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void notifyAllTransactionsObserver(List<Transaction> allTransactions) {
-        transactionArrayList.clear();
-        transactionArrayList.addAll(allTransactions);
-        adapter.setAllTransactions(transactionArrayList);
-    }
 
     public void onFAB_Clicked(View view) {
         NavController navController = Navigation.findNavController(view);

@@ -5,23 +5,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
@@ -40,8 +30,10 @@ public class DialogFilterAllTransactions extends DialogFragment {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void setUi(HashMap<String, Boolean> currentTransTypesSelected) {
+        typeOfTransactions = currentTransTypesSelected;
         currentTransTypesSelected.forEach(this::updateUiItems);
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateUiItems(String s, Boolean b) {
        switch(s) {
             case "transaction":
@@ -57,10 +49,8 @@ public class DialogFilterAllTransactions extends DialogFragment {
                 Toast.makeText(getContext(), "error with dialog", Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
     /////--------------
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -72,10 +62,8 @@ public class DialogFilterAllTransactions extends DialogFragment {
         payables = view.findViewById(R.id.check_box_payables);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
         viewModel.getChosenTypesOfTransactions().observe(owner, this::setUi);
-
         builder.setView(view)
-                // Add action buttons
-                .setPositiveButton("ok", (dialog1, id) ->onItemSelected())
+                .setPositiveButton("ok", (dialog1, id) -> onConfirmSelection())
                 .setNegativeButton("cancel", (dialog12, id) ->
                         this.getDialog().cancel());
         builder.setTitle("Displayed information");
@@ -83,8 +71,29 @@ public class DialogFilterAllTransactions extends DialogFragment {
         return builder.create();
     }
 
-    private void onItemSelected() {
-    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void onConfirmSelection() {
+        typeOfTransactions.forEach(this::updateList);
+        viewModel.setTypesOfTransactions(typeOfTransactions);
 
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void updateList(String s, Boolean aBoolean) {
+        switch(s) {
+            case "transaction":
+                typeOfTransactions.replace(s,transactions.isChecked());
+
+                break;
+            case "receivable":
+                typeOfTransactions.replace(s,receivables.isChecked());
+
+                break;
+            case "payable":
+                typeOfTransactions.replace(s,payables.isChecked());
+                break;
+            default:
+                Toast.makeText(getContext(), "error with dialog", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }
