@@ -2,9 +2,11 @@ package be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -42,6 +44,7 @@ public class ViewModel_AllTransactions extends ViewModel {
     public LiveData<List<Transaction>> getMonthlyListOfTransactions() {
         return monthlyListOfTransactions;
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void selectMonthlyList() {
             String urlGetAccountTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
             CollectionReference transactionsFromOneAccount = db.
