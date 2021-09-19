@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -20,7 +21,6 @@ import androidx.lifecycle.ViewModelProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import be.kuleuven.elcontador10.R;
 
@@ -34,11 +34,16 @@ public class DialogFilterAllTransactions extends DialogFragment {
     HashMap<String,Boolean> typeOfTransactions;
 
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         View view =inflater.inflate(R.layout.bottom_menu_all_transactions, container, false);
         iconTransaction = view.findViewById(R.id.bs_icon_transaction);
         iconReceivable = view.findViewById(R.id.icon_receivable);
@@ -47,21 +52,28 @@ public class DialogFilterAllTransactions extends DialogFragment {
         receivables = view.findViewById(R.id.bs_layout_Receivables);
         payables = view.findViewById(R.id.bs_layout_Payables);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
-        viewModel.getChosenTypesOfTransactions().observe(getViewLifecycleOwner(), i ->setUi(i));
+        viewModel.getChosenTypesOfTransactions().observe(getViewLifecycleOwner(), this::setUi);
+        iconTransaction.setImageResource(R.drawable.icon_transaction);
+
         return view;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void setUi(HashMap<String, Boolean> currentTransTypesSelected) {
-        currentTransTypesSelected.forEach(this::updateUIItems);
+        currentTransTypesSelected.forEach(this::updateUiItems);
 
     }
 
-    private void updateUIItems(String s, Boolean b) {
-        switch(s) {
+    private void updateUiItems(String s, Boolean b) {
+       /* switch(s) {
             case "transaction":
-                if(b) iconTransaction.setImageResource(R.drawable.ic_baseline_radio_button_checked_24);
-                else iconTransaction.setImageResource(R.drawable.ic_baseline_radio_button_unchecked_24);
+                if(b)
+                {
+                    iconTransaction.setImageResource(R.drawable.ic_baseline_radio_button_checked_24);
+                }
+                else {
+                    iconTransaction.setImageResource(R.drawable.ic_baseline_radio_button_unchecked_24);
+                }
                 break;
             case "receivable":
                 if(b) iconReceivable.setImageResource(R.drawable.ic_baseline_radio_button_checked_24);
@@ -73,16 +85,16 @@ public class DialogFilterAllTransactions extends DialogFragment {
                 break;
             default:
                 Toast.makeText(getContext(), "error with dialog", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
 
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-            transactions.setOnClickListener(v->updateUIItems("transaction",true));
-            receivables.setOnClickListener(v->updateUIItems("receivable",true));
-            payables.setOnClickListener(v->updateUIItems("payable",true));
+            transactions.setOnClickListener(v-> updateUiItems("transaction",true));
+            receivables.setOnClickListener(v-> updateUiItems("receivable",true));
+            payables.setOnClickListener(v-> updateUiItems("payable",true));
     }
 
 

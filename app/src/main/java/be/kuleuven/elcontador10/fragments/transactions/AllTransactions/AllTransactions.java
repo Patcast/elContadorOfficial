@@ -54,7 +54,6 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
     private FloatingActionButton fabNewTransaction,fabPayableOrReceivable,fabNew;
     private TextView textFabNewTransaction,textFabReceivable;
     private LinearLayout coverLayout;
-    private ConstraintLayout mainContainer;
     private Button selectMonth;
     boolean isClicked;
     private MainActivity mainActivity;
@@ -70,7 +69,6 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         selectMonth = view.findViewById(R.id.btn_selectMonth);
-        mainContainer = view.findViewById(R.id.main_container);
         coverLayout = view.findViewById(R.id.coverLayout);
         textFabNewTransaction = view.findViewById(R.id.text_fabNewTransaction);
         textFabReceivable = view.findViewById(R.id.text_fabReceivable);
