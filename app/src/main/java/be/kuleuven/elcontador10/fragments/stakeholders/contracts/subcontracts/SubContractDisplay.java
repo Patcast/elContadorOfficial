@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
@@ -22,6 +23,9 @@ import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.model.contract.SubContract;
 
 public class SubContractDisplay extends Fragment implements Caching.SubContractObserver {
+
+    //views
+
 
     // variables
     private MainActivity mainActivity;
@@ -36,6 +40,7 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
 
         // set variables
         mainActivity = (MainActivity) getActivity();
+        scheduledTransactions = new ArrayList<>();
 
         return view;
     }
@@ -53,9 +58,12 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
     }
 
     @Override
-    public void notify(SubContract contract) {
+    public void notify(SubContract contract, List<ScheduledTransaction> scheduledTransactionList) {
         subContract = contract;
         StakeHolder stakeHolder = Caching.INSTANCE.getChosenStakeHolder();
         mainActivity.setHeaderText(stakeHolder.getName() + " - " + subContract.getTitle());
+
+        scheduledTransactions.clear();
+        scheduledTransactions.addAll(scheduledTransactionList);
     }
 }

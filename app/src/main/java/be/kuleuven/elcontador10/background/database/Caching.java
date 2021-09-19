@@ -34,6 +34,7 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Transaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 import be.kuleuven.elcontador10.background.model.User;
+import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.contract.Contract;
@@ -68,7 +69,7 @@ public enum Caching {
     }
 
     public interface SubContractObserver {
-        void notify(SubContract contract);
+        void notify(SubContract contract, List<ScheduledTransaction> scheduledTransactions);
     }
 
 
@@ -84,6 +85,7 @@ public enum Caching {
     public List <Transaction> transactions = new ArrayList<>();
     public List <Transaction> microAccountTransactions = new ArrayList<>();
     public List <Contract> microAccountContracts = new ArrayList<>();
+    public List <ScheduledTransaction> scheduledTransactions = new ArrayList<>();
 
     ///********** Observers List
     private final List <AccountsObserver> accountsObservers = new ArrayList<>();
@@ -183,8 +185,8 @@ public enum Caching {
 
     public void attachSubcontractObserver(SubContractObserver observer) {
         subContractObservers.add(observer);
-        if (chosenSubContract != null)
-            observer.notify(chosenSubContract);
+        if (chosenSubContract != null && scheduledTransactions != null)
+            observer.notify(chosenSubContract, scheduledTransactions);
     }
 
     public void detachSubcontractObserver(SubContractObserver observer) {
@@ -489,7 +491,31 @@ public enum Caching {
                     chosenSubContract = value.toObject(SubContract.class);
                     chosenSubContract.setId(value.getId());
 
-                    subContractObservers.forEach(e -> e.notify(chosenSubContract));
+                    getScheduledTransactions(url, chosenSubContract.getTitle());
+                });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void getScheduledTransactions(String subContractURL, String subContractTitle) {
+        String url = subContractURL + "/scheduledTransactions";
+
+        db.collection(url)
+                .addSnapshotListener((value, error) -> {
+                    if (error!= null && value == null) {
+                        Log.w(TAG, "Listen failed", error);
+                        return;
+                    }
+
+                    scheduledTransactions.clear();
+
+                    for (QueryDocumentSnapshot doc : value) {
+                        ScheduledTransaction transaction = doc.toObject(ScheduledTransaction.class);
+                        transaction.setId(doc.getId());
+                        transaction.setTitle(subContractTitle);
+                        scheduledTransactions.add(transaction);
+                    }
+
+                    subContractObservers.forEach(e -> e.notify(chosenSubContract, scheduledTransactions));
                 });
     }
 
