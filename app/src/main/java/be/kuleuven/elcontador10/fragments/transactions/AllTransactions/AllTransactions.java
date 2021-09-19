@@ -84,7 +84,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
 
     private HashMap<String, Boolean> makeMapOfTransTypes() {
         HashMap<String, Boolean> transTypes = new HashMap<>();
-        transTypes.put("transaction",false);
+        transTypes.put("transaction",true);
         transTypes.put("receivable",false);
         transTypes.put("payable",false);
         return transTypes;
@@ -251,7 +251,7 @@ public class AllTransactions extends Fragment implements Caching.AllTransactions
 
     @Override
     public void onFilterClick() {
-        DialogFilterAllTransactions filterDialog = new DialogFilterAllTransactions();
+        DialogFilterAllTransactions filterDialog = new DialogFilterAllTransactions(getViewLifecycleOwner());
         filterDialog.show(getParentFragmentManager(),"AccountsBottomSheet");
     }
 
