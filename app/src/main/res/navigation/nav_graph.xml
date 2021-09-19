@@ -143,7 +143,7 @@
         android:name="be.kuleuven.elcontador10.fragments.stakeholders.contracts.subcontracts.SubContractDisplay"
         android:label="SubContractDisplay" >
         <argument
-            android:name="id"
+            android:name="subcontractId"
             app:argType="string" />
     </fragment>
     <fragment

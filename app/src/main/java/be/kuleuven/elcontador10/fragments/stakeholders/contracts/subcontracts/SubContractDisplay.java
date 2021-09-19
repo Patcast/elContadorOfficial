@@ -21,13 +21,13 @@ import be.kuleuven.elcontador10.background.model.contract.Contract;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.model.contract.SubContract;
 
-public class SubContractDisplay extends Fragment {
+public class SubContractDisplay extends Fragment implements Caching.SubContractObserver {
 
     // variables
     private MainActivity mainActivity;
     private ArrayList<ScheduledTransaction> scheduledTransactions;
     private SubContract subContract;
-    private String id;
+    private String idSubcontract;
 
     @Nullable
     @Override
@@ -46,13 +46,16 @@ public class SubContractDisplay extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // get arguments
-        id = SubContractDisplayArgs.fromBundle(getArguments()).getId();
+        idSubcontract = SubContractDisplayArgs.fromBundle(getArguments()).getSubcontractId();
 
+        Caching.INSTANCE.getSubContract(idSubcontract);
+        Caching.INSTANCE.attachSubcontractObserver(this);
+    }
+
+    @Override
+    public void notify(SubContract contract) {
+        subContract = contract;
         StakeHolder stakeHolder = Caching.INSTANCE.getChosenStakeHolder();
-        Contract contract = Caching.INSTANCE.getChosenContract();
-        subContract = contract.getSubContractFromId(id);
-        Caching.INSTANCE.setChosenSubContract(subContract);
-
         mainActivity.setHeaderText(stakeHolder.getName() + " - " + subContract.getTitle());
     }
 }

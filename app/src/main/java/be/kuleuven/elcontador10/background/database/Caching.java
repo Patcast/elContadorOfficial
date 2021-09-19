@@ -67,7 +67,9 @@ public enum Caching {
         void notifyMicroAccountContractsObserver(List<Contract> contracts);
     }
 
-
+    public interface SubContractObserver {
+        void notify(SubContract contract);
+    }
 
 
 
@@ -91,6 +93,7 @@ public enum Caching {
     private final List <MicroAccountTransactionObserver> microAccountObservers = new ArrayList<>();
     private final List <AllTransactionsObserver> allTransactionsObservers = new ArrayList<>();
     private final List <MicroAccountContractObserver> microAccountContractObservers = new ArrayList<>();
+    private final List <SubContractObserver> subContractObservers = new ArrayList<>();
 
     ///********** Variables
 
@@ -142,6 +145,7 @@ public enum Caching {
         if(stakeHolders.size()!=0){
             newObserver.notifyStakeholdersObserver( stakeHolders); }
     }
+
     public void deAttachStakeholdersObservers(StakeholdersObserver newObserver){
         stakeholdersObservers.remove(newObserver);
     }
@@ -175,6 +179,16 @@ public enum Caching {
     public void deAttachMicroContractObserver(MicroAccountContractObserver observer) {
         if (microAccountContractObservers.size() != 0)
             microAccountContractObservers.remove(observer);
+    }
+
+    public void attachSubcontractObserver(SubContractObserver observer) {
+        subContractObservers.add(observer);
+        if (chosenSubContract != null)
+            observer.notify(chosenSubContract);
+    }
+
+    public void detachSubcontractObserver(SubContractObserver observer) {
+        subContractObservers.remove(observer);
     }
 
 ///Other Methods*************************
@@ -458,6 +472,25 @@ public enum Caching {
                 });
 
         return subContracts;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void getSubContract(String subcontract) {
+        String url = "/accounts/" + chosenAccountId + "/stakeHolders/" + chosenMicroAccountId +
+                "/contracts/" + chosenContract.getId() + "/subcontracts/" + subcontract;
+
+        db.document(url)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null && value == null) {
+                        Log.w(TAG, "Listen failed", error);
+                        return;
+                    }
+
+                    chosenSubContract = value.toObject(SubContract.class);
+                    chosenSubContract.setId(value.getId());
+
+                    subContractObservers.forEach(e -> e.notify(chosenSubContract));
+                });
     }
 
 //////************** end of db
