@@ -33,8 +33,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.jetbrains.annotations.NotNull;
 
 
+import java.text.ParseException;
 import java.util.ArrayList;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -98,6 +100,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -116,13 +119,17 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
                 else fabNew.setVisibility(View.VISIBLE);
             }
         });
-
         rotateOpen = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_open);
         rotateClose = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_close);
         popOpen= AnimationUtils.loadAnimation(getContext(),R.anim.pop_up_fabs);
         popClose = AnimationUtils.loadAnimation(getContext(),R.anim.pop_down_fabs);
         isClicked= false;
-        viewModel.selectMonthlyList();
+        try {
+            Calendar cal = Calendar.getInstance();
+            viewModel.selectMonthlyList(cal.get(Calendar.MONTH)+1,cal.get(Calendar.YEAR));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
     @Override
     public void onStart() {
@@ -210,11 +217,19 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         navController.navigate(R.id.action_allTransactions2_to_newTransaction);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        String monthSelected = (getResources().getStringArray(R.array.months_list))[month-1];
-        String monthYear = ""+monthSelected+" "+year;
-        selectMonth.setText(monthYear);
+
+        try {
+            viewModel.selectMonthlyList(month,year);
+            String monthSelected = (getResources().getStringArray(R.array.months_list))[month-1];
+            String monthYear = ""+monthSelected+" "+year;
+            selectMonth.setText(monthYear);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "error with dates", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
