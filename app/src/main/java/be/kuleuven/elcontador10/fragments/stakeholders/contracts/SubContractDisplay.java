@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,6 +42,7 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
     private SubContract subContract;
     private String idSubcontract;
     ScheduledTransactionsRecViewAdapter adapter;
+    private SubContractViewModel viewModel;
 
     @Nullable
     @Override
@@ -50,6 +53,7 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
         mainActivity = (MainActivity) getActivity();
         scheduledTransactions = new ArrayList<>();
         adapter = new ScheduledTransactionsRecViewAdapter(view, getContext());
+        viewModel = new ViewModelProvider(requireActivity()).get(SubContractViewModel.class);
 
         // set views
         amount = view.findViewById(R.id.subcontract_amount);
@@ -73,6 +77,14 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
 
         Caching.INSTANCE.getSubContract(idSubcontract);
         Caching.INSTANCE.attachSubcontractObserver(this);
+
+        viewModel.getData().observe(getViewLifecycleOwner(), this::changeData);
+    }
+
+    public void changeData(ArrayList<ScheduledTransaction> scheduledTransactions) {
+        this.scheduledTransactions.clear();
+        this.scheduledTransactions.addAll(scheduledTransactions);
+        adapter.setScheduledTransactions(this.scheduledTransactions);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -82,9 +94,7 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
         StakeHolder stakeHolder = Caching.INSTANCE.getChosenStakeHolder();
         mainActivity.setHeaderText(stakeHolder.getName() + " - " + subContract.getTitle());
 
-        scheduledTransactions.clear();
-        scheduledTransactions.addAll(scheduledTransactionList);
-        adapter.setScheduledTransactions(scheduledTransactions);
+        viewModel.setData((ArrayList<ScheduledTransaction>) scheduledTransactionList);
 
         amount.setText(new NumberFormatter(subContract.getAmount()).getFinalNumber());
 

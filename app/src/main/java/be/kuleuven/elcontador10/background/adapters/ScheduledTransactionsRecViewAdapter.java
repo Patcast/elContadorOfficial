@@ -1,6 +1,7 @@
 package be.kuleuven.elcontador10.background.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.Timestamp;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -62,7 +65,7 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
 
         NumberFormatter formatterPaid = new NumberFormatter(transaction.getAmountPaid());
         NumberFormatter formatterTotal = new NumberFormatter(transaction.getTotalAmount());
-        if(formatterTotal.isNegative()) {
+        if(!formatterTotal.isNegative()) {
             holder.textAmount.setTextColor(ContextCompat.getColor(context, R.color.rec_view_negative_amount));
             holder.textPaidBy.setText(R.string.paid_to);
         }
@@ -72,7 +75,18 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
         holder.textDate.setText(DatabaseDatesFunctions.INSTANCE.timestampToString(transaction.getDueDate()));
         holder.textTitle.setText(transaction.getTitle());
 
+        // setting colours
+        if (transaction.getAmountPaid() >= transaction.getTotalAmount()) {
+            holder.textTitle.setTextColor(Color.GRAY);
+            holder.textAmount.setTextColor(Color.GRAY);
+        } else if (transaction.getDueDate().getSeconds() < Timestamp.now().getSeconds()) {
+            holder.textTitle.setTextColor(Color.RED);
+            holder.textAmount.setTextColor(Color.RED);
+        }
+
         //TODO categories
+
+        // TODO go somewhere
         
 //        holder.parent.setOnClickListener(v->{
 //            try {

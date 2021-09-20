@@ -212,6 +212,9 @@
     <string name="year">Year</string>
     <string name="receivables">Receivables</string>
     <string name="payables">Payables</string>
+    <string name="late">Late</string>
+    <string name="future">Future</string>
+    <string name="completed">Completed</string>
     <string-array name="months_list">
         <item>January</item>
         <item>February</item>
