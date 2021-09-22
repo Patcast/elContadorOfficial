@@ -10,8 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,13 +24,12 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.ScheduledTransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.model.contract.Contract;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
-public class SubContractDisplay extends Fragment implements Caching.SubContractObserver {
+public class SubContractDisplay extends Fragment implements Caching.SubContractObserver, MainActivity.TopMenuHandler {
 
     //views
     private TextView amount, period, title;
@@ -50,10 +49,13 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
         View view =  inflater.inflate(R.layout.fragment_contract_subcontract, container, false);
 
         // set variables
-        mainActivity = (MainActivity) getActivity();
+        mainActivity = (MainActivity) requireActivity();
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter, true);
+        mainActivity.setCurrentMenuClicker(this);
+
         scheduledTransactions = new ArrayList<>();
         adapter = new ScheduledTransactionsRecViewAdapter(view, getContext());
-        viewModel = new ViewModelProvider(requireActivity()).get(SubContractViewModel.class);
+        viewModel = new ViewModelProvider(mainActivity).get(SubContractViewModel.class);
 
         // set views
         amount = view.findViewById(R.id.subcontract_amount);
@@ -78,13 +80,11 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
         Caching.INSTANCE.getSubContract(idSubcontract);
         Caching.INSTANCE.attachSubcontractObserver(this);
 
-        viewModel.getData().observe(getViewLifecycleOwner(), this::changeData);
+        viewModel.getFiltered().observe(getViewLifecycleOwner(), this::changeData);
     }
 
-    public void changeData(ArrayList<ScheduledTransaction> scheduledTransactions) {
-        this.scheduledTransactions.clear();
-        this.scheduledTransactions.addAll(scheduledTransactions);
-        adapter.setScheduledTransactions(this.scheduledTransactions);
+    public void changeData(ArrayList<ScheduledTransaction> filteredTransactions) {
+        adapter.setScheduledTransactions(filteredTransactions);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -94,7 +94,8 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
         StakeHolder stakeHolder = Caching.INSTANCE.getChosenStakeHolder();
         mainActivity.setHeaderText(stakeHolder.getName() + " - " + subContract.getTitle());
 
-        viewModel.setData((ArrayList<ScheduledTransaction>) scheduledTransactionList);
+        scheduledTransactions = (ArrayList<ScheduledTransaction>) scheduledTransactionList;
+        viewModel.setFiltered(scheduledTransactions);
 
         amount.setText(new NumberFormatter(subContract.getAmount()).getFinalNumber());
 
@@ -104,5 +105,46 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
             period.setText("N/A");
 
         title.setText(contract.getTitle());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter, false);
+        mainActivity.setCurrentMenuClicker(null);
+    }
+
+    // activity handler functions
+
+    @Override
+    public void onBottomSheetClick() {
+
+    }
+
+    @Override
+    public void onDeleteClick() {
+
+    }
+
+    @Override
+    public void onEditingClick() {
+
+    }
+
+    @Override
+    public void onAddClick() {
+
+    }
+
+    @Override
+    public void onSearchClick(SearchView searchView) {
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onFilterClick() {
+        SubContractFilterDialog filterDialog = new SubContractFilterDialog(getViewLifecycleOwner());
+        filterDialog.show(getParentFragmentManager(), "SubContractDisplay");
     }
 }

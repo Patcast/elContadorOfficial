@@ -65,10 +65,7 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
 
         NumberFormatter formatterPaid = new NumberFormatter(transaction.getAmountPaid());
         NumberFormatter formatterTotal = new NumberFormatter(transaction.getTotalAmount());
-        if(!formatterTotal.isNegative()) {
-            holder.textAmount.setTextColor(ContextCompat.getColor(context, R.color.rec_view_negative_amount));
-            holder.textPaidBy.setText(R.string.paid_to);
-        }
+        if(formatterTotal.isNegative()) holder.textPaidBy.setText(R.string.paid_by);
 
         String amount = formatterPaid.getFinalNumber() + "/" + formatterTotal.getFinalNumber();
         holder.textAmount.setText(amount);
@@ -76,10 +73,10 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
         holder.textTitle.setText(transaction.getTitle());
 
         // setting colours
-        if (transaction.getAmountPaid() >= transaction.getTotalAmount()) {
+        if (Math.abs(transaction.getAmountPaid()) >= Math.abs(transaction.getTotalAmount())) { // paid
             holder.textTitle.setTextColor(Color.GRAY);
             holder.textAmount.setTextColor(Color.GRAY);
-        } else if (transaction.getDueDate().getSeconds() < Timestamp.now().getSeconds()) {
+        } else if (transaction.getDueDate().getSeconds() < Timestamp.now().getSeconds()) { // unpaid and late
             holder.textTitle.setTextColor(Color.RED);
             holder.textAmount.setTextColor(Color.RED);
         }
