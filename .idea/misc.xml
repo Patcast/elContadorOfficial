@@ -19,6 +19,8 @@
         <entry key="app/src/main/res/layout/fragment_all_transactions.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_micro_account_transactions.xml" value="0.25" />
         <entry key="app/src/main/res/layout/rec_view_contracts.xml" value="0.11018237082066869" />
+        <entry key="app/src/main/res/layout/rec_view_item_all_transactions.xml" value="0.2265625" />
+        <entry key="app/src/main/res/layout/rec_view_scheduled_payments.xml" value="0.2265625" />
       </map>
     </option>
   </component>

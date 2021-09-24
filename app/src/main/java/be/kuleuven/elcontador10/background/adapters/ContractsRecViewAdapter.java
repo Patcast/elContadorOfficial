@@ -32,12 +32,14 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
     private final Context context;
     private NavController navController;
     private Fragment fragment;
+    private ArrayList<ViewHolder> views;
 
     public ContractsRecViewAdapter(View view, Context context, Fragment fragment) {
         viewFromHostingClass = view;
         this.context = context;
         contracts = new ArrayList<>();
         this.fragment = fragment;
+        views = new ArrayList<>();
     }
 
     @NonNull
@@ -52,13 +54,14 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Contract contract = contracts.get(position);
+        views.add(holder);
 
         holder.title.setText(contract.getTitle());
 
         holder.expand.setOnClickListener(v -> {
             if (contract.getSubContracts().size() != 0) {
                 if (holder.subcontracts.getVisibility() == View.GONE) {
-                    closeOtherContracts(holder, position);
+                    closeOtherContracts(position);
 
                     Caching.INSTANCE.setChosenContract(contract);
 
@@ -91,9 +94,11 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void closeOtherContracts(ViewHolder holder, int position) {
+    public void closeOtherContracts(int position) {
         for (int i = 0; i < getItemCount(); i++) {
             if (i != position) {
+                ViewHolder holder = views.get(i);
+
                 holder.expand.setBackground(context.getDrawable(R.drawable.icon_expand));
                 holder.subcontracts.setVisibility(View.GONE);
                 holder.divider.setVisibility(View.GONE);
