@@ -104,7 +104,6 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
     public void onStop() {
         super.onStop();
         Caching.INSTANCE.deAttachMicroContractObserver(this);
-        subContractList.clear();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
