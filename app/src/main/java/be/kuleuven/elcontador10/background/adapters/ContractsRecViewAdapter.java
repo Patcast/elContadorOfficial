@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.elcontador10.R;
+import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.contract.Contract;
 import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolderDirections;
@@ -56,21 +57,27 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
 
         holder.expand.setOnClickListener(v -> {
             if (contract.getSubContracts().size() != 0) {
-                if (holder.payments.getVisibility() == View.GONE) {
+                if (holder.subcontracts.getVisibility() == View.GONE) {
+                    closeOtherContracts(holder, position);
+
+                    Caching.INSTANCE.setChosenContract(contract);
+
                     holder.expand.setBackground(context.getDrawable(R.drawable.icon_compress));
-                    holder.payments.setVisibility(View.VISIBLE);
+                    holder.subcontracts.setVisibility(View.VISIBLE);
 
                     // set up Payments recycler view
-                    holder.payments.setLayoutManager(new LinearLayoutManager(context));
+                    holder.subcontracts.setLayoutManager(new LinearLayoutManager(context));
                     ArrayList<SubContract> subContracts = contract.getSubContracts();
                     SubContractsRecViewAdapter adapter = new SubContractsRecViewAdapter(viewFromHostingClass, context, fragment);
                     adapter.setPayments(subContracts);
-                    holder.payments.setAdapter(adapter);
+                    holder.subcontracts.setAdapter(adapter);
 
                     holder.divider.setVisibility(View.VISIBLE);
                 } else {
+                    Caching.INSTANCE.setChosenContract(null);
+
                     holder.expand.setBackground(context.getDrawable(R.drawable.icon_expand));
-                    holder.payments.setVisibility(View.GONE);
+                    holder.subcontracts.setVisibility(View.GONE);
                     holder.divider.setVisibility(View.GONE);
                 }
             }
@@ -83,16 +90,26 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void closeOtherContracts(ViewHolder holder, int position) {
+        for (int i = 0; i < getItemCount(); i++) {
+            if (i != position) {
+                holder.expand.setBackground(context.getDrawable(R.drawable.icon_expand));
+                holder.subcontracts.setVisibility(View.GONE);
+                holder.divider.setVisibility(View.GONE);
+            }
+        }
+    }
+
     @Override
     public int getItemCount() {
         return contracts.size();
     }
 
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView title;
         private final Button expand;
-        private final RecyclerView payments;
+        private final RecyclerView subcontracts;
         private final ConstraintLayout layout;
         private final View divider;
 
@@ -101,7 +118,7 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
 
             title = itemView.findViewById(R.id.contract_title);
             expand = itemView.findViewById(R.id.contract_expand);
-            payments = itemView.findViewById(R.id.contract_recyclerview);
+            subcontracts = itemView.findViewById(R.id.contract_recyclerview);
             layout = itemView.findViewById(R.id.contract_layout);
             divider = itemView.findViewById(R.id.contract_divider);
         }
