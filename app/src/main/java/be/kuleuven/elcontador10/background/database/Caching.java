@@ -12,12 +12,9 @@ import androidx.annotation.RequiresApi;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.core.OrderBy;
 
 
 import java.util.ArrayList;
@@ -31,10 +28,10 @@ import be.kuleuven.elcontador10.background.model.Account;
 
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
+import be.kuleuven.elcontador10.background.model.Transactions.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 import be.kuleuven.elcontador10.background.model.User;
-import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
+import be.kuleuven.elcontador10.background.model.Transactions.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.contract.Contract;
@@ -362,7 +359,7 @@ public enum Caching {
                     transactions.clear();
                     for (QueryDocumentSnapshot doc : value) {
                         ProcessedTransaction myTransaction =  doc.toObject(ProcessedTransaction.class);
-                        myTransaction.setId( doc.getId());
+                        myTransaction.setIdOfTransaction( doc.getId());
                         transactions.add(myTransaction);
                     }
                     allTransactionsObservers.forEach(t->t.notifyAllTransactionsObserver(getTransactions()));
@@ -497,8 +494,8 @@ public enum Caching {
 
                     for (QueryDocumentSnapshot doc : value) {
                         ScheduledTransaction transaction = doc.toObject(ScheduledTransaction.class);
-                        transaction.setId(doc.getId());
-                        transaction.setTitle(subContractTitle);
+                        transaction.setIdOfTransaction(doc.getId());
+                        transaction.setIdOfTransaction(subContractTitle);
                         scheduledTransactions.add(transaction);
                     }
 
@@ -550,7 +547,7 @@ public enum Caching {
     public ProcessedTransaction getTransaction(String idOfTransaction){
         List<ProcessedTransaction> availableTran = new ArrayList<>(getTransactions());
        Optional<ProcessedTransaction> possibleTransaction = availableTran.stream()
-                            .filter(t->t.getId().equals(idOfTransaction))
+                            .filter(t->t.getIdOfTransaction().equals(idOfTransaction))
                             .findFirst();
        return possibleTransaction.orElse(null);
     }

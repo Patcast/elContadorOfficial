@@ -46,6 +46,7 @@ import be.kuleuven.elcontador10.background.ViewModelCategory;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
+import be.kuleuven.elcontador10.background.model.Transactions.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
 
@@ -206,7 +207,7 @@ public class ContractNewSubContract extends Fragment {
                     final long final_amount = amount_value;
                     final String final_ID = Caching.INSTANCE.getChosenMicroAccountId();
 
-                    transactions.forEach(e -> e.setTotalAmount(final_amount));
+                    transactions.forEach(e -> e.setAmount((int)final_amount));
                     transactions.forEach(e -> e.setIdOfStakeholder(final_ID));
 
                     // add all scheduled transactions
@@ -274,7 +275,7 @@ public class ContractNewSubContract extends Fragment {
 
                         String info_text = period_text + "\n\nPayment dates:\n" +
                                 transactions.stream()
-                                        .map(e -> DatabaseDatesFunctions.INSTANCE.timestampToString(e.getDueDate()))
+                                        .map(e -> DatabaseDatesFunctions.INSTANCE.timestampToString(e.getDate()))
                                         .collect(Collectors.joining("\n"));
 
                         info.setText(info_text);

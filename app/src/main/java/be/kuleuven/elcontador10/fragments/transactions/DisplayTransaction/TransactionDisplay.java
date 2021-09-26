@@ -33,7 +33,7 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.tools.DateFormatter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
-import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
+import be.kuleuven.elcontador10.background.model.Transactions.ProcessedTransaction;
 
 public class TransactionDisplay extends Fragment  {
     private MainActivity mainActivity;
@@ -177,10 +177,10 @@ public class TransactionDisplay extends Fragment  {
             DateFormatter timeFormatter = new DateFormatter(selectedTrans.getDate(),"t");
             amount.setText(formatter.getFinalNumber());
             String startPhrase=(formatter.isNegative())? getString(R.string.paid_to): getString(R.string.paid_by);
-            String concerningText= startPhrase+" "+Caching.INSTANCE.getStakeholderName(selectedTrans.getStakeHolder());
+            String concerningText= startPhrase+" "+Caching.INSTANCE.getStakeholderName(selectedTrans.getIdOfStakeholder());
             concerning.setText(concerningText);
             account.setText(Caching.INSTANCE.getAccountName());
-            idText.setText(selectedTrans.getId());
+            idText.setText(selectedTrans.getIdOfTransaction());
             String emoji =Caching.INSTANCE.getCategoryEmoji(selectedTrans.getCategory());
             if (emoji.length()==0){
                 emojiCategory.setVisibility(View.GONE);

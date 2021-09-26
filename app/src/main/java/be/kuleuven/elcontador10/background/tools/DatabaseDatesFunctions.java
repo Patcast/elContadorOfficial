@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
+import be.kuleuven.elcontador10.background.model.Transactions.ScheduledTransaction;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public enum DatabaseDatesFunctions {

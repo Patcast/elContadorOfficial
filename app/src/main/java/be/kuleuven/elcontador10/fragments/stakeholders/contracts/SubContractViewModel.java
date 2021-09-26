@@ -11,7 +11,7 @@ import com.google.firebase.Timestamp;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
+import be.kuleuven.elcontador10.background.model.Transactions.ScheduledTransaction;
 
 public class SubContractViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<ScheduledTransaction>> filtered = new MutableLiveData<>();
@@ -62,19 +62,19 @@ public class SubContractViewModel extends ViewModel {
 
         if (isLate.getValue())
             combined.addAll(raw.stream()
-                    .filter(e -> Math.abs(e.getAmountPaid()) < Math.abs(e.getTotalAmount()))
-                    .filter(e -> e.getDueDate().getSeconds() < Timestamp.now().getSeconds()) // due date smaller than now
+                    .filter(e -> Math.abs(e.getAmountPaid()) < Math.abs(e.getAmount()))
+                    .filter(e -> e.getDate().getSeconds() < Timestamp.now().getSeconds()) // due date smaller than now
                     .collect(Collectors.toCollection(ArrayList::new)));
 
         if (isFuture.getValue())
             combined.addAll(raw.stream()
-                    .filter(e -> Math.abs(e.getAmountPaid()) < Math.abs(e.getTotalAmount()))
-                    .filter(e -> e.getDueDate().getSeconds() > Timestamp.now().getSeconds()) // due date larger than now
+                    .filter(e -> Math.abs(e.getAmountPaid()) < Math.abs(e.getAmount()))
+                    .filter(e -> e.getDate().getSeconds() > Timestamp.now().getSeconds()) // due date larger than now
                     .collect(Collectors.toCollection(ArrayList::new)));
 
         if (isCompleted.getValue())
             combined.addAll(raw.stream()
-                    .filter(e -> Math.abs(e.getAmountPaid()) >= Math.abs(e.getTotalAmount()))
+                    .filter(e -> Math.abs(e.getAmountPaid()) >= Math.abs(e.getAmount()))
                     .collect(Collectors.toCollection(ArrayList::new)));
 
         this.filtered.setValue(combined);

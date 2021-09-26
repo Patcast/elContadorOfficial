@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.background.model.contract;
+package be.kuleuven.elcontador10.background.model.Transactions;
 
 import android.util.Log;
 
@@ -8,21 +8,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import be.kuleuven.elcontador10.background.database.Caching;
 
-public class ScheduledTransaction {
-    private String id;
-    private long totalAmount;
+public class ScheduledTransaction extends Transaction{
+
+
     private long amountPaid;
-    private Timestamp dueDate;
-    private String idOfStakeholder;
-    private String title;
+
+
 
     private static final String TAG = "scheduledTransaction";
 
     public ScheduledTransaction(long totalAmount, long amountPaid, Timestamp dueDate, String idOfStakeholder) {
-        this.totalAmount = totalAmount;
+        super("title",(int)amountPaid,idOfStakeholder,"category",dueDate);
         this.amountPaid = amountPaid;
-        this.dueDate = dueDate;
-        this.idOfStakeholder = idOfStakeholder;
+
     }
 
     // for Firebase
@@ -41,23 +39,6 @@ public class ScheduledTransaction {
                 .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
     }
 
-    @Exclude
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public long getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(long totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
     public long getAmountPaid() {
         return amountPaid;
     }
@@ -66,28 +47,10 @@ public class ScheduledTransaction {
         this.amountPaid = amountPaid;
     }
 
-    public Timestamp getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(Timestamp dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public String getIdOfStakeholder() {
-        return idOfStakeholder;
-    }
 
     public void setIdOfStakeholder(String idOfStakeholder) {
-        this.idOfStakeholder = idOfStakeholder;
+        super.setIdOfStakeholder(idOfStakeholder);
     }
 
-    @Exclude
-    public String getTitle() {
-        return title;
-    }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
 }
