@@ -29,8 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.model.Transaction;
+import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 
 public class ViewModel_AllTransactions extends ViewModel {
     private static final String TAG = "All Transactions VM";
@@ -46,8 +47,8 @@ public class ViewModel_AllTransactions extends ViewModel {
     }
 
 
-    private final MutableLiveData<List<Transaction>> monthlyListOfTransactions = new MutableLiveData<>();
-    public LiveData<List<Transaction>> getMonthlyListOfTransactions() {
+    private final MutableLiveData<List<ProcessedTransaction>> monthlyListOfTransactions = new MutableLiveData<>();
+    public LiveData<List<ProcessedTransaction>> getMonthlyListOfTransactions() {
         return monthlyListOfTransactions;
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -72,9 +73,9 @@ public class ViewModel_AllTransactions extends ViewModel {
                     Log.w(TAG, "Listen failed.", e);
                     return;
                 }
-                List<Transaction> listTrans = new ArrayList<>();
+                List<ProcessedTransaction> listTrans = new ArrayList<>();
                 for (QueryDocumentSnapshot doc : value) {
-                    Transaction myTransaction =  doc.toObject(Transaction.class);
+                    ProcessedTransaction myTransaction =  doc.toObject(ProcessedTransaction.class);
                     myTransaction.setId( doc.getId());
                     listTrans.add(myTransaction);
                 }

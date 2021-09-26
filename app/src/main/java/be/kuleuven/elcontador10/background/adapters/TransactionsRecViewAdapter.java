@@ -24,13 +24,13 @@ import java.util.List;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
-import be.kuleuven.elcontador10.background.model.Transaction;
+import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolderDirections;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.AllTransactionsDirections;
 
 
 public class TransactionsRecViewAdapter extends RecyclerView.Adapter<TransactionsRecViewAdapter.ViewHolder>  {
-    private List<Transaction> allTransactions = new ArrayList<>();
+    private List<ProcessedTransaction> allTransactions = new ArrayList<>();
     NavController navController;
     View viewFromHostingClass;
     Context context;
@@ -103,7 +103,7 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
     }
 
 
-    public void setAllTransactions (List<Transaction> NewTransactions) {
+    public void setAllTransactions (List<ProcessedTransaction> NewTransactions) {
         this.allTransactions = NewTransactions;
         notifyDataSetChanged();
     }

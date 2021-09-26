@@ -33,12 +33,12 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.tools.DateFormatter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
-import be.kuleuven.elcontador10.background.model.Transaction;
+import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 
 public class TransactionDisplay extends Fragment  {
     private MainActivity mainActivity;
     TextView concerning, registeredBy, idText ,account, amount, category,emojiCategory, date,time, notes;
-    Transaction selectedTrans;
+    ProcessedTransaction selectedTrans;
     NavController navController;
     ConstraintLayout layoutAddPhotoIcon;
     CircularProgressIndicator progressIndicator;

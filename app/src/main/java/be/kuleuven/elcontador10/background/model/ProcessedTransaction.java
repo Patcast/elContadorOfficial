@@ -28,7 +28,7 @@ import java.util.Date;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 
-public class Transaction {
+public class ProcessedTransaction {
     private static final String TAG = "newTransaction";
 
 
@@ -46,10 +46,10 @@ public class Transaction {
     private boolean deleted;
     private String imageName;
 
-    public Transaction() {
+    public ProcessedTransaction() {
     }
 
-    public Transaction(String title, int amount, String registeredBy, String stakeHolder, String category, String notes, String imageName) {
+    public ProcessedTransaction(String title, int amount, String registeredBy, String stakeHolder, String category, String notes, String imageName) {
         this.title = title;
         this.amount = amount;
         this.registeredBy = registeredBy;
@@ -62,7 +62,7 @@ public class Transaction {
     }
 
 
-    public void uploadImageToFireBase(Transaction newTransactionInput,ImageFireBase ImageSelected,Context context) {
+    public void uploadImageToFireBase(ProcessedTransaction newTransactionInput,ImageFireBase ImageSelected,Context context) {
         StringBuilder saveUrl = new StringBuilder();
         saveUrl.append(Caching.INSTANCE.getChosenAccountId());
         saveUrl.append("/");
@@ -74,7 +74,7 @@ public class Transaction {
             Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show();
         });
     }
-    public void sendTransaction(Transaction newTrans,Context context){
+    public void sendTransaction(ProcessedTransaction newTrans,Context context){
         String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
 
         db.collection(urlNewTransactions)
