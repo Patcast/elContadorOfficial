@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -55,6 +56,7 @@ public class ContractNewSubContract extends Fragment {
     private Button start, confirm;
     private LinearLayout duration_layout;
     private ConstraintLayout custom_frequency_layout;
+    private ImageButton addCategory;
 
     //variables
     private MainActivity mainActivity;
@@ -117,6 +119,8 @@ public class ContractNewSubContract extends Fragment {
 
         confirm = view.findViewById(R.id.payment_new_confirm);
         confirm.setOnClickListener(this::onConfirm_Clicked);
+
+        addCategory = view.findViewById(R.id.imageButton_chooseCategory);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

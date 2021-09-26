@@ -127,6 +127,9 @@
         <argument
             android:name="contractId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_contractNewPayment_to_chooseCategory"
+            app:destination="@id/chooseCategory" />
     </fragment>
     <fragment
         android:id="@+id/chooseCategory"
