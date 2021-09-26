@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -25,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -40,7 +42,9 @@ import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.ViewModelCategory;
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
@@ -49,20 +53,20 @@ public class ContractNewSubContract extends Fragment {
     private NavController navController;
 
     //views
-    private TextView title, amount, custom_frequency, duration, info, notes;
+    private TextView title, amount, custom_frequency, duration, info, notes, emoji;
     private Spinner frequency_spinner, custom_frequency_spinner, duration_spinner;
     private RadioButton in, out;
     private Button start, confirm;
     private LinearLayout duration_layout;
     private ConstraintLayout custom_frequency_layout;
+    private ImageButton selectCategory;
 
     //variables
     private MainActivity mainActivity;
-    private String contractId;
-    private String period_text;
-    private String frequency_text;
+    private String contractId, idCatSelected, period_text, frequency_text;
     private int paymentsLeft;
     private ArrayList<ScheduledTransaction> transactions;
+    private ViewModelCategory viewModel;
 
     @Nullable
     @Override
@@ -117,6 +121,35 @@ public class ContractNewSubContract extends Fragment {
 
         confirm = view.findViewById(R.id.payment_new_confirm);
         confirm.setOnClickListener(this::onConfirm_Clicked);
+
+        selectCategory = view.findViewById(R.id.imageButton_chooseCategory);
+        selectCategory.setOnClickListener(this::onSelectCategory_Clicked);
+
+        emoji = view.findViewById(R.id.text_emoji_category);
+        emoji.setOnClickListener(this::onSelectCategory_Clicked);
+
+        viewModel = new ViewModelProvider(requireActivity()).get(ViewModelCategory.class);
+        viewModel.getChosenCategory().observe(getViewLifecycleOwner(), this::setChosenCategory);
+    }
+
+    public void onSelectCategory_Clicked(View view) {
+        ContractNewSubContractDirections.ActionContractNewPaymentToChooseCategory action =
+                ContractNewSubContractDirections.actionContractNewPaymentToChooseCategory(false);
+
+        navController.navigate(action);
+    }
+
+    public void setChosenCategory(EmojiCategory emojiCategory) {
+        if (emojiCategory == null) {
+            idCatSelected = null;
+            emoji.setVisibility(View.GONE);
+            selectCategory.setVisibility(View.VISIBLE);
+        } else {
+            idCatSelected = emojiCategory.getId();
+            selectCategory.setVisibility(View.GONE);
+            emoji.setVisibility(View.VISIBLE);
+            emoji.setText(emojiCategory.getIcon());
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

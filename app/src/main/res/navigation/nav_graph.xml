@@ -127,12 +127,19 @@
         <argument
             android:name="contractId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_contractNewPayment_to_chooseCategory"
+            app:destination="@id/chooseCategory" />
     </fragment>
     <fragment
         android:id="@+id/chooseCategory"
         android:name="be.kuleuven.elcontador10.fragments.transactions.NewTransaction.Categories.ChooseCategory"
         android:label="fragment_choose_category"
-        tools:layout="@layout/fragment_choose_category" />
+        tools:layout="@layout/fragment_choose_category" >
+        <argument
+            android:name="newTransaction"
+            app:argType="boolean" />
+    </fragment>
     <fragment
         android:id="@+id/displayPhoto2"
         android:name="be.kuleuven.elcontador10.fragments.transactions.DisplayTransaction.DisplayPhoto"

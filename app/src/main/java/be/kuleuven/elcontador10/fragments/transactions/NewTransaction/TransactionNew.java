@@ -113,14 +113,19 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         // listeners
         txtStakeHolder.setOnClickListener(v -> { navController.navigate(R.id.action_newTransaction_to_chooseStakeHolderDialog); });
         confirmButton.setOnClickListener(v -> confirmTransaction());
-        btnAddCategory.setOnClickListener(v-> navController.navigate(R.id.action_newTransaction_to_chooseCategory));
+        btnAddCategory.setOnClickListener(this::onCategory_Clicked);
         btnAddPicture.setOnClickListener(v -> askForCamaraPermission());
-        txtEmojiCategory.setOnClickListener(v-> navController.navigate(R.id.action_newTransaction_to_chooseCategory));
+        txtEmojiCategory.setOnClickListener(this::onCategory_Clicked);
         setWordCounters();
         accountSelected.setText(Caching.INSTANCE.getAccountName());
     }
 
+    public void onCategory_Clicked(View view) {
+        TransactionNewDirections.ActionNewTransactionToChooseCategory action =
+                TransactionNewDirections.actionNewTransactionToChooseCategory(true);
 
+        navController.navigate(action);
+    }
 
     private void setWordCounters() {
         new MaxWordsCounter(30,txtTitle,txtWordsCounterTitle,getContext());
