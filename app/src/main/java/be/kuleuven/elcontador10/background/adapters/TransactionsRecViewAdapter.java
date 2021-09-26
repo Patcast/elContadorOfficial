@@ -24,7 +24,7 @@ import java.util.List;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
-import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
+import be.kuleuven.elcontador10.background.model.Transactions.ProcessedTransaction;
 import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolderDirections;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.AllTransactionsDirections;
 
@@ -51,8 +51,8 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
-        String idStakeholder = allTransactions.get(position).getStakeHolder();
-        String idOfTransaction = allTransactions.get(position).getId();
+        String idStakeholder = allTransactions.get(position).getIdOfStakeholder();
+        String idOfTransaction = allTransactions.get(position).getIdOfTransaction();
         String stakeName = Caching.INSTANCE.getStakeholderName(idStakeholder);
         NumberFormatter formatter = new NumberFormatter(allTransactions.get(position).getAmount());
         if(formatter.isNegative())holder.textAmount.setTextColor(ContextCompat.getColor(context, R.color.rec_view_negative_amount));

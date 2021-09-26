@@ -1,10 +1,7 @@
 package be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
 
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
@@ -12,13 +9,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.core.OrderBy;
-import com.google.firebase.storage.FirebaseStorage;
-import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -29,9 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
-import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
+import be.kuleuven.elcontador10.background.model.Transactions.ProcessedTransaction;
 
 public class ViewModel_AllTransactions extends ViewModel {
     private static final String TAG = "All Transactions VM";
@@ -76,7 +67,7 @@ public class ViewModel_AllTransactions extends ViewModel {
                 List<ProcessedTransaction> listTrans = new ArrayList<>();
                 for (QueryDocumentSnapshot doc : value) {
                     ProcessedTransaction myTransaction =  doc.toObject(ProcessedTransaction.class);
-                    myTransaction.setId( doc.getId());
+                    myTransaction.setIdOfTransaction( doc.getId());
                     listTrans.add(myTransaction);
                 }
                 monthlyListOfTransactions.setValue(listTrans);
