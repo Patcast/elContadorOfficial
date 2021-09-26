@@ -3,14 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/allTransactions2"
         android:icon="@drawable/ic_round_analytics_24"
-        android:title="@string/analytics"
+        android:title="@string/summary"
         />
     <item android:id="@+id/stakeholders"
         android:icon="@drawable/ic_baseline_people_alt_24"
         android:title="@string/stakeholdersPlural"
         />
-    <item android:id="@+id/properties"
-        android:icon="@drawable/ic_baseline_business_24"
-        android:title="@string/properties"
-        />
+
 </menu>

@@ -16,15 +16,76 @@
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/fragment_view_pager_holder.xml" value="0.36666666666666664" />
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/rec_view_item_accounts.xml" value="0.36666666666666664" />
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/menu/top_three_buttons_menu.xml" value="0.36666666666666664" />
-        <entry key="app/src/main/res/layout/fragment_all_transactions.xml" value="0.22" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout-land/fragment_transactions.xml" value="0.17372134038800705" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_add_new_microaccount.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_all_transactions.xml" value="0.25" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_contract_display.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_contract_new_payment.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_contract_new_sub_contract.xml" value="0.24864130434782608" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_contract_subcontract.xml" value="0.3632246376811594" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_micro_account_contracts.xml" value="0.30978260869565216" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_micro_account_transactions.xml" value="0.30978260869565216" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_micro_account_view_holder.xml" value="0.33" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_properties.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_settings.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_stakeholder_display.xml" value="0.31431159420289856" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_stakeholder_summary.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_view_pager_holder.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/rec_view_item_all_transactions.xml" value="0.30978260869565216" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/rec_view_item_categories.xml" value="0.30978260869565216" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/rec_view_payments.xml" value="0.5" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/rec_view_scheduled_payments.xml" value="0.5" />
+        <entry key="app/src/main/res/drawable/accounts_first_background.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/accounts_second_background.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/background_accounts_first.xml" value="0.22870370370370371" />
+        <entry key="app/src/main/res/drawable/background_accounts_second.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/background_bottom_menu.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/background_buttons_white_outline.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/background_transaction_display.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/bottom_nav_icon_color_selector.xml" value="0.23333333333333334" />
+        <entry key="app/src/main/res/drawable/buttons.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/ic_baseline_add_a_photo_24.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/ic_baseline_business_24.xml" value="0.24259259259259258" />
+        <entry key="app/src/main/res/drawable/ic_tag.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/new_account_category_outline.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/rec_view_item_accounts_test.xml" value="0.22870370370370371" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/bottom_menu_accounts.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/bottom_menu_categories.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/bottom_menu_pick_gallery_or_camara.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/cardview_row.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/dialoge_category_editing.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/fragment_accounts_bottom_menu.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/fragment_add_new_account.xml" value="0.14907407407407408" />
+        <entry key="app/src/main/res/layout/fragment_all_micro_acounts.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/fragment_all_transactions.xml" value="0.2911882219335624" />
+        <entry key="app/src/main/res/layout/fragment_choose_category.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/fragment_choose_stake_holder.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/fragment_contract_new.xml" value="0.1328125" />
+        <entry key="app/src/main/res/layout/fragment_contract_new_payment.xml" value="0.1328125" />
+        <entry key="app/src/main/res/layout/fragment_display_photo.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25384615384615383" />
         <entry key="app/src/main/res/layout/fragment_micro_account_transactions.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/rec_view_contracts.xml" value="0.11018237082066869" />
-        <entry key="app/src/main/res/layout/rec_view_item_all_transactions.xml" value="0.2265625" />
-        <entry key="app/src/main/res/layout/rec_view_scheduled_payments.xml" value="0.2265625" />
+        <entry key="app/src/main/res/layout/fragment_micro_account_view_holder.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/fragment_properties.xml" value="0.2014388489208633" />
+        <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/fragment_transaction_display.xml" value="0.2503718534222504" />
+        <entry key="app/src/main/res/layout/fragment_transaction_new.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_view_pager_holder.xml" value="0.18796296296296297" />
+        <entry key="app/src/main/res/layout/rec_view_contracts.xml" value="0.1328125" />
+        <entry key="app/src/main/res/layout/rec_view_item_accounts.xml" value="0.38368905582062923" />
+        <entry key="app/src/main/res/layout/rec_view_item_accounts_test.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/rec_view_item_all_micros.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/rec_view_item_all_transactions.xml" value="0.38599314908689375" />
+        <entry key="app/src/main/res/layout/rec_view_item_categories.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/rec_view_payments.xml" value="0.1328125" />
+        <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.2578125" />
+        <entry key="app/src/main/res/menu/top_three_buttons_menu.xml" value="0.1" />
+        <entry key="app/src/main/res/xml/file_paths.xml" value="0.1" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
