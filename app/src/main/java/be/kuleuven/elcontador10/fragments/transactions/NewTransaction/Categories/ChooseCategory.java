@@ -25,6 +25,7 @@ import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.ViewModelCategory;
 import be.kuleuven.elcontador10.background.adapters.CategoriesRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
@@ -33,7 +34,7 @@ import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_
 public class ChooseCategory extends Fragment implements Caching.CategoriesObserver, MainActivity.TopMenuHandler, CategoryDialog.DialogCategoriesListener {
 //Todo: Delete BottomSheet class and layout
     private ConstraintLayout noCategoryItem,addCustomCat;
-    private ViewModel_NewTransaction viewModel;
+    private ViewModelCategory viewModel;
     private RecyclerView recyclerCategories_custom;
     private CategoriesRecViewAdapter adapter_custom;
     private final List<EmojiCategory> customCategories = new ArrayList<>();
@@ -50,7 +51,13 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         mainActivity.setCurrentMenuClicker(this);
         noCategoryItem = view.findViewById(R.id.choose_noCat);
         addCustomCat = view.findViewById(R.id.layout_addCategory);
-        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
+
+        boolean isNewTransaction = ChooseCategoryArgs.fromBundle(getArguments()).getNewTransaction();
+
+        if (isNewTransaction)
+            viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
+        else
+            viewModel = new ViewModelProvider(requireActivity()).get(ViewModelCategory.class);
         startDefaultRecViews(view);
         startCustomRecycler(view);
         return view;
