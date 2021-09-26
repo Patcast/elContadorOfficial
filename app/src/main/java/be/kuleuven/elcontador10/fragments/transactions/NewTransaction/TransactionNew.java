@@ -47,7 +47,7 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.ImageFireBase;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.model.Transaction;
+import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
@@ -205,7 +205,7 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
 
     private void makeNewTrans(){
 
-        Transaction newTransaction = new Transaction(
+        ProcessedTransaction newTransaction = new ProcessedTransaction(
                 txtTitle.getText().toString(),
                 (radGroup.getCheckedRadioButtonId() == R.id.radio_CashOut)?Integer.parseInt(txtAmount.getText().toString())*-1:Integer.parseInt(txtAmount.getText().toString()),
                 mainActivity.returnSavedLoggedEmail(),

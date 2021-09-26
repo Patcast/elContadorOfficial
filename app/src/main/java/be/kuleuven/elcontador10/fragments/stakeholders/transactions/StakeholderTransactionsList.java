@@ -24,14 +24,14 @@ import java.util.List;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.Transaction;
+import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewModel;
 
 public class StakeholderTransactionsList extends Fragment implements Caching.MicroAccountTransactionObserver {
     private RecyclerView recyclerView;
     private LinearLayout coverLayout;
     private TransactionsRecViewAdapter adapter;
-    private ArrayList<Transaction> transactions;
+    private ArrayList<ProcessedTransaction> transactions;
 
     private StakeholderViewModel viewModel;
     private boolean fabClicked;
@@ -87,7 +87,7 @@ public class StakeholderTransactionsList extends Fragment implements Caching.Mic
     }
 
     @Override
-    public void notifyMicroAccountTransactionObserver(List<Transaction> transactions) {
+    public void notifyMicroAccountTransactionObserver(List<ProcessedTransaction> transactions) {
         this.transactions.clear();
         this.transactions.addAll(transactions);
         adapter.setAllTransactions(this.transactions);

@@ -31,7 +31,7 @@ import be.kuleuven.elcontador10.background.model.Account;
 
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.model.Transaction;
+import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
 import be.kuleuven.elcontador10.background.model.User;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
@@ -59,10 +59,10 @@ public enum Caching {
         void notifyAccountsObserver(List<Account> accounts);
     }
     public interface AllTransactionsObserver{
-        void notifyAllTransactionsObserver(List<Transaction> allTransactions);
+        void notifyAllTransactionsObserver(List<ProcessedTransaction> allTransactions);
     }
     public interface MicroAccountTransactionObserver{
-        void notifyMicroAccountTransactionObserver(List<Transaction> transactions);
+        void notifyMicroAccountTransactionObserver(List<ProcessedTransaction> transactions);
     }
     public interface MicroAccountContractObserver {
         void notifyMicroAccountContractsObserver(List<Contract> contracts);
@@ -82,8 +82,8 @@ public enum Caching {
     public List <StakeHolder> stakeHolders = new ArrayList<>();
     public List <TransactionType>  transTypes = new ArrayList<>();
     public List <String> roles = new ArrayList<>();
-    public List <Transaction> transactions = new ArrayList<>();
-    public List <Transaction> microAccountTransactions = new ArrayList<>();
+    public List <ProcessedTransaction> transactions = new ArrayList<>();
+    public List <ProcessedTransaction> microAccountTransactions = new ArrayList<>();
     public List <Contract> microAccountContracts = new ArrayList<>();
     public List <ScheduledTransaction> scheduledTransactions = new ArrayList<>();
 
@@ -361,29 +361,14 @@ public enum Caching {
                     }
                     transactions.clear();
                     for (QueryDocumentSnapshot doc : value) {
-                        Transaction myTransaction =  doc.toObject(Transaction.class);
+                        ProcessedTransaction myTransaction =  doc.toObject(ProcessedTransaction.class);
                         myTransaction.setId( doc.getId());
                         transactions.add(myTransaction);
                     }
                     allTransactionsObservers.forEach(t->t.notifyAllTransactionsObserver(getTransactions()));
                 });
 
-   /* String urlGetAccountTransactions = "/accounts/"+chosenAccountId+"/transactions";
-        db.collection(urlGetAccountTransactions).
-                orderBy("date", Query.Direction.DESCENDING).
-                addSnapshotListener((value, e) -> {
-                    if (e != null) {
-                        Log.w(TAG, "Listen failed.", e);
-                        return;
-                    }
-                    transactions.clear();
-                    for (QueryDocumentSnapshot doc : value) {
-                        Transaction myTransaction =  doc.toObject(Transaction.class);
-                        myTransaction.setId( doc.getId());
-                        transactions.add(myTransaction);
-                    }
-                    allTransactionsObservers.forEach(t->t.notifyAllTransactionsObserver(getTransactions()));
-                });*/
+
     }
     User requestedUser;
     public User requestUser(String userEmail){
@@ -418,7 +403,7 @@ public enum Caching {
                     microAccountTransactions.clear();
 
                     for (QueryDocumentSnapshot doc : value) {
-                        Transaction myTransaction = doc.toObject(Transaction.class);
+                        ProcessedTransaction myTransaction = doc.toObject(ProcessedTransaction.class);
                         //myTransaction.setId(doc.getId());//new transactions don't need it.
                         microAccountTransactions.add(myTransaction);
                     }
@@ -553,7 +538,7 @@ public enum Caching {
         return stakeHolders;
     }
 
-    public List<Transaction> getTransactions() {
+    public List<ProcessedTransaction> getTransactions() {
         return transactions;
     }
 
@@ -562,9 +547,9 @@ public enum Caching {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public Transaction getTransaction(String idOfTransaction){
-        List<Transaction> availableTran = new ArrayList<>(getTransactions());
-       Optional<Transaction> possibleTransaction = availableTran.stream()
+    public ProcessedTransaction getTransaction(String idOfTransaction){
+        List<ProcessedTransaction> availableTran = new ArrayList<>(getTransactions());
+       Optional<ProcessedTransaction> possibleTransaction = availableTran.stream()
                             .filter(t->t.getId().equals(idOfTransaction))
                             .findFirst();
        return possibleTransaction.orElse(null);

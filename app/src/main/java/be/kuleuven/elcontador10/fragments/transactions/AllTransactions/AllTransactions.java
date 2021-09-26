@@ -44,7 +44,7 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.Transaction;
+import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.tools.MonthYearPickerDialog;
 
 
@@ -84,7 +84,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         return view;
     }
 
-    private void updateListOfTransactions(List<Transaction> listUpdated) {
+    private void updateListOfTransactions(List<ProcessedTransaction> listUpdated) {
         adapter.setAllTransactions(listUpdated);
     }
 
