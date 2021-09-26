@@ -121,7 +121,7 @@
     <string name="askForValidCompanyId">Please insert a valid Companie\'s Id</string>
     <string name="noCompanyIdTyped">Please type the id of the Company</string>
     <string name="accounts">Accounts</string>
-    <string name="select_an_stakeholder">Select an Stakeholder</string>
+    <string name="select_a_stakeholder">Select a Stakeholder</string>
     <string name="error_finding_microAccount">error finding microAccount</string>
     <string name="select_micro_account">Select a micro-account</string>
     <string name="search">Search</string>
@@ -215,6 +215,14 @@
     <string name="late">Late</string>
     <string name="future">Future</string>
     <string name="completed">Completed</string>
+    <string name="scheduled_transaction">Scheduled Transaction</string>
+    <string name="select_a_transaction">Select a Transaction</string>
+    <string name="total_amount_to_pay">Total amount to pay:</string>
+    <string name="amount_paid">Amount paid:</string>
+    <string name="amount_left">Amount left:</string>
+    <string name="increase_amount_paid">Increase amount paid</string>
+    <string name="warning_amount_paid_will_be_larger_than_amount_to_pay">Warning! Amount paid will be larger than amount to pay.</string>
+    <string name="execute_scheduled_transaction">Execute Scheduled Transaction</string>
 
     <string-array name="months_list">
         <item>January</item>

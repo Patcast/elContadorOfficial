@@ -186,7 +186,7 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
             selectedStakeHolder = stakeHolder;
         }
         else{
-            txtStakeHolder.setText(R.string.select_an_stakeholder);
+            txtStakeHolder.setText(R.string.select_a_stakeholder);
         }
     }
     private void confirmTransaction(){
