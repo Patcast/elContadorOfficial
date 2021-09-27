@@ -7,8 +7,9 @@ import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 
-public class ScheduledTransaction {
+public class ScheduledTransaction implements TransactionInterface {
     private String id;
     private long totalAmount;
     private long amountPaid;
@@ -89,5 +90,51 @@ public class ScheduledTransaction {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+
+    @Override
+    public int getColorPositiveInt() {
+        return 0;
+    }
+
+    @Override
+    public int getColorNegativeInt() {
+        return 0;
+    }
+
+    @Override
+    public int getAmountInt() {
+        return (int)totalAmount;
+    }
+
+    @Override
+    public String getIdOfStakeInt() {
+        return idOfStakeholder;
+    }
+
+    @Override
+    public String getIdOfTransactionInt() {
+        return null;
+    }
+
+    @Override
+    public String getIdOfCategoryInt() {
+        return null;
+    }
+
+    @Override
+    public String getDateInt() {
+        return "3 Sep";
+    }
+
+    @Override
+    public String getTitleInt() {
+        return "Title";
+    }
+
+    @Override
+    public String getImageInt() {
+        return null;
     }
 }

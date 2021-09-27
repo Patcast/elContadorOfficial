@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -34,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 
 
 import java.text.ParseException;
-import java.util.ArrayList;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -44,6 +42,7 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.tools.MonthYearPickerDialog;
 
@@ -79,12 +78,12 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
         viewModel.setTypesOfTransactions(makeMapOfTransTypes());
         viewModel.getChosenTypesOfTransactions().observe(getViewLifecycleOwner(), i ->updateTransactionTypesDisplayed());
-        viewModel.getMonthlyListOfTransactions().observe(getViewLifecycleOwner(),i->updateListOfTransactions(i));
+        viewModel.getAllChosenTransactions().observe(getViewLifecycleOwner(), i->updateListOfTransactions(i));
         startRecycler(view);
         return view;
     }
 
-    private void updateListOfTransactions(List<ProcessedTransaction> listUpdated) {
+    private void updateListOfTransactions(List<TransactionInterface> listUpdated) {
         adapter.setAllTransactions(listUpdated);
     }
 
@@ -223,9 +222,11 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
         try {
             viewModel.selectMonthlyList(month,year);
+            viewModel.selectScheduleTransactions(month,year);
             String monthSelected = (getResources().getStringArray(R.array.months_list))[month-1];
             String monthYear = ""+monthSelected+" "+year;
             selectMonth.setText(monthYear);
+            viewModel.setListOfTransactions();
         } catch (ParseException e) {
             e.printStackTrace();
             Toast.makeText(getContext(), "error with dates", Toast.LENGTH_SHORT).show();

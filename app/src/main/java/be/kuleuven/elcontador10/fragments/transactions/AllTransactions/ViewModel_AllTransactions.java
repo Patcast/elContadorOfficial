@@ -1,24 +1,19 @@
 package be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
 
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.core.OrderBy;
-import com.google.firebase.storage.FirebaseStorage;
-import com.squareup.picasso.Picasso;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -29,14 +24,16 @@ import java.util.HashMap;
 import java.util.List;
 
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
-import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
+import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 
 public class ViewModel_AllTransactions extends ViewModel {
     private static final String TAG = "All Transactions VM";
     //ChosenTypesOfTransactions
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
 
     private final MutableLiveData<HashMap<String,Boolean>> chosenTypesOfTransactions = new MutableLiveData<>();
     public LiveData<HashMap<String,Boolean>> getChosenTypesOfTransactions() {
@@ -46,11 +43,7 @@ public class ViewModel_AllTransactions extends ViewModel {
         chosenTypesOfTransactions.setValue(selectedTypes);
     }
 
-
     private final MutableLiveData<List<ProcessedTransaction>> monthlyListOfTransactions = new MutableLiveData<>();
-    public LiveData<List<ProcessedTransaction>> getMonthlyListOfTransactions() {
-        return monthlyListOfTransactions;
-    }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void selectMonthlyList(int month, int year) throws ParseException {
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -80,9 +73,50 @@ public class ViewModel_AllTransactions extends ViewModel {
                     listTrans.add(myTransaction);
                 }
                 monthlyListOfTransactions.setValue(listTrans);
+                setListOfTransactions();
+
             });
     }
 
+    private final MutableLiveData<List<ScheduledTransaction>> monthlyListOfScheduleTransactions = new MutableLiveData<>();
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void selectScheduleTransactions(int month, int year) throws ParseException {
+
+        db.collectionGroup("subcontracts").addSnapshotListener((value, e) -> {
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e);
+                return;
+            }
+            List<ScheduledTransaction> listTransSchedule = new ArrayList<>();
+            for (QueryDocumentSnapshot doc : value) {
+                ScheduledTransaction myTransaction =  doc.toObject(ScheduledTransaction.class);
+                myTransaction.setId(doc.getId());
+                listTransSchedule.add(myTransaction);
+            }
+            monthlyListOfScheduleTransactions.setValue(listTransSchedule);
+            setListOfTransactions();
+        });
+
+
+    }
+
+    private final MutableLiveData<List<TransactionInterface>> allChosenTransactions = new MutableLiveData<>();
+    public LiveData<List<TransactionInterface>> getAllChosenTransactions() {
+        return allChosenTransactions;
+    }
+    public void setListOfTransactions(){
+       List<TransactionInterface> listAllTransactions = new ArrayList<>();
+        /*if(getChosenTypesOfTransactions().getValue().get("transaction"))
+        {listAllTransactions.addAll(monthlyListOfTransactions.getValue());
+        }*/
+        if(getChosenTypesOfTransactions().getValue().get("receivable"))
+        {listAllTransactions.addAll(monthlyListOfScheduleTransactions.getValue());
+        }
+        else{
+            listAllTransactions.clear();
+        }
+        allChosenTransactions.setValue(listAllTransactions);
+    }
 
 
 

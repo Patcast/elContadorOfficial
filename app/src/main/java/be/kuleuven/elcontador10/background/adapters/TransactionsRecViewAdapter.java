@@ -23,6 +23,7 @@ import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolderDirections;
@@ -30,7 +31,7 @@ import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.AllTransa
 
 
 public class TransactionsRecViewAdapter extends RecyclerView.Adapter<TransactionsRecViewAdapter.ViewHolder>  {
-    private List<ProcessedTransaction> allTransactions = new ArrayList<>();
+    private List<TransactionInterface> allTransactions = new ArrayList<>();
     NavController navController;
     View viewFromHostingClass;
     Context context;
@@ -51,18 +52,19 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
-        String idStakeholder = allTransactions.get(position).getStakeHolder();
-        String idOfTransaction = allTransactions.get(position).getId();
+        String idStakeholder = allTransactions.get(position).getIdOfStakeInt();
+        String idOfTransaction = allTransactions.get(position).getIdOfTransactionInt();
         String stakeName = Caching.INSTANCE.getStakeholderName(idStakeholder);
-        NumberFormatter formatter = new NumberFormatter(allTransactions.get(position).getAmount());
+        NumberFormatter formatter = new NumberFormatter(allTransactions.get(position).getAmountInt());
         if(formatter.isNegative())holder.textAmount.setTextColor(ContextCompat.getColor(context, R.color.rec_view_negative_amount));
         if(formatter.isNegative())holder.textPaidBy.setText(R.string.paid_to);
         holder.textNameOfParticipant.setText(stakeName);
         holder.textAmount.setText(formatter.getFinalNumber());
-        holder.textDate.setText(allTransactions.get(position).getShortDate());
-        holder.textTitle.setText(allTransactions.get(position).getTitle());
-        holder.txtEmojiCategory.setText(Caching.INSTANCE.getCategoryEmoji(allTransactions.get(position).getCategory()));
-        if(!(allTransactions.get(position).getImageName().length()>0))holder.camaraIcon.setVisibility(View.GONE);
+        holder.textDate.setText(allTransactions.get(position).getDateInt());
+        holder.textTitle.setText(allTransactions.get(position).getTitleInt());
+        holder.txtEmojiCategory.setText(Caching.INSTANCE.getCategoryEmoji(allTransactions.get(position).getIdOfCategoryInt()));
+        if(!(allTransactions.get(position).getImageInt().length()>0))holder.camaraIcon.setVisibility(View.GONE);
+        else holder.camaraIcon.setVisibility(View.VISIBLE);
         holder.parent.setOnClickListener(v->{
             try {
                 // from Account ViewHolder
@@ -103,7 +105,7 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
     }
 
 
-    public void setAllTransactions (List<ProcessedTransaction> NewTransactions) {
+    public void setAllTransactions (List<TransactionInterface> NewTransactions) {
         this.allTransactions = NewTransactions;
         notifyDataSetChanged();
     }

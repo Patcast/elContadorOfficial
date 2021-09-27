@@ -27,8 +27,9 @@ import java.util.Date;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 
-public class ProcessedTransaction {
+public class ProcessedTransaction implements TransactionInterface {
     private static final String TAG = "newTransaction";
 
 
@@ -43,8 +44,9 @@ public class ProcessedTransaction {
     private Timestamp date;
     private String registeredBy;
     private String notes;
-    private boolean deleted;
     private String imageName;
+    private final int colorPositive = R.color.transaction_processed_positive;
+    private final int colorNegative = R.color.transaction_processed_negative;
 
     public ProcessedTransaction() {
     }
@@ -56,7 +58,6 @@ public class ProcessedTransaction {
         this.stakeHolder = stakeHolder;
         this.category = category;
         this.date = new Timestamp(new Date());
-        this.deleted = false;
         this.notes = notes;
         this.imageName = imageName;
     }
@@ -122,14 +123,11 @@ public class ProcessedTransaction {
         return date;
     }
 
-    public boolean isDeleted() {
-        return deleted;
-    }
 
     public String getNotes() {
         return notes;
     }
-    //@Exclude
+    @Exclude
     public String getId() {
         return id;
     }
@@ -146,6 +144,51 @@ public class ProcessedTransaction {
         return imageName;
     }
 
+
+    @Override
+    public int getColorPositiveInt() {
+        return colorPositive;
+    }
+
+    @Override
+    public int getColorNegativeInt() {
+        return colorNegative;
+    }
+
+    @Override
+    public int getAmountInt() {
+        return amount;
+    }
+
+    @Override
+    public String getIdOfStakeInt() {
+        return stakeHolder;
+    }
+
+    @Override
+    public String getIdOfTransactionInt() {
+        return id;
+    }
+
+    @Override
+    public String getIdOfCategoryInt() {
+        return category;
+    }
+
+    @Override
+    public String getDateInt() {
+        return getShortDate();
+    }
+
+    @Override
+    public String getTitleInt() {
+        return title;
+    }
+
+    @Override
+    public String getImageInt() {
+        return imageName;
+    }
 
 }
 

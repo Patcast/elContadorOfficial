@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.text.ParseException;
 import java.util.HashMap;
 
 import be.kuleuven.elcontador10.R;

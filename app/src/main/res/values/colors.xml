@@ -15,6 +15,10 @@
     <color name="rec_view_gray">#36393F</color>
     <color name="rec_view_transactions">#282828</color>
     <color name="rec_view_title">#eed075</color>
+    <color name="transaction_processed_positive">#ffcc66</color>
+    <color name="transaction_processed_negative">#ffcc99</color>
+    <color name="transaction_Schedule_payables">#669999</color>
+    <color name="transaction_Schedule_receivables">#6699cc</color>
     <color name="rec_view_negative_amount">#e4b31d</color>
     <color name="fb_color">#cfa219</color>
     <color name="text_titles">#e4b31d</color>
