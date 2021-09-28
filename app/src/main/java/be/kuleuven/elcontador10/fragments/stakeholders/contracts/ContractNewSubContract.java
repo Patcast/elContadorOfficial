@@ -84,6 +84,7 @@ public class ContractNewSubContract extends Fragment {
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setHeaderText("New Payment");
         contractId = ContractNewSubContractArgs.fromBundle(getArguments()).getContractId();
+        idCatSelected = null;
 
         // set views
         title = view.findViewById(R.id.payment_new_title);
@@ -200,6 +201,9 @@ public class ContractNewSubContract extends Fragment {
                     ScheduledTransaction transaction = new ScheduledTransaction(amount_value, 0,
                             DatabaseDatesFunctions.INSTANCE.localDateToTimestamp(LocalDate.now()), Caching.INSTANCE.getChosenMicroAccountId());
 
+                    transaction.setTitle(title_text);
+                    transaction.setCategory(idCatSelected);
+
                     ScheduledTransaction.newScheduledTransaction(transaction, contractId, subContractId);
                 } else {
                     // final copies of variables for foreach
@@ -208,6 +212,8 @@ public class ContractNewSubContract extends Fragment {
 
                     transactions.forEach(e -> e.setTotalAmount(final_amount));
                     transactions.forEach(e -> e.setIdOfStakeholder(final_ID));
+                    transactions.forEach(e -> e.setTitle(title_text));
+                    transactions.forEach(e -> e.setCategory(idCatSelected));
 
                     // add all scheduled transactions
                     transactions.forEach(e -> ScheduledTransaction.newScheduledTransaction(e, contractId, subContractId));

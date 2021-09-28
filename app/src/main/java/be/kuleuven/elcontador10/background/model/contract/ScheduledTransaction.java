@@ -15,6 +15,7 @@ public class ScheduledTransaction {
     private Timestamp dueDate;
     private String idOfStakeholder;
     private String title;
+    private String category;
 
     private static final String TAG = "scheduledTransaction";
 
@@ -82,12 +83,19 @@ public class ScheduledTransaction {
         this.idOfStakeholder = idOfStakeholder;
     }
 
-    @Exclude
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

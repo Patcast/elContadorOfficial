@@ -476,12 +476,12 @@ public enum Caching {
                     chosenSubContract = value.toObject(SubContract.class);
                     chosenSubContract.setId(value.getId());
 
-                    getScheduledTransactions(url, chosenSubContract.getTitle());
+                    getScheduledTransactions(url);
                 });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void getScheduledTransactions(String subContractURL, String subContractTitle) {
+    public void getScheduledTransactions(String subContractURL) {
         String url = subContractURL + "/scheduledTransactions";
 
         Query query = db.collection(url)
@@ -498,7 +498,6 @@ public enum Caching {
                     for (QueryDocumentSnapshot doc : value) {
                         ScheduledTransaction transaction = doc.toObject(ScheduledTransaction.class);
                         transaction.setId(doc.getId());
-                        transaction.setTitle(subContractTitle);
                         scheduledTransactions.add(transaction);
                     }
 

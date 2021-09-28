@@ -93,12 +93,6 @@
             android:gravity="center"
             android:text="💰" />
 
-        <ImageView
-            android:id="@+id/imageView_camara_icon"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            app:srcCompat="@drawable/ic_baseline_camera_alt_24" />
-
 
     </LinearLayout>
 
