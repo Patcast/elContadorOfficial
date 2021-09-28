@@ -65,7 +65,11 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
 
         String amount = formatterPaid.getFinalNumber() + "/" + formatterTotal.getFinalNumber();
         holder.textAmount.setText(amount);
-        holder.textDate.setText(DatabaseDatesFunctions.INSTANCE.timestampToString(transaction.getDate()));
+
+        if (transaction.getDate() != null)
+            holder.textDate.setText(DatabaseDatesFunctions.INSTANCE.timestampToString(transaction.getDate()));
+        else
+            holder.textDate.setText("N/A");
         holder.textTitle.setText(transaction.getTitle());
 
         // setting colours
