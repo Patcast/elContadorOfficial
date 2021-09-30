@@ -69,7 +69,10 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
 
         String amount = formatterPaid.getFinalNumber() + "/" + formatterTotal.getFinalNumber();
         holder.textAmount.setText(amount);
-        holder.textDate.setText(DatabaseDatesFunctions.INSTANCE.timestampToString(transaction.getDueDate()));
+        if (transaction.getDueDate() != null)
+            holder.textDate.setText(DatabaseDatesFunctions.INSTANCE.timestampToString(transaction.getDueDate()));
+        else
+            holder.textDate.setText("N/A");
         holder.textTitle.setText(transaction.getTitle());
 
         // setting colours
@@ -80,6 +83,9 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
             holder.textTitle.setTextColor(Color.RED);
             holder.textAmount.setTextColor(Color.RED);
         }
+
+        if (transaction.getCategory() != null)
+            holder.txtEmojiCategory.setText(Caching.INSTANCE.getCategoryEmoji(transaction.getCategory()));
 
         //TODO categories
 

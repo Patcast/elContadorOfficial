@@ -7,15 +7,15 @@ import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 
-public class ScheduledTransaction implements TransactionInterface {
+public class ScheduledTransaction {
     private String id;
     private long totalAmount;
     private long amountPaid;
     private Timestamp dueDate;
     private String idOfStakeholder;
     private String title;
+    private String category;
 
     private static final String TAG = "scheduledTransaction";
 
@@ -83,7 +83,6 @@ public class ScheduledTransaction implements TransactionInterface {
         this.idOfStakeholder = idOfStakeholder;
     }
 
-    @Exclude
     public String getTitle() {
         return title;
     }
@@ -92,49 +91,11 @@ public class ScheduledTransaction implements TransactionInterface {
         this.title = title;
     }
 
-
-    @Override
-    public int getColorPositiveInt() {
-        return 0;
+    public String getCategory() {
+        return category;
     }
 
-    @Override
-    public int getColorNegativeInt() {
-        return 0;
-    }
-
-    @Override
-    public int getAmountInt() {
-        return (int)totalAmount;
-    }
-
-    @Override
-    public String getIdOfStakeInt() {
-        return idOfStakeholder;
-    }
-
-    @Override
-    public String getIdOfTransactionInt() {
-        return null;
-    }
-
-    @Override
-    public String getIdOfCategoryInt() {
-        return null;
-    }
-
-    @Override
-    public String getDateInt() {
-        return "3 Sep";
-    }
-
-    @Override
-    public String getTitleInt() {
-        return "Title";
-    }
-
-    @Override
-    public String getImageInt() {
-        return null;
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
