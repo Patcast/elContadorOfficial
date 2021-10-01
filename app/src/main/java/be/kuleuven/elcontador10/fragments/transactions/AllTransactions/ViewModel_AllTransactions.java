@@ -67,9 +67,30 @@ public class ViewModel_AllTransactions extends ViewModel {
     public LiveData<Map<String, Integer>> getMapOfMonthlySummaryValues() {
         return mapOfMonthlySummaryValues;
     }
-    public void setMapOfMonthlySummaryValues(Map<String, Integer> mapOfMonthlySummaryValuesInput){
-        mapOfMonthlySummaryValues.setValue(mapOfMonthlySummaryValuesInput);
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void setMapOfSummary() {
+        Map<String,Integer>  summaryMap = new HashMap<>();
+        int startingBalance = Caching.INSTANCE.getStartingBalance(calendarFilter.getValue().get("month"),calendarFilter.getValue().get("year"));
+        summaryMap.put("startingBalance",startingBalance);
+        int currentBalance = monthlyListOfProcessedTransactions.stream()
+                .map(ProcessedTransaction::getTotalAmount)
+                .filter(totalAmount -> totalAmount >0)
+                .reduce(startingBalance, Integer::sum);
+        summaryMap.put("currentBalance",currentBalance);
+        summaryMap.put("receivables",monthlyListOfScheduleTransactions.stream()
+                .map(ScheduledTransaction::getTotalAmount)
+                .filter(totalAmount -> totalAmount >0)
+                .reduce(0, Integer::sum));
+        summaryMap.put("payables",monthlyListOfScheduleTransactions.stream()
+                .map(ScheduledTransaction::getTotalAmount)
+                .filter(totalAmount -> totalAmount <0)
+                .reduce(0, Integer::sum));
+        summaryMap.put("scheduleBalance",monthlyListOfScheduleTransactions.stream()
+                .map(ScheduledTransaction::getTotalAmount)
+                .reduce(currentBalance, Integer::sum));
+        mapOfMonthlySummaryValues.setValue(summaryMap);
     }
+
 
 
 
@@ -150,6 +171,7 @@ public class ViewModel_AllTransactions extends ViewModel {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void setListOfTransactions(){
         allChosenTransactions.setValue(filterTransactions());
+        setMapOfSummary();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -174,22 +196,7 @@ public class ViewModel_AllTransactions extends ViewModel {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void MakeMapOfSummary() {
-        Map<String,Integer> summaryMap = new HashMap<>();
 
-        summaryMap.put("startingBalance",0);
-        summaryMap.put("currentBalance",0);
-        summaryMap.put("receivables",monthlyListOfScheduleTransactions.stream()
-                .map(ScheduledTransaction::getTotalAmount)
-                .filter(totalAmount -> totalAmount >0)
-                .reduce(0, Integer::sum));
-        summaryMap.put("payables",monthlyListOfScheduleTransactions.stream()
-                .map(ScheduledTransaction::getTotalAmount)
-                .filter(totalAmount -> totalAmount >0)
-                .reduce(0, Integer::sum));
-        setMapOfMonthlySummaryValues(summaryMap);
-    }
     private void initialiseCalendarFilter() {
         Calendar cal = Calendar.getInstance();
         Map<String,Integer> chosenDateMap = new HashMap<>();
@@ -205,11 +212,6 @@ public class ViewModel_AllTransactions extends ViewModel {
         transTypes.put("payable",false);
         setBooleanFilter(transTypes);
     }
-
-    public void resetAll(){
-        booleanFilter.setValue(null);
-    }
-
     public void resetListOfTransactions() {
         monthlyListOfScheduleTransactions.clear();
         monthlyListOfProcessedTransactions.clear();

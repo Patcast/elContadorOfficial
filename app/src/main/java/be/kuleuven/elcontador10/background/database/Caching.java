@@ -23,6 +23,7 @@ import com.google.firebase.firestore.core.OrderBy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import be.kuleuven.elcontador10.R;
@@ -646,5 +647,17 @@ public enum Caching {
 
     public void setChosenSubContract(SubContract chosenSubContract) {
         this.chosenSubContract = chosenSubContract;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public int getStartingBalance(int month, int year){
+        Optional<Map<String,Integer>> mapOptional = getAccounts().stream()
+                .filter(a->a.getId().equals(chosenAccountId))
+                .map(Account::getMapOfStaringBalances)
+                .findFirst();
+        if(mapOptional.isPresent()){
+          return  mapOptional.get().getOrDefault((""+month+"/"+year),0);
+        }
+        return 0;
+
     }
 }

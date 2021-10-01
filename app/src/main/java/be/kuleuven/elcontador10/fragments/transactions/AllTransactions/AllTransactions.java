@@ -43,6 +43,7 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
+import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 
 public class AllTransactions extends Fragment implements  DatePickerDialog.OnDateSetListener, MainActivity.TopMenuHandler {
@@ -97,9 +98,25 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
                 e.printStackTrace();
             }
         });
-        viewModel.getAllChosenTransactions().observe(getViewLifecycleOwner(), this::updateListOfTransactionsForRecView);
+        viewModel.getAllChosenTransactions().observe(getViewLifecycleOwner(), i->adapter.setAllTransactions(i));
+        viewModel.getMapOfMonthlySummaryValues().observe(getViewLifecycleOwner(), this::updateSummaryUi);
+
         startRecycler(view);
         return view;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void updateSummaryUi(Map<String, Integer> inputsForSummary) {
+        NumberFormatter formatter = new NumberFormatter(inputsForSummary.get("startingBalance"));
+        txtStartingBalance.setText(formatter.getFinalNumber());
+        formatter.setOriginalNumber(inputsForSummary.get("currentBalance"));
+        txCurrentBalance.setText(formatter.getFinalNumber());
+        formatter.setOriginalNumber(inputsForSummary.get("receivables"));
+        txtSumOfReceivables.setText(formatter.getFinalNumber());
+        formatter.setOriginalNumber(inputsForSummary.get("payables"));
+        txtSumOfPayables.setText(formatter.getFinalNumber());
+        formatter.setOriginalNumber(inputsForSummary.get("scheduleBalance"));
+        ScheduleBalance.setText(formatter.getFinalNumber());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -111,14 +128,6 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         viewModel.selectScheduleTransactions();
         viewModel.selectListOfProcessedTransactions();
     }
-
-
-    private void updateListOfTransactionsForRecView(List<TransactionInterface> listUpdated) {
-
-
-    }
-
-
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
