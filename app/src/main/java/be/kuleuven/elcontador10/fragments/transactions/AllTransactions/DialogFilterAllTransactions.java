@@ -13,24 +13,24 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import java.text.ParseException;
 import java.util.HashMap;
+import java.util.Map;
 
 import be.kuleuven.elcontador10.R;
 
 public class DialogFilterAllTransactions extends DialogFragment {
 
-
+    CheckBox transactions,receivables,payables;
+    ViewModel_AllTransactions viewModel;
+    Map<String,Boolean> typeOfTransactions;
     androidx.lifecycle.LifecycleOwner owner;
     public DialogFilterAllTransactions(androidx.lifecycle.LifecycleOwner owner){
         this.owner = owner;
     }
-    CheckBox transactions,receivables,payables;
-    ViewModel_AllTransactions viewModel;
-    HashMap<String,Boolean> typeOfTransactions;
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void setUi(HashMap<String, Boolean> currentTransTypesSelected) {
+    private void setUi(Map<String, Boolean> currentTransTypesSelected) {
         typeOfTransactions = currentTransTypesSelected;
         currentTransTypesSelected.forEach(this::updateUiItems);
     }
@@ -62,7 +62,7 @@ public class DialogFilterAllTransactions extends DialogFragment {
         receivables = view.findViewById(R.id.check_box_receivables);
         payables = view.findViewById(R.id.check_box_payables);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
-        viewModel.getChosenTypesOfTransactions().observe(owner, this::setUi);
+        viewModel.getBooleanFilter().observe(owner, this::setUi);
         builder.setView(view)
                 .setPositiveButton("ok", (dialog1, id) -> onConfirmSelection())
                 .setNegativeButton("cancel", (dialog12, id) ->
@@ -75,8 +75,8 @@ public class DialogFilterAllTransactions extends DialogFragment {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void onConfirmSelection() {
         typeOfTransactions.forEach(this::updateList);
-        viewModel.setTypesOfTransactions(typeOfTransactions);
-
+        viewModel.setBooleanFilter(typeOfTransactions);
+        viewModel.setListOfTransactions();
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateList(String s, Boolean aBoolean) {

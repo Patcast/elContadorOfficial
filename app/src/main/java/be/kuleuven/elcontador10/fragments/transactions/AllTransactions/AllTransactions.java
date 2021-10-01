@@ -34,31 +34,41 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.ParseException;
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
-import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
-import be.kuleuven.elcontador10.background.tools.MonthYearPickerDialog;
 
 
 public class AllTransactions extends Fragment implements  DatePickerDialog.OnDateSetListener, MainActivity.TopMenuHandler {
-
+    //TODO: update starting balance if transactions are deleted
     private RecyclerView recyclerAllTransactions;
     private TransactionsRecViewAdapter adapter;
     private FloatingActionButton fabNewTransaction,fabPayableOrReceivable,fabNew;
-    private TextView textFabNewTransaction,textFabReceivable;
+    private TextView textFabNewTransaction,textFabReceivable,txtStartingBalance,txCurrentBalance,txtSumOfReceivables,txtSumOfPayables,ScheduleBalance;
     private LinearLayout coverLayout;
     private Button selectMonth;
     boolean isClicked;
     private MainActivity mainActivity;
     private Animation rotateOpen,rotateClose,popOpen,popClose;
     private ViewModel_AllTransactions viewModel;
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
+        try {
+            viewModel.setInitialData();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -70,34 +80,45 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         selectMonth = view.findViewById(R.id.btn_selectMonth);
         coverLayout = view.findViewById(R.id.coverLayout);
+        txtStartingBalance = view.findViewById(R.id.text_startingBalance);
+        txCurrentBalance = view.findViewById(R.id.text_currentBalance);
+        txtSumOfReceivables = view.findViewById(R.id.text_receivables);
+        txtSumOfPayables = view.findViewById(R.id.text_payables);
+        ScheduleBalance = view.findViewById(R.id.text_futureBalance);
         textFabNewTransaction = view.findViewById(R.id.text_fabNewTransaction);
         textFabReceivable = view.findViewById(R.id.text_fabReceivable);
         fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
         fabPayableOrReceivable = view.findViewById(R.id.btn_new_ReceivableOrPayable);
         fabNew = view.findViewById(R.id.btn_newFAB);
-        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
-        viewModel.setTypesOfTransactions(makeMapOfTransTypes());
-        viewModel.getChosenTypesOfTransactions().observe(getViewLifecycleOwner(), i ->updateTransactionTypesDisplayed());
-        viewModel.getAllChosenTransactions().observe(getViewLifecycleOwner(), i->updateListOfTransactions(i));
+        viewModel.getCalendarFilter().observe(getViewLifecycleOwner(), i-> {
+            try {
+                updateDateButtonAndListOfTransactions(i);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        });
+        viewModel.getAllChosenTransactions().observe(getViewLifecycleOwner(), this::updateListOfTransactionsForRecView);
         startRecycler(view);
         return view;
     }
 
-    private void updateListOfTransactions(List<TransactionInterface> listUpdated) {
-        adapter.setAllTransactions(listUpdated);
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void updateDateButtonAndListOfTransactions(Map<String, Integer> calendarFilter) throws ParseException {
+        String monthSelected = (getResources().getStringArray(R.array.months_list))[calendarFilter.get("month")-1];
+        String monthYear = ""+monthSelected+" "+calendarFilter.get("year");
+        selectMonth.setText(monthYear);
+        viewModel.resetListOfTransactions();
+        viewModel.selectScheduleTransactions();
+        viewModel.selectListOfProcessedTransactions();
     }
 
 
-    private HashMap<String, Boolean> makeMapOfTransTypes() {
-        HashMap<String, Boolean> transTypes = new HashMap<>();
-        transTypes.put("transaction",true);
-        transTypes.put("receivable",false);
-        transTypes.put("payable",false);
-        return transTypes;
-    }
-    private void updateTransactionTypesDisplayed() {
+    private void updateListOfTransactionsForRecView(List<TransactionInterface> listUpdated) {
+
 
     }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -123,12 +144,6 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         popOpen= AnimationUtils.loadAnimation(getContext(),R.anim.pop_up_fabs);
         popClose = AnimationUtils.loadAnimation(getContext(),R.anim.pop_down_fabs);
         isClicked= false;
-        try {
-            Calendar cal = Calendar.getInstance();
-            viewModel.selectMonthlyList(cal.get(Calendar.MONTH)+1,cal.get(Calendar.YEAR));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
     }
     @Override
     public void onStart() {
@@ -148,7 +163,9 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
 
     private void pickDate() {
-        MonthYearPickerDialog pd = new MonthYearPickerDialog();
+        int month = viewModel.getCalendarFilter().getValue().get("month");
+        int year = viewModel.getCalendarFilter().getValue().get("year");
+        MonthYearPickerDialog pd = new MonthYearPickerDialog(month,year);
         pd.setListener(this);
         pd.show(getParentFragmentManager(), "MonthYearPickerDialog");
     }
@@ -219,18 +236,10 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
-        try {
-            viewModel.selectMonthlyList(month,year);
-            viewModel.selectScheduleTransactions(month,year);
-            String monthSelected = (getResources().getStringArray(R.array.months_list))[month-1];
-            String monthYear = ""+monthSelected+" "+year;
-            selectMonth.setText(monthYear);
-            viewModel.setListOfTransactions();
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "error with dates", Toast.LENGTH_SHORT).show();
-        }
+        Map<String,Integer> chosenDateMap = new HashMap<>();
+        chosenDateMap.put("month",month);
+        chosenDateMap.put("year",year);
+        viewModel.setCalendarFilter(chosenDateMap);
     }
 
 

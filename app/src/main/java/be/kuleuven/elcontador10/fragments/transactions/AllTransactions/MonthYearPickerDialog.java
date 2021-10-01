@@ -1,8 +1,7 @@
-package be.kuleuven.elcontador10.background.tools;
+package be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +9,8 @@ import android.widget.NumberPicker;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Calendar;
 
@@ -18,8 +19,16 @@ import be.kuleuven.elcontador10.R;
 public class MonthYearPickerDialog extends DialogFragment {
 
     private static final int MAX_YEAR = 2030;
+    private static final int MIN_YEAR = 2021;
     private DatePickerDialog.OnDateSetListener listener;
+    private ViewModel_AllTransactions viewModel;
+    private final int month;
+    private final int year;
 
+    MonthYearPickerDialog(int month, int year){
+        this.month= month;
+        this.year= year;
+    }
     public void setListener(DatePickerDialog.OnDateSetListener listener) {
         this.listener = listener;
     }
@@ -29,7 +38,6 @@ public class MonthYearPickerDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
-
         Calendar cal = Calendar.getInstance();
 
         View dialog = inflater.inflate(R.layout.month_year_picker, null);
@@ -40,11 +48,12 @@ public class MonthYearPickerDialog extends DialogFragment {
 
         final NumberPicker yearPicker = dialog.findViewById(R.id.picker_year);
 
+        //monthPicker.setValue(cal.get(Calendar.MONTH)+1);
+        monthPicker.setValue(month);
 
-        monthPicker.setValue(cal.get(Calendar.MONTH)+1);
 
-        int year = cal.get(Calendar.YEAR);
-        yearPicker.setMinValue(year);
+        //int year = cal.get(Calendar.YEAR);
+        yearPicker.setMinValue(MIN_YEAR);
         yearPicker.setMaxValue(MAX_YEAR);
         yearPicker.setValue(year);
         builder.setView(dialog)

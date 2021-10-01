@@ -12,6 +12,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import be.kuleuven.elcontador10.background.database.Caching;
 
@@ -21,6 +22,7 @@ public class Account {
     private String name;
     private ArrayList<String> users;
     private String id;
+    private Map<String,Integer> mapOfStaringBalances;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -84,5 +86,9 @@ public class Account {
 
     public ArrayList<String> getUsers() {
         return users;
+    }
+
+    public Map<String, Integer> getMapOfStaringBalances() {
+        return mapOfStaringBalances;
     }
 }

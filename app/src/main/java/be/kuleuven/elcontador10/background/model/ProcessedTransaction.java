@@ -37,7 +37,7 @@ public class ProcessedTransaction implements TransactionInterface {
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
 
     private String title;
-    private int amount;
+    private int totalAmount;
     private String stakeHolder;
     private String id;
     private String category;
@@ -53,7 +53,7 @@ public class ProcessedTransaction implements TransactionInterface {
 
     public ProcessedTransaction(String title, int amount, String registeredBy, String stakeHolder, String category, String notes, String imageName) {
         this.title = title;
-        this.amount = amount;
+        this.totalAmount = amount;
         this.registeredBy = registeredBy;
         this.stakeHolder = stakeHolder;
         this.category = category;
@@ -94,18 +94,8 @@ public class ProcessedTransaction implements TransactionInterface {
     }
 
 
-    public String getShortDate(){
-        String [] bitsOfDate = date.toDate().toString().split(" ");
-        StringBuilder shortDate = new StringBuilder();
-        shortDate.append(bitsOfDate[2]);
-        shortDate.append(" ");
-        shortDate.append(bitsOfDate[1]);
-        return shortDate.toString();
-    }
 
-    public int getAmount() {
-        return amount;
-    }
+
 
     public String getRegisteredBy() {
         return registeredBy;
@@ -119,11 +109,6 @@ public class ProcessedTransaction implements TransactionInterface {
         return category;
     }
 
-    public Timestamp getDate() {
-        return date;
-    }
-
-
     public String getNotes() {
         return notes;
     }
@@ -136,9 +121,6 @@ public class ProcessedTransaction implements TransactionInterface {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
-    }
 
     public String getImageName() {
         return imageName;
@@ -156,8 +138,8 @@ public class ProcessedTransaction implements TransactionInterface {
     }
 
     @Override
-    public int getAmountInt() {
-        return amount;
+    public int getTotalAmount() {
+        return totalAmount;
     }
 
     @Override
@@ -176,12 +158,12 @@ public class ProcessedTransaction implements TransactionInterface {
     }
 
     @Override
-    public String getDateInt() {
-        return getShortDate();
+    public Timestamp getDate() {
+        return date;
     }
 
     @Override
-    public String getTitleInt() {
+    public String getTitle() {
         return title;
     }
 

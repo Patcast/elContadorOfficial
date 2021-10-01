@@ -63,13 +63,13 @@ public class SubContractViewModel extends ViewModel {
         if (isLate.getValue())
             combined.addAll(raw.stream()
                     .filter(e -> Math.abs(e.getAmountPaid()) < Math.abs(e.getTotalAmount()))
-                    .filter(e -> e.getDueDate().getSeconds() < Timestamp.now().getSeconds()) // due date smaller than now
+                    .filter(e -> e.getDate().getSeconds() < Timestamp.now().getSeconds()) // due date smaller than now
                     .collect(Collectors.toCollection(ArrayList::new)));
 
         if (isFuture.getValue())
             combined.addAll(raw.stream()
                     .filter(e -> Math.abs(e.getAmountPaid()) < Math.abs(e.getTotalAmount()))
-                    .filter(e -> e.getDueDate().getSeconds() > Timestamp.now().getSeconds()) // due date larger than now
+                    .filter(e -> e.getDate().getSeconds() > Timestamp.now().getSeconds()) // due date larger than now
                     .collect(Collectors.toCollection(ArrayList::new)));
 
         if (isCompleted.getValue())

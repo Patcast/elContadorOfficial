@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,12 +25,9 @@ import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
-import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolderDirections;
-import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.AllTransactionsDirections;
 
 public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<ScheduledTransactionsRecViewAdapter.ViewHolder> {
     private List<ScheduledTransaction> allTransactions = new ArrayList<>();
@@ -69,8 +65,8 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
 
         String amount = formatterPaid.getFinalNumber() + "/" + formatterTotal.getFinalNumber();
         holder.textAmount.setText(amount);
-        if (transaction.getDueDate() != null)
-            holder.textDate.setText(DatabaseDatesFunctions.INSTANCE.timestampToString(transaction.getDueDate()));
+        if (transaction.getDate() != null)
+            holder.textDate.setText(DatabaseDatesFunctions.INSTANCE.timestampToString(transaction.getDate()));
         else
             holder.textDate.setText("N/A");
         holder.textTitle.setText(transaction.getTitle());
@@ -79,7 +75,7 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
         if (Math.abs(transaction.getAmountPaid()) >= Math.abs(transaction.getTotalAmount())) { // paid
             holder.textTitle.setTextColor(Color.GRAY);
             holder.textAmount.setTextColor(Color.GRAY);
-        } else if (transaction.getDueDate().getSeconds() < Timestamp.now().getSeconds()) { // unpaid and late
+        } else if (transaction.getDate().getSeconds() < Timestamp.now().getSeconds()) { // unpaid and late
             holder.textTitle.setTextColor(Color.RED);
             holder.textAmount.setTextColor(Color.RED);
         }

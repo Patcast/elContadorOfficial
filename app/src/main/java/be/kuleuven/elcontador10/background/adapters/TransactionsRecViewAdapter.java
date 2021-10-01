@@ -24,8 +24,8 @@ import java.util.List;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
+import be.kuleuven.elcontador10.background.tools.DateFormatter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
-import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolderDirections;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.AllTransactionsDirections;
 
@@ -55,15 +55,17 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         String idStakeholder = allTransactions.get(position).getIdOfStakeInt();
         String idOfTransaction = allTransactions.get(position).getIdOfTransactionInt();
         String stakeName = Caching.INSTANCE.getStakeholderName(idStakeholder);
-        NumberFormatter formatter = new NumberFormatter(allTransactions.get(position).getAmountInt());
+        int amountInput = allTransactions.get(position).getTotalAmount();
+        NumberFormatter formatter = new NumberFormatter(amountInput);
         if(formatter.isNegative())holder.textAmount.setTextColor(ContextCompat.getColor(context, R.color.rec_view_negative_amount));
         if(formatter.isNegative())holder.textPaidBy.setText(R.string.paid_to);
         holder.textNameOfParticipant.setText(stakeName);
         holder.textAmount.setText(formatter.getFinalNumber());
-        holder.textDate.setText(allTransactions.get(position).getDateInt());
-        holder.textTitle.setText(allTransactions.get(position).getTitleInt());
+        DateFormatter dateFormatter = new DateFormatter(allTransactions.get(position).getDate(),"s");
+        holder.textDate.setText(dateFormatter.getFormattedDate());
+        holder.textTitle.setText(allTransactions.get(position).getTitle());
         holder.txtEmojiCategory.setText(Caching.INSTANCE.getCategoryEmoji(allTransactions.get(position).getIdOfCategoryInt()));
-        if(!(allTransactions.get(position).getImageInt().length()>0))holder.camaraIcon.setVisibility(View.GONE);
+        if(!(allTransactions.get(position).getImageInt()!= null && allTransactions.get(position).getImageInt().length()>0))holder.camaraIcon.setVisibility(View.GONE);
         else holder.camaraIcon.setVisibility(View.VISIBLE);
         holder.parent.setOnClickListener(v->{
             try {

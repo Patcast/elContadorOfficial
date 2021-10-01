@@ -172,7 +172,7 @@ public class TransactionDisplay extends Fragment  {
         selectedTrans = Caching.INSTANCE.getTransaction(idOfTransaction);
         if(selectedTrans.equals(null))Toast.makeText(getContext(),"error getting Transaction",Toast.LENGTH_SHORT);
         else {
-            NumberFormatter formatter = new NumberFormatter(selectedTrans.getAmount());
+            NumberFormatter formatter = new NumberFormatter(selectedTrans.getTotalAmount());
             DateFormatter dateFormatter = new DateFormatter(selectedTrans.getDate(),"f");
             DateFormatter timeFormatter = new DateFormatter(selectedTrans.getDate(),"t");
             amount.setText(formatter.getFinalNumber());

@@ -7,28 +7,30 @@ import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 
-public class ScheduledTransaction {
+public class ScheduledTransaction implements TransactionInterface {
     private String id;
     private long totalAmount;
     private long amountPaid;
-    private Timestamp dueDate;
+    private Timestamp date;
     private String idOfStakeholder;
     private String title;
     private String category;
+    private String idOfAccount;
 
     private static final String TAG = "scheduledTransaction";
 
     public ScheduledTransaction(long totalAmount, long amountPaid, Timestamp dueDate, String idOfStakeholder) {
         this.totalAmount = totalAmount;
         this.amountPaid = amountPaid;
-        this.dueDate = dueDate;
+        this.date = dueDate;
         this.idOfStakeholder = idOfStakeholder;
+        idOfAccount = Caching.INSTANCE.getChosenAccountId();
     }
 
     // for Firebase
     public ScheduledTransaction() {}
-
     // database
     // TODO database functions
     public static void newScheduledTransaction(ScheduledTransaction transaction, String contractId, String subContractId) {
@@ -51,10 +53,6 @@ public class ScheduledTransaction {
         this.id = id;
     }
 
-    public long getTotalAmount() {
-        return totalAmount;
-    }
-
     public void setTotalAmount(long totalAmount) {
         this.totalAmount = totalAmount;
     }
@@ -67,12 +65,8 @@ public class ScheduledTransaction {
         this.amountPaid = amountPaid;
     }
 
-    public Timestamp getDueDate() {
-        return dueDate;
-    }
-
     public void setDueDate(Timestamp dueDate) {
-        this.dueDate = dueDate;
+        this.date = dueDate;
     }
 
     public String getIdOfStakeholder() {
@@ -83,8 +77,49 @@ public class ScheduledTransaction {
         this.idOfStakeholder = idOfStakeholder;
     }
 
+    @Override
+    public int getColorPositiveInt() {
+        return 0;
+    }
+
+    @Override
+    public int getColorNegativeInt() {
+        return 0;
+    }
+
+    @Override
+    public int getTotalAmount() {
+        return (int)totalAmount;
+    }
+
+    @Override
+    public String getIdOfStakeInt() {
+        return idOfStakeholder;
+    }
+
+    @Override
+    public String getIdOfTransactionInt() {
+        return id;
+    }
+
+    @Override
+    public String getIdOfCategoryInt() {
+        return category;
+    }
+
+    @Override
+    public Timestamp getDate() {
+
+        return date;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    @Override
+    public String getImageInt() {
+        return null;
     }
 
     public void setTitle(String title) {
@@ -97,5 +132,9 @@ public class ScheduledTransaction {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getIdOfAccount() {
+        return idOfAccount;
     }
 }

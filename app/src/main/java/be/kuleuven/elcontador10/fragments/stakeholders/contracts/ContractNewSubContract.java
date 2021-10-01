@@ -280,7 +280,7 @@ public class ContractNewSubContract extends Fragment {
 
                         String info_text = period_text + "\n\nPayment dates:\n" +
                                 transactions.stream()
-                                        .map(e -> DatabaseDatesFunctions.INSTANCE.timestampToString(e.getDueDate()))
+                                        .map(e -> DatabaseDatesFunctions.INSTANCE.timestampToString(e.getDate()))
                                         .collect(Collectors.joining("\n"));
 
                         info.setText(info_text);
