@@ -34,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.ParseException;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -245,10 +246,19 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Map<String,Integer> chosenDateMap = new HashMap<>();
-        chosenDateMap.put("month",month);
-        chosenDateMap.put("year",year);
-        viewModel.setCalendarFilter(chosenDateMap);
+        Calendar cal = Calendar.getInstance();
+
+        if(year < cal.get(Calendar.YEAR) || (year < cal.get(Calendar.YEAR)|| month<cal.get(Calendar.MONTH)+1))
+        {
+
+            Toast.makeText(getContext(), "The account does not have records for the selected period, the latest period of the account is "+Caching.INSTANCE.getLatestStartingBalance(), Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Map<String,Integer> chosenDateMap = new HashMap<>();
+            chosenDateMap.put("month",month);
+            chosenDateMap.put("year",year);
+            viewModel.setCalendarFilter(chosenDateMap);
+        }
     }
 
 

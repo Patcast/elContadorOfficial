@@ -70,7 +70,7 @@ public class ViewModel_AllTransactions extends ViewModel {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void setMapOfSummary() {
         Map<String,Integer>  summaryMap = new HashMap<>();
-        int startingBalance = Caching.INSTANCE.getStartingBalance(calendarFilter.getValue().get("month"),calendarFilter.getValue().get("year"));
+        int startingBalance = Caching.INSTANCE.getStartingBalances(calendarFilter.getValue().get("month"),calendarFilter.getValue().get("year"));
         summaryMap.put("startingBalance",startingBalance);
         int currentBalance = monthlyListOfProcessedTransactions.stream()
                 .map(ProcessedTransaction::getTotalAmount)

@@ -649,7 +649,7 @@ public enum Caching {
         this.chosenSubContract = chosenSubContract;
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public int getStartingBalance(int month, int year){
+    public int getStartingBalances(int month, int year){
         Optional<Map<String,Integer>> mapOptional = getAccounts().stream()
                 .filter(a->a.getId().equals(chosenAccountId))
                 .map(Account::getMapOfStaringBalances)
@@ -658,6 +658,18 @@ public enum Caching {
           return  mapOptional.get().getOrDefault((""+month+"/"+year),0);
         }
         return 0;
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String getLatestStartingBalance(){
+        Optional<Map<String,Integer>> mapOptional = getAccounts().stream()
+                .filter(a->a.getId().equals(chosenAccountId))
+                .map(Account::getMapOfStaringBalances)
+                .findFirst();
+        if(mapOptional.isPresent()){
+            return  mapOptional.get().keySet().toArray(new String[0])[0];
+        }
+        return "[error loading latest period]";
 
     }
 }
