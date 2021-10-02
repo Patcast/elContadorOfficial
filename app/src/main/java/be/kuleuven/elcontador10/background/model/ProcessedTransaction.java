@@ -1,7 +1,7 @@
 package be.kuleuven.elcontador10.background.model;
 
 import android.content.Context;
-import android.os.Build;
+
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,25 +30,23 @@ public class ProcessedTransaction implements TransactionInterface {
 
     private String title;
     private int totalAmount;
-    private String stakeHolder;
+    private String idOfStakeInt;
     private String id;
-    private String category;
+    private String idOfCategoryInt;
     private Timestamp date;
     private String registeredBy;
     private String notes;
     private String imageName;
-    private final int colorPositive = R.color.transaction_processed_positive;
-    private final int colorNegative = R.color.transaction_processed_negative;
 
     public ProcessedTransaction() {
     }
 
-    public ProcessedTransaction(String title, int amount, String registeredBy, String stakeHolder, String category, String notes, String imageName) {
+    public ProcessedTransaction(String title, int amount, String registeredBy, String idOfStakeInt, String idOfCategoryInt, String notes, String imageName) {
         this.title = title;
         this.totalAmount = amount;
         this.registeredBy = registeredBy;
-        this.stakeHolder = stakeHolder;
-        this.category = category;
+        this.idOfStakeInt = idOfStakeInt;
+        this.idOfCategoryInt = idOfCategoryInt;
         this.date = new Timestamp(new Date());
         this.notes = notes;
         this.imageName = imageName;
@@ -79,74 +77,37 @@ public class ProcessedTransaction implements TransactionInterface {
     }
     public void deleteTransaction(){
         String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
-        db.collection(urlNewTransactions).document(getId())
+        db.collection(urlNewTransactions).document(getIdOfTransactionInt())
                 .delete()
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
     }
 
 
+    public void setId(String id) {
+        this.id = id;
+    }
 
 
 
     public String getRegisteredBy() {
         return registeredBy;
     }
-
-    public String getStakeHolder() {
-        return stakeHolder;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
     public String getNotes() {
         return notes;
     }
-    @Exclude
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-
-    public String getImageName() {
-        return imageName;
-    }
-
-
-    @Override
-    public int getColorPositiveInt() {
-        return colorPositive;
-    }
-
-    @Override
-    public int getColorNegativeInt() {
-        return colorNegative;
-    }
-
     @Override
     public int getTotalAmount() {
         return totalAmount;
     }
-
     @Override
     public String getIdOfStakeInt() {
-        return stakeHolder;
-    }
-
-    @Override
-    public String getIdOfTransactionInt() {
-        return id;
+        return idOfStakeInt;
     }
 
     @Override
     public String getIdOfCategoryInt() {
-        return category;
+        return idOfCategoryInt;
     }
 
     @Override
@@ -160,10 +121,22 @@ public class ProcessedTransaction implements TransactionInterface {
     }
 
     @Override
-    public String getImageInt() {
+    public String getImageName() {
         return imageName;
     }
 
+    @Exclude
+    @Override
+    public int getColorInt() {
+        int colorPositive = R.color.transaction_processed_positive;
+        int colorNegative = R.color.transaction_processed_negative;
+        return (totalAmount<0)? colorNegative : colorPositive;
+    }
+    @Exclude
+    @Override
+    public String getIdOfTransactionInt() {
+        return id;
+    }
 }
 
 

@@ -77,13 +77,9 @@ public class ScheduledTransaction implements TransactionInterface {
         this.idOfStakeholder = idOfStakeholder;
     }
 
-    @Override
-    public int getColorPositiveInt() {
-        return 0;
-    }
 
     @Override
-    public int getColorNegativeInt() {
+    public int getColorInt() {
         return 0;
     }
 
@@ -118,7 +114,7 @@ public class ScheduledTransaction implements TransactionInterface {
     }
 
     @Override
-    public String getImageInt() {
+    public String getImageName() {
         return null;
     }
 

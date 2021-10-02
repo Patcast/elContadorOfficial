@@ -246,12 +246,12 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Calendar cal = Calendar.getInstance();
+        String[] latestStartingBalance = getLatestStartingBalance();
+        String latestPeriod = ""+(getResources().getStringArray(R.array.months_list))[Integer.parseInt(latestStartingBalance[0])-1] +" "+latestStartingBalance[1];
 
-        if(year < cal.get(Calendar.YEAR) || (year < cal.get(Calendar.YEAR)|| month<cal.get(Calendar.MONTH)+1))
-        {
+        if(year < Integer.parseInt(latestStartingBalance[1])|| (year == Integer.parseInt(latestStartingBalance[1]) && month < Integer.parseInt(latestStartingBalance[0]))){
+            Toast.makeText(getContext(), "The account does not have records for the selected period, the latest period of the account is "+latestPeriod, Toast.LENGTH_LONG).show();
 
-            Toast.makeText(getContext(), "The account does not have records for the selected period, the latest period of the account is "+Caching.INSTANCE.getLatestStartingBalance(), Toast.LENGTH_SHORT).show();
         }
         else {
             Map<String,Integer> chosenDateMap = new HashMap<>();
@@ -259,6 +259,12 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
             chosenDateMap.put("year",year);
             viewModel.setCalendarFilter(chosenDateMap);
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private String[] getLatestStartingBalance() {
+        String keyOfLatestStartingBalance = Caching.INSTANCE.getLatestStartingBalance();
+        return keyOfLatestStartingBalance.split("/");
     }
 
 

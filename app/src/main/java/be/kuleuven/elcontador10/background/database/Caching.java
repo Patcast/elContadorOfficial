@@ -12,12 +12,9 @@ import androidx.annotation.RequiresApi;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.core.OrderBy;
 
 
 import java.util.ArrayList;
@@ -542,7 +539,7 @@ public enum Caching {
     public ProcessedTransaction getTransaction(String idOfTransaction){
         List<ProcessedTransaction> availableTran = new ArrayList<>(getTransactions());
        Optional<ProcessedTransaction> possibleTransaction = availableTran.stream()
-                            .filter(t->t.getId().equals(idOfTransaction))
+                            .filter(t->t.getIdOfTransactionInt().equals(idOfTransaction))
                             .findFirst();
        return possibleTransaction.orElse(null);
     }

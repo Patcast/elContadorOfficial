@@ -177,17 +177,17 @@ public class TransactionDisplay extends Fragment  {
             DateFormatter timeFormatter = new DateFormatter(selectedTrans.getDate(),"t");
             amount.setText(formatter.getFinalNumber());
             String startPhrase=(formatter.isNegative())? getString(R.string.paid_to): getString(R.string.paid_by);
-            String concerningText= startPhrase+" "+Caching.INSTANCE.getStakeholderName(selectedTrans.getStakeHolder());
+            String concerningText= startPhrase+" "+Caching.INSTANCE.getStakeholderName(selectedTrans.getIdOfStakeInt());
             concerning.setText(concerningText);
             account.setText(Caching.INSTANCE.getAccountName());
-            idText.setText(selectedTrans.getId());
-            String emoji =Caching.INSTANCE.getCategoryEmoji(selectedTrans.getCategory());
+            idText.setText(selectedTrans.getIdOfTransactionInt());
+            String emoji =Caching.INSTANCE.getCategoryEmoji(selectedTrans.getIdOfCategoryInt());
             if (emoji.length()==0){
                 emojiCategory.setVisibility(View.GONE);
                 category.setVisibility(View.GONE);
             }
             else emojiCategory.setText(emoji);
-            category.setText(Caching.INSTANCE.getCategoryTitle(selectedTrans.getCategory()));
+            category.setText(Caching.INSTANCE.getCategoryTitle(selectedTrans.getIdOfCategoryInt()));
             date.setText(dateFormatter.getFormattedDate());
             time.setText(timeFormatter.getFormattedDate());
             registeredBy.setText(selectedTrans.getRegisteredBy());

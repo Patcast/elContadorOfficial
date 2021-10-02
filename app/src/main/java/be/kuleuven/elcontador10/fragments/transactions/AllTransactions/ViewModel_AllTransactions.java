@@ -74,7 +74,6 @@ public class ViewModel_AllTransactions extends ViewModel {
         summaryMap.put("startingBalance",startingBalance);
         int currentBalance = monthlyListOfProcessedTransactions.stream()
                 .map(ProcessedTransaction::getTotalAmount)
-                .filter(totalAmount -> totalAmount >0)
                 .reduce(startingBalance, Integer::sum);
         summaryMap.put("currentBalance",currentBalance);
         summaryMap.put("receivables",monthlyListOfScheduleTransactions.stream()

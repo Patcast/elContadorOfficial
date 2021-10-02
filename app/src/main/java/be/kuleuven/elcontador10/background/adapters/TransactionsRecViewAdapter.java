@@ -65,7 +65,7 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         holder.textDate.setText(dateFormatter.getFormattedDate());
         holder.textTitle.setText(allTransactions.get(position).getTitle());
         holder.txtEmojiCategory.setText(Caching.INSTANCE.getCategoryEmoji(allTransactions.get(position).getIdOfCategoryInt()));
-        if(!(allTransactions.get(position).getImageInt()!= null && allTransactions.get(position).getImageInt().length()>0))holder.camaraIcon.setVisibility(View.GONE);
+        if(!(allTransactions.get(position).getImageName()!= null && allTransactions.get(position).getImageName().length()>0))holder.camaraIcon.setVisibility(View.GONE);
         else holder.camaraIcon.setVisibility(View.VISIBLE);
         holder.parent.setOnClickListener(v->{
             try {
