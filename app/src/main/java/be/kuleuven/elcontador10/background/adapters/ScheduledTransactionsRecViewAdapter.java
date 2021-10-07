@@ -87,10 +87,6 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
         if (transaction.getCategory() != null)
             holder.txtEmojiCategory.setText(Caching.INSTANCE.getCategoryEmoji(transaction.getCategory()));
 
-        //TODO categories
-
-        // TODO go somewhere
-
         holder.parent.setOnClickListener(view -> {
             if (Math.abs(transaction.getAmountPaid()) >= Math.abs(transaction.getTotalAmount()))
                 Toast.makeText(context, R.string.fully_paid, Toast.LENGTH_SHORT).show();
