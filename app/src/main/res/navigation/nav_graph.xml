@@ -152,6 +152,9 @@
         <argument
             android:name="subcontractId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_subContractDisplay_to_executeScheduledTransaction"
+            app:destination="@id/executeScheduledTransaction" />
     </fragment>
     <fragment
         android:id="@+id/allTransactions2"
@@ -164,6 +167,9 @@
         <action
             android:id="@+id/action_allTransactions2_to_transactionDisplay"
             app:destination="@id/transactionDisplay" />
+        <action
+            android:id="@+id/action_allTransactions2_to_executeScheduledTransaction"
+            app:destination="@id/executeScheduledTransaction" />
     </fragment>
     <fragment
         android:id="@+id/stakeholders"
@@ -182,4 +188,13 @@
         android:name="be.kuleuven.elcontador10.fragments.properties.Properties"
         android:label="fragment_properties"
         tools:layout="@layout/fragment_properties" />
+    <fragment
+        android:id="@+id/executeScheduledTransaction"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.ExecuteScheduledTransaction"
+        android:label="fragment_execute_scheduled_transaction"
+        tools:layout="@layout/fragment_execute_scheduled_transaction" >
+        <action
+            android:id="@+id/action_executeScheduledTransaction_to_chooseStakeHolderDialog"
+            app:destination="@id/chooseStakeHolderDialog" />
+    </fragment>
 </navigation>

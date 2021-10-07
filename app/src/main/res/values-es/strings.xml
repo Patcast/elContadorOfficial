@@ -14,6 +14,11 @@
     <string name="select_frequency">Please select frequency</string>
     <string name="number_of_payments">Number of subContracts</string>
     <string name="date_before_error">Date chosen is before today</string>
+    <string name="scheduled_transaction">Scheduled Transaction</string>
+    <string name="select_a_transaction">Select a Transaction</string>
+    <string name="increase_amount_paid">Increase amount paid</string>
+    <string name="warning_amount_paid_will_be_larger_than_amount_to_pay">Warning! Amount paid will be larger than amount to pay.</string>
+    <string name="execute_scheduled_transaction">Execute Scheduled Transaction</string>
     <string-array name="months_list">
         <item>January</item>
         <item>February</item>
