@@ -95,7 +95,7 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
         mainActivity.setHeaderText(stakeHolder.getName() + " - " + subContract.getTitle());
 
         scheduledTransactions = (ArrayList<ScheduledTransaction>) scheduledTransactionList;
-        viewModel.setFiltered(scheduledTransactions);
+        viewModel.setRaw(scheduledTransactions);
 
         amount.setText(new NumberFormatter(subContract.getAmount()).getFinalNumber());
 

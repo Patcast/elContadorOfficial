@@ -111,7 +111,7 @@ public class ProcessedTransaction implements TransactionInterface {
     }
 
     @Override
-    public Timestamp getDate() {
+    public Timestamp getDueDate() {
         return date;
     }
 

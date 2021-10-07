@@ -8,7 +8,7 @@ public interface TransactionInterface {
     public String getIdOfStakeInt();
     public String getIdOfTransactionInt();
     public String getIdOfCategoryInt();
-    public Timestamp getDate();
+    public Timestamp getDueDate();
     public String getTitle();
     public String getImageName();
 }

@@ -65,8 +65,8 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
 
         String amount = formatterPaid.getFinalNumber() + "/" + formatterTotal.getFinalNumber();
         holder.textAmount.setText(amount);
-        if (transaction.getDate() != null)
-            holder.textDate.setText(DatabaseDatesFunctions.INSTANCE.timestampToString(transaction.getDate()));
+        if (transaction.getDueDate() != null)
+            holder.textDate.setText(DatabaseDatesFunctions.INSTANCE.timestampToString(transaction.getDueDate()));
         else
             holder.textDate.setText("N/A");
         holder.textTitle.setText(transaction.getTitle());
@@ -75,7 +75,7 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
         if (Math.abs(transaction.getAmountPaid()) >= Math.abs(transaction.getTotalAmount())) { // paid
             holder.textTitle.setTextColor(Color.GRAY);
             holder.textAmount.setTextColor(Color.GRAY);
-        } else if (transaction.getDate().getSeconds() < Timestamp.now().getSeconds()) { // unpaid and late
+        } else if (transaction.getDueDate().getSeconds() < Timestamp.now().getSeconds()) { // unpaid and late
             holder.textTitle.setTextColor(Color.RED);
             holder.textAmount.setTextColor(Color.RED);
         }

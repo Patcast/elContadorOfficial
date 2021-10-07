@@ -190,7 +190,7 @@ public class ViewModel_AllTransactions extends ViewModel {
         }
 
        return listAllTransactionsFiltered.stream().
-                                                sorted(Comparator.comparing(TransactionInterface::getDate)).
+                                                sorted(Comparator.comparing(TransactionInterface::getDueDate)).
                                                 collect(Collectors.toList());
     }
 

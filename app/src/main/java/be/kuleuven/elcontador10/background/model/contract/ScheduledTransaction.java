@@ -13,7 +13,7 @@ public class ScheduledTransaction implements TransactionInterface {
     private String id;
     private long totalAmount;
     private long amountPaid;
-    private Timestamp date;
+    private Timestamp dueDate;
     private String idOfStakeholder;
     private String title;
     private String category;
@@ -24,7 +24,7 @@ public class ScheduledTransaction implements TransactionInterface {
     public ScheduledTransaction(long totalAmount, long amountPaid, Timestamp dueDate, String idOfStakeholder) {
         this.totalAmount = totalAmount;
         this.amountPaid = amountPaid;
-        this.date = dueDate;
+        this.dueDate = dueDate;
         this.idOfStakeholder = idOfStakeholder;
         idOfAccount = Caching.INSTANCE.getChosenAccountId();
     }
@@ -66,7 +66,7 @@ public class ScheduledTransaction implements TransactionInterface {
     }
 
     public void setDueDate(Timestamp dueDate) {
-        this.date = dueDate;
+        this.dueDate = dueDate;
     }
 
     public String getIdOfStakeholder() {
@@ -104,9 +104,9 @@ public class ScheduledTransaction implements TransactionInterface {
     }
 
     @Override
-    public Timestamp getDate() {
+    public Timestamp getDueDate() {
 
-        return date;
+        return dueDate;
     }
 
     public String getTitle() {

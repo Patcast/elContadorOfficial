@@ -61,7 +61,7 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         if(formatter.isNegative())holder.textPaidBy.setText(R.string.paid_to);
         holder.textNameOfParticipant.setText(stakeName);
         holder.textAmount.setText(formatter.getFinalNumber());
-        DateFormatter dateFormatter = new DateFormatter(allTransactions.get(position).getDate(),"s");
+        DateFormatter dateFormatter = new DateFormatter(allTransactions.get(position).getDueDate(),"s");
         holder.textDate.setText(dateFormatter.getFormattedDate());
         holder.textTitle.setText(allTransactions.get(position).getTitle());
         holder.txtEmojiCategory.setText(Caching.INSTANCE.getCategoryEmoji(allTransactions.get(position).getIdOfCategoryInt()));

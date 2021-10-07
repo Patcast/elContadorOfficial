@@ -57,6 +57,8 @@ public class SubContractFilterDialog extends DialogFragment {
         viewModel.setIsLate(late.isChecked());
         viewModel.setIsFuture(future.isChecked());
         viewModel.setIsCompleted(completed.isChecked());
+
+        viewModel.setFiltered();
     }
 
     private void updateLate(boolean late) {

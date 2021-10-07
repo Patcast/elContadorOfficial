@@ -173,8 +173,8 @@ public class TransactionDisplay extends Fragment  {
         if(selectedTrans.equals(null))Toast.makeText(getContext(),"error getting Transaction",Toast.LENGTH_SHORT);
         else {
             NumberFormatter formatter = new NumberFormatter(selectedTrans.getTotalAmount());
-            DateFormatter dateFormatter = new DateFormatter(selectedTrans.getDate(),"f");
-            DateFormatter timeFormatter = new DateFormatter(selectedTrans.getDate(),"t");
+            DateFormatter dateFormatter = new DateFormatter(selectedTrans.getDueDate(),"f");
+            DateFormatter timeFormatter = new DateFormatter(selectedTrans.getDueDate(),"t");
             amount.setText(formatter.getFinalNumber());
             String startPhrase=(formatter.isNegative())? getString(R.string.paid_to): getString(R.string.paid_by);
             String concerningText= startPhrase+" "+Caching.INSTANCE.getStakeholderName(selectedTrans.getIdOfStakeInt());
