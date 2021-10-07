@@ -101,19 +101,6 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
                 navController.navigate(action);
             }
         });
-
-//        holder.parent.setOnClickListener(v->{
-//            try {
-//                // from Account ViewHolder
-//                AllTransactionsDirections.ActionAllTransactions2ToTransactionDisplay action = AllTransactionsDirections.actionAllTransactions2ToTransactionDisplay(idOfTransaction);
-//                navController.navigate(action);
-//            } catch (Exception e) {
-//                // from MicroAccount ViewHolder
-//                StakeholderViewPageHolderDirections.ActionMicroAccountViewPagerHolderToTransactionDisplay action =
-//                        StakeholderViewPageHolderDirections.actionMicroAccountViewPagerHolderToTransactionDisplay(idOfTransaction);
-//                navController.navigate(action);
-//            }
-//        });
     }
     
     @Override
