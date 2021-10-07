@@ -2,6 +2,10 @@ package be.kuleuven.elcontador10.background.model.contract;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -42,6 +46,19 @@ public class ScheduledTransaction implements TransactionInterface {
                 .add(transaction)
                 .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId()))
                 .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+    }
+
+    public static void updateScheduledTransaction(ScheduledTransaction transaction) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + Caching.INSTANCE.getChosenMicroAccountId() +
+                "/contracts/" + Caching.INSTANCE.getChosenContract().getId() + "/subcontracts/" + Caching.INSTANCE.getChosenSubContract().getId() +
+                "/scheduledTransactions/" + transaction.getId();
+
+        db.document(url)
+                .set(transaction)
+                .addOnSuccessListener(unused -> Log.d(TAG, "Document updated: " + transaction.getId()))
+                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
     }
 
     @Exclude
@@ -134,5 +151,9 @@ public class ScheduledTransaction implements TransactionInterface {
 
     public void setIdOfAccount(String idOfAccount) {
         this.idOfAccount = idOfAccount;
+    }
+
+    public void pay(long amount) {
+        amountPaid += amount;
     }
 }

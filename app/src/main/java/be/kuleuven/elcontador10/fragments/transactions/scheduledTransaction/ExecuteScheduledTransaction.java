@@ -2,6 +2,8 @@ package be.kuleuven.elcontador10.fragments.transactions.scheduledTransaction;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
@@ -26,7 +30,8 @@ import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 public class ExecuteScheduledTransaction extends Fragment {
 
-    private TextView selectStakeholder, selectTransaction, amountTotal, amountPaid, amountLeft;
+    // views
+    private TextView selectStakeholder, selectTransaction, amountTotal, amountPaid, amountLeft, warning;
     private EditText increase;
     private Button confirm;
 
@@ -36,6 +41,8 @@ public class ExecuteScheduledTransaction extends Fragment {
     private ScheduledTransaction transaction;
     private StakeHolder stakeholder;
     private ExecuteScheduledViewModel viewModel;
+    private NavController navController;
+    private long left;
 
     @Nullable
     @Override
@@ -50,10 +57,13 @@ public class ExecuteScheduledTransaction extends Fragment {
         amountTotal = view.findViewById(R.id.execute_amount_total);
         amountPaid = view.findViewById(R.id.execute_amount_paid);
         amountLeft = view.findViewById(R.id.execute_amount_left);
+        warning = view.findViewById(R.id.execute_warning);
 
         increase = view.findViewById(R.id.execute_amount);
+        increase.addTextChangedListener(new CustomTextWatcher());
 
         confirm = view.findViewById(R.id.execute_confirm);
+        confirm.setOnClickListener(this::onConfirm_Clicked);
 
         viewModel = new ViewModelProvider(mainActivity).get(ExecuteScheduledViewModel.class);
 
@@ -64,6 +74,8 @@ public class ExecuteScheduledTransaction extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        navController = Navigation.findNavController(view);
 
         transactionID = ExecuteScheduledTransactionArgs.fromBundle(getArguments()).getId();
         stakeholder = Caching.INSTANCE.getChosenStakeHolder();
@@ -88,10 +100,14 @@ public class ExecuteScheduledTransaction extends Fragment {
                     selectTransaction.setText(text);
 
                     setTexts();
-                } else
+                } else {
                     Toast.makeText(mainActivity, "Error loading data!", Toast.LENGTH_SHORT).show();
+                    navController.popBackStack();
+                }
             }
+            else setNullTexts();
         }
+        else setNullTexts();
 
 //        Toast.makeText(mainActivity, id, Toast.LENGTH_SHORT).show();
     }
@@ -99,11 +115,61 @@ public class ExecuteScheduledTransaction extends Fragment {
     public void setTexts() {
         String total = getResources().getString(R.string.total_amount_to_pay) + new NumberFormatter(transaction.getTotalAmount()).getFinalNumber();
         String paid = getResources().getString(R.string.amount_paid) + new NumberFormatter(transaction.getAmountPaid()).getFinalNumber();
-        String left = getResources().getString(R.string.amount_left) +
-                new NumberFormatter(transaction.getTotalAmount() - transaction.getAmountPaid()).getFinalNumber();
+
+        this.left = transaction.getTotalAmount() - transaction.getAmountPaid();
+        String left = getResources().getString(R.string.amount_left) + new NumberFormatter(this.left).getFinalNumber();
 
         amountTotal.setText(total);
         amountPaid.setText(paid);
         amountLeft.setText(left);
+    }
+
+    public void setNullTexts() {
+        String total = getResources().getString(R.string.total_amount_to_pay) + "N/A";
+        String paid = getResources().getString(R.string.amount_paid) + "N/A";
+        String left = getResources().getString(R.string.amount_left) + "N/A";
+
+        amountTotal.setText(total);
+        amountPaid.setText(paid);
+        amountLeft.setText(left);
+    }
+
+    public void onConfirm_Clicked(View view) {
+        String pay_text = increase.getText().toString();
+
+        if (pay_text.equals(""))
+            Toast.makeText(mainActivity, R.string.input_amount_to_pay, Toast.LENGTH_SHORT).show();
+        else if (warning.getVisibility() == View.VISIBLE) {
+            Toast.makeText(mainActivity, R.string.warning_amount_paid_will_be_larger_than_amount_to_pay, Toast.LENGTH_SHORT).show();
+        } else {
+            transaction.pay(Integer.parseInt(pay_text));
+            ScheduledTransaction.updateScheduledTransaction(transaction);
+
+            navController.popBackStack();
+        }
+    }
+
+    private class CustomTextWatcher implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            String text = charSequence.toString();
+
+            if (!text.equals("")) {
+                int inter = Integer.parseInt(text);
+
+                if (inter > left) warning.setVisibility(View.VISIBLE);
+                else warning.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
     }
 }
