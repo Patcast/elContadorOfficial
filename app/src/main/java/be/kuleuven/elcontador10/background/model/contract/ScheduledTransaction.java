@@ -26,7 +26,7 @@ public class ScheduledTransaction implements TransactionInterface {
         this.amountPaid = amountPaid;
         this.dueDate = dueDate;
         this.idOfStakeholder = idOfStakeholder;
-        idOfAccount = Caching.INSTANCE.getChosenAccountId();
+        this.idOfAccount = Caching.INSTANCE.getChosenAccountId();
     }
 
     // for Firebase
@@ -77,7 +77,6 @@ public class ScheduledTransaction implements TransactionInterface {
         this.idOfStakeholder = idOfStakeholder;
     }
 
-
     @Override
     public int getColorInt() {
         return 0;
@@ -105,7 +104,6 @@ public class ScheduledTransaction implements TransactionInterface {
 
     @Override
     public Timestamp getDueDate() {
-
         return dueDate;
     }
 
@@ -132,5 +130,9 @@ public class ScheduledTransaction implements TransactionInterface {
 
     public String getIdOfAccount() {
         return idOfAccount;
+    }
+
+    public void setIdOfAccount(String idOfAccount) {
+        this.idOfAccount = idOfAccount;
     }
 }

@@ -26,8 +26,11 @@ import java.util.List;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
+import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
+import be.kuleuven.elcontador10.fragments.stakeholders.contracts.SubContractDisplayArgs;
+import be.kuleuven.elcontador10.fragments.stakeholders.contracts.SubContractDisplayDirections;
 
 public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<ScheduledTransactionsRecViewAdapter.ViewHolder> {
     private List<ScheduledTransaction> allTransactions = new ArrayList<>();
@@ -86,7 +89,14 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
         //TODO categories
 
         // TODO go somewhere
-        
+
+        holder.parent.setOnClickListener(view -> {
+            SubContractDisplayDirections.ActionSubContractDisplayToExecuteScheduledTransaction action =
+                SubContractDisplayDirections.actionSubContractDisplayToExecuteScheduledTransaction(idOfTransaction);
+
+            navController.navigate(action);
+        });
+
 //        holder.parent.setOnClickListener(v->{
 //            try {
 //                // from Account ViewHolder

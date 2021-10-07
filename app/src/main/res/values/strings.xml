@@ -217,9 +217,9 @@
     <string name="completed">Completed</string>
     <string name="scheduled_transaction">Scheduled Transaction</string>
     <string name="select_a_transaction">Select a Transaction</string>
-    <string name="total_amount_to_pay">Total amount to pay:</string>
-    <string name="amount_paid">Amount paid:</string>
-    <string name="amount_left">Amount left:</string>
+    <string name="total_amount_to_pay">Total amount to pay: </string>
+    <string name="amount_paid">Amount paid: </string>
+    <string name="amount_left">Amount left: </string>
     <string name="increase_amount_paid">Increase amount paid</string>
     <string name="warning_amount_paid_will_be_larger_than_amount_to_pay">Warning! Amount paid will be larger than amount to pay.</string>
     <string name="execute_scheduled_transaction">Execute Scheduled Transaction</string>

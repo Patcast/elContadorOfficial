@@ -669,4 +669,11 @@ public enum Caching {
         return "[error loading latest period]";
 
     }
+
+    public ScheduledTransaction getScheduledTransactionFromId(String id) {
+        for (ScheduledTransaction scheduledTransaction : scheduledTransactions) {
+            if (scheduledTransaction.getId().equals(id)) return scheduledTransaction;
+        }
+        return null;
+    }
 }

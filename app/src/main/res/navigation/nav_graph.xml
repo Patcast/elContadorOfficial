@@ -190,11 +190,14 @@
         tools:layout="@layout/fragment_properties" />
     <fragment
         android:id="@+id/executeScheduledTransaction"
-        android:name="be.kuleuven.elcontador10.fragments.transactions.ExecuteScheduledTransaction"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.scheduledTransaction.ExecuteScheduledTransaction"
         android:label="fragment_execute_scheduled_transaction"
         tools:layout="@layout/fragment_execute_scheduled_transaction" >
         <action
             android:id="@+id/action_executeScheduledTransaction_to_chooseStakeHolderDialog"
             app:destination="@id/chooseStakeHolderDialog" />
+        <argument
+            android:name="id"
+            app:argType="string" />
     </fragment>
 </navigation>
