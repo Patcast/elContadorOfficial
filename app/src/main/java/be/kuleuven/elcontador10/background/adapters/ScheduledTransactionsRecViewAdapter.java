@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -91,10 +92,14 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
         // TODO go somewhere
 
         holder.parent.setOnClickListener(view -> {
-            SubContractDisplayDirections.ActionSubContractDisplayToExecuteScheduledTransaction action =
-                SubContractDisplayDirections.actionSubContractDisplayToExecuteScheduledTransaction(idOfTransaction);
+            if (Math.abs(transaction.getAmountPaid()) >= Math.abs(transaction.getTotalAmount()))
+                Toast.makeText(context, R.string.fully_paid, Toast.LENGTH_SHORT).show();
+            else {
+                SubContractDisplayDirections.ActionSubContractDisplayToExecuteScheduledTransaction action =
+                        SubContractDisplayDirections.actionSubContractDisplayToExecuteScheduledTransaction(idOfTransaction);
 
-            navController.navigate(action);
+                navController.navigate(action);
+            }
         });
 
 //        holder.parent.setOnClickListener(v->{

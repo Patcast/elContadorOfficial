@@ -224,6 +224,7 @@
     <string name="warning_amount_paid_will_be_larger_than_amount_to_pay">Warning! Amount paid will be larger than amount to pay.</string>
     <string name="execute_scheduled_transaction">Execute Scheduled Transaction</string>
     <string name="input_amount_to_pay">Please input the amount to pay.</string>
+    <string name="fully_paid">This transaction is fully paid.</string>
 
     <string-array name="months_list">
         <item>January</item>
