@@ -89,11 +89,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             motion:layout_constraintBottom_toBottomOf="@+id/text_startBalanceFix"
-            android:layout_marginEnd="20dp"
             android:alpha="1"
             motion:layout_constraintTop_toTopOf="@+id/text_startBalanceFix"
-            android:layout_marginRight="20dp"
-            motion:layout_constraintStart_toStartOf="@+id/guideline12" />
+            motion:layout_constraintStart_toStartOf="@+id/guideline12"
+            motion:layout_constraintEnd_toEndOf="parent" />
         <Constraint
             android:id="@+id/text_startBalanceFix"
             motion:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
@@ -108,11 +107,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             motion:layout_constraintBottom_toBottomOf="@+id/text_receivablesFix"
-            android:layout_marginEnd="20dp"
             android:alpha="1"
             motion:layout_constraintTop_toTopOf="@+id/text_receivablesFix"
-            android:layout_marginRight="20dp"
-            motion:layout_constraintStart_toStartOf="@+id/guideline12" />
+            motion:layout_constraintStart_toStartOf="@+id/guideline12"
+            motion:layout_constraintEnd_toEndOf="parent" />
         <Constraint
             android:id="@+id/text_receivablesFix"
             android:layout_width="wrap_content"
@@ -126,11 +124,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             motion:layout_constraintBottom_toBottomOf="@+id/text_payablesFix"
-            android:layout_marginEnd="20dp"
             android:alpha="1"
             motion:layout_constraintTop_toTopOf="@+id/text_payablesFix"
-            android:layout_marginRight="20dp"
-            motion:layout_constraintStart_toStartOf="@+id/guideline12" />
+            motion:layout_constraintStart_toStartOf="@+id/guideline12"
+            motion:layout_constraintEnd_toEndOf="parent" />
         <Constraint
             android:id="@+id/text_payablesFix"
             android:layout_width="wrap_content"
@@ -144,11 +141,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             motion:layout_constraintBottom_toBottomOf="@+id/text_futureBalanceFix"
-            android:layout_marginEnd="20dp"
             android:alpha="1"
             motion:layout_constraintTop_toTopOf="@+id/text_futureBalanceFix"
-            android:layout_marginRight="20dp"
-            motion:layout_constraintStart_toStartOf="@+id/guideline12" />
+            motion:layout_constraintStart_toStartOf="@+id/guideline12"
+            motion:layout_constraintEnd_toEndOf="parent" />
         <Constraint
             android:id="@+id/text_futureBalanceFix"
             android:layout_width="wrap_content"

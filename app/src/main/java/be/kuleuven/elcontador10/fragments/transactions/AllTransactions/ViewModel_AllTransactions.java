@@ -108,8 +108,8 @@ public class ViewModel_AllTransactions extends ViewModel {
             String urlGetAccountTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
             Query transactionsFromOneAccount = db.
                     collection(urlGetAccountTransactions).
-                    whereGreaterThanOrEqualTo("date", dateSelectedBottom).
-                    whereLessThan("date", dateSelectedTop);
+                    whereGreaterThanOrEqualTo("dueDate", dateSelectedBottom).
+                    whereLessThan("dueDate", dateSelectedTop);
             transactionsFromOneAccount.addSnapshotListener((value, e) -> {
                 if (e != null) {
                     Log.w(TAG, "Listen failed.", e);
@@ -139,8 +139,8 @@ public class ViewModel_AllTransactions extends ViewModel {
 
         db.collectionGroup("scheduledTransactions").
                 whereEqualTo("idOfAccount", Caching.INSTANCE.getChosenAccountId()).
-                whereGreaterThanOrEqualTo("date", dateSelectedBottom).
-                whereLessThan("date", dateSelectedTop).
+                whereGreaterThanOrEqualTo("dueDate", dateSelectedBottom).
+                whereLessThan("dueDate", dateSelectedTop).
                 addSnapshotListener((value,e ) -> {
 
                     if (e != null) {
@@ -190,7 +190,7 @@ public class ViewModel_AllTransactions extends ViewModel {
         }
 
        return listAllTransactionsFiltered.stream().
-                                                sorted(Comparator.comparing(TransactionInterface::getDueDate)).
+                                                sorted(Comparator.comparing(TransactionInterface::getDueDate).reversed()).
                                                 collect(Collectors.toList());
     }
 

@@ -33,7 +33,7 @@ public class ProcessedTransaction implements TransactionInterface {
     private String idOfStakeInt;
     private String id;
     private String idOfCategoryInt;
-    private Timestamp date;
+    private Timestamp dueDate;
     private String registeredBy;
     private String notes;
     private String imageName;
@@ -47,7 +47,7 @@ public class ProcessedTransaction implements TransactionInterface {
         this.registeredBy = registeredBy;
         this.idOfStakeInt = idOfStakeInt;
         this.idOfCategoryInt = idOfCategoryInt;
-        this.date = new Timestamp(new Date());
+        this.dueDate = new Timestamp(new Date());
         this.notes = notes;
         this.imageName = imageName;
     }
@@ -112,7 +112,7 @@ public class ProcessedTransaction implements TransactionInterface {
 
     @Override
     public Timestamp getDueDate() {
-        return date;
+        return dueDate;
     }
 
     @Override

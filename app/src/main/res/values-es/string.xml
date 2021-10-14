@@ -2,7 +2,7 @@
 <resources>
     <string name="Transaction_new">Nueva Transacción</string>
     <string name="Transaction_filter"> Filtro Transacciones </string>
-    <string name="app_name">!A Caray¡</string>
+    <string name="app_name">elContador</string>
     <string name="new_transaction_title">Nueva Transacción</string>
     <string name="receive">Recibe</string>
     <string name="amount">Cantidad</string>
