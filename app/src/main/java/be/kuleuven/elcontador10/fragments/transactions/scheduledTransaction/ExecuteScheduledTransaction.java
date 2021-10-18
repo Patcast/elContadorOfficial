@@ -20,9 +20,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.firebase.Timestamp;
+
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
@@ -134,6 +137,7 @@ public class ExecuteScheduledTransaction extends Fragment {
         amountLeft.setText(left);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void onConfirm_Clicked(View view) {
         String pay_text = increase.getText().toString();
 
@@ -144,6 +148,17 @@ public class ExecuteScheduledTransaction extends Fragment {
         } else {
             transaction.pay(Integer.parseInt(pay_text));
             ScheduledTransaction.updateScheduledTransaction(transaction);
+
+            // create new transaction
+
+            String notes = String.format("Generated transaction of %s of stakeholder %s by %s at %s", transaction.getTitle(),
+                    Caching.INSTANCE.getStakeholderName(transaction.getIdOfStakeholder()), Caching.INSTANCE.getAccountName(),
+                    DatabaseDatesFunctions.INSTANCE.timestampToString(Timestamp.now()));
+
+            ProcessedTransaction processedTransaction = new ProcessedTransaction(transaction.getTitle(), Integer.parseInt(pay_text), mainActivity.returnSavedLoggedEmail(),
+                    transaction.getIdOfStakeholder(), transaction.getCategory(), notes, transaction.getImageName());
+
+            processedTransaction.sendTransaction(processedTransaction, getContext());
 
             navController.popBackStack();
         }

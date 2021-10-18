@@ -104,11 +104,13 @@ public class ScheduledTransaction implements TransactionInterface {
         return (int)totalAmount;
     }
 
+    @Exclude
     @Override
     public String getIdOfStakeInt() {
         return idOfStakeholder;
     }
 
+    @Exclude
     @Override
     public String getIdOfTransactionInt() {
         return id;
