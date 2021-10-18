@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.BalanceRecord;
 import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
@@ -36,7 +37,7 @@ public class ViewModel_AllTransactions extends ViewModel {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final List<ProcessedTransaction> monthlyListOfProcessedTransactions = new ArrayList<>();
     private final List<ScheduledTransaction> monthlyListOfScheduleTransactions = new ArrayList<>();
-
+    private final List<BalanceRecord> listOfBalanceRecords = new ArrayList<>();
     /// Boolean filter
     private final MutableLiveData<Map<String,Boolean>> booleanFilter = new MutableLiveData<>();
     public LiveData<Map<String,Boolean>> getBooleanFilter() {
@@ -70,6 +71,7 @@ public class ViewModel_AllTransactions extends ViewModel {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void setMapOfSummary() {
         Map<String,Integer>  summaryMap = new HashMap<>();
+
         int startingBalance = Caching.INSTANCE.getStartingBalances(calendarFilter.getValue().get("month"),calendarFilter.getValue().get("year"));
         summaryMap.put("startingBalance",startingBalance);
         int currentBalance = monthlyListOfProcessedTransactions.stream()
@@ -90,7 +92,28 @@ public class ViewModel_AllTransactions extends ViewModel {
         mapOfMonthlySummaryValues.setValue(summaryMap);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void requestBalanceRecords(){
+        Query transactionsFromOneAccount = db.collection("/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/balanceRecords");
+        transactionsFromOneAccount.addSnapshotListener((value, e) -> {
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e);
+                return;
+            }
+            List<BalanceRecord> listTrans = new ArrayList<>();
+            for (QueryDocumentSnapshot doc : value) {
+                Map<String, Object> myRecordMap =  doc.getData();
+                Long closingBalance = (myRecordMap.containsKey("closingBalance"))? (Long) myRecordMap.get("closingBalance"): null;
+                listTrans.add(new BalanceRecord((Long)myRecordMap.get("startingBalance"),closingBalance,(Timestamp) myRecordMap.get("date")));
+            }
+            listOfBalanceRecords.clear();
+            listOfBalanceRecords.addAll(listTrans);
+            setMapOfSummary();
+        });
 
+
+
+    }
 
 
     /// Querying lists of transactions
@@ -165,6 +188,7 @@ public class ViewModel_AllTransactions extends ViewModel {
         initialiseBooleanFilter();
         selectScheduleTransactions();
         selectListOfProcessedTransactions( );
+        requestBalanceRecords();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -193,8 +217,6 @@ public class ViewModel_AllTransactions extends ViewModel {
                                                 sorted(Comparator.comparing(TransactionInterface::getDueDate).reversed()).
                                                 collect(Collectors.toList());
     }
-
-
 
     private void initialiseCalendarFilter() {
         Calendar cal = Calendar.getInstance();

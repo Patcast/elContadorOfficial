@@ -287,7 +287,7 @@ public enum Caching {
                     for (QueryDocumentSnapshot doc : value) {
                         if (doc.get("name") != null) {
                             Account myAccount =  doc.toObject(Account.class);
-                            myAccount.setId( doc.getId());
+                            myAccount.setId(doc.getId());
                             accounts.add(myAccount);
                         }
                     }
