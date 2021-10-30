@@ -98,7 +98,7 @@
                 android:paddingVertical="10dp"
                 android:scaleX="1.7"
                 android:scaleY="1.7"
-                android:text="@string/in"
+                android:text="@string/receivables"
                 android:translationX="24dp" />
 
             <RadioButton
@@ -108,7 +108,7 @@
                 android:paddingVertical="10dp"
                 android:scaleX="1.7"
                 android:scaleY="1.7"
-                android:text="@string/out"
+                android:text="@string/payables"
                 android:translationX="-30dp" />
 
         </RadioGroup>

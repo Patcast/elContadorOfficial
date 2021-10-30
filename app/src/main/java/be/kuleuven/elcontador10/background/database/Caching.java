@@ -495,6 +495,11 @@ public enum Caching {
                 });
     }
 
+    public void setScheduledTransactions(List<ScheduledTransaction> transactions) {
+        scheduledTransactions.clear();
+        scheduledTransactions.addAll(transactions);
+    }
+
 //////************** end of db
 
     // getters
@@ -636,6 +641,13 @@ public enum Caching {
 
     public void setChosenStakeHolder(StakeHolder chosenStakeHolder) {
         this.chosenStakeHolder = chosenStakeHolder;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setChosenStakeHolder(String chosenStakeHolderID) {
+        chosenStakeHolder = stakeHolders.stream()
+                .filter(t -> t.getId().equals(chosenStakeHolderID))
+                .findFirst().orElse(null);
     }
 
     public void setChosenContract(Contract chosenContract) {

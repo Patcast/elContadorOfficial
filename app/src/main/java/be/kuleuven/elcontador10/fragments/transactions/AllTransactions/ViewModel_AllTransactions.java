@@ -155,7 +155,7 @@ public class ViewModel_AllTransactions extends ViewModel {
                         listTransSchedule.add(myTransaction);
                     }
                     monthlyListOfScheduleTransactions.addAll(listTransSchedule);
-                    setListOfTransactions();
+                    Caching.INSTANCE.setScheduledTransactions(listTransSchedule);
         });
     }
 
