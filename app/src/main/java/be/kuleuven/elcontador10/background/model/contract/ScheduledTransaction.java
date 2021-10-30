@@ -116,6 +116,7 @@ public class ScheduledTransaction implements TransactionInterface {
         return id;
     }
 
+    @Exclude
     @Override
     public String getIdOfCategoryInt() {
         return category;
