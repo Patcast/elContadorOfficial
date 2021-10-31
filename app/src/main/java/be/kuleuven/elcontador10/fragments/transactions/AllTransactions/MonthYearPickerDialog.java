@@ -38,7 +38,7 @@ public class MonthYearPickerDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        Calendar cal = Calendar.getInstance();
+
 
         View dialog = inflater.inflate(R.layout.month_year_picker, null);
         final NumberPicker monthPicker = dialog.findViewById(R.id.picker_month);
@@ -48,7 +48,7 @@ public class MonthYearPickerDialog extends DialogFragment {
 
         final NumberPicker yearPicker = dialog.findViewById(R.id.picker_year);
 
-        //monthPicker.setValue(cal.get(Calendar.MONTH)+1);
+
         monthPicker.setValue(month);
 
 
