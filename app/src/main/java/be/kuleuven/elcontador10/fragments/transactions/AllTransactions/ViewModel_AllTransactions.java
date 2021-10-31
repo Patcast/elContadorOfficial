@@ -72,11 +72,6 @@ public class ViewModel_AllTransactions extends ViewModel {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private BalanceRecord getSelectedRecord(Integer month, Integer year){
-        // assuming month and Year exist, otherwise null
-        BalanceRecord test = listOfBalanceRecords.get(1);
-        int monthTest = test.getDate().toDate().getMonth() +1;
-        int yearTest = test.getDate().toDate().getYear()+1900;
-
         Optional <BalanceRecord> selectedRecord = listOfBalanceRecords
                 .stream()
                 .filter(i-> i.getDate().toDate().getMonth()+1==month)

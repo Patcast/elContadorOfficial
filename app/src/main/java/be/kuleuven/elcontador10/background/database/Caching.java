@@ -40,9 +40,6 @@ import be.kuleuven.elcontador10.background.model.contract.Contract;
 public enum Caching {
     INSTANCE;
 
-
-
-
     /// interfaces******
     public interface CategoriesObserver{
         void notifyCatObserver(List <EmojiCategory> customCategoriesInput);
@@ -645,7 +642,7 @@ public enum Caching {
     public void setChosenSubContract(SubContract chosenSubContract) {
         this.chosenSubContract = chosenSubContract;
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
+   /* @RequiresApi(api = Build.VERSION_CODES.N)
     public int getStartingBalances(int month, int year){
         Optional<Map<String,Integer>> mapOptional = getAccounts().stream()
                 .filter(a->a.getId().equals(chosenAccountId))
@@ -655,7 +652,6 @@ public enum Caching {
           return  mapOptional.get().getOrDefault((""+month+"/"+year),0);
         }
         return 0;
-
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public String getLatestStartingBalance(){
@@ -668,7 +664,7 @@ public enum Caching {
         }
         return "[error loading latest period]";
 
-    }
+    }*/
 
     public ScheduledTransaction getScheduledTransactionFromId(String id) {
         for (ScheduledTransaction scheduledTransaction : scheduledTransactions) {

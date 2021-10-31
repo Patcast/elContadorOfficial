@@ -11,31 +11,36 @@
 
     <TextView
         android:id="@+id/text_title_allTrans"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:text="Renta de Noviembre"
         android:textColor="@color/rec_view_title"
-        android:layout_marginBottom="10dp"
-
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/textPaidBy"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textAmount"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/rec_view_title"
-        android:text="$4,000.00"
-        android:layout_marginRight="15dp"
         android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:text="$4,000.00"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/rec_view_title"
         android:textSize="20sp"
+        android:gravity="right"
         app:layout_constraintBottom_toBottomOf="@+id/text_title_allTrans"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_title_allTrans"
-        />
+        app:layout_constraintStart_toEndOf="@+id/text_title_allTrans"
+        app:layout_constraintTop_toTopOf="@+id/text_title_allTrans" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
@@ -58,41 +63,44 @@
         android:id="@+id/text_date_allTrans"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Yesterday"
-        android:layout_marginRight="15dp"
         android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:text="Yesterday"
         app:layout_constraintBottom_toBottomOf="@+id/textPaidBy"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textPaidBy" />
 
     <TextView
         android:id="@+id/text_nameOfParticipant"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:text="Patricio Castillo"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toEndOf="@+id/textPaidBy"
-        app:layout_constraintTop_toTopOf="@+id/textPaidBy"
-        android:layout_marginStart="5dp" />
+        app:layout_constraintTop_toTopOf="@+id/textPaidBy" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textView_transaction_emoji"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:textSize="15sp"
             android:gravity="center"
-            android:text="💰" />
+            android:text="💰"
+            android:textSize="15sp" />
 
         <ImageView
             android:id="@+id/imageView_camara_icon"
@@ -102,5 +110,12 @@
 
 
     </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="254dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

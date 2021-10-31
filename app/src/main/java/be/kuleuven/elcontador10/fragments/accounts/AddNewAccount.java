@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.model.Account;
+import be.kuleuven.elcontador10.background.model.BalanceRecord;
 
 
 public class AddNewAccount extends Fragment {
@@ -63,11 +64,8 @@ public class AddNewAccount extends Fragment {
             String nameOfAccount =edTextName.getText().toString();
             if (!(nameOfAccount.isEmpty())){
                 String amountText = edTextBalance.getText().toString();
-                long amount;
-                if(!(amountText.isEmpty())) {
-                    amount = Long.parseLong(amountText);
-                }
-                else{amount =0;}
+                long amount = 0;
+                if(!(amountText.isEmpty())) amount = Long.parseLong(amountText);
                 Account newAccount = new Account(nameOfAccount,amount,users);
                 newAccount.sendNewAccount(newAccount,getContext());
             }

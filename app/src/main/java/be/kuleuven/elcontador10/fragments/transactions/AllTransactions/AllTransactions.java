@@ -280,11 +280,11 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+   /* @RequiresApi(api = Build.VERSION_CODES.N)
     private String[] getLatestStartingBalance() {
         String keyOfLatestStartingBalance = Caching.INSTANCE.getLatestStartingBalance();
         return keyOfLatestStartingBalance.split("/");
-    }
+    }*/
 
 
     @Override
