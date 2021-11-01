@@ -85,9 +85,6 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
                 }
             }
             else if (allTransactions.get(position) instanceof ScheduledTransaction) {
-                    Caching.INSTANCE.setChosenMicroAccountId(idStakeholder);
-                    Caching.INSTANCE.setChosenStakeHolder(idStakeholder);
-
                     AllTransactionsDirections.ActionAllTransactions2ToExecuteScheduledTransaction action =
                             AllTransactionsDirections.actionAllTransactions2ToExecuteScheduledTransaction(idOfTransaction);
 

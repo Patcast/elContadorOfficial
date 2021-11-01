@@ -34,7 +34,7 @@ import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 public class ExecuteScheduledTransaction extends Fragment {
 
     // views
-    private TextView selectStakeholder, selectTransaction, amountTotal, amountPaid, amountLeft, warning;
+    private TextView selectStakeholder, selectTransaction, amountTotal, amountPaid, amountLeft, warning, payableOrReceivable;
     private EditText increase;
     private Button confirm;
 
@@ -46,6 +46,7 @@ public class ExecuteScheduledTransaction extends Fragment {
     private ExecuteScheduledViewModel viewModel;
     private NavController navController;
     private long left;
+    private boolean isReceivable;
 
     @Nullable
     @Override
@@ -61,6 +62,7 @@ public class ExecuteScheduledTransaction extends Fragment {
         amountPaid = view.findViewById(R.id.execute_amount_paid);
         amountLeft = view.findViewById(R.id.execute_amount_left);
         warning = view.findViewById(R.id.execute_warning);
+        payableOrReceivable = view.findViewById(R.id.execute_PayOrReceive);
 
         increase = view.findViewById(R.id.execute_amount);
         increase.addTextChangedListener(new CustomTextWatcher());
@@ -116,15 +118,21 @@ public class ExecuteScheduledTransaction extends Fragment {
     }
 
     public void setTexts() {
-        String total = getResources().getString(R.string.total_amount_to_pay) + new NumberFormatter(transaction.getTotalAmount()).getFinalNumber();
-        String paid = getResources().getString(R.string.amount_paid) + new NumberFormatter(transaction.getAmountPaid()).getFinalNumber();
+        String total = getResources().getString(R.string.total_amount_to_pay) + new NumberFormatter(Math.abs(transaction.getTotalAmount())).getFinalNumber();
+        String paid = getResources().getString(R.string.amount_paid) + new NumberFormatter(Math.abs(transaction.getAmountPaid())).getFinalNumber();
 
-        this.left = transaction.getTotalAmount() - transaction.getAmountPaid();
+        this.left = Math.abs(transaction.getTotalAmount()) - Math.abs(transaction.getAmountPaid());
         String left = getResources().getString(R.string.amount_left) + new NumberFormatter(this.left).getFinalNumber();
+
+        isReceivable = transaction.getTotalAmount() > 0;
 
         amountTotal.setText(total);
         amountPaid.setText(paid);
         amountLeft.setText(left);
+
+        if (isReceivable) payableOrReceivable.setText(R.string.receivables);
+        else payableOrReceivable.setText(R.string.payables);
+
     }
 
     public void setNullTexts() {
@@ -146,7 +154,11 @@ public class ExecuteScheduledTransaction extends Fragment {
         else if (warning.getVisibility() == View.VISIBLE) {
             Toast.makeText(mainActivity, R.string.warning_amount_paid_will_be_larger_than_amount_to_pay, Toast.LENGTH_SHORT).show();
         } else {
-            transaction.pay(Integer.parseInt(pay_text));
+            int toPay = Integer.parseInt(pay_text);
+
+            if (!isReceivable) toPay = -toPay; // is a payable, so negative
+
+            transaction.pay(toPay);
             ScheduledTransaction.updateScheduledTransaction(transaction);
 
             // create new transaction
@@ -155,7 +167,7 @@ public class ExecuteScheduledTransaction extends Fragment {
                     Caching.INSTANCE.getStakeholderName(transaction.getIdOfStakeholder()), Caching.INSTANCE.getAccountName(),
                     DatabaseDatesFunctions.INSTANCE.timestampToString(Timestamp.now()));
 
-            ProcessedTransaction processedTransaction = new ProcessedTransaction(transaction.getTitle(), Integer.parseInt(pay_text), mainActivity.returnSavedLoggedEmail(),
+            ProcessedTransaction processedTransaction = new ProcessedTransaction(transaction.getTitle(), toPay, mainActivity.returnSavedLoggedEmail(),
                     transaction.getIdOfStakeholder(), transaction.getCategory(), notes, transaction.getImageName());
 
             processedTransaction.sendTransaction(processedTransaction, getContext());

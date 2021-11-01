@@ -36,8 +36,8 @@ public class ScheduledTransaction implements TransactionInterface {
 
     // for Firebase
     public ScheduledTransaction() {}
+
     // database
-    // TODO database functions
     public static void newScheduledTransaction(ScheduledTransaction transaction, String contractId, String subContractId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + Caching.INSTANCE.getChosenMicroAccountId() +
@@ -60,6 +60,7 @@ public class ScheduledTransaction implements TransactionInterface {
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
     }
 
+    // setters and getters
     @Exclude
     public String getId() {
         return id;
