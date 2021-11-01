@@ -35,17 +35,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.ParseException;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 
@@ -261,7 +257,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        latestStartingBalance = viewModel.getLatestStartingBalance();
+        latestStartingBalance = viewModel.getFirstStartingBalanceTimeStamp();
         if (latestStartingBalance!=null){
             int lastMonth =latestStartingBalance.toDate().getMonth()+1;
             int lastYear =latestStartingBalance.toDate().getYear()+1900;
@@ -279,12 +275,6 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
             Toast.makeText(getContext(), "Error Loading Transactions, please try again.", Toast.LENGTH_LONG).show();
         }
     }
-
-   /* @RequiresApi(api = Build.VERSION_CODES.N)
-    private String[] getLatestStartingBalance() {
-        String keyOfLatestStartingBalance = Caching.INSTANCE.getLatestStartingBalance();
-        return keyOfLatestStartingBalance.split("/");
-    }*/
 
 
     @Override

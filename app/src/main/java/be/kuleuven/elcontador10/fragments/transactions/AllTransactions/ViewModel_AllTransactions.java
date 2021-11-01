@@ -3,6 +3,7 @@ package be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -24,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.background.database.Caching;
@@ -71,7 +73,7 @@ public class ViewModel_AllTransactions extends ViewModel {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private BalanceRecord getSelectedRecord(Integer month, Integer year){
+    public BalanceRecord getSelectedRecord(Integer month, Integer year){
         Optional <BalanceRecord> selectedRecord = listOfBalanceRecords
                 .stream()
                 .filter(i-> i.getDate().toDate().getMonth()+1==month)
@@ -118,7 +120,7 @@ public class ViewModel_AllTransactions extends ViewModel {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void requestBalanceRecords(){
+    private void requestBalanceRecords(){
         Query transactionsFromOneAccount = db
                 .collection("/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/balanceRecords");
         transactionsFromOneAccount.addSnapshotListener((value, e) -> {
@@ -137,7 +139,7 @@ public class ViewModel_AllTransactions extends ViewModel {
         });
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public Timestamp getLatestStartingBalance(){
+    public Timestamp getFirstStartingBalanceTimeStamp(){
         Optional<Timestamp> time =  listOfBalanceRecords
                 .stream()
                 .sorted(Comparator.comparing(BalanceRecord::getDate))
@@ -269,4 +271,17 @@ public class ViewModel_AllTransactions extends ViewModel {
         monthlyListOfScheduleTransactions.clear();
         monthlyListOfProcessedTransactions.clear();
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public Timestamp getLatestStarBalDate(){
+        Optional<Timestamp> time =  listOfBalanceRecords
+                .stream()
+                .sorted(Comparator.comparing(BalanceRecord::getDate))
+                .map(i -> i.getDate())
+                .reduce((first, second) -> second);
+        return time.orElse(null);
+    }
+
+
+
 }

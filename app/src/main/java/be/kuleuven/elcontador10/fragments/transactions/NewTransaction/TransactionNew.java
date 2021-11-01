@@ -53,10 +53,9 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-//Todo: Improvement of Categories and programming limit words for notes and title. Also remove mandatory Stakeholder.
+//Todo: Remove mandatory Stakeholder.
 public class TransactionNew extends Fragment implements EasyPermissions.PermissionCallbacks{
     public static final int CAMARA_PERM_CODE = 2901;
-    private static final String TAG = "TransactionNew";
     public static final int CAMARA_REQUEST_CODE = 1382;
     public static final int GALLERY_REQUEST_CODE = 3892;
 
@@ -294,8 +293,6 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         }
 
     }
-
-
     private String getFileExt(Uri contentUri) {
         ContentResolver c = requireActivity().getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();

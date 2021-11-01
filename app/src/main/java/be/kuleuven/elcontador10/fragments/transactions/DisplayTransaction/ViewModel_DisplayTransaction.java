@@ -16,6 +16,7 @@ import com.squareup.picasso.Target;
 import java.util.concurrent.atomic.AtomicReference;
 
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.ImageFireBase;
 
 public class ViewModel_DisplayTransaction extends ViewModel {
     FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -67,6 +68,18 @@ public class ViewModel_DisplayTransaction extends ViewModel {
                 Toast.makeText(context, "Error loading photo.", Toast.LENGTH_SHORT).show();
             });
     }
+
+    //ChosenImage
+    private final MutableLiveData<ImageFireBase> chosenImage = new MutableLiveData<>();
+    public LiveData<ImageFireBase> getChosenImage() {
+        return chosenImage;
+    }
+    public void selectImage(ImageFireBase imageInput){
+        chosenImage.setValue(imageInput);
+    }
+    public void resetImage(){ chosenImage.setValue(null); }
+
+
     public void reset(){
         chosenBitmap.setValue(null);
         isLoading.setValue(false);
