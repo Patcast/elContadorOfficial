@@ -22,6 +22,7 @@ public class ScheduledTransaction implements TransactionInterface {
     private String title;
     private String category;
     private String idOfAccount;
+    private String path;
 
     private static final String TAG = "scheduledTransaction";
 
@@ -51,9 +52,7 @@ public class ScheduledTransaction implements TransactionInterface {
     public static void updateScheduledTransaction(ScheduledTransaction transaction) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + Caching.INSTANCE.getChosenMicroAccountId() +
-                "/contracts/" + Caching.INSTANCE.getChosenContract().getId() + "/subcontracts/" + Caching.INSTANCE.getChosenSubContract().getId() +
-                "/scheduledTransactions/" + transaction.getId();
+        String url = transaction.getPath();
 
         db.document(url)
                 .set(transaction)
@@ -158,5 +157,15 @@ public class ScheduledTransaction implements TransactionInterface {
 
     public void pay(long amount) {
         amountPaid += amount;
+    }
+
+    // for updating data
+    @Exclude
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

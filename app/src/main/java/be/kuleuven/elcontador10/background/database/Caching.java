@@ -488,6 +488,7 @@ public enum Caching {
                     for (QueryDocumentSnapshot doc : value) {
                         ScheduledTransaction transaction = doc.toObject(ScheduledTransaction.class);
                         transaction.setId(doc.getId());
+                        transaction.setPath(doc.getReference().getPath());
                         scheduledTransactions.add(transaction);
                     }
 
