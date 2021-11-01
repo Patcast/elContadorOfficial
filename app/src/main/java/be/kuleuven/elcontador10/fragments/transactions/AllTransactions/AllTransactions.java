@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.Timestamp;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import java.text.ParseException;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +61,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     private MainActivity mainActivity;
     private Animation rotateOpen,rotateClose,popOpen,popClose;
     private ViewModel_AllTransactions viewModel;
+    private Timestamp latestStartingBalance;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -101,17 +104,26 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         });
         viewModel.getAllChosenTransactions().observe(getViewLifecycleOwner(), i->adapter.setAllTransactions(i));
         viewModel.getMapOfMonthlySummaryValues().observe(getViewLifecycleOwner(), this::updateSummaryUi);
-
         startRecycler(view);
         return view;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateSummaryUi(Map<String, Integer> inputsForSummary) {
-        NumberFormatter formatter = new NumberFormatter(inputsForSummary.get("startingBalance"));
-        txtStartingBalance.setText(formatter.getFinalNumber());
-        formatter.setOriginalNumber(inputsForSummary.get("currentBalance"));
-        txCurrentBalance.setText(formatter.getFinalNumber());
+
+        NumberFormatter formatter = new NumberFormatter(0);
+        String inputSB = "NA";
+        if(inputsForSummary.get("startingBalance")!=null){
+            formatter.setOriginalNumber(inputsForSummary.get("startingBalance"));
+            inputSB = formatter.getFinalNumber();
+        }
+        txtStartingBalance.setText(inputSB);
+        String inputCB = "NA";
+        if(inputsForSummary.get("currentBalance")!=null){
+            formatter.setOriginalNumber(inputsForSummary.get("currentBalance"));
+            inputCB = formatter.getFinalNumber();
+        }
+        txCurrentBalance.setText(inputCB);
         formatter.setOriginalNumber(inputsForSummary.get("receivables"));
         txtSumOfReceivables.setText(formatter.getFinalNumber());
         formatter.setOriginalNumber(inputsForSummary.get("payables"));
@@ -128,6 +140,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         viewModel.resetListOfTransactions();
         viewModel.selectScheduleTransactions();
         viewModel.selectListOfProcessedTransactions();
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -155,6 +168,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         popClose = AnimationUtils.loadAnimation(getContext(),R.anim.pop_down_fabs);
         isClicked= false;
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onStart() {
         super.onStart();
@@ -162,6 +176,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,true);
         recyclerAllTransactions.setAdapter(adapter);
+
     }
 
     @Override
@@ -246,26 +261,30 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        String[] latestStartingBalance = getLatestStartingBalance();
-        String latestPeriod = ""+(getResources().getStringArray(R.array.months_list))[Integer.parseInt(latestStartingBalance[0])-1] +" "+latestStartingBalance[1];
-
-        if(year < Integer.parseInt(latestStartingBalance[1])|| (year == Integer.parseInt(latestStartingBalance[1]) && month < Integer.parseInt(latestStartingBalance[0]))){
-            Toast.makeText(getContext(), "The account does not have records for the selected period, the latest period of the account is "+latestPeriod, Toast.LENGTH_LONG).show();
-
+        latestStartingBalance = viewModel.getLatestStartingBalance();
+        if (latestStartingBalance!=null){
+            int lastMonth =latestStartingBalance.toDate().getMonth()+1;
+            int lastYear =latestStartingBalance.toDate().getYear()+1900;
+            if(year <lastYear || (year == lastYear) && month < lastMonth){
+                Toast.makeText(getContext(), "Invalid date! The latest Balance Summary available is for "+(getResources().getStringArray(R.array.months_list))[lastMonth-1]+" / "+lastYear, Toast.LENGTH_LONG).show();
+            }
+            else {
+                Map<String,Integer> chosenDateMap = new HashMap<>();
+                chosenDateMap.put("month",month);
+                chosenDateMap.put("year",year);
+                viewModel.setCalendarFilter(chosenDateMap);
+            }
         }
         else {
-            Map<String,Integer> chosenDateMap = new HashMap<>();
-            chosenDateMap.put("month",month);
-            chosenDateMap.put("year",year);
-            viewModel.setCalendarFilter(chosenDateMap);
+            Toast.makeText(getContext(), "Error Loading Transactions, please try again.", Toast.LENGTH_LONG).show();
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+   /* @RequiresApi(api = Build.VERSION_CODES.N)
     private String[] getLatestStartingBalance() {
         String keyOfLatestStartingBalance = Caching.INSTANCE.getLatestStartingBalance();
         return keyOfLatestStartingBalance.split("/");
-    }
+    }*/
 
 
     @Override

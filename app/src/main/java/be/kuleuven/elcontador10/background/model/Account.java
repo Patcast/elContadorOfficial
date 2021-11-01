@@ -8,10 +8,13 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import be.kuleuven.elcontador10.background.database.Caching;
@@ -22,7 +25,6 @@ public class Account {
     private String name;
     private ArrayList<String> users;
     private String id;
-    private Map<String,Integer> mapOfStaringBalances;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -35,35 +37,17 @@ public class Account {
     public Account() {
     }
 
-
-    public Account(long balance, String name, String id) {
-        this.balance = balance;
-        this.name = name;
-        this.id = id;
-    }
-
-    public Account(int balance, String name) {
-        this.balance = balance;
-        this.name = name;
-    }
-
     public void sendNewAccount(Account newAccount, Context context){
         db.collection("accounts")
                 .add(newAccount)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                        Toast.makeText(context,"Account registered",Toast.LENGTH_SHORT).show();
-
-                    }
+                .addOnSuccessListener(doc -> {
+                    Log.d(TAG, "DocumentSnapshot written with ID: " + doc.getId());
+                    Toast.makeText(context,"Account registered",Toast.LENGTH_SHORT).show();
+                    BalanceRecord record = new BalanceRecord(balance,new Timestamp(new Date()));
+                    record.sendNewRecord(record, doc.getId());
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+
     }
 
 
@@ -80,6 +64,7 @@ public class Account {
         return name;
     }
 
+    @Exclude
     public String getId() {
         return id;
     }
@@ -88,7 +73,4 @@ public class Account {
         return users;
     }
 
-    public Map<String, Integer> getMapOfStaringBalances() {
-        return mapOfStaringBalances;
-    }
 }

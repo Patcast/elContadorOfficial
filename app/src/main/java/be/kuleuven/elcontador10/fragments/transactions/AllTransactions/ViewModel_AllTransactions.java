@@ -23,9 +23,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.BalanceRecord;
 import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
@@ -36,7 +38,7 @@ public class ViewModel_AllTransactions extends ViewModel {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final List<ProcessedTransaction> monthlyListOfProcessedTransactions = new ArrayList<>();
     private final List<ScheduledTransaction> monthlyListOfScheduleTransactions = new ArrayList<>();
-
+    private final List<BalanceRecord> listOfBalanceRecords = new ArrayList<>();
     /// Boolean filter
     private final MutableLiveData<Map<String,Boolean>> booleanFilter = new MutableLiveData<>();
     public LiveData<Map<String,Boolean>> getBooleanFilter() {
@@ -67,16 +69,40 @@ public class ViewModel_AllTransactions extends ViewModel {
     public LiveData<Map<String, Integer>> getMapOfMonthlySummaryValues() {
         return mapOfMonthlySummaryValues;
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private BalanceRecord getSelectedRecord(Integer month, Integer year){
+        Optional <BalanceRecord> selectedRecord = listOfBalanceRecords
+                .stream()
+                .filter(i-> i.getDate().toDate().getMonth()+1==month)
+                .filter(i-> i.getDate().toDate().getYear() + 1900==year)
+                .findFirst();
+        return selectedRecord.orElse(null);
+    }
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void setMapOfSummary() {
         Map<String,Integer>  summaryMap = new HashMap<>();
-        int startingBalance = Caching.INSTANCE.getStartingBalances(calendarFilter.getValue().get("month"),calendarFilter.getValue().get("year"));
+        int selectedMonth =calendarFilter.getValue().get("month");
+        int selectedYear = calendarFilter.getValue().get("year");
+        BalanceRecord selectedRecord = getSelectedRecord(selectedMonth,selectedYear);
+        Integer startingBalance = null;
+        Integer closingBalance = null;
+        if(selectedRecord!=null){
+            Timestamp currentDate = Timestamp.now();
+            int currentMonth =currentDate.toDate().getMonth()+1;
+            int currentYear =currentDate.toDate().getYear()+1900;
+            if ((selectedYear< currentYear)||(selectedYear== currentYear&&selectedMonth<=currentMonth)){
+                    startingBalance = (int) selectedRecord.getStartingBalance();
+                    closingBalance = monthlyListOfProcessedTransactions
+                            .stream()
+                            .map(ProcessedTransaction::getTotalAmount)
+                            .reduce(startingBalance, Integer::sum);
+            }
+        }
         summaryMap.put("startingBalance",startingBalance);
-        int currentBalance = monthlyListOfProcessedTransactions.stream()
-                .map(ProcessedTransaction::getTotalAmount)
-                .reduce(startingBalance, Integer::sum);
-        summaryMap.put("currentBalance",currentBalance);
-        summaryMap.put("receivables",monthlyListOfScheduleTransactions.stream()
+        summaryMap.put("currentBalance",closingBalance);
+        summaryMap.put("receivables",monthlyListOfScheduleTransactions
+                .stream()
                 .map(ScheduledTransaction::getTotalAmount)
                 .filter(totalAmount -> totalAmount >0)
                 .reduce(0, Integer::sum));
@@ -84,13 +110,41 @@ public class ViewModel_AllTransactions extends ViewModel {
                 .map(ScheduledTransaction::getTotalAmount)
                 .filter(totalAmount -> totalAmount <0)
                 .reduce(0, Integer::sum));
+        if(closingBalance==null) closingBalance = 0;
         summaryMap.put("scheduleBalance",monthlyListOfScheduleTransactions.stream()
                 .map(ScheduledTransaction::getTotalAmount)
-                .reduce(currentBalance, Integer::sum));
+                .reduce(closingBalance, Integer::sum));
         mapOfMonthlySummaryValues.setValue(summaryMap);
     }
 
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void requestBalanceRecords(){
+        Query transactionsFromOneAccount = db
+                .collection("/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/balanceRecords");
+        transactionsFromOneAccount.addSnapshotListener((value, e) -> {
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e);
+                return;
+            }
+            List<BalanceRecord> listRec = new ArrayList<>();
+            for (QueryDocumentSnapshot doc : value) {
+                Map<String, Object> myRecordMap =  doc.getData();
+                listRec.add(new BalanceRecord((Long)myRecordMap.get("startingBalance"),(Timestamp) myRecordMap.get("date")));
+            }
+            listOfBalanceRecords.clear();
+            listOfBalanceRecords.addAll(listRec);
+            setMapOfSummary();
+        });
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public Timestamp getLatestStartingBalance(){
+        Optional<Timestamp> time =  listOfBalanceRecords
+                .stream()
+                .sorted(Comparator.comparing(BalanceRecord::getDate))
+                .map(i -> i.getDate())
+                .findFirst();
+        return time.orElse(null);
+    }
 
 
     /// Querying lists of transactions
@@ -162,10 +216,12 @@ public class ViewModel_AllTransactions extends ViewModel {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void setInitialData() throws ParseException {
+        requestBalanceRecords();
         initialiseCalendarFilter();
         initialiseBooleanFilter();
         selectScheduleTransactions();
-        selectListOfProcessedTransactions( );
+        selectListOfProcessedTransactions();
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -194,8 +250,6 @@ public class ViewModel_AllTransactions extends ViewModel {
                                                 sorted(Comparator.comparing(TransactionInterface::getDueDate).reversed()).
                                                 collect(Collectors.toList());
     }
-
-
 
     private void initialiseCalendarFilter() {
         Calendar cal = Calendar.getInstance();
