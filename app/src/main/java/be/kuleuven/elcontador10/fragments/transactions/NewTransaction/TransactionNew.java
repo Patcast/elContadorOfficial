@@ -1,22 +1,14 @@
 package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
 
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -28,17 +20,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import be.kuleuven.elcontador10.R;
@@ -46,17 +33,15 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.ImageFireBase;
-import be.kuleuven.elcontador10.background.model.Interfaces.UseCamaraInterface;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.tools.CamaraSetUp;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
-import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 //Todo: Remove mandatory Stakeholder.
-public class TransactionNew extends Fragment implements EasyPermissions.PermissionCallbacks , UseCamaraInterface {
+public class TransactionNew extends Fragment implements EasyPermissions.PermissionCallbacks  {
     RadioGroup radGroup;
     TextView txtWordsCounterTitle,accountSelected,txtEmojiCategory,txtStakeHolder,txtWordsCounterNotes,txtMustHaveAmount;
     ImageButton btnAddCategory,btnAddPicture;
@@ -107,7 +92,7 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         txtStakeHolder.setOnClickListener(v -> { navController.navigate(R.id.action_newTransaction_to_chooseStakeHolderDialog); });
         confirmButton.setOnClickListener(v -> confirmTransaction());
         btnAddCategory.setOnClickListener(this::onCategory_Clicked);
-        btnAddPicture.setOnClickListener(v -> StartCamara());
+        btnAddPicture.setOnClickListener(v -> startCamara());
         txtEmojiCategory.setOnClickListener(this::onCategory_Clicked);
         setWordCounters();
         accountSelected.setText(Caching.INSTANCE.getAccountName());
@@ -225,9 +210,9 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
     }
-    @Override
+
     @RequiresApi(api = Build.VERSION_CODES.R)
-    public void StartCamara(){
+    public void startCamara(){
         camara = new CamaraSetUp(getContext(),this);
     }
 

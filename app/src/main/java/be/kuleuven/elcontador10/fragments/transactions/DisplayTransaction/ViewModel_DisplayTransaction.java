@@ -12,19 +12,17 @@ import androidx.lifecycle.ViewModel;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-
-import java.util.concurrent.atomic.AtomicReference;
-
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.ImageFireBase;
+import be.kuleuven.elcontador10.background.model.Interfaces.ViewModelCamaraInterface;
 
-public class ViewModel_DisplayTransaction extends ViewModel {
+public class ViewModel_DisplayTransaction extends ViewModel implements ViewModelCamaraInterface {
     FirebaseStorage storage = FirebaseStorage.getInstance();
-    private Target target = new Target() {
+    private final Target target = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             chosenBitmap.setValue(bitmap);
-           isLoading.setValue(false);
+            isLoading.setValue(false);
         }
 
         @Override
@@ -42,7 +40,7 @@ public class ViewModel_DisplayTransaction extends ViewModel {
     public ViewModel_DisplayTransaction() {
         setIsLoading(false);
     }
-
+    // Loading Bar
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     public LiveData<Boolean> getIsLoading() {
         return isLoading;
@@ -62,27 +60,31 @@ public class ViewModel_DisplayTransaction extends ViewModel {
             downloadUrl.append(Caching.INSTANCE.getChosenAccountId());
             downloadUrl.append("/");
             downloadUrl.append(imageName);
-            storage.getReference().child(downloadUrl.toString()).getDownloadUrl().addOnSuccessListener(uri -> {
-                Picasso.get().load(uri).into(target);
-            }).addOnFailureListener(exception -> {
-                Toast.makeText(context, "Error loading photo.", Toast.LENGTH_SHORT).show();
-            });
+            storage.getReference()
+                    .child(downloadUrl.toString())
+                    .getDownloadUrl()
+                    .addOnSuccessListener(uri -> Picasso.get().load(uri).into(target))
+                    .addOnFailureListener(exception -> Toast.makeText(context, "Error loading photo.", Toast.LENGTH_SHORT).show());
     }
 
     //ChosenImage
     private final MutableLiveData<ImageFireBase> chosenImage = new MutableLiveData<>();
+    @Override
     public LiveData<ImageFireBase> getChosenImage() {
         return chosenImage;
     }
+    @Override
     public void selectImage(ImageFireBase imageInput){
         chosenImage.setValue(imageInput);
     }
+    @Override
     public void resetImage(){ chosenImage.setValue(null); }
 
 
     public void reset(){
         chosenBitmap.setValue(null);
         isLoading.setValue(false);
+        resetImage();
         Picasso.get().cancelRequest(target);
     }
 

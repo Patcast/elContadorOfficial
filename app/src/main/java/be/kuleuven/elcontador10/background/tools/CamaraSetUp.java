@@ -24,9 +24,7 @@ import java.util.Date;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.ImageFireBase;
-import be.kuleuven.elcontador10.background.model.Interfaces.UseCamaraInterface;
 import be.kuleuven.elcontador10.background.model.Interfaces.ViewModelCamaraInterface;
-import be.kuleuven.elcontador10.fragments.transactions.DisplayTransaction.ViewModel_DisplayTransaction;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.PicturesBottomMenu;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
