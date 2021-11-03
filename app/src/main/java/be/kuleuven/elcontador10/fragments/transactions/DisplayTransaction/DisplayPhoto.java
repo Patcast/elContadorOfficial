@@ -1,7 +1,6 @@
 package be.kuleuven.elcontador10.fragments.transactions.DisplayTransaction;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,13 +11,12 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.github.chrisbanes.photoview.PhotoView;
-import com.squareup.picasso.Picasso;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.model.ImageFireBase;
 
 
 public class DisplayPhoto extends Fragment {
@@ -49,15 +47,10 @@ public class DisplayPhoto extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
-        viewModel.getChosenBitMap().observe(getViewLifecycleOwner(), this::setImage);
+        viewModel.getChosenBitMap().observe(getViewLifecycleOwner(), this::setImageDownloaded);
+        viewModel.getChosenImage().observe(getViewLifecycleOwner(), this::setImageAdded);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_delete,true);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add,true);
     }
@@ -69,9 +62,14 @@ public class DisplayPhoto extends Fragment {
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add,false);
     }
 
-    private void setImage(Bitmap bitmap) {
+    private void setImageDownloaded(Bitmap bitmap) {
         if(bitmap!=null) {
             photoView.setImageBitmap(bitmap);
+        }
+    }
+    private void setImageAdded(ImageFireBase imageAdded) {
+        if(imageAdded!=null) {
+            photoView.setImageURI(imageAdded.getContentUri());
         }
     }
 }

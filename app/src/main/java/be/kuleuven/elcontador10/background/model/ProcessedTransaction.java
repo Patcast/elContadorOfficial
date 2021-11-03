@@ -5,17 +5,24 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 
 
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
@@ -52,7 +59,49 @@ public class ProcessedTransaction implements TransactionInterface {
         this.imageName = imageName;
     }
 
+    public void updateImageFromFireBase(ProcessedTransaction newTransactionInput,ImageFireBase ImageSelected,Context context) {
+        String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
+        Map<String, Object> data = new HashMap<>();
+        data.put("imageName",ImageSelected.getNameOfImage());
+        db.collection(urlNewTransactions).document(newTransactionInput.id)
+                .set(data, SetOptions.merge());
 
+        StringBuilder saveUrl = new StringBuilder();
+        saveUrl.append(Caching.INSTANCE.getChosenAccountId());
+        saveUrl.append("/");
+        saveUrl.append(ImageSelected.getNameOfImage());
+        StorageReference image = storageReference.child(saveUrl.toString());
+        image.putFile(ImageSelected.getContentUri()).addOnSuccessListener(taskSnapshot -> {
+            Toast.makeText(context,"photo added", Toast.LENGTH_SHORT).show();
+        }).addOnFailureListener(e -> {
+            Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show();
+            deleteImageFromFireBase(false,context);
+            Toast.makeText(context,"photo failed to upload, please try again", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    public void deleteImageFromFireBase(Boolean storedSuccessfully,Context context){
+        // remove ImageName from transaction
+        String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
+        Map<String, Object> data = new HashMap<>();
+        data.put("imageName","");
+        db.collection(urlNewTransactions).document(getIdOfTransactionInt())
+                .set(data, SetOptions.merge());
+        if(storedSuccessfully) {
+            // remove ImageName file from storage
+            StringBuilder deleteUrl = new StringBuilder();
+            deleteUrl.append(Caching.INSTANCE.getChosenAccountId());
+            deleteUrl.append("/");
+            deleteUrl.append(getImageName());
+            StorageReference desertRef = storageReference.child(deleteUrl.toString());
+            desertRef.delete().addOnSuccessListener(aVoid -> {
+                Toast.makeText(context,"photo deleted", Toast.LENGTH_SHORT).show();
+            }).addOnFailureListener(exception -> {
+                Toast.makeText(context,"photo failed to delete, please try again", Toast.LENGTH_SHORT).show();
+            });
+        }
+    }
+    //Todo: Maybe use similar method to update after the transaction was created.
     public void uploadImageToFireBase(ProcessedTransaction newTransactionInput,ImageFireBase ImageSelected,Context context) {
         StringBuilder saveUrl = new StringBuilder();
         saveUrl.append(Caching.INSTANCE.getChosenAccountId());
@@ -142,6 +191,8 @@ public class ProcessedTransaction implements TransactionInterface {
     public String getIdOfTransactionInt() {
         return id;
     }
+
+
 }
 
 

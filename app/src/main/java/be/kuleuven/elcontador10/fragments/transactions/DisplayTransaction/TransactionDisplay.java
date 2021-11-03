@@ -281,7 +281,10 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==CamaraSetUp.CAMARA_REQUEST_CODE||requestCode==CamaraSetUp.GALLERY_REQUEST_CODE){
-            camara.onActivityResultForCamara(requestCode,resultCode,viewModel,data);
+            ImageFireBase photoCreated= camara.onActivityResultForCamara(requestCode,resultCode,viewModel,data);
+            if (photoCreated!=null){
+                selectedTrans.updateImageFromFireBase(selectedTrans,photoCreated,getContext());
+            }
         }
     }
     @Override

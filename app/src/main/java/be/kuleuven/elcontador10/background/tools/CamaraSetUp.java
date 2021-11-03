@@ -124,7 +124,8 @@ public class CamaraSetUp {
         return image;
     }
 
-    public void onActivityResultForCamara(int requestCode, int resultCode, ViewModelCamaraInterface viewModel, @Nullable Intent data){
+    public ImageFireBase onActivityResultForCamara(int requestCode, int resultCode, ViewModelCamaraInterface viewModel, @Nullable Intent data){
+        ImageFireBase photoCreated = null;
         if(requestCode==CAMARA_REQUEST_CODE){
             if(resultCode== Activity.RESULT_OK){
                 File f = new  File(currentPhotoPath);
@@ -135,6 +136,7 @@ public class CamaraSetUp {
                 fragment.getActivity().sendBroadcast(mediaScanIntent);
                 ImageFireBase imageFireBase = new ImageFireBase(f.getName(),contentUri);
                 viewModel.selectImage(imageFireBase);
+                photoCreated = imageFireBase;
 
             }
         }
@@ -147,10 +149,11 @@ public class CamaraSetUp {
                 Log.d("tag","onActivityResult: Gallery Image Uri: "+imageFileName);
                 ImageFireBase imageFireBase = new ImageFireBase(imageFileName,contentUri);
                 viewModel.selectImage(imageFireBase);
+                photoCreated = imageFireBase;
 
             }
         }
-
+        return photoCreated;
     }
 
     private String getFileExt(Uri contentUri) {
