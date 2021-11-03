@@ -266,6 +266,7 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
 
     //
     ////// CAMARA
+    /////
     public static final int CAMARA_PERM_CODE = 2901;
     public static final int CAMARA_REQUEST_CODE = 1382;
     public static final int GALLERY_REQUEST_CODE = 3892;
