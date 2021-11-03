@@ -46,19 +46,17 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.ImageFireBase;
+import be.kuleuven.elcontador10.background.model.Interfaces.UseCamaraInterface;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
+import be.kuleuven.elcontador10.background.tools.CamaraSetUp;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 //Todo: Remove mandatory Stakeholder.
-public class TransactionNew extends Fragment implements EasyPermissions.PermissionCallbacks{
-    public static final int CAMARA_PERM_CODE = 2901;
-    public static final int CAMARA_REQUEST_CODE = 1382;
-    public static final int GALLERY_REQUEST_CODE = 3892;
-
+public class TransactionNew extends Fragment implements EasyPermissions.PermissionCallbacks , UseCamaraInterface {
     RadioGroup radGroup;
     TextView txtWordsCounterTitle,accountSelected,txtEmojiCategory,txtStakeHolder,txtWordsCounterNotes,txtMustHaveAmount;
     ImageButton btnAddCategory,btnAddPicture;
@@ -70,10 +68,6 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
     ImageFireBase imageSelected;
     StakeHolder selectedStakeHolder;
     String idCatSelected;
-    String currentPhotoPath;
-    PicturesBottomMenu bottomSheet;
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,7 +107,7 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         txtStakeHolder.setOnClickListener(v -> { navController.navigate(R.id.action_newTransaction_to_chooseStakeHolderDialog); });
         confirmButton.setOnClickListener(v -> confirmTransaction());
         btnAddCategory.setOnClickListener(this::onCategory_Clicked);
-        btnAddPicture.setOnClickListener(v -> askForCamaraPermission());
+        btnAddPicture.setOnClickListener(v -> StartCamara());
         txtEmojiCategory.setOnClickListener(this::onCategory_Clicked);
         setWordCounters();
         accountSelected.setText(Caching.INSTANCE.getAccountName());
@@ -224,15 +218,20 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
     }
 
     ////// CAMARA
-
+    CamaraSetUp camara;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
     }
-
+    @Override
     @RequiresApi(api = Build.VERSION_CODES.R)
+    public void StartCamara(){
+        camara = new CamaraSetUp(getContext(),this);
+    }
+
+ /*   @RequiresApi(api = Build.VERSION_CODES.R)
     @AfterPermissionGranted(CAMARA_PERM_CODE)
     private void askForCamaraPermission() {
         String[] perms= {Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE};
@@ -242,9 +241,9 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         else{
             EasyPermissions.requestPermissions(this,getString(R.string.camara_permission_denied),CAMARA_PERM_CODE,perms);
         }
-    }
+    }*/
 
-    private void chooseImageOptions() {
+   /* private void chooseImageOptions() {
       bottomSheet = new PicturesBottomMenu(new PicturesBottomMenu.PicturesBottomSheetListener() {
            @Override
            public void onGalleryClick() {
@@ -259,17 +258,19 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
            }
        });
         bottomSheet.show(getParentFragmentManager(),"PicturesBottomSheet");
-    }
+    }*/
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==CAMARA_REQUEST_CODE){
-
+        if(requestCode==CamaraSetUp.CAMARA_REQUEST_CODE||requestCode==CamaraSetUp.GALLERY_REQUEST_CODE){
+            camara.onActivityResultForCamara(requestCode,resultCode,viewModel,data);
+        }
+       /* if(requestCode==CAMARA_REQUEST_CODE){
             if(resultCode== Activity.RESULT_OK){
                 File f = new  File(currentPhotoPath);
-                imageFinal.setImageURI(Uri.fromFile(f));
+                //imageFinal.setImageURI(Uri.fromFile(f));
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 Uri contentUri = Uri.fromFile(f);
                 mediaScanIntent.setData(contentUri);
@@ -290,19 +291,19 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
                 viewModel.selectImage(imageFireBase);
 
             }
-        }
+        }*/
 
     }
-    private String getFileExt(Uri contentUri) {
+  /*  private String getFileExt(Uri contentUri) {
         ContentResolver c = requireActivity().getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(c.getType(contentUri));
-    }
+    }*/
 
 
 
 
-    @RequiresApi(api = Build.VERSION_CODES.R)
+   /* @RequiresApi(api = Build.VERSION_CODES.R)
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -310,16 +311,16 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
        // File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES); USE if you don't want them to be saved in the gallery.
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+                imageFileName,  *//* prefix *//*
+                ".jpg",         *//* suffix *//*
+                storageDir      *//* directory *//*
         );
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
-    }
+    }*/
 
-    static final int REQUEST_TAKE_PHOTO=1;
+  /*  static final int REQUEST_TAKE_PHOTO=1;
     @RequiresApi(api = Build.VERSION_CODES.R)
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -342,11 +343,11 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
                 startActivityForResult(takePictureIntent, CAMARA_REQUEST_CODE);
             }
         }
-    }
-    private void useGallery() {
+    }*/
+  /*  private void useGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(gallery, GALLERY_REQUEST_CODE);
-    }
+    }*/
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
 

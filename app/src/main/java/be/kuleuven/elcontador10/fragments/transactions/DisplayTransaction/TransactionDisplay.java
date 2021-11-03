@@ -318,7 +318,7 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
 
             if(resultCode== Activity.RESULT_OK){
                 File f = new  File(currentPhotoPath);
-                imViewPhotoIn.setImageURI(Uri.fromFile(f));
+                //imViewPhotoIn.setImageURI(Uri.fromFile(f));
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 Uri contentUri = Uri.fromFile(f);
                 mediaScanIntent.setData(contentUri);
@@ -368,7 +368,7 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
         return image;
     }
 
-    static final int REQUEST_TAKE_PHOTO=1;
+
     @RequiresApi(api = Build.VERSION_CODES.R)
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
