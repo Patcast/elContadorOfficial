@@ -12,10 +12,18 @@
         android:paddingHorizontal="20dp">
 
         <TextView
-            android:id="@+id/execute_stakeholder_text"
+            android:id="@+id/execute_PayOrReceive"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
+            android:text="@string/payables"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/execute_stakeholder_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:text="@string/stakeholder" />
 
         <TextView

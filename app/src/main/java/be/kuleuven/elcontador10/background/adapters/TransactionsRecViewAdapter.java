@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -24,6 +25,8 @@ import java.util.List;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
+import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
+import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.tools.DateFormatter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolderDirections;
@@ -67,19 +70,30 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         holder.txtEmojiCategory.setText(Caching.INSTANCE.getCategoryEmoji(allTransactions.get(position).getIdOfCategoryInt()));
         if(!(allTransactions.get(position).getImageName()!= null && allTransactions.get(position).getImageName().length()>0))holder.camaraIcon.setVisibility(View.GONE);
         else holder.camaraIcon.setVisibility(View.VISIBLE);
-        holder.parent.setOnClickListener(v->{
-            try {
-                // from Account ViewHolder
-                AllTransactionsDirections.ActionAllTransactions2ToTransactionDisplay action = AllTransactionsDirections.actionAllTransactions2ToTransactionDisplay(idOfTransaction);
-                navController.navigate(action);
-            } catch (Exception e) {
-                // from MicroAccount ViewHolder
-                StakeholderViewPageHolderDirections.ActionMicroAccountViewPagerHolderToTransactionDisplay action =
-                        StakeholderViewPageHolderDirections.actionMicroAccountViewPagerHolderToTransactionDisplay(idOfTransaction);
-                navController.navigate(action);
+
+        holder.parent.setOnClickListener(v -> {
+            if (allTransactions.get(position) instanceof ProcessedTransaction) {
+                try {
+                    // from Account ViewHolder
+                    AllTransactionsDirections.ActionAllTransactions2ToTransactionDisplay action = AllTransactionsDirections.actionAllTransactions2ToTransactionDisplay(idOfTransaction);
+                    navController.navigate(action);
+                } catch (Exception e) {
+                    // from MicroAccount ViewHolder
+                    StakeholderViewPageHolderDirections.ActionMicroAccountViewPagerHolderToTransactionDisplay action =
+                            StakeholderViewPageHolderDirections.actionMicroAccountViewPagerHolderToTransactionDisplay(idOfTransaction);
+                    navController.navigate(action);
+                }
             }
+            else if (allTransactions.get(position) instanceof ScheduledTransaction) {
+                    AllTransactionsDirections.ActionAllTransactions2ToExecuteScheduledTransaction action =
+                            AllTransactionsDirections.actionAllTransactions2ToExecuteScheduledTransaction(idOfTransaction);
+
+                    navController.navigate(action);
+
+                } else Toast.makeText(context, "Error!", Toast.LENGTH_SHORT).show();
         });
     }
+
 
     @Override
     public int getItemCount() {

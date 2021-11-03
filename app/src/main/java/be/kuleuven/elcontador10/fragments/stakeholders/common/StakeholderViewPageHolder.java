@@ -79,8 +79,8 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
 
         viewModel.getFabClicked().observe(getViewLifecycleOwner(), item -> {
             fabClicked = item;
-            setVisibility();
-            setAnimation();
+//            setVisibility();
+//            setAnimation();
         });
 
         addFragments(view);
@@ -145,7 +145,9 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         switch(viewPager.getCurrentItem()){
             case 0:
                 // transactions
+                fab.setVisibility(View.GONE);
 
+ /*
                 if (fabClicked)
                     viewModel.setFabClicked(true);
 
@@ -155,7 +157,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
                     fabClicked = !fabClicked;
                     viewModel.setFabClicked(fabClicked);
                 });
-
+*/
                 break;
             case 1:
                 // contracts
@@ -166,13 +168,15 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
                 });
 
                 fabClicked = true;
-                setVisibility();
+                fab.setVisibility(View.VISIBLE);
+//                setVisibility();
                 fabClicked = false;
 
                 break;
         }
     }
 
+/*
     private void setVisibility() {
         if (!fabClicked) {
             labelNewPayableReceivable.setVisibility(View.VISIBLE);
@@ -204,4 +208,5 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
             fab.startAnimation(rotateClose);
         }
     }
+*/
 }

@@ -208,10 +208,11 @@ public class ViewModel_AllTransactions extends ViewModel {
                     for (QueryDocumentSnapshot doc : value) {
                         ScheduledTransaction myTransaction =  doc.toObject(ScheduledTransaction.class);
                         myTransaction.setId(doc.getId());
+                        myTransaction.setPath(doc.getReference().getPath());
                         listTransSchedule.add(myTransaction);
                     }
                     monthlyListOfScheduleTransactions.addAll(listTransSchedule);
-                    setListOfTransactions();
+                    Caching.INSTANCE.setScheduledTransactions(listTransSchedule);
         });
     }
 

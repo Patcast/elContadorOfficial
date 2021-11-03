@@ -485,11 +485,17 @@ public enum Caching {
                     for (QueryDocumentSnapshot doc : value) {
                         ScheduledTransaction transaction = doc.toObject(ScheduledTransaction.class);
                         transaction.setId(doc.getId());
+                        transaction.setPath(doc.getReference().getPath());
                         scheduledTransactions.add(transaction);
                     }
 
                     subContractObservers.forEach(e -> e.notify(chosenSubContract, scheduledTransactions));
                 });
+    }
+
+    public void setScheduledTransactions(List<ScheduledTransaction> transactions) {
+        scheduledTransactions.clear();
+        scheduledTransactions.addAll(transactions);
     }
 
 //////************** end of db
@@ -633,6 +639,13 @@ public enum Caching {
 
     public void setChosenStakeHolder(StakeHolder chosenStakeHolder) {
         this.chosenStakeHolder = chosenStakeHolder;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setChosenStakeHolder(String chosenStakeHolderID) {
+        chosenStakeHolder = stakeHolders.stream()
+                .filter(t -> t.getId().equals(chosenStakeHolderID))
+                .findFirst().orElse(null);
     }
 
     public void setChosenContract(Contract chosenContract) {
