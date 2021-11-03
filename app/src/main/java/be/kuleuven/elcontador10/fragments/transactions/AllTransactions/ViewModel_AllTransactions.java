@@ -273,15 +273,6 @@ public class ViewModel_AllTransactions extends ViewModel {
         monthlyListOfProcessedTransactions.clear();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public Timestamp getLatestStarBalDate(){
-        Optional<Timestamp> time =  listOfBalanceRecords
-                .stream()
-                .sorted(Comparator.comparing(BalanceRecord::getDate))
-                .map(i -> i.getDate())
-                .reduce((first, second) -> second);
-        return time.orElse(null);
-    }
 
 
 

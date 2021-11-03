@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.firebase.Timestamp;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,14 +69,12 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
     ImageView imViewPhotoIn;
     View view;
     ViewModel_DisplayTransaction viewModel;
-    ViewModel_AllTransactions viewModelAllTrans;
     boolean isLoading;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_DisplayTransaction.class);
-        viewModelAllTrans = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
         viewModel.reset();
         isLoading=false;
     }
@@ -215,10 +214,12 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
         else setUiForPhoto(false);
 
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void confirmDelete(){
         navController.popBackStack();
-        if( selectedTrans.getDueDate().toDate().compareTo(viewModelAllTrans.getLatestStarBalDate().toDate())< 0) {
+        Timestamp currentDate = Timestamp.now();
+        if( selectedTrans.getDueDate().toDate().getMonth()!=currentDate.toDate().getMonth()) {
             Toast.makeText(getContext(), "The transaction belongs to a previous month, so it is not possible to delete it.", Toast.LENGTH_LONG).show();
         }
         else{

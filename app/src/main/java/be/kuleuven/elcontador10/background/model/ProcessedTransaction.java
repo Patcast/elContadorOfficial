@@ -60,7 +60,8 @@ public class ProcessedTransaction implements TransactionInterface {
         saveUrl.append(ImageSelected.getNameOfImage());
         StorageReference image = storageReference.child(saveUrl.toString());
         image.putFile(ImageSelected.getContentUri()).addOnSuccessListener(taskSnapshot -> {
-            newTransactionInput.sendTransaction(newTransactionInput,context);
+            if (newTransactionInput!=null) newTransactionInput.sendTransaction(newTransactionInput,context);
+            else Toast.makeText(context,"photo added", Toast.LENGTH_SHORT).show();
         }).addOnFailureListener(e -> {
             Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show();
         });
