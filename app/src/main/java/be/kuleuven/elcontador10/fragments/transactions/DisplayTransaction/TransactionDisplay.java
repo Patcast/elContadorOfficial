@@ -128,7 +128,10 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
     }
 
     private void setImage (ImageFireBase image,Bitmap bitmap){
-        if(image!=null) {
+        if(!hasNullOrEmptyDrawable(imViewPhotoIn)) {
+            setUiForPhoto(true);
+        }
+        else if(image!=null) {
             setUiForPhoto(true);
             imViewPhotoIn.setImageURI(image.getContentUri());
         }
@@ -136,10 +139,6 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
             setUiForPhoto(true);
             imViewPhotoIn.setImageBitmap(bitmap);
         }
-        else if(!hasNullOrEmptyDrawable(imViewPhotoIn)) {
-            setUiForPhoto(true);
-        }
-
         else if(!isLoading) {
             setUiForPhoto(false);
         }
@@ -157,6 +156,7 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
         if(photoDownloaded){
             imViewPhotoIn.setVisibility(View.VISIBLE);
             layoutAddPhotoIcon.setVisibility(View.GONE);
+            progressIndicator.setVisibility(View.GONE);
         }else{
             imViewPhotoIn.setVisibility(View.GONE);
             layoutAddPhotoIcon.setVisibility(View.VISIBLE);
@@ -210,14 +210,15 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
     }
 
     private void checkIfImageExists(){
-        if(selectedTrans.getImageName().length()>0){
-            if(viewModel.getChosenBitMap().getValue()==null){
-                viewModel.selectBitMap(selectedTrans.getImageName(),requireContext());
+        if (selectedTrans.getImageName()!=null){
+            if(selectedTrans.getImageName().length()>0){
+                if(viewModel.getChosenBitMap().getValue()==null){
+                    viewModel.selectBitMap(selectedTrans.getImageName(),requireContext());
+                }
+                else imViewPhotoIn.setImageBitmap(viewModel.getChosenBitMap().getValue());
             }
-            else imViewPhotoIn.setImageBitmap(viewModel.getChosenBitMap().getValue());
         }
         else setUiForPhoto(false);
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
