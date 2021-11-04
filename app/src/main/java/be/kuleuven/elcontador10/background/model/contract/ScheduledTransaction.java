@@ -23,6 +23,7 @@ public class ScheduledTransaction implements TransactionInterface {
     private String path;
     private int color;
     private ScheduledTransactionStatus status;
+    private boolean completed;
 
     public enum ScheduledTransactionStatus {
         LATE, FUTURE, COMPLETED
@@ -36,6 +37,7 @@ public class ScheduledTransaction implements TransactionInterface {
         this.dueDate = dueDate;
         this.idOfStakeholder = idOfStakeholder;
         this.idOfAccount = Caching.INSTANCE.getChosenAccountId();
+        this.completed = false;
         setColor();
     }
 
@@ -202,5 +204,13 @@ public class ScheduledTransaction implements TransactionInterface {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 }

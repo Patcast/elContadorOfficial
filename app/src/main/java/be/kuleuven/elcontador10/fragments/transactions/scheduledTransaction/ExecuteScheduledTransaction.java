@@ -159,6 +159,9 @@ public class ExecuteScheduledTransaction extends Fragment {
             if (!isReceivable) toPay = -toPay; // is a payable, so negative
 
             transaction.pay(toPay);
+
+            if (transaction.getAmountPaid() == transaction.getTotalAmount()) transaction.setCompleted(true);
+
             ScheduledTransaction.updateScheduledTransaction(transaction);
 
             // create new transaction
