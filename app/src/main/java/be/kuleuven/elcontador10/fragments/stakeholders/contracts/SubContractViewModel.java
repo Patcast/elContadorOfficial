@@ -55,17 +55,18 @@ public class SubContractViewModel extends ViewModel {
         completed = new ArrayList<>();
 
         for (ScheduledTransaction transaction : transactions) {
-            switch (transaction.getStatus()) {
-                case LATE:
-                    late.add(transaction);
-                    break;
-                case FUTURE:
-                    future.add(transaction);
-                    break;
-                case COMPLETED:
-                    completed.add(transaction);
-                    break;
-            }
+            if (transaction.getStatus() != null)
+                switch (transaction.getStatus()) {
+                    case LATE:
+                        late.add(transaction);
+                        break;
+                    case FUTURE:
+                        future.add(transaction);
+                        break;
+                    case COMPLETED:
+                        completed.add(transaction);
+                        break;
+                }
         }
 
         setFiltered();
