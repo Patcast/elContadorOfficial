@@ -98,9 +98,9 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
         super.onStart();
         mainActivity.setCurrentMenuClicker(this);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_delete,true);
-        viewModel.getChosenBitMap().observe(getViewLifecycleOwner(), this::setImageByDownloading);
+        viewModel.getChosenBitMap().observe(getViewLifecycleOwner(), i -> setImage(null,i));
         viewModel.getIsLoading().observe(getViewLifecycleOwner(),this::setLoadingBar);
-        viewModel.getChosenImage().observe(getViewLifecycleOwner(),this::setImageByAdding);
+        viewModel.getChosenImage().observe(getViewLifecycleOwner(),b -> setImage(b,null));
 
     }
 
@@ -123,22 +123,16 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
         }
     }
 
-    private void setImageByDownloading(Bitmap bitmap) {
-        if(bitmap!=null) {
-            setUiForPhoto(true);
-            imViewPhotoIn.setImageBitmap(bitmap);
-        }
-        else {
-            setUiForPhoto(false);
-
-        }
-    }
-    private void setImageByAdding(ImageFireBase image) {
+    private void setImage (ImageFireBase image,Bitmap bitmap){
         if(image!=null) {
             setUiForPhoto(true);
             imViewPhotoIn.setImageURI(image.getContentUri());
         }
-        else {
+        else if(bitmap!=null) {
+            setUiForPhoto(true);
+            imViewPhotoIn.setImageBitmap(bitmap);
+        }
+        else if(!isLoading) {
             setUiForPhoto(false);
         }
     }
