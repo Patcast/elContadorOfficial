@@ -216,34 +216,6 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         camara = new CamaraSetUp(getContext(),this);
     }
 
- /*   @RequiresApi(api = Build.VERSION_CODES.R)
-    @AfterPermissionGranted(CAMARA_PERM_CODE)
-    private void askForCamaraPermission() {
-        String[] perms= {Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE};
-        if(EasyPermissions.hasPermissions(requireContext(),perms)){
-            chooseImageOptions();
-        }
-        else{
-            EasyPermissions.requestPermissions(this,getString(R.string.camara_permission_denied),CAMARA_PERM_CODE,perms);
-        }
-    }*/
-
-   /* private void chooseImageOptions() {
-      bottomSheet = new PicturesBottomMenu(new PicturesBottomMenu.PicturesBottomSheetListener() {
-           @Override
-           public void onGalleryClick() {
-               useGallery();
-               bottomSheet.dismiss();
-           }
-           @RequiresApi(api = Build.VERSION_CODES.R)
-           @Override
-           public void onTakePictureClick() {
-               dispatchTakePictureIntent();
-               bottomSheet.dismiss();
-           }
-       });
-        bottomSheet.show(getParentFragmentManager(),"PicturesBottomSheet");
-    }*/
 
 
     @Override
@@ -252,87 +224,8 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         if(requestCode==CamaraSetUp.CAMARA_REQUEST_CODE||requestCode==CamaraSetUp.GALLERY_REQUEST_CODE){
             camara.onActivityResultForCamara(requestCode,resultCode,viewModel,data);
         }
-       /* if(requestCode==CAMARA_REQUEST_CODE){
-            if(resultCode== Activity.RESULT_OK){
-                File f = new  File(currentPhotoPath);
-                //imageFinal.setImageURI(Uri.fromFile(f));
-                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri contentUri = Uri.fromFile(f);
-                mediaScanIntent.setData(contentUri);
-                getActivity().sendBroadcast(mediaScanIntent);
-                ImageFireBase imageFireBase = new ImageFireBase(f.getName(),contentUri);
-                viewModel.selectImage(imageFireBase);
-
-            }
-        }
-        if(requestCode==GALLERY_REQUEST_CODE){
-
-            if(resultCode== Activity.RESULT_OK){
-                Uri contentUri = data.getData();
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String imageFileName = "JPEG_"+timeStamp+"."+getFileExt(contentUri);
-                Log.d("tag","onActivityResult: Gallery Image Uri: "+imageFileName);
-                ImageFireBase imageFireBase = new ImageFireBase(imageFileName,contentUri);
-                viewModel.selectImage(imageFireBase);
-
-            }
-        }*/
-
     }
-  /*  private String getFileExt(Uri contentUri) {
-        ContentResolver c = requireActivity().getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(c.getType(contentUri));
-    }*/
 
-
-
-
-   /* @RequiresApi(api = Build.VERSION_CODES.R)
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-       // File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES); USE if you don't want them to be saved in the gallery.
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  *//* prefix *//*
-                ".jpg",         *//* suffix *//*
-                storageDir      *//* directory *//*
-        );
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }*/
-
-  /*  static final int REQUEST_TAKE_PHOTO=1;
-    @RequiresApi(api = Build.VERSION_CODES.R)
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(requireContext(),
-                        "com.example.android.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, CAMARA_REQUEST_CODE);
-            }
-        }
-    }*/
-  /*  private void useGallery() {
-        Intent gallery = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(gallery, GALLERY_REQUEST_CODE);
-    }*/
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
 
