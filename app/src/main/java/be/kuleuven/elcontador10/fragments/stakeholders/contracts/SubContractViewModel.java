@@ -49,27 +49,34 @@ public class SubContractViewModel extends ViewModel {
         return filtered;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void setRaw(ArrayList<ScheduledTransaction> transactions) {
-        late = transactions.stream()
-                .filter(e -> Math.abs(e.getAmountPaid()) < Math.abs(e.getTotalAmount()))
-                .filter(e -> e.getDueDate().getSeconds() < Timestamp.now().getSeconds()) // due date smaller than now
-                .collect(Collectors.toCollection(ArrayList::new));
+        late = new ArrayList<>();
+        future = new ArrayList<>();
+        completed = new ArrayList<>();
 
-        future = transactions.stream()
-                .filter(e -> Math.abs(e.getAmountPaid()) < Math.abs(e.getTotalAmount()))
-                .filter(e -> e.getDueDate().getSeconds() > Timestamp.now().getSeconds()) // due date larger than now
-                .collect(Collectors.toCollection(ArrayList::new));
-
-        completed = transactions.stream()
-                .filter(e -> Math.abs(e.getAmountPaid()) >= Math.abs(e.getTotalAmount()))
-                .collect(Collectors.toCollection(ArrayList::new));
+        for (ScheduledTransaction transaction : transactions) {
+            switch (transaction.getStatus()) {
+                case LATE:
+                    late.add(transaction);
+                    break;
+                case FUTURE:
+                    future.add(transaction);
+                    break;
+                case COMPLETED:
+                    completed.add(transaction);
+                    break;
+            }
+        }
 
         setFiltered();
     }
 
     public void setFiltered() {
         ArrayList<ScheduledTransaction> combined = new ArrayList<>();
+
+        assert isLate.getValue() != null;
+        assert isFuture.getValue() != null;
+        assert isCompleted.getValue() != null;
 
         if (isLate.getValue()) combined.addAll(late);
 

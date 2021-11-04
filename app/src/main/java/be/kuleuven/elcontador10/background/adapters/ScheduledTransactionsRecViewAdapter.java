@@ -76,13 +76,8 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
         holder.textTitle.setText(transaction.getTitle());
 
         // setting colours
-        if (Math.abs(transaction.getAmountPaid()) >= Math.abs(transaction.getTotalAmount())) { // paid
-            holder.textTitle.setTextColor(Color.GRAY);
-            holder.textAmount.setTextColor(Color.GRAY);
-        } else if (transaction.getDueDate().getSeconds() < Timestamp.now().getSeconds()) { // unpaid and late
-            holder.textTitle.setTextColor(Color.RED);
-            holder.textAmount.setTextColor(Color.RED);
-        }
+        holder.textTitle.setTextColor(context.getResources().getColor(transaction.getColorInt()));
+        holder.textAmount.setTextColor(context.getResources().getColor(transaction.getColorInt()));
 
         if (transaction.getCategory() != null)
             holder.txtEmojiCategory.setText(Caching.INSTANCE.getCategoryEmoji(transaction.getCategory()));

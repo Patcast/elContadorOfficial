@@ -31,6 +31,8 @@
     <color name="superDarkGrey">#141414</color>
     <color name="FabColor2">#cf8419</color>
     <color name="blur_background">#B9000000</color>
-    <color name="rec_view_scheduled_title">#008fb3</color>
+    <color name="rec_view_scheduled_future">#008fb3</color>
+    <color name="rec_view_scheduled_completed">#82898d</color>
+    <color name="rec_view_scheduled_late">#770000</color>
 
 </resources>

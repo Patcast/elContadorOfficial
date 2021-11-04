@@ -16,7 +16,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:text="Renta de Noviembre"
-        android:textColor="@color/rec_view_scheduled_title"
+        android:textColor="@color/rec_view_scheduled_future"
 
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/textPaidBy"
@@ -30,7 +30,7 @@
         android:layout_marginEnd="15dp"
         android:layout_marginRight="15dp"
         android:text="$4,000.00"
-        android:textColor="@color/rec_view_scheduled_title"
+        android:textColor="@color/rec_view_scheduled_future"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/text_title_allSchTrans"
         app:layout_constraintEnd_toEndOf="parent"

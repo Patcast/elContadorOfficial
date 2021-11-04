@@ -486,6 +486,7 @@ public enum Caching {
                         ScheduledTransaction transaction = doc.toObject(ScheduledTransaction.class);
                         transaction.setId(doc.getId());
                         transaction.setPath(doc.getReference().getPath());
+                        transaction.setColor();
                         scheduledTransactions.add(transaction);
                     }
 
