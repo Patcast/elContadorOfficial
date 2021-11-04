@@ -18,11 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,15 +46,11 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     //TODO: update starting balance if transactions are deleted
     private RecyclerView recyclerAllTransactions;
     private TransactionsRecViewAdapter adapter;
-    private FloatingActionButton fabNewTransaction,fabPayableOrReceivable,fabNew;
-    private TextView textFabNewTransaction,textFabReceivable,txtStartingBalance,txCurrentBalance,txtSumOfReceivables,txtSumOfPayables,ScheduleBalance;
-    private LinearLayout coverLayout;
+    private FloatingActionButton fabNew;
+    private TextView txtStartingBalance,txCurrentBalance,txtSumOfReceivables,txtSumOfPayables,ScheduleBalance;
     private Button selectMonth;
-    boolean isClicked;
     private MainActivity mainActivity;
-    private Animation rotateOpen,rotateClose,popOpen,popClose;
     private ViewModel_AllTransactions viewModel;
-    private Timestamp latestStartingBalance;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -80,16 +73,11 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         selectMonth = view.findViewById(R.id.btn_selectMonth);
-        coverLayout = view.findViewById(R.id.coverLayout);
         txtStartingBalance = view.findViewById(R.id.text_startingBalance);
         txCurrentBalance = view.findViewById(R.id.text_currentBalance);
         txtSumOfReceivables = view.findViewById(R.id.text_receivables);
         txtSumOfPayables = view.findViewById(R.id.text_payables);
         ScheduleBalance = view.findViewById(R.id.text_futureBalance);
-        textFabNewTransaction = view.findViewById(R.id.text_fabNewTransaction);
-        textFabReceivable = view.findViewById(R.id.text_fabReceivable);
-        fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
-        fabPayableOrReceivable = view.findViewById(R.id.btn_new_ReceivableOrPayable);
         fabNew = view.findViewById(R.id.btn_newFAB);
         viewModel.getCalendarFilter().observe(getViewLifecycleOwner(), i-> {
             try {
@@ -102,6 +90,43 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         viewModel.getMapOfMonthlySummaryValues().observe(getViewLifecycleOwner(), this::updateSummaryUi);
         startRecycler(view);
         return view;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        selectMonth.setOnClickListener(v -> pickDate());
+        fabNew.setOnClickListener(this::onFAB_Clicked);
+
+        recyclerAllTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    fabNew.setVisibility(View.INVISIBLE);
+                }
+                else fabNew.setVisibility(View.VISIBLE);
+            }
+        });
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onStart() {
+        super.onStart();
+        mainActivity.setCurrentMenuClicker(this);
+        mainActivity.displayBottomNavigationMenu(true);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,true);
+        recyclerAllTransactions.setAdapter(adapter);
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mainActivity.displayBottomNavigationMenu(false);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -139,49 +164,6 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        selectMonth.setOnClickListener(v -> pickDate());
-        coverLayout.setOnClickListener(v->closeCover());
-        fabNew.setOnClickListener(v->fabOpenAnimation());
-        fabNewTransaction.setOnClickListener(this::onFAB_Clicked);
-        fabPayableOrReceivable.setOnClickListener(v -> Toast.makeText(getContext(), "Payables Or Receivables", Toast.LENGTH_SHORT).show());
-        recyclerAllTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                    fabNew.setVisibility(View.INVISIBLE);
-                }
-                else fabNew.setVisibility(View.VISIBLE);
-            }
-        });
-        rotateOpen = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_open);
-        rotateClose = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_close);
-        popOpen= AnimationUtils.loadAnimation(getContext(),R.anim.pop_up_fabs);
-        popClose = AnimationUtils.loadAnimation(getContext(),R.anim.pop_down_fabs);
-        isClicked= false;
-    }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void onStart() {
-        super.onStart();
-        mainActivity.setCurrentMenuClicker(this);
-        mainActivity.displayBottomNavigationMenu(true);
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,true);
-        recyclerAllTransactions.setAdapter(adapter);
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mainActivity.displayBottomNavigationMenu(false);
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,false);
-    }
-
 
     private void pickDate() {
         int month = viewModel.getCalendarFilter().getValue().get("month");
@@ -189,56 +171,6 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         MonthYearPickerDialog pd = new MonthYearPickerDialog(month,year);
         pd.setListener(this);
         pd.show(getParentFragmentManager(), "MonthYearPickerDialog");
-    }
-
-    public void closeCover() {
-        if(isClicked){
-            setAnimation(true);
-            setVisibility(true);
-            isClicked = false;
-        }
-    }
-
-    private void fabOpenAnimation() {
-        setVisibility(isClicked);
-        setAnimation(isClicked);
-        isClicked = !isClicked;
-    }
-
-    private void setAnimation(boolean addButtonClicked) {
-        if(!addButtonClicked){
-            coverLayout.setVisibility(View.VISIBLE);
-            textFabNewTransaction.startAnimation(popOpen);
-            textFabReceivable.startAnimation(popOpen);
-            fabNewTransaction.startAnimation(popOpen);
-            fabPayableOrReceivable.startAnimation(popOpen);
-            fabNew.startAnimation(rotateOpen);
-        }
-        else{
-            coverLayout.setVisibility(View.INVISIBLE);
-            textFabNewTransaction.startAnimation(popClose);
-            textFabReceivable.startAnimation(popClose);
-            fabNewTransaction.startAnimation(popClose);
-            fabPayableOrReceivable.startAnimation(popClose);
-            fabNew.startAnimation(rotateClose);
-        }
-
-    }
-
-    private void setVisibility(boolean addButtonClicked) {
-        if(!addButtonClicked){
-            textFabReceivable.setVisibility(View.VISIBLE);
-            textFabNewTransaction.setVisibility(View.VISIBLE);
-            fabNewTransaction.setVisibility(View.VISIBLE);
-            fabPayableOrReceivable.setVisibility(View.VISIBLE);
-        }
-        else{
-            textFabNewTransaction.setVisibility(View.INVISIBLE);
-            textFabReceivable.setVisibility(View.INVISIBLE);
-            fabNewTransaction.setVisibility(View.INVISIBLE);
-            fabPayableOrReceivable.setVisibility(View.INVISIBLE);
-        }
-
     }
 
     private void startRecycler(View view) {
@@ -257,10 +189,10 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        latestStartingBalance = viewModel.getFirstStartingBalanceTimeStamp();
-        if (latestStartingBalance!=null){
-            int lastMonth =latestStartingBalance.toDate().getMonth()+1;
-            int lastYear =latestStartingBalance.toDate().getYear()+1900;
+        Timestamp latestStartingBalance = viewModel.getFirstStartingBalanceTimeStamp();
+        if (latestStartingBalance !=null){
+            int lastMonth = latestStartingBalance.toDate().getMonth()+1;
+            int lastYear = latestStartingBalance.toDate().getYear()+1900;
             if(year <lastYear || (year == lastYear) && month < lastMonth){
                 Toast.makeText(getContext(), "Invalid date! The latest Balance Summary available is for "+(getResources().getStringArray(R.array.months_list))[lastMonth-1]+" / "+lastYear, Toast.LENGTH_LONG).show();
             }
