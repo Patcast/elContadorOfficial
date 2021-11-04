@@ -52,6 +52,7 @@
         <entry key="app/src/main/res/drawable/buttons.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_a_photo_24.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/ic_baseline_business_24.xml" value="0.24259259259259258" />
+        <entry key="app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/ic_tag.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/new_account_category_outline.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/rec_view_item_accounts_test.xml" value="0.22870370370370371" />
@@ -66,7 +67,7 @@
         <entry key="app/src/main/res/layout/fragment_all_micro_acounts.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_all_transactions.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_choose_category.xml" value="0.2578125" />
-        <entry key="app/src/main/res/layout/fragment_choose_stake_holder.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/fragment_choose_stake_holder.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_contract_new.xml" value="0.1328125" />
         <entry key="app/src/main/res/layout/fragment_contract_new_payment.xml" value="0.1328125" />
         <entry key="app/src/main/res/layout/fragment_display_photo.xml" value="0.2578125" />
@@ -81,7 +82,7 @@
         <entry key="app/src/main/res/layout/rec_view_contracts.xml" value="0.1328125" />
         <entry key="app/src/main/res/layout/rec_view_item_accounts.xml" value="0.38368905582062923" />
         <entry key="app/src/main/res/layout/rec_view_item_accounts_test.xml" value="0.375" />
-        <entry key="app/src/main/res/layout/rec_view_item_all_micros.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/rec_view_item_all_micros.xml" value="0.335" />
         <entry key="app/src/main/res/layout/rec_view_item_all_transactions.xml" value="0.38599314908689375" />
         <entry key="app/src/main/res/layout/rec_view_item_categories.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/rec_view_payments.xml" value="0.1328125" />

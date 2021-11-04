@@ -44,16 +44,16 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
 
     @Override
     public void onBindViewHolder(@NonNull  StakeHolderRecViewAdapter.ViewHolder holder, int position) {
-
-            holder.textName.setText(stakeholdersList.get(position).getName());
-            holder.textRole.setText(String.valueOf(stakeholdersList.get(position).getRole()));
-            holder.parent.setOnClickListener(v -> {
-               viewModel.selectStakeholder(stakeholdersList.get(position));
+        StakeHolder stakeHolder =stakeholdersList.get(position);
+        holder.textName.setText(stakeHolder.getName());
+        holder.textRole.setText(String.valueOf(stakeHolder.getRole()));
+        holder.txtBalance.setVisibility(View.GONE);
+        holder.parent.setOnClickListener(v -> {
+               viewModel.selectStakeholder(stakeHolder);
                NavController navController = Navigation.findNavController(viewFromHostingClass);
                navController.navigate(R.id.action_chooseStakeHolderDialog_to_newTransaction);
-            }
-            );
-            }
+            });
+    }
 
     @Override
     public int getItemCount() {
@@ -63,7 +63,7 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
     public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView textName;
         private TextView textRole;
-
+        private TextView txtBalance;
         private ConstraintLayout parent;
 
         public ViewHolder(@NonNull View itemView) {
@@ -71,6 +71,8 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
             parent = itemView.findViewById(R.id.parent_allMicros);
             textName = itemView.findViewById(R.id.text_Account_name_Micros);
             textRole = itemView.findViewById(R.id.text_micros_role);
+            txtBalance = itemView.findViewById(R.id.text_micros_balance);
+
         }
     }
 

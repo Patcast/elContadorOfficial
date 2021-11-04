@@ -1,49 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent_allMicros"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    android:layout_marginTop="2dp"
+    android:layout_marginTop="3dp"
     android:background="@color/rec_view_transactions"
-    android:paddingVertical="5dp"
     android:paddingHorizontal="10dp"
-    android:id="@+id/parent_allMicros"
     >
 
-        <TextView
-            android:id="@+id/text_micros_balance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="21dp"
-            android:layout_marginRight="21dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_Account_name_Micros" />
 
         <TextView
             android:id="@+id/text_Account_name_Micros"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Juan Martinez"
+            android:textColor="@color/title_rec_view_stake"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/text_micros_role"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="@+id/guideline4"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_micros_balance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            android:text="$4,000.00"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/rec_view_title"
+            android:textSize="20sp"
+            android:gravity="end"
+            app:layout_constraintBottom_toBottomOf="@+id/text_Account_name_Micros"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/text_Account_name_Micros"
+            app:layout_constraintTop_toTopOf="@+id/text_Account_name_Micros" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/guideline6"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
 
         <TextView
             android:id="@+id/text_micros_role"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="TextView"
-            app:layout_constraintStart_toStartOf="@+id/guideline6"
+            android:layout_marginBottom="8dp"
+            android:text="Tenant"
+            app:layout_constraintStart_toStartOf="@+id/guideline4"
             app:layout_constraintTop_toBottomOf="@+id/text_Account_name_Micros" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline6"
+            android:id="@+id/guideline2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="21dp" />
+            app:layout_constraintGuide_begin="254dp" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

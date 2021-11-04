@@ -34,5 +34,6 @@
     <color name="rec_view_scheduled_future">#008fb3</color>
     <color name="rec_view_scheduled_completed">#82898d</color>
     <color name="rec_view_scheduled_late">#770000</color>
+    <color name="title_rec_view_stake">#E2D8D7</color>
 
 </resources>
