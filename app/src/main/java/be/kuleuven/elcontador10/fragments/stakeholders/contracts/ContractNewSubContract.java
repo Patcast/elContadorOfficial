@@ -164,7 +164,7 @@ public class ContractNewSubContract extends Fragment {
         else if (info.getCurrentTextColor() == Color.RED && duration_layout.getVisibility() == View.VISIBLE) { // error visible
             Toast.makeText(mainActivity, "Please check for errors.", Toast.LENGTH_SHORT).show();
         } else {
-            long amount_value = Long.parseLong(amount_text);
+            int amount_value = Integer.parseInt(amount_text);
             if (out.isChecked()) amount_value = - amount_value;
 
             Timestamp startDate;
@@ -207,7 +207,7 @@ public class ContractNewSubContract extends Fragment {
                     ScheduledTransaction.newScheduledTransaction(transaction, contractId, subContractId);
                 } else {
                     // final copies of variables for foreach
-                    final long final_amount = amount_value;
+                    final int final_amount = amount_value;
                     final String final_ID = Caching.INSTANCE.getChosenMicroAccountId();
 
                     transactions.forEach(e -> e.setTotalAmount(final_amount));

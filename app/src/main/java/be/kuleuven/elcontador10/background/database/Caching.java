@@ -7,8 +7,11 @@ import android.util.Log;
 
 
 import androidx.annotation.RequiresApi;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 
@@ -22,9 +25,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 
+import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.model.Account;
 
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
@@ -36,6 +41,7 @@ import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.model.contract.Contract;
+import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.ViewModel_AllTransactions;
 
 public enum Caching {
     INSTANCE;
@@ -67,9 +73,6 @@ public enum Caching {
         void notify(SubContract contract, List<ScheduledTransaction> scheduledTransactions);
     }
 
-
-
-
     ////*********Data
     private final List <Account> accounts = new ArrayList<>();
     private final List<EmojiCategory> defaultCategories = new ArrayList<>();
@@ -97,6 +100,7 @@ public enum Caching {
     Context context;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "Caching";
+    ViewModel_AllTransactions viewModel;
 
     /// ******** Authentication
     private String chosenAccountId;
@@ -288,6 +292,7 @@ public enum Caching {
                             accounts.add(myAccount);
                         }
                     }
+
                     accountsObservers.forEach(t->t.notifyAccountsObserver(getAccounts()));
                 });
     }
@@ -328,15 +333,35 @@ public enum Caching {
                         Log.w(TAG, "Listen failed.", e);
                         return;
                     }
+
                     stakeHolders.clear();
+                    assert value != null;
                     for (QueryDocumentSnapshot doc : value) {
                         StakeHolder myStakeHolder =  doc.toObject(StakeHolder.class);
-                        myStakeHolder.setId( doc.getId());
+
+                        myStakeHolder.setId(doc.getId());
+
                         stakeHolders.add(myStakeHolder);
                     }
                     stakeholdersObservers.forEach(s->s.notifyStakeholdersObserver(getStakeHolders()));
                 });
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private int getBalanceOfStakeholder(List<ScheduledTransaction> transactions, String stakeholderId) {
+        int sum = transactions.stream()
+                .filter(t -> t.getIdOfStakeholder().equals(stakeholderId))
+                .mapToInt(ScheduledTransaction::getTotalAmount)
+                .sum();
+
+        int paid = transactions.stream()
+                .filter(t -> t.getIdOfStakeholder().equals(stakeholderId))
+                .mapToInt(ScheduledTransaction::getAmountPaid)
+                .sum();
+
+        return sum - paid;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestAccountTransactions(String chosenAccountId){
         String urlGetAccountTransactions = "/accounts/"+chosenAccountId+"/transactions";
@@ -494,9 +519,31 @@ public enum Caching {
                 });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void setScheduledTransactions(List<ScheduledTransaction> transactions) {
         scheduledTransactions.clear();
         scheduledTransactions.addAll(transactions);
+
+        // update balance
+        if (stakeHolders != null && stakeHolders.size() != 0) {
+            for (StakeHolder stakeholder : stakeHolders) {
+                // get past / now scheduled transactions for the stakeholder
+                ArrayList<ScheduledTransaction> stakeholderScheduledTransactions = scheduledTransactions.stream()
+                        .filter(transaction -> transaction.getIdOfStakeholder().equals(stakeholder.getId()))
+                        .filter(transaction -> transaction.getDueDate().getSeconds() <= Timestamp.now().getSeconds())
+                        .collect(Collectors.toCollection(ArrayList::new));
+
+                int sum = stakeholderScheduledTransactions.stream()
+                        .mapToInt(ScheduledTransaction::getTotalAmount)
+                        .sum();
+
+                int paid = stakeholderScheduledTransactions.stream()
+                        .mapToInt(ScheduledTransaction::getAmountPaid)
+                        .sum();
+
+                stakeholder.setBalance(sum - paid);
+            }
+        }
     }
 
 //////************** end of db

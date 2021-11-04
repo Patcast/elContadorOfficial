@@ -112,4 +112,8 @@ public class StakeHolder implements Parcelable {
         this.id = id;
     }
 
+    public void setBalance(int balance) {
+        this.balance = balance;
+    }
+
 }

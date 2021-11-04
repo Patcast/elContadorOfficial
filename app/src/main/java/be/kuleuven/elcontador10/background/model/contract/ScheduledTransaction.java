@@ -12,8 +12,8 @@ import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface
 
 public class ScheduledTransaction implements TransactionInterface {
     private String id;
-    private long totalAmount;
-    private long amountPaid;
+    private int totalAmount;
+    private int amountPaid;
     private Timestamp dueDate;
     private String idOfStakeholder;
     private String title;
@@ -29,7 +29,7 @@ public class ScheduledTransaction implements TransactionInterface {
 
     private static final String TAG = "scheduledTransaction";
 
-    public ScheduledTransaction(long totalAmount, long amountPaid, Timestamp dueDate, String idOfStakeholder) {
+    public ScheduledTransaction(int totalAmount, int amountPaid, Timestamp dueDate, String idOfStakeholder) {
         this.totalAmount = totalAmount;
         this.amountPaid = amountPaid;
         this.dueDate = dueDate;
@@ -75,15 +75,15 @@ public class ScheduledTransaction implements TransactionInterface {
         this.id = id;
     }
 
-    public void setTotalAmount(long totalAmount) {
+    public void setTotalAmount(int totalAmount) {
         this.totalAmount = totalAmount;
     }
 
-    public long getAmountPaid() {
+    public int getAmountPaid() {
         return amountPaid;
     }
 
-    public void setAmountPaid(long amountPaid) {
+    public void setAmountPaid(int amountPaid) {
         this.amountPaid = amountPaid;
     }
 

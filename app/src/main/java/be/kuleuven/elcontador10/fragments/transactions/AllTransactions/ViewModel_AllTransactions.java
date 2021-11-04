@@ -272,8 +272,4 @@ public class ViewModel_AllTransactions extends ViewModel {
         monthlyListOfScheduleTransactions.clear();
         monthlyListOfProcessedTransactions.clear();
     }
-
-
-
-
 }
