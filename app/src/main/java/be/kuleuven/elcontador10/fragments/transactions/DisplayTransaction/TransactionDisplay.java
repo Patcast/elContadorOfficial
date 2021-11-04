@@ -3,6 +3,8 @@ package be.kuleuven.elcontador10.fragments.transactions.DisplayTransaction;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -82,7 +84,9 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
         try {
             TransactionDisplayArgs args = TransactionDisplayArgs.fromBundle(getArguments());
             initializeViews(view);
-            displayInformation(args.getId());
+            selectedTrans = Caching.INSTANCE.getTransaction(args.getId());
+            displayInformation();
+
             mainActivity.setTitle(selectedTrans.getTitle());
 
         }
@@ -96,12 +100,12 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
     @Override
     public void onStart() {
         super.onStart();
+        checkIfImageExists();
         mainActivity.setCurrentMenuClicker(this);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_delete,true);
         viewModel.getChosenBitMap().observe(getViewLifecycleOwner(), i -> setImage(null,i));
         viewModel.getIsLoading().observe(getViewLifecycleOwner(),this::setLoadingBar);
         viewModel.getChosenImage().observe(getViewLifecycleOwner(),b -> setImage(b,null));
-
     }
 
     @Override
@@ -132,9 +136,20 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
             setUiForPhoto(true);
             imViewPhotoIn.setImageBitmap(bitmap);
         }
+        else if(!hasNullOrEmptyDrawable(imViewPhotoIn)) {
+            setUiForPhoto(true);
+        }
+
         else if(!isLoading) {
             setUiForPhoto(false);
         }
+    }
+    public static boolean hasNullOrEmptyDrawable(ImageView iv)
+    {
+        Drawable drawable = iv.getDrawable();
+        BitmapDrawable bitmapDrawable = drawable instanceof BitmapDrawable ? (BitmapDrawable)drawable : null;
+
+        return bitmapDrawable == null || bitmapDrawable.getBitmap() == null;
     }
 
 
@@ -167,9 +182,8 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void displayInformation(String idOfTransaction) {
-        selectedTrans = Caching.INSTANCE.getTransaction(idOfTransaction);
-        if(selectedTrans.equals(null))Toast.makeText(getContext(),"error getting Transaction",Toast.LENGTH_SHORT);
+    private void displayInformation() {
+        if(selectedTrans==null)Toast.makeText(getContext(),"error getting Transaction",Toast.LENGTH_SHORT).show();
         else {
             NumberFormatter formatter = new NumberFormatter(selectedTrans.getTotalAmount());
             DateFormatter dateFormatter = new DateFormatter(selectedTrans.getDueDate(),"f");
@@ -191,7 +205,7 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
             time.setText(timeFormatter.getFormattedDate());
             registeredBy.setText(selectedTrans.getRegisteredBy());
             notes.setText(selectedTrans.getNotes());
-            checkIfImageExists();
+
         }
     }
 
@@ -200,6 +214,7 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
             if(viewModel.getChosenBitMap().getValue()==null){
                 viewModel.selectBitMap(selectedTrans.getImageName(),requireContext());
             }
+            else imViewPhotoIn.setImageBitmap(viewModel.getChosenBitMap().getValue());
         }
         else setUiForPhoto(false);
 
