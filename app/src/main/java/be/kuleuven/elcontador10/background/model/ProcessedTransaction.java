@@ -5,10 +5,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 
 
@@ -27,6 +25,7 @@ import java.util.Map;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
+import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 public class ProcessedTransaction implements TransactionInterface {
     private static final String TAG = "newTransaction";
@@ -191,6 +190,15 @@ public class ProcessedTransaction implements TransactionInterface {
     public String getIdOfTransactionInt() {
         return id;
     }
+
+    @Exclude
+    @Override
+    public String getAmountToDisplay(){
+        NumberFormatter formatter = new NumberFormatter(getTotalAmount());
+        return formatter.getFinalNumber();
+    }
+
+
 
 
 }

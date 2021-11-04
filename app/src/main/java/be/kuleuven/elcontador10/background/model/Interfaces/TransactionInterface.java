@@ -11,4 +11,5 @@ public interface TransactionInterface {
     public Timestamp getDueDate();
     public String getTitle();
     public String getImageName();
+    public String getAmountToDisplay();
 }

@@ -32,6 +32,7 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.BalanceRecord;
 import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
+import be.kuleuven.elcontador10.background.model.Summary.SummaryHeader;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 
 public class ViewModel_AllTransactions extends ViewModel {
@@ -71,7 +72,17 @@ public class ViewModel_AllTransactions extends ViewModel {
     public LiveData<Map<String, Integer>> getMapOfMonthlySummaryValues() {
         return mapOfMonthlySummaryValues;
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void setMapOfSummary() {
+            SummaryHeader header = new SummaryHeader(
+                    listOfBalanceRecords,
+                    monthlyListOfProcessedTransactions,
+                    monthlyListOfScheduleTransactions,
+                    calendarFilter.getValue().get("month"),
+                    calendarFilter.getValue().get("year"));
+            mapOfMonthlySummaryValues.setValue(header.getSummaryMap());
+    }
+/*
     @RequiresApi(api = Build.VERSION_CODES.N)
     public BalanceRecord getSelectedRecord(Integer month, Integer year){
         Optional <BalanceRecord> selectedRecord = listOfBalanceRecords
@@ -81,6 +92,7 @@ public class ViewModel_AllTransactions extends ViewModel {
                 .findFirst();
         return selectedRecord.orElse(null);
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void setMapOfSummary() {
         Map<String,Integer>  summaryMap = new HashMap<>();
@@ -103,21 +115,46 @@ public class ViewModel_AllTransactions extends ViewModel {
         }
         summaryMap.put("startingBalance",startingBalance);
         summaryMap.put("currentBalance",closingBalance);
-        summaryMap.put("receivables",monthlyListOfScheduleTransactions
-                .stream()
-                .map(ScheduledTransaction::getTotalAmount)
-                .filter(totalAmount -> totalAmount >0)
-                .reduce(0, Integer::sum));
-        summaryMap.put("payables",monthlyListOfScheduleTransactions.stream()
-                .map(ScheduledTransaction::getTotalAmount)
-                .filter(totalAmount -> totalAmount <0)
-                .reduce(0, Integer::sum));
-        if(closingBalance==null) closingBalance = 0;
-        summaryMap.put("scheduleBalance",monthlyListOfScheduleTransactions.stream()
-                .map(ScheduledTransaction::getTotalAmount)
-                .reduce(closingBalance, Integer::sum));
+        summaryMap.put("receivables",getNetSumOfSchedule(false));
+        summaryMap.put("payables",getNetSumOfSchedule(true));
+        //if(closingBalance==null) closingBalance = 0;
+        summaryMap.put("scheduleBalance",calcScheduleBalance(closingBalance));
         mapOfMonthlySummaryValues.setValue(summaryMap);
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private Integer calcScheduleBalance(int closingBalance) {
+        return closingBalance+getNetSumOfSchedule(true)+ getNetSumOfSchedule(false);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public int getNetSumOfSchedule(boolean isPayable){
+        int totalAmountToPay;
+        int totalAmountPaid;
+        if(isPayable){
+            totalAmountToPay = monthlyListOfScheduleTransactions.stream()
+                    .map(ScheduledTransaction::getTotalAmount)
+                    .filter(totalAmount -> totalAmount < 0)
+                    .reduce(0, Integer::sum);
+            totalAmountPaid = monthlyListOfScheduleTransactions.stream()
+                    .map(i -> (int) i.getAmountPaid())
+                    .filter(totalAmount -> totalAmount < 0)
+                    .reduce(0, Integer::sum);
+        }
+        else{
+            totalAmountToPay = monthlyListOfScheduleTransactions.stream()
+                    .map(ScheduledTransaction::getTotalAmount)
+                    .filter(totalAmount -> totalAmount > 0)
+                    .reduce(0, Integer::sum);
+            totalAmountPaid = monthlyListOfScheduleTransactions.stream()
+                    .map(i -> (int) i.getAmountPaid())
+                    .filter(totalAmount -> totalAmount > 0)
+                    .reduce(0, Integer::sum);
+
+        }
+        return totalAmountToPay-totalAmountPaid;
+
+    }*/
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void requestBalanceRecords(){

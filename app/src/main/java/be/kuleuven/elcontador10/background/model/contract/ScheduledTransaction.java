@@ -9,6 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
+import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 public class ScheduledTransaction implements TransactionInterface {
     private String id;
@@ -35,7 +36,6 @@ public class ScheduledTransaction implements TransactionInterface {
         this.dueDate = dueDate;
         this.idOfStakeholder = idOfStakeholder;
         this.idOfAccount = Caching.INSTANCE.getChosenAccountId();
-
         setColor();
     }
 
@@ -102,6 +102,9 @@ public class ScheduledTransaction implements TransactionInterface {
     @Exclude
     @Override
     public int getColorInt() {
+        if(color ==0){
+            setColor();
+        }
         return color;
     }
 
@@ -158,6 +161,13 @@ public class ScheduledTransaction implements TransactionInterface {
     @Override
     public String getImageName() {
         return null;
+    }
+
+    @Override
+    public String getAmountToDisplay() {
+        int displayedAmount= getTotalAmount() - getAmountPaid();
+        NumberFormatter formatter = new NumberFormatter(displayedAmount);
+        return formatter.getFinalNumber();
     }
 
     public void setTitle(String title) {

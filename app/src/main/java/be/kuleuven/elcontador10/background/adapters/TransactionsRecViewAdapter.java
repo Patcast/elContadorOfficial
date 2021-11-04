@@ -55,18 +55,20 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
-        String idStakeholder = allTransactions.get(position).getIdOfStakeInt();
-        String idOfTransaction = allTransactions.get(position).getIdOfTransactionInt();
-        String stakeName = Caching.INSTANCE.getStakeholderName(idStakeholder);
-        int amountInput = allTransactions.get(position).getTotalAmount();
-        NumberFormatter formatter = new NumberFormatter(amountInput);
-        if(formatter.isNegative())holder.textAmount.setTextColor(ContextCompat.getColor(context, R.color.rec_view_negative_amount));
-        if(formatter.isNegative())holder.textPaidBy.setText(R.string.paid_to);
-        holder.textNameOfParticipant.setText(stakeName);
-        holder.textAmount.setText(formatter.getFinalNumber());
-        DateFormatter dateFormatter = new DateFormatter(allTransactions.get(position).getDueDate(),"s");
+        TransactionInterface transaction = allTransactions.get(position);
+        // show stakeholder
+        if(transaction.getTotalAmount()<0)holder.textPaidBy.setText(R.string.paid_to);
+        holder.textNameOfParticipant.setText(Caching.INSTANCE.getStakeholderName(transaction.getIdOfStakeInt()));
+        // show Amount
+        holder.textAmount.setText(transaction.getAmountToDisplay());
+        holder.textAmount.setTextColor(ContextCompat.getColor(context,transaction.getColorInt()));
+        // show Date
+        DateFormatter dateFormatter = new DateFormatter(transaction.getDueDate(),"s");
         holder.textDate.setText(dateFormatter.getFormattedDate());
-        holder.textTitle.setText(allTransactions.get(position).getTitle());
+        // show title
+        holder.textTitle.setText(transaction.getTitle());
+        holder.textTitle.setTextColor(ContextCompat.getColor(context, allTransactions.get(position).getColorInt()));
+        // show image and emoji
         holder.txtEmojiCategory.setText(Caching.INSTANCE.getCategoryEmoji(allTransactions.get(position).getIdOfCategoryInt()));
         if(!(allTransactions.get(position).getImageName()!= null && allTransactions.get(position).getImageName().length()>0))holder.camaraIcon.setVisibility(View.GONE);
         else holder.camaraIcon.setVisibility(View.VISIBLE);
@@ -75,18 +77,18 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
             if (allTransactions.get(position) instanceof ProcessedTransaction) {
                 try {
                     // from Account ViewHolder
-                    AllTransactionsDirections.ActionAllTransactions2ToTransactionDisplay action = AllTransactionsDirections.actionAllTransactions2ToTransactionDisplay(idOfTransaction);
+                    AllTransactionsDirections.ActionAllTransactions2ToTransactionDisplay action = AllTransactionsDirections.actionAllTransactions2ToTransactionDisplay(transaction.getIdOfTransactionInt());
                     navController.navigate(action);
                 } catch (Exception e) {
                     // from MicroAccount ViewHolder
                     StakeholderViewPageHolderDirections.ActionMicroAccountViewPagerHolderToTransactionDisplay action =
-                            StakeholderViewPageHolderDirections.actionMicroAccountViewPagerHolderToTransactionDisplay(idOfTransaction);
+                            StakeholderViewPageHolderDirections.actionMicroAccountViewPagerHolderToTransactionDisplay(transaction.getIdOfTransactionInt());
                     navController.navigate(action);
                 }
             }
             else if (allTransactions.get(position) instanceof ScheduledTransaction) {
                     AllTransactionsDirections.ActionAllTransactions2ToExecuteScheduledTransaction action =
-                            AllTransactionsDirections.actionAllTransactions2ToExecuteScheduledTransaction(idOfTransaction);
+                            AllTransactionsDirections.actionAllTransactions2ToExecuteScheduledTransaction(transaction.getIdOfTransactionInt());
 
                     navController.navigate(action);
 
