@@ -51,9 +51,10 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
-        holder.textName.setText(stakeholdersList.get(position).getName());
-        holder.textRole.setText(String.valueOf(stakeholdersList.get(position).getRole()));
-        NumberFormatter formatter = new NumberFormatter(stakeholdersList.get(position).getBalance());
+        StakeHolder stake = stakeholdersList.get(position);
+        holder.textName.setText(stake.getName());
+        holder.textRole.setText(String.valueOf(stake.getRole()));
+        NumberFormatter formatter = new NumberFormatter(stake.getBalance());
         String formatted = formatter.getFinalNumber();
         holder.textBalance.setText(formatted);
         holder.parent.setOnClickListener(v -> {
@@ -97,24 +98,7 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
         notifyDataSetChanged();
 
     }
-/*    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void filter(String txtSearched){
-        int lenght = txtSearched.length();
-        if(lenght==0){
-            stakeholdersList.clear();
-            stakeholdersList.addAll(StakeHoldersFull);
-        }else{
-            List<StakeHolder> collection = stakeholdersList
-                    .stream()
-                    .filter(i->i.getName().toLowerCase().contains(txtSearched.toLowerCase()))
-                    .collect(Collectors.toList());
-            stakeholdersList.clear();
-            stakeholdersList.addAll(collection);
 
-        }
-
-        notifyDataSetChanged();
-    }*/
     @Override
     public Filter getFilter() {
         return filter;
