@@ -19,27 +19,18 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.adapters.StakeHolderRecViewAdapter;
-import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.StakeHolder;
+import be.kuleuven.elcontador10.background.adapters.ChooseStakeHolderRecViewAdapter;
+import be.kuleuven.elcontador10.fragments.stakeholders.common.AllStakeholders.ViewModel_AllStakeholders;
 
 
-
-public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersObserver , MainActivity.TopMenuHandler{
-    private RecyclerView recyclerStakeHolds;
+public class ChooseStakeHolder extends Fragment implements MainActivity.TopMenuHandler{
     private ConstraintLayout noStakeLayout;
-    private StakeHolderRecViewAdapter adapter;
+    private ChooseStakeHolderRecViewAdapter adapter;
     private ViewModel_NewTransaction viewModel;
     private NavController navController;
     private MainActivity mainActivity;
-
-
-    private final List <StakeHolder> stakeHolders = new ArrayList<>();
     private MenuItem menuItem;
 
     @Override
@@ -55,12 +46,10 @@ public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersO
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setHeaderText(getString(R.string.select_a_stakeholder));
         mainActivity.setCurrentMenuClicker(this);
-        recyclerStakeHolds = view.findViewById(R.id.recyclerViewChooseStake);
+        RecyclerView recyclerStakeHolds = view.findViewById(R.id.recyclerViewChooseStake);
         noStakeLayout = view.findViewById(R.id.layoutNoStakeHolder);
         recyclerStakeHolds.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        adapter = new StakeHolderRecViewAdapter(view,viewModel);
-        Caching.INSTANCE.attachStakeholdersObservers(this);
-        if(stakeHolders.size()>0) adapter.setStakeholdersList(stakeHolders);
+        adapter = new ChooseStakeHolderRecViewAdapter(view,viewModel);
         recyclerStakeHolds.setAdapter(adapter);
         return view;
     }
@@ -70,22 +59,22 @@ public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersO
         super.onViewCreated(view, savedInstanceState);
         noStakeLayout.setOnClickListener(i->noStakeSelected());
         navController = Navigation.findNavController(view);
+        ViewModel_AllStakeholders viewModelAllStakeHolders = new ViewModelProvider(requireActivity()).get(ViewModel_AllStakeholders.class);
+        viewModelAllStakeHolders.getStakeholdersList().observe(getViewLifecycleOwner(), i->adapter.setStakeholdersList(i));
+
 
     }
 
     @Override
     public void onStart(){
         super.onStart();
-        Caching.INSTANCE.attachStakeholdersObservers(this);
-        if(stakeHolders.size()>0) adapter.setStakeholdersList(stakeHolders);
-        recyclerStakeHolds.setAdapter(adapter);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,true);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Caching.INSTANCE.deAttachStakeholdersObservers(this);
+
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,false);
         if( menuItem != null) menuItem.collapseActionView();
     }
@@ -93,13 +82,6 @@ public class ChooseStakeHolder extends Fragment implements Caching.StakeholdersO
     private void noStakeSelected() {
         viewModel.reset();
         navController.popBackStack();
-
-    }
-    @Override
-    public void notifyStakeholdersObserver(List<StakeHolder> stakeHolders) {
-        this.stakeHolders.clear();
-        this.stakeHolders.addAll(stakeHolders);
-        adapter.setStakeholdersList(this.stakeHolders);
     }
 
     @Override

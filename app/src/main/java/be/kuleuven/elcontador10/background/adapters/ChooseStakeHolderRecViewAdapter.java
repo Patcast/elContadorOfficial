@@ -26,14 +26,14 @@ import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_
 
 
 
-public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderRecViewAdapter.ViewHolder> implements Filterable {
+public class ChooseStakeHolderRecViewAdapter extends RecyclerView.Adapter<ChooseStakeHolderRecViewAdapter.ViewHolder> implements Filterable {
 
     private List<StakeHolder> stakeholdersList = new ArrayList<>();
     private ArrayList<StakeHolder> stakeHoldersFull = new ArrayList<>();
     private final View viewFromHostingClass;
     private final ViewModel_NewTransaction viewModel;
 
-    public StakeHolderRecViewAdapter(View viewFromHostingClass, ViewModel_NewTransaction viewModel) {
+    public ChooseStakeHolderRecViewAdapter(View viewFromHostingClass, ViewModel_NewTransaction viewModel) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.viewModel = viewModel;
     }
@@ -46,7 +46,7 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
             }
 
     @Override
-    public void onBindViewHolder(@NonNull  StakeHolderRecViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull  ChooseStakeHolderRecViewAdapter.ViewHolder holder, int position) {
         StakeHolder stakeHolder =stakeholdersList.get(position);
         holder.textName.setText(stakeHolder.getName());
         holder.textRole.setText(String.valueOf(stakeHolder.getRole()));
