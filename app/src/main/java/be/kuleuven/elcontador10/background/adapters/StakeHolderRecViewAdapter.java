@@ -4,6 +4,8 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +16,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,12 +26,12 @@ import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_
 
 
 
-public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderRecViewAdapter.ViewHolder> {
+public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderRecViewAdapter.ViewHolder> implements Filterable {
 
     private List<StakeHolder> stakeholdersList = new ArrayList<>();
-    private ArrayList<StakeHolder> stakeHoldersOriginal;
+    private ArrayList<StakeHolder> stakeHoldersFull = new ArrayList<>();
     private final View viewFromHostingClass;
-    private ViewModel_NewTransaction viewModel;
+    private final ViewModel_NewTransaction viewModel;
 
     public StakeHolderRecViewAdapter(View viewFromHostingClass, ViewModel_NewTransaction viewModel) {
         this.viewFromHostingClass = viewFromHostingClass;
@@ -60,11 +63,13 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
             return stakeholdersList.size();
             }
 
+
+
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView textName;
-        private TextView textRole;
-        private TextView txtBalance;
-        private ConstraintLayout parent;
+        private final TextView textName;
+        private final TextView textRole;
+        private final TextView txtBalance;
+        private final ConstraintLayout parent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -76,29 +81,46 @@ public class StakeHolderRecViewAdapter extends RecyclerView.Adapter<StakeHolderR
         }
     }
 
-    public void setStakeholdersList(List <StakeHolder> stakeholdersList) {
-        this.stakeholdersList = stakeholdersList;
+    public void setStakeholdersList(List <StakeHolder> stakeholdersListInput) {
+        stakeHoldersFull.clear();
+        stakeholdersList.clear();
+        this.stakeholdersList.addAll(stakeholdersListInput);
+        stakeHoldersFull.addAll(stakeholdersListInput);
         notifyDataSetChanged();
-        stakeHoldersOriginal = new ArrayList<>();
-        stakeHoldersOriginal.addAll(this.stakeholdersList);
-
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void filter(String txtSearched){
-        int lenght = txtSearched.length();
-        if(lenght==0){
-            stakeholdersList.clear();
-            stakeholdersList.addAll(stakeHoldersOriginal);
-        }else{
-            List<StakeHolder> collection = stakeholdersList
-                                                            .stream()
-                                                            .filter(i->i.getName().toLowerCase().contains(txtSearched.toLowerCase()))
-                                                            .collect(Collectors.toList());
-            stakeholdersList.clear();
-            stakeholdersList.addAll(collection);
 
-        }
-
-     notifyDataSetChanged();
+    @Override
+    public Filter getFilter() {
+        return filter;
     }
+
+    Filter filter = new Filter() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                List<StakeHolder> collectionFiltered = new ArrayList<>();
+                if (constraint.toString().isEmpty()) {
+                    collectionFiltered.addAll(stakeHoldersFull);
+                }
+                else {
+                    collectionFiltered
+                            .addAll(stakeHoldersFull
+                            .stream()
+                            .filter(i -> i.getName().toLowerCase().contains(constraint.toString().toLowerCase()))
+                            .collect(Collectors.toList()));
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = collectionFiltered;
+                return filterResults;
+            }
+            @Override
+            protected void publishResults (CharSequence constraint, FilterResults results){
+                stakeholdersList.clear();
+                stakeholdersList.addAll((Collection<? extends StakeHolder>) results.values);
+                notifyDataSetChanged();
+            }};
+
+
+
+
 }

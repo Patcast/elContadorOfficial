@@ -14,7 +14,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -27,17 +26,16 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 
 public class MainActivity extends AppCompatActivity {
-
-
     public interface TopMenuHandler {
         void onBottomSheetClick();
         void onDeleteClick();
         void onEditingClick();
         void onAddClick();
-        void onSearchClick(SearchView searchView);
+        void onSearchClick(MenuItem item);
         void onFilterClick();
     }
-    SearchView searchView;
+    //
+    //private MenuItem item;
     private Menu topRightMenu;
     private TabLayout tabLayout;
     private BottomNavigationView bottomMenu;
@@ -131,8 +129,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         topRightMenu = menu;
         getMenuInflater().inflate(R.menu.top_three_buttons_menu, menu);
-        MenuItem item = menu.findItem(R.id.menu_search);
-        searchView = (SearchView) item.getActionView();
+        //item = menu.findItem(R.id.menu_search);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -152,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                 currentTopMenuHandler.onAddClick();
                 return true;
             case R.id.menu_search:
-                currentTopMenuHandler.onSearchClick(searchView);
+                currentTopMenuHandler.onSearchClick(item);
                 return true;
             case R.id.menu_filter:
                 currentTopMenuHandler.onFilterClick();

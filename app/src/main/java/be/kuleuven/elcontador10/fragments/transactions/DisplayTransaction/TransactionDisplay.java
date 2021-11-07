@@ -11,7 +11,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -20,6 +19,7 @@ import androidx.navigation.Navigation;
 
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -262,7 +262,7 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
     }
 
     @Override
-    public void onSearchClick(SearchView searchView) {
+    public void onSearchClick(MenuItem item) {
 
     }
 

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -128,8 +129,8 @@ public class StakeholdersList extends Fragment implements Caching.StakeholdersOb
         }
 
         @Override
-        public void onSearchClick(androidx.appcompat.widget.SearchView searchView) {
-                searchView.setOnQueryTextListener((androidx.appcompat.widget.SearchView.OnQueryTextListener)this);
+        public void onSearchClick(MenuItem item) {
+               // item.setOnQueryTextListener((androidx.appcompat.widget.SearchView.OnQueryTextListener)this);
         }
 
         @Override
