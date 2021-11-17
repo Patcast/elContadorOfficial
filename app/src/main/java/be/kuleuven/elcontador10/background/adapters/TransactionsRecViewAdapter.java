@@ -90,6 +90,8 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
                     AllTransactionsDirections.ActionAllTransactions2ToExecuteScheduledTransaction action =
                             AllTransactionsDirections.actionAllTransactions2ToExecuteScheduledTransaction(transaction.getIdOfTransactionInt());
 
+                    Caching.INSTANCE.setChosenStakeHolder(transaction.getIdOfStakeInt());
+
                     navController.navigate(action);
 
                 } else Toast.makeText(context, "Error!", Toast.LENGTH_SHORT).show();
