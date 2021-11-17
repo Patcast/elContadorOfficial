@@ -162,7 +162,7 @@ public class ContractNewSubContract extends Fragment {
             Toast.makeText(mainActivity, R.string.zero_amount, Toast.LENGTH_SHORT).show();
         }
         else if (info.getCurrentTextColor() == Color.RED && duration_layout.getVisibility() == View.VISIBLE) { // error visible
-            Toast.makeText(mainActivity, "Please check for errors.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mainActivity, R.string.check_errors, Toast.LENGTH_SHORT).show();
         } else {
             int amount_value = Integer.parseInt(amount_text);
             if (out.isChecked()) amount_value = - amount_value;
@@ -170,18 +170,17 @@ public class ContractNewSubContract extends Fragment {
             Timestamp startDate;
             Timestamp endDate;
 
+            String start_text = start.getText().toString();
+            startDate = DatabaseDatesFunctions.INSTANCE.stringToTimestamp(start_text); // initial payment at the start of contract
+
             int frequency_value = frequency_spinner.getSelectedItemPosition();
 
             if (frequency_value == 0) {
-                startDate = null;
                 endDate = null;
 
                 period_text = "N/A";
                 paymentsLeft = 0;
             } else {
-                String start_text = start.getText().toString();
-
-                startDate = DatabaseDatesFunctions.INSTANCE.stringToTimestamp(start_text); // initial payment at the start of contract
                 endDate = DatabaseDatesFunctions.INSTANCE.stringToTimestamp(period_text.split(" - ")[1]);
 
                 if (paymentsLeft == 0) {
@@ -199,7 +198,7 @@ public class ContractNewSubContract extends Fragment {
             if (subContractId != null) {
                 if (frequency_value == 0) {
                     ScheduledTransaction transaction = new ScheduledTransaction(amount_value, 0,
-                            DatabaseDatesFunctions.INSTANCE.localDateToTimestamp(LocalDate.now()), Caching.INSTANCE.getChosenMicroAccountId());
+                            startDate, Caching.INSTANCE.getChosenMicroAccountId());
 
                     transaction.setTitle(title_text);
                     transaction.setCategory(idCatSelected);
@@ -255,57 +254,33 @@ public class ContractNewSubContract extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void calculateDates() {
-        String string = duration.getText().toString();
+        if (frequency_spinner.getSelectedItemPosition() != 0) { // not one time
+            String string = duration.getText().toString();
 
-        if (string.length() == 0) {
-            info.setTextColor(Color.RED);
-            info.setText(R.string.please_fill_in_duration);
-        } else {
-            String start_date = start.getText().toString();
+            if (string.length() == 0) {
+                info.setTextColor(Color.RED);
+                info.setText(R.string.please_fill_in_duration);
+            } else {
+                String start_date = start.getText().toString();
 
-            if (!start_date.equals("N/A")) {
-                info.setTextColor(Color.WHITE);
-                int frequencyID = frequency_spinner.getSelectedItemPosition();
-                int durationValue = Integer.parseInt(duration.getText().toString());
+                if (!start_date.equals("N/A")) {
+                    info.setTextColor(Color.WHITE);
+                    int frequencyID = frequency_spinner.getSelectedItemPosition();
+                    int durationValue = Integer.parseInt(duration.getText().toString());
 
-                if (frequency_spinner.getSelectedItemPosition() != 6) {
-                    int durationUnit = duration_spinner.getSelectedItemPosition();
+                    if (frequency_spinner.getSelectedItemPosition() != 6) { // not custom
+                        int durationUnit = duration_spinner.getSelectedItemPosition();
 
-                    period_text = DatabaseDatesFunctions.INSTANCE.getPeriod(start_date, frequencyID, durationValue, durationUnit);
+                        period_text = DatabaseDatesFunctions.INSTANCE.getPeriod(start_date, frequencyID, durationValue, durationUnit);
 
-                    transactions = DatabaseDatesFunctions.INSTANCE.getScheduledTransactions(period_text, frequencyID);
+                        transactions = DatabaseDatesFunctions.INSTANCE.getScheduledTransactions(period_text, frequencyID);
 
-                    if (transactions != null) {
-                        paymentsLeft = transactions.size();
-
-                        String info_text = period_text + "\n\nPayment dates:\n" +
-                                transactions.stream()
-                                        .map(e -> DatabaseDatesFunctions.INSTANCE.timestampToString(e.getDueDate()))
-                                        .collect(Collectors.joining("\n"));
-
-                        info.setText(info_text);
-                    } else {
-                        info.setText(R.string.error_period);
-                        info.setTextColor(Color.RED);
-                    }
-                } else {
-                    String frequency_value = custom_frequency.getText().toString();
-                    int frequency_unit = custom_frequency_spinner.getSelectedItemPosition();
-
-                    if (!frequency_value.equals("")) {
-                        frequency_text = frequency_value + "-" + frequency_unit;
-
-                        LinkedList<String> data = DatabaseDatesFunctions.INSTANCE.customPeriod(start_date, durationValue,
-                                frequency_text);
-
-                        if (data != null) {
-                            period_text = data.getLast();
-                            paymentsLeft = data.size() - 1;
+                        if (transactions != null) {
+                            paymentsLeft = transactions.size();
 
                             String info_text = period_text + "\n\nPayment dates:\n" +
-                                    data.stream()
-                                            .limit(data.size() - 1) // last one not a payment
-                                            .map(String::toString)
+                                    transactions.stream()
+                                            .map(e -> DatabaseDatesFunctions.INSTANCE.timestampToString(e.getDueDate()))
                                             .collect(Collectors.joining("\n"));
 
                             info.setText(info_text);
@@ -313,14 +288,51 @@ public class ContractNewSubContract extends Fragment {
                             info.setText(R.string.error_period);
                             info.setTextColor(Color.RED);
                         }
-                    } else {
-                        info.setText(R.string.zero_amount);
-                        info.setTextColor(Color.RED);
+                    } else { // custom
+                        String frequency_value = custom_frequency.getText().toString();
+                        int frequency_unit = custom_frequency_spinner.getSelectedItemPosition();
+
+                        if (!frequency_value.equals("")) {
+                            frequency_text = frequency_value + "-" + frequency_unit;
+
+                            LinkedList<String> data = DatabaseDatesFunctions.INSTANCE.customPeriod(start_date, durationValue,
+                                    frequency_text);
+
+                            if (data != null) {
+                                period_text = data.getLast();
+                                paymentsLeft = data.size() - 1;
+
+                                String info_text = period_text + "\n\nPayment dates:\n" +
+                                        data.stream()
+                                                .limit(data.size() - 1) // last one not a payment
+                                                .map(String::toString)
+                                                .collect(Collectors.joining("\n"));
+
+                                info.setText(info_text);
+                            } else {
+                                info.setText(R.string.error_period);
+                                info.setTextColor(Color.RED);
+                            }
+                        } else {
+                            info.setText(R.string.zero_amount);
+                            info.setTextColor(Color.RED);
+                        }
                     }
+                } else {
+                    info.setText(R.string.select_starting_date);
+                    info.setTextColor(Color.RED);
                 }
-            } else {
+            }
+        } else { // one time
+            if (start.getText().toString().equals("N/A")) {
                 info.setText(R.string.select_starting_date);
                 info.setTextColor(Color.RED);
+            } else {
+                String info_text = "Payment date:\n" +
+                        start.getText().toString();
+
+                info.setText(info_text);
+                info.setTextColor(Color.WHITE);
             }
         }
     }
@@ -347,21 +359,22 @@ public class ContractNewSubContract extends Fragment {
     private class FrequencyAdapter implements AdapterView.OnItemSelectedListener {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-            if (i == 0) {
-                duration_layout.setVisibility(View.GONE);
+            if (i == 0) { // one time
                 custom_frequency_layout.setVisibility(View.GONE);
+                duration_layout.setVisibility(View.GONE);
                 frequency_text = "0";
             }
             else {
                 duration_layout.setVisibility(View.VISIBLE);
 
-                if (i == 6) {
+                if (i == 6) { // custom
                     custom_frequency_layout.setVisibility(View.VISIBLE);
+
 
                     duration.setHint(R.string.number_of_payments);
                     duration_spinner.setVisibility(View.GONE);
                 }
-                else {
+                else { // standard
                     custom_frequency_layout.setVisibility(View.GONE);
                     frequency_text = String.valueOf(i);
 

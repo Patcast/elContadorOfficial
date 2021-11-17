@@ -157,7 +157,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
-            android:id="@+id/payment_new_duration_layout"
+            android:id="@+id/payment_new_start_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -177,6 +177,13 @@
                 android:background="@drawable/background_buttons"
                 android:text="N/A"
                 android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/payment_new_duration_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -206,15 +213,15 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/payment_new_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="top|left"
-                android:textColor="#FF0000"
-                android:textSize="18sp" />
-
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/payment_new_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|left"
+            android:textColor="#FF0000"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/payment_new_notes"

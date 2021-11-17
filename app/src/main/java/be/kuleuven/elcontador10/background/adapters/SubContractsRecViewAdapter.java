@@ -62,8 +62,10 @@ public class SubContractsRecViewAdapter extends RecyclerView.Adapter<SubContract
         String amount_text = ((amount > 0)? context.getString(R.string.in) : context.getString(R.string.out)) + " " + absolute_amount;
         holder.amount.setText(amount_text);
 
-        if (subContract.getStartDate() != null)
+        if (subContract.getStartDate() != null && subContract.getEndDate() != null)
             holder.period.setText(DatabaseDatesFunctions.INSTANCE.timestampToPeriod(subContract.getStartDate(), subContract.getEndDate()));
+        else if (subContract.getStartDate() != null)
+            holder.period.setText(DatabaseDatesFunctions.INSTANCE.timestampToString(subContract.getStartDate()));
         else
             holder.period.setText("N/A");
 

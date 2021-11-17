@@ -101,8 +101,10 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
 
         amount.setText(new NumberFormatter(subContract.getAmount()).getFinalNumber());
 
-        if (subContract.getStartDate() != null)
+        if (subContract.getStartDate() != null && subContract.getEndDate() != null)
             period.setText(DatabaseDatesFunctions.INSTANCE.timestampToPeriod(subContract.getStartDate(), subContract.getEndDate()));
+        else if (subContract.getStartDate() != null)
+            period.setText(DatabaseDatesFunctions.INSTANCE.timestampToString(subContract.getStartDate()));
         else
             period.setText("N/A");
 

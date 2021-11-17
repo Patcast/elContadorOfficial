@@ -225,6 +225,7 @@
     <string name="execute_scheduled_transaction">Execute Scheduled Transaction</string>
     <string name="input_amount_to_pay">Please input the amount to pay.</string>
     <string name="fully_paid">This transaction is fully paid.</string>
+    <string name="check_errors">Please check for errors.</string>
 
     <string-array name="months_list">
         <item>January</item>
