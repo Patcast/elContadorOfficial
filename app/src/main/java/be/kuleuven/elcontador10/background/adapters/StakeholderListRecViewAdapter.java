@@ -49,14 +49,24 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
         return new StakeholderListRecViewAdapter.ViewHolder(viewParent);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
         StakeHolder stake = stakeholdersList.get(position);
         holder.textName.setText(stake.getName());
         holder.textRole.setText(String.valueOf(stake.getRole()));
-        NumberFormatter formatter = new NumberFormatter(stake.getBalance());
-        String formatted = formatter.getFinalNumber();
-        holder.textBalance.setText(formatted);
+
+        long balance = stake.getBalance();
+        if (balance != 0) {
+            NumberFormatter formatter = new NumberFormatter(balance);
+            String formatted = formatter.getFinalNumber();
+            holder.textBalance.setText(formatted);
+
+            if (balance > 0) holder.textBalance.setTextColor(viewFromHostingClass.getContext().getColor(R.color.transaction_processed_positive));
+            else holder.textBalance.setTextColor(viewFromHostingClass.getContext().getColor(R.color.rec_view_negative_amount));
+
+        } else holder.textBalance.setVisibility(View.GONE); // hide 0 balance
+
         holder.parent.setOnClickListener(v -> {
                     viewModel.selectStakeholder(stakeholdersList.get(position));
                     NavController navController = Navigation.findNavController(viewFromHostingClass);
