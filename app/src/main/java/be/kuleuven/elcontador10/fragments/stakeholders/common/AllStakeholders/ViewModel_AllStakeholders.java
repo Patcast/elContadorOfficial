@@ -41,23 +41,24 @@ public class ViewModel_AllStakeholders extends ViewModel {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestGroupOFStakeHolders(String chosenAccountId){
-        String stakeHoldersUrl = "/accounts/"+chosenAccountId+"/stakeHolders";
-        Query getStakeHolders = db.collection(stakeHoldersUrl)
-                .orderBy("name", Query.Direction.ASCENDING);
-
-        getStakeHolders.addSnapshotListener((value, e) -> {
-                    if (e != null) {
-                        return;
-                    }
-                    List<StakeHolder> list = new ArrayList<>();
-                    assert value != null;
-                    for (QueryDocumentSnapshot doc : value) {
-                        StakeHolder myStakeHolder =  doc.toObject(StakeHolder.class);
-                        myStakeHolder.setId(doc.getId());
-                        list.add(myStakeHolder);
-                    }
-                    setStakeholdersList(list);
-                });
+//        String stakeHoldersUrl = "/accounts/"+chosenAccountId+"/stakeHolders";
+//        Query getStakeHolders = db.collection(stakeHoldersUrl)
+//                .orderBy("name", Query.Direction.ASCENDING);
+//
+//        getStakeHolders.addSnapshotListener((value, e) -> {
+//                    if (e != null) {
+//                        return;
+//                    }
+//                    List<StakeHolder> list = new ArrayList<>();
+//                    assert value != null;
+//                    for (QueryDocumentSnapshot doc : value) {
+//                        StakeHolder myStakeHolder =  doc.toObject(StakeHolder.class);
+//                        myStakeHolder.setId(doc.getId());
+//                        list.add(myStakeHolder);
+//                    }
+//                    setStakeholdersList(list);
+//                });
+        setStakeholdersList(Caching.INSTANCE.getStakeHolders());
     }
 
 
