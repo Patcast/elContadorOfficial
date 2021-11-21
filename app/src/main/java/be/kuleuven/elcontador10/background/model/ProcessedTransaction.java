@@ -194,9 +194,13 @@ public class ProcessedTransaction implements TransactionInterface {
     @Exclude
     @Override
     public int getColorInt() {
-        int colorPositive = R.color.transaction_processed_positive;
-        int colorNegative = R.color.transaction_processed_negative;
-        return (totalAmount<0)? colorNegative : colorPositive;
+        if(getIsDeleted())return R.color.rec_view_scheduled_completed;
+        else{
+            int colorPositive = R.color.transaction_processed_positive;
+            int colorNegative = R.color.transaction_processed_negative;
+            return (totalAmount<0)? colorNegative : colorPositive;
+        }
+
     }
 
     @Exclude

@@ -74,11 +74,16 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         else holder.camaraIcon.setVisibility(View.VISIBLE);
 
         holder.parent.setOnClickListener(v -> {
-            if (allTransactions.get(position) instanceof ProcessedTransaction) {
+            if (transaction instanceof ProcessedTransaction) {
                 try {
                     // from Account ViewHolder
-                    AllTransactionsDirections.ActionAllTransactions2ToTransactionDisplay action = AllTransactionsDirections.actionAllTransactions2ToTransactionDisplay(transaction.getIdOfTransactionInt());
-                    navController.navigate(action);
+                    ProcessedTransaction castTransaction = (ProcessedTransaction) transaction;
+                    if(castTransaction.getIsDeleted()) Toast.makeText(context ,"This transaction is deleted. The details cannot be displayed", Toast.LENGTH_SHORT).show();
+                    else{
+                        AllTransactionsDirections.ActionAllTransactions2ToTransactionDisplay action = AllTransactionsDirections.actionAllTransactions2ToTransactionDisplay(transaction.getIdOfTransactionInt());
+                        navController.navigate(action);
+                    }
+
                 } catch (Exception e) {
                     // from MicroAccount ViewHolder
                     StakeholderViewPageHolderDirections.ActionMicroAccountViewPagerHolderToTransactionDisplay action =

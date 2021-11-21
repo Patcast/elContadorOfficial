@@ -99,7 +99,7 @@ public class SummaryHeader {
                     .filter(totalAmount -> totalAmount < 0)
                     .reduce(0, Integer::sum);
             totalAmountPaid = monthlyListOfScheduleTransactions.stream()
-                    .map(i -> (int) i.getAmountPaid())
+                    .map(ScheduledTransaction::getAmountPaid)
                     .filter(totalAmount -> totalAmount < 0)
                     .reduce(0, Integer::sum);
             sumOfPayables =totalAmountToPay-totalAmountPaid;
@@ -109,7 +109,7 @@ public class SummaryHeader {
                     .filter(totalAmount -> totalAmount > 0)
                     .reduce(0, Integer::sum);
             totalAmountPaid = monthlyListOfScheduleTransactions.stream()
-                    .map(i -> (int) i.getAmountPaid())
+                    .map(ScheduledTransaction::getAmountPaid)
                     .filter(totalAmount -> totalAmount > 0)
                     .reduce(0, Integer::sum);
             sumOfReceivables =totalAmountToPay-totalAmountPaid;
