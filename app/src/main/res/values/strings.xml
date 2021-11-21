@@ -226,6 +226,7 @@
     <string name="input_amount_to_pay">Please input the amount to pay.</string>
     <string name="fully_paid">This transaction is fully paid.</string>
     <string name="check_errors">Please check for errors.</string>
+    <string name="deleted_transactions">Deleted Transactions</string>
 
     <string-array name="months_list">
         <item>January</item>

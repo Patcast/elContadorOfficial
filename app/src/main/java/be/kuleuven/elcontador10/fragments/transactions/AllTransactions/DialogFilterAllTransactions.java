@@ -20,7 +20,7 @@ import be.kuleuven.elcontador10.R;
 
 public class DialogFilterAllTransactions extends DialogFragment {
 
-    CheckBox transactions,receivables,payables;
+    CheckBox transactions,receivables,payables,deleteTrans;
     ViewModel_AllTransactions viewModel;
     Map<String,Boolean> typeOfTransactions;
     androidx.lifecycle.LifecycleOwner owner;
@@ -46,6 +46,9 @@ public class DialogFilterAllTransactions extends DialogFragment {
             case "payable":
                 payables.setChecked(b);
                 break;
+           case "deletedTrans":
+               deleteTrans.setChecked(b);
+               break;
             default:
                 Toast.makeText(getContext(), "error with dialog", Toast.LENGTH_SHORT).show();
         }
@@ -61,6 +64,7 @@ public class DialogFilterAllTransactions extends DialogFragment {
         transactions = view.findViewById(R.id.check_box_transaction);
         receivables = view.findViewById(R.id.check_box_receivables);
         payables = view.findViewById(R.id.check_box_payables);
+        deleteTrans = view.findViewById(R.id.check_box_deletedTrans);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
         viewModel.getBooleanFilter().observe(owner, this::setUi);
         builder.setView(view)
@@ -91,6 +95,9 @@ public class DialogFilterAllTransactions extends DialogFragment {
                 break;
             case "payable":
                 typeOfTransactions.replace(s,payables.isChecked());
+                break;
+            case "deletedTrans":
+                typeOfTransactions.replace(s,deleteTrans.isChecked());
                 break;
             default:
                 Toast.makeText(getContext(), "error with dialog", Toast.LENGTH_SHORT).show();

@@ -77,6 +77,7 @@ public class SummaryHeader {
                 startingBalance = (int) selectedBalanceRecord.getStartingBalance();
                 closingBalance = monthlyListOfProcessedTransactions
                         .stream()
+                        .filter(i-> !i.getIsDeleted())
                         .map(ProcessedTransaction::getTotalAmount)
                         .reduce(startingBalance, Integer::sum);
             }

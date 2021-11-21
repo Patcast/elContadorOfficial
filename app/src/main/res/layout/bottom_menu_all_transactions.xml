@@ -30,6 +30,13 @@
         android:paddingVertical="15dp"
         android:text="@string/payables"
         android:textSize="18sp" />
+    <CheckBox
+        android:id="@+id/check_box_deletedTrans"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="15dp"
+        android:text="@string/deleted_transactions"
+        android:textSize="18sp" />
 
 
 

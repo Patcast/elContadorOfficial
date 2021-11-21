@@ -40,6 +40,7 @@ public class ViewModel_AllTransactions extends ViewModel {
     //ChosenTypesOfTransactions
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final List<ProcessedTransaction> monthlyListOfProcessedTransactions = new ArrayList<>();
+    private final List<ProcessedTransaction> ListOfDeletedTransactions = new ArrayList<>();
     private final List<ScheduledTransaction> monthlyListOfScheduleTransactions = new ArrayList<>();
     private final List<BalanceRecord> listOfBalanceRecords = new ArrayList<>();
     /// Boolean filter
@@ -139,11 +140,12 @@ public class ViewModel_AllTransactions extends ViewModel {
                 List<ProcessedTransaction> listTrans = new ArrayList<>();
                 for (QueryDocumentSnapshot doc : value) {
                     ProcessedTransaction myTransaction =  doc.toObject(ProcessedTransaction.class);
-                    myTransaction.setId( doc.getId());
+                    myTransaction.setId(doc.getId());
                     listTrans.add(myTransaction);
                 }
                 monthlyListOfProcessedTransactions.clear();
                 monthlyListOfProcessedTransactions.addAll(listTrans);
+
                 setListOfTransactions();
             });
     }
@@ -202,7 +204,7 @@ public class ViewModel_AllTransactions extends ViewModel {
         List<TransactionInterface> listAllTransactionsFiltered = new ArrayList<>();
         if(booleanFilter.getValue().get("transaction"))
         {
-            listAllTransactionsFiltered.addAll(monthlyListOfProcessedTransactions);
+            listAllTransactionsFiltered.addAll(monthlyListOfProcessedTransactions.stream().filter(i-> !i.getIsDeleted()).collect(Collectors.toList()));
         }
         if(booleanFilter.getValue().get("receivable"))
         {
@@ -212,7 +214,10 @@ public class ViewModel_AllTransactions extends ViewModel {
         {
             listAllTransactionsFiltered.addAll(monthlyListOfScheduleTransactions.stream().filter(i->i.getTotalAmount()<0).collect(Collectors.toList()));
         }
-
+        if(booleanFilter.getValue().get("deletedTrans"))
+        {
+            listAllTransactionsFiltered.addAll(monthlyListOfProcessedTransactions.stream().filter(ProcessedTransaction::getIsDeleted).collect(Collectors.toList()));
+        }
        return listAllTransactionsFiltered.stream().
                                                 sorted(Comparator.comparing(TransactionInterface::getDueDate).reversed()).
                                                 collect(Collectors.toList());
@@ -229,8 +234,9 @@ public class ViewModel_AllTransactions extends ViewModel {
     private void initialiseBooleanFilter() {
         HashMap<String, Boolean> transTypes = new HashMap<>();
         transTypes.put("transaction",true);
-        transTypes.put("receivable",false);
-        transTypes.put("payable",false);
+        transTypes.put("receivable",true);
+        transTypes.put("payable",true);
+        transTypes.put("deletedTrans",false);
         setBooleanFilter(transTypes);
     }
     public void resetListOfTransactions() {

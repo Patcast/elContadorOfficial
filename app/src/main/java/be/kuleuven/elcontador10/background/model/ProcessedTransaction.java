@@ -7,6 +7,8 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 
 
@@ -43,6 +45,7 @@ public class ProcessedTransaction implements TransactionInterface {
     private String registeredBy;
     private String notes;
     private String imageName;
+    private boolean isDeleted;
 
     public ProcessedTransaction() {
     }
@@ -56,6 +59,7 @@ public class ProcessedTransaction implements TransactionInterface {
         this.dueDate = new Timestamp(new Date());
         this.notes = notes;
         this.imageName = imageName;
+        isDeleted = false;
     }
 
     public void updateImageFromFireBase(ProcessedTransaction newTransactionInput,ImageFireBase ImageSelected,Context context) {
@@ -125,7 +129,7 @@ public class ProcessedTransaction implements TransactionInterface {
                 .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show());
     }
     public void deleteTransaction(Context context){
-        String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
+        /*
         db.collection(urlNewTransactions).document(getIdOfTransactionInt())
                 .delete()
                 .addOnSuccessListener(aVoid ->{
@@ -133,9 +137,18 @@ public class ProcessedTransaction implements TransactionInterface {
                     Toast.makeText(context, "Transaction deleted", Toast.LENGTH_LONG).show();
 
                 } )
-                .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
+                .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));*/
+        isDeleted = true;
+        String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
+        db.collection(urlNewTransactions).document(getIdOfTransactionInt())
+                .update("isDeleted", true)
+                .addOnSuccessListener(aVoid -> successfulDelete(context))
+                .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete transaction.", Toast.LENGTH_SHORT).show());
     }
-
+    public void successfulDelete(Context context){
+        Toast.makeText(context, "Transaction deleted.", Toast.LENGTH_SHORT).show();
+        //delete picture too here
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -185,6 +198,7 @@ public class ProcessedTransaction implements TransactionInterface {
         int colorNegative = R.color.transaction_processed_negative;
         return (totalAmount<0)? colorNegative : colorPositive;
     }
+
     @Exclude
     @Override
     public String getIdOfTransactionInt() {
@@ -198,7 +212,9 @@ public class ProcessedTransaction implements TransactionInterface {
         return formatter.getFinalNumber();
     }
 
-
+    public boolean getIsDeleted() {
+        return isDeleted;
+    }
 
 
 }

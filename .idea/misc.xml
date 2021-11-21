@@ -38,7 +38,6 @@
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_transaction_display.xml" value="0.657601977750309" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_transaction_new.xml" value="0.30978260869565216" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_view_pager_holder.xml" value="0.20520833333333333" />
-        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/rec_view_item_all_micros.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/rec_view_item_all_transactions.xml" value="0.30978260869565216" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/rec_view_item_categories.xml" value="0.30978260869565216" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/rec_view_payments.xml" value="0.5" />
@@ -59,6 +58,7 @@
         <entry key="app/src/main/res/drawable/rec_view_item_accounts_test.xml" value="0.22870370370370371" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/bottom_menu_accounts.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/bottom_menu_all_transactions.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/bottom_menu_categories.xml" value="0.335" />
         <entry key="app/src/main/res/layout/bottom_menu_pick_gallery_or_camara.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/cardview_row.xml" value="0.2578125" />
