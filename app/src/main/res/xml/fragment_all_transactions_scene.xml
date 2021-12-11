@@ -48,6 +48,14 @@
                motion:motionTarget="@+id/arrow_to_drop"
                motion:framePosition="10"
                android:alpha="0.5" />
+           <KeyAttribute
+               motion:motionTarget="@+id/text_sumCashOut"
+               motion:framePosition="90"
+               android:alpha="0.5" />
+           <KeyAttribute
+               motion:motionTarget="@+id/text_sumCashOutFix"
+               motion:framePosition="90"
+               android:alpha="0.5" />
        </KeyFrameSet>
         <OnClick motion:targetId="@+id/main_container" />
     </Transition>
@@ -71,19 +79,16 @@
             android:id="@+id/main_container"
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="400dp"
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
         <Constraint
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            motion:layout_constraintBottom_toBottomOf="@+id/main_container"
-            motion:layout_constraintTop_toTopOf="@+id/main_container"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp"
-            motion:layout_constraintStart_toStartOf="@+id/main_container"
+            motion:layout_constraintStart_toStartOf="@id/guidelineHeaders"
             android:id="@+id/text_currentBalanceFix"
-            motion:layout_constraintVertical_bias="0.4" />
+            motion:layout_constraintTop_toBottomOf="@id/text_startBalanceFix"
+            android:layout_marginTop="100dp" />
         <Constraint
             android:id="@+id/text_startingBalance"
             android:layout_width="0dp"
@@ -95,13 +100,13 @@
             motion:layout_constraintEnd_toEndOf="parent" />
         <Constraint
             android:id="@+id/text_startBalanceFix"
-            motion:layout_constraintEnd_toEndOf="@id/text_currentBalanceFix"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            motion:layout_constraintBottom_toTopOf="@+id/text_currentBalanceFix"
             android:alpha="1"
-            motion:layout_constraintStart_toStartOf="@id/text_currentBalanceFix" />
+            motion:layout_constraintStart_toEndOf="@id/guidelineHeaders"
+            motion:layout_editor_absoluteY="73dp"
+            android:layout_marginTop="30dp"
+            motion:layout_constraintTop_toBottomOf="@id/text_selectedMonthFix" />
         <Constraint
             android:id="@+id/text_receivables"
             android:layout_width="0dp"
@@ -185,13 +190,10 @@
         <Constraint
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            motion:layout_constraintBottom_toTopOf="@+id/text_startBalanceFix"
-            android:layout_marginStart="20dp"
-            motion:layout_constraintTop_toTopOf="@+id/main_container"
-            android:layout_marginLeft="20dp"
-            motion:layout_constraintStart_toStartOf="@+id/main_container"
+            motion:layout_constraintStart_toStartOf="@id/guidelineHeaders"
             android:id="@+id/text_selectedMonthFix"
-            />
+            motion:layout_constraintTop_toTopOf="@id/main_container"
+            android:layout_marginTop="25dp" />
         <Constraint
             android:id="@+id/btn_newFAB"
             motion:layout_constraintEnd_toEndOf="parent"
@@ -202,6 +204,128 @@
             android:layout_marginEnd="20dp"
             android:alpha="0"
             android:layout_marginRight="20dp" />
+        <Constraint
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/text_sumCashInFix"
+            android:layout_marginTop="20dp"
+            motion:layout_editor_absoluteX="20dp"
+            motion:layout_constraintTop_toBottomOf="@id/text_startBalanceFix" />
+        <Constraint
+            android:id="@+id/text_sumCashInFix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            motion:layout_editor_absoluteX="20dp"
+            motion:layout_constraintTop_toBottomOf="@id/text_startBalanceFix" />
+        <Constraint
+            android:id="@+id/text_sumCashInFix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            motion:layout_editor_absoluteX="20dp"
+            motion:layout_constraintTop_toBottomOf="@id/text_startBalanceFix" />
+        <Constraint
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_sumCashInFix"
+            android:layout_marginTop="20dp"
+            motion:layout_editor_absoluteX="20dp"
+            motion:layout_constraintTop_toBottomOf="@id/text_startBalanceFix" />
+        <Constraint
+            android:id="@+id/text_sumCashIn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="@+id/guideline12"
+            motion:layout_constraintBottom_toBottomOf="@+id/text_sumCashInFix"
+            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp" />
+        <Constraint
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/text_sumCashOutFix"
+            motion:layout_editor_absoluteX="20dp"
+            motion:layout_constraintTop_toBottomOf="@id/text_sumCashInFix"
+            android:layout_marginTop="20dp" />
+        <Constraint
+            android:id="@+id/text_sumCashOutFix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_editor_absoluteX="20dp"
+            motion:layout_constraintTop_toBottomOf="@id/text_sumCashInFix"
+            android:layout_marginTop="20dp" />
+        <Constraint
+            android:id="@+id/text_sumCashOutFix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_editor_absoluteX="20dp"
+            motion:layout_constraintTop_toBottomOf="@id/text_sumCashInFix"
+            android:layout_marginTop="20dp" />
+        <Constraint
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_sumCashOutFix"
+            motion:layout_editor_absoluteX="20dp"
+            motion:layout_constraintTop_toBottomOf="@id/text_sumCashInFix"
+            android:layout_marginTop="20dp" />
+        <Constraint
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:id="@+id/text_sumCashOut"
+            motion:layout_constraintTop_toTopOf="@id/text_sumCashOutFix"
+            motion:layout_constraintStart_toStartOf="@id/guideline12"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintBottom_toBottomOf="@id/text_sumCashOutFix" />
+        <Constraint
+            android:id="@+id/text_sumCashOut"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toTopOf="@id/text_sumCashOutFix"
+            motion:layout_constraintStart_toStartOf="@id/guideline12"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            motion:layout_constraintEnd_toEndOf="parent" />
+        <Constraint
+            android:id="@+id/text_sumCashOut"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toTopOf="@id/text_sumCashOutFix"
+            motion:layout_constraintStart_toStartOf="@id/guideline12"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            motion:layout_constraintEnd_toEndOf="parent" />
+        <Constraint
+            android:id="@+id/text_sumCashOut"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toTopOf="@id/text_sumCashOutFix"
+            motion:layout_constraintStart_toStartOf="@id/guideline12"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            motion:layout_constraintEnd_toEndOf="parent" />
+        <Constraint
+            android:id="@+id/text_sumCashOut"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toTopOf="@id/text_sumCashOutFix"
+            motion:layout_constraintStart_toStartOf="@id/guideline12"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            motion:layout_constraintEnd_toEndOf="parent" />
+        <Constraint
+            android:layout_height="wrap_content"
+            motion:layout_constraintGuide_begin="230dp"
+            android:layout_width="wrap_content"
+            android:id="@+id/guideline12" />
+        <Constraint
+            android:id="@+id/guideline12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintGuide_begin="230dp"
+            motion:layout_constraintStart_toEndOf="@+id/main_container" />
 
     </ConstraintSet>
 </MotionScene>

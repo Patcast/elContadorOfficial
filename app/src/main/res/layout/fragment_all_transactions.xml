@@ -21,9 +21,7 @@
         android:contentDescription="container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
         android:id="@+id/btn_selectMonth"
@@ -62,12 +60,65 @@
         android:id="@+id/text_currentBalanceFix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:text="Current Balance:"
+        android:text="Cash at the end:"
         app:layout_constraintBottom_toBottomOf="@+id/main_container"
-        app:layout_constraintStart_toStartOf="@+id/main_container"
+        app:layout_constraintStart_toStartOf="@+id/guidelineHeaders"
         app:layout_constraintTop_toBottomOf="@+id/text_selectedMonthFix"
+
+        />
+    <TextView
+        android:id="@+id/text_sumCashIn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:alpha="0"
+        android:text="$400,000.00"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/text_sumCashInFix"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline12"
+        app:layout_constraintTop_toTopOf="@+id/text_sumCashInFix" />
+
+    <TextView
+        android:id="@+id/text_sumCashInFix"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0"
+        android:text="Sum of cash in:"
+        app:layout_constraintStart_toStartOf="@+id/guidelineHeaders"
+        app:layout_constraintTop_toBottomOf="@+id/text_startBalanceFix"
+
+        />
+
+    <TextView
+        android:id="@+id/text_sumCashOut"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:alpha="0"
+        android:text="$3,000,000.00"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/text_sumCashInFix"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline12"
+        app:layout_constraintTop_toTopOf="@+id/text_sumCashInFix" />
+
+    <TextView
+        android:id="@+id/text_sumCashOutFix"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sum of cash Out:"
+        android:alpha="0"
+        app:layout_constraintStart_toStartOf="@+id/guidelineHeaders"
+        app:layout_constraintTop_toBottomOf="@+id/text_startBalanceFix"
 
         />
 
@@ -78,7 +129,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginBottom="10dp"
-        android:text="Selected Month:"
+        android:text="Selected Period:"
         app:layout_constraintBottom_toTopOf="@+id/text_currentBalanceFix"
         app:layout_constraintStart_toStartOf="@+id/main_container"
 
@@ -104,7 +155,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:alpha="0"
-        android:text="Starting Balance:"
+        android:text="Cash in the beginning:"
         app:layout_constraintBottom_toTopOf="@+id/text_currentBalanceFix"
         app:layout_constraintStart_toStartOf="@+id/guidelineHeaders" />
 
@@ -210,7 +261,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="195dp" />
+        app:layout_constraintGuide_begin="230dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHeaders"

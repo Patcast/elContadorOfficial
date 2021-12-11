@@ -2,13 +2,9 @@ package be.kuleuven.elcontador10.background.model;
 
 import android.content.Context;
 
-import android.util.Log;
+
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 
 
@@ -129,15 +125,6 @@ public class ProcessedTransaction implements TransactionInterface {
                 .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show());
     }
     public void deleteTransaction(Context context){
-        /*
-        db.collection(urlNewTransactions).document(getIdOfTransactionInt())
-                .delete()
-                .addOnSuccessListener(aVoid ->{
-                    Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                    Toast.makeText(context, "Transaction deleted", Toast.LENGTH_LONG).show();
-
-                } )
-                .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));*/
         isDeleted = true;
         String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
         db.collection(urlNewTransactions).document(getIdOfTransactionInt())

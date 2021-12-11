@@ -47,7 +47,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     private RecyclerView recyclerAllTransactions;
     private TransactionsRecViewAdapter adapter;
     private FloatingActionButton fabNew;
-    private TextView txtStartingBalance,txCurrentBalance,txtSumOfReceivables,txtSumOfPayables,ScheduleBalance;
+    private TextView txtStartingBalance,txCurrentBalance,txtSumOfReceivables,txtSumOfPayables,ScheduleBalance,txtSumOfCashOut, txtSumOfCashIn;
     private Button selectMonth;
     private MainActivity mainActivity;
     private ViewModel_AllTransactions viewModel;
@@ -73,6 +73,8 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         selectMonth = view.findViewById(R.id.btn_selectMonth);
+        txtSumOfCashOut = view.findViewById(R.id.text_sumCashOut);
+        txtSumOfCashIn = view.findViewById(R.id.text_sumCashIn);
         txtStartingBalance = view.findViewById(R.id.text_startingBalance);
         txCurrentBalance = view.findViewById(R.id.text_currentBalance);
         txtSumOfReceivables = view.findViewById(R.id.text_receivables);
@@ -139,6 +141,24 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
             inputSB = formatter.getFinalNumber();
         }
         txtStartingBalance.setText(inputSB);
+
+        String inputCI = "NA";
+        if(inputsForSummary.get("cashIn")!=null){
+            formatter.setOriginalNumber(inputsForSummary.get("cashIn"));
+            inputCI = formatter.getFinalNumber();
+        }
+        txtSumOfCashIn.setText(inputCI);
+
+        String inputCO = "NA";
+        if(inputsForSummary.get("cashOut")!=null){
+            formatter.setOriginalNumber(inputsForSummary.get("cashOut"));
+            inputCO = formatter.getFinalNumber();
+        }
+        txtSumOfCashOut.setText(inputCO);
+
+
+
+
         String inputCB = "NA";
         if(inputsForSummary.get("currentBalance")!=null){
             formatter.setOriginalNumber(inputsForSummary.get("currentBalance"));

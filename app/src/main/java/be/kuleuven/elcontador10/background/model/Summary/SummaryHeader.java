@@ -30,6 +30,8 @@ public class SummaryHeader {
     private Integer sumOfPayables;
     private Integer sumOfReceivables;
     private Integer scheduleBalance;
+    private Integer cashOut;
+    private Integer cashIn;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -46,6 +48,8 @@ public class SummaryHeader {
     private void makeMap() {
         setSelectedBalanceRecord();
         summaryMap.put("startingBalance",getStartingBalance());
+        summaryMap.put("cashIn",getCashIn());
+        summaryMap.put("cashOut",getCashOut());
         summaryMap.put("currentBalance",getClosingBalance());
         summaryMap.put("receivables",getSumOfReceivables());
         summaryMap.put("payables",getSumOfPayables());
@@ -62,11 +66,6 @@ public class SummaryHeader {
         setStartingAndClosingBalance();
 
     }
-
-    private void setNetScheduleBalance() {
-        scheduleBalance=  (closingBalance != null? closingBalance:0) + getSumOfPayables()+getSumOfReceivables();
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void setStartingAndClosingBalance(){
         if(selectedBalanceRecord!=null){
@@ -80,11 +79,14 @@ public class SummaryHeader {
                         .filter(i-> !i.getIsDeleted())
                         .map(ProcessedTransaction::getTotalAmount)
                         .reduce(startingBalance, Integer::sum);
+                setCashInAndOut();// only called if valid
             }
         }
         else {
             startingBalance = null;
             closingBalance = null;
+            cashIn = null;
+            cashOut = null;
         }
         setScheduleBalances();
     }
@@ -116,6 +118,25 @@ public class SummaryHeader {
             setNetScheduleBalance();
 
     }
+    private void setNetScheduleBalance() {
+        scheduleBalance=  (closingBalance != null? closingBalance:0) + getSumOfPayables()+getSumOfReceivables();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void setCashInAndOut() {
+        cashIn = monthlyListOfProcessedTransactions
+                .stream()
+                .filter(i-> !i.getIsDeleted())
+                .map(ProcessedTransaction::getTotalAmount)
+                .filter(totalAmount -> totalAmount >=0)
+                .reduce(0, Integer::sum);
+        cashOut = monthlyListOfProcessedTransactions
+                .stream()
+                .filter(i-> !i.getIsDeleted())
+                .map(ProcessedTransaction::getTotalAmount)
+                .filter(totalAmount -> totalAmount <0)
+                .reduce(0, Integer::sum);
+    }
 
 
     public Integer getStartingBalance() {
@@ -140,5 +161,13 @@ public class SummaryHeader {
 
     public Map<String, Integer> getSummaryMap() {
         return summaryMap;
+    }
+
+    public Integer getCashOut() {
+        return cashOut;
+    }
+
+    public Integer getCashIn() {
+        return cashIn;
     }
 }
