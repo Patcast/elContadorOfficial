@@ -3,45 +3,72 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="60dp"
     android:layout_marginVertical="2dp"
-    android:paddingVertical="10dp"
-    android:paddingHorizontal="20dp"
     android:background="@color/rec_view_transactions"
     android:id="@+id/recView_item_categories"
     >
+
         <TextView
             android:id="@+id/textView_category_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginStart="30dp"
-            android:textSize="20sp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
             android:text="Rentas"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/boundary"
             app:layout_constraintStart_toEndOf="@+id/imageButton_category_icon"
             app:layout_constraintTop_toTopOf="parent"
-            />
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="10dp" />
 
         <TextView
             android:id="@+id/imageButton_category_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="⚙️"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:textSize="25sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switch_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageButton
+            android:id="@+id/btn_edit_category"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:background="@color/rec_view_transactions"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="TouchTargetSizeCheck"
-            android:visibility="gone"/>
+            app:srcCompat="@drawable/ic_edit_gray"
+            android:contentDescription="@string/edit" />
+
+        <LinearLayout
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:id="@+id/boundary"
+            android:background="@color/dark_grey"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_edit_category"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+        <!--     <com.google.android.material.switchmaterial.SwitchMaterial
+                 android:id="@+id/switch_category"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 app:layout_constraintBottom_toBottomOf="parent"
+                 app:layout_constraintEnd_toEndOf="parent"
+                 app:layout_constraintTop_toTopOf="parent"
+                 tools:ignore="TouchTargetSizeCheck"
+                 android:visibility="gone"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

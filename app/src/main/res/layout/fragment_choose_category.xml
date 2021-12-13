@@ -106,6 +106,7 @@
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:background="#2f2f2f"
+
         >
 
         <TextView
@@ -117,7 +118,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginStart="20dp" />
+            android:layout_marginStart="20dp"
+            android:visibility="gone"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -125,6 +127,7 @@
         android:id="@+id/recView_categories_default"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         />
 
 
