@@ -162,6 +162,7 @@ public class ViewModel_AllTransactions extends ViewModel {
 
         db.collectionGroup("scheduledTransactions").
                 whereEqualTo("idOfAccount", Caching.INSTANCE.getChosenAccountId()).
+                whereEqualTo("completed", false).
                 whereGreaterThanOrEqualTo("dueDate", dateSelectedBottom).
                 whereLessThan("dueDate", dateSelectedTop).
                 addSnapshotListener((value,e ) -> {
@@ -234,8 +235,8 @@ public class ViewModel_AllTransactions extends ViewModel {
     private void initialiseBooleanFilter() {
         HashMap<String, Boolean> transTypes = new HashMap<>();
         transTypes.put("transaction",true);
-        transTypes.put("receivable",true);
-        transTypes.put("payable",true);
+        transTypes.put("receivable",false);
+        transTypes.put("payable",false);
         transTypes.put("deletedTrans",false);
         setBooleanFilter(transTypes);
     }

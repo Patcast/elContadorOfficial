@@ -98,6 +98,7 @@ public class ProcessedTransaction implements TransactionInterface {
             }).addOnFailureListener(exception -> {
                 Toast.makeText(context,"photo failed to delete, please try again", Toast.LENGTH_SHORT).show();
             });
+            imageName = null; // the idea is to remove all places where image name was stored.
         }
     }
     //Todo: Maybe use similar method to update after the transaction was created.

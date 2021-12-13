@@ -66,7 +66,6 @@ public class StakeholdersList extends Fragment implements  MainActivity.TopMenuH
         @Override
         public void onViewCreated(@NonNull  View view, @Nullable  Bundle savedInstanceState) {
                 super.onViewCreated(view, savedInstanceState);
-                mainActivity.displayBottomNavigationMenu(true);
                 viewModelAllStakes.getStakeholdersList().observe(getViewLifecycleOwner(), i->adapter.setStakeListOnAdapter(i));
         }
 
@@ -75,6 +74,7 @@ public class StakeholdersList extends Fragment implements  MainActivity.TopMenuH
         public void onStart() {
                 super.onStart();
                 Caching.INSTANCE.setChosenMicroAccountId(null);
+                mainActivity.displayBottomNavigationMenu(true);
                 mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,true);
         }
 
@@ -129,7 +129,9 @@ public class StakeholdersList extends Fragment implements  MainActivity.TopMenuH
                                 return false;
                         }
                 });
+
         }
+
 
         @Override
         public void onFilterClick() {

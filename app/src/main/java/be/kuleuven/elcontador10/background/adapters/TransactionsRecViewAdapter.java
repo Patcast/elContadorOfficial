@@ -28,7 +28,6 @@ import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.tools.DateFormatter;
-import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolderDirections;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.AllTransactionsDirections;
 
@@ -58,6 +57,7 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         TransactionInterface transaction = allTransactions.get(position);
         // show stakeholder
         if(transaction.getTotalAmount()<0)holder.textPaidBy.setText(R.string.paid_to);
+        else holder.textPaidBy.setText(R.string.paid_by);
         holder.textNameOfParticipant.setText(Caching.INSTANCE.getStakeholderName(transaction.getIdOfStakeInt()));
         // show Amount
         holder.textAmount.setText(transaction.getAmountToDisplay());
