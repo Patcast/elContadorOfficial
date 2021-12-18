@@ -1,6 +1,8 @@
 package be.kuleuven.elcontador10.background.model;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -16,6 +18,7 @@ public class EmojiCategory {
     private String icon;
     private String title;
     private String id;
+    boolean isDeleted;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public EmojiCategory() {
@@ -24,6 +27,7 @@ public class EmojiCategory {
     public EmojiCategory(String title,String icon) {
         this.icon = icon;
         this.title = title;
+        isDeleted = false;
     }
 
     public EmojiCategory(String icon, String title, String id) {
@@ -36,10 +40,16 @@ public class EmojiCategory {
         String urlNewTransactions = "/accounts/"+ Caching.INSTANCE.getChosenAccountId()+"/customCategories";
         db.collection(urlNewTransactions)
                 .add(newEmoji)
-                .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId()))
+                .addOnSuccessListener(documentReference -> setNewId(documentReference.getId()) )
                 .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
 
     }
+
+    private void setNewId(String id) {
+        this.id = id;
+        updateCategory(this);
+    }
+
     public void updateCategory(EmojiCategory newEmoji){
         String urlNewTransactions = "/accounts/"+ Caching.INSTANCE.getChosenAccountId()+"/customCategories";
         db.collection(urlNewTransactions).document(newEmoji.getId())
@@ -48,12 +58,19 @@ public class EmojiCategory {
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
     }
 
-    public void deleteCategory(){
-        String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/customCategories";
+    public void deleteCategory( ){
+        isDeleted = true;
+        String urlNewTransactions = "/accounts/"+ Caching.INSTANCE.getChosenAccountId()+"/customCategories";
+        db.collection(urlNewTransactions).document(id)
+                .update("isDeleted", true)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+
+        /*String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/customCategories";
         db.collection(urlNewTransactions).document(getId())
                 .delete()
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted!"))
-                .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
+                .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));*/
     }
 
 
@@ -67,6 +84,10 @@ public class EmojiCategory {
 
     public String getId() {
         return id;
+    }
+
+    public boolean getIsDeleted() {
+        return isDeleted;
     }
 
     public void setId(String id) {

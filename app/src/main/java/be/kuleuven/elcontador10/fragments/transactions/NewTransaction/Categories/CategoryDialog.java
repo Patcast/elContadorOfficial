@@ -1,5 +1,6 @@
 package be.kuleuven.elcontador10.fragments.transactions.NewTransaction.Categories;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,11 +65,22 @@ public class CategoryDialog extends DialogFragment {
     }
 
     private void deleteCategory() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Delete Category")
+                .setMessage("Are you sure you want to delete this category?")
+                .setPositiveButton("Yes", (dialog, which) ->confirmDelete())
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
+    }
+
+    private void confirmDelete() {
         if(editingEmoji!=null){
             editingEmoji.deleteCategory();
         }
         closeDialog();
     }
+
 
     private void updateUIEditingMode() {
         if (editingEmoji!=null){

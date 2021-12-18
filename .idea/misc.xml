@@ -64,6 +64,7 @@
         <entry key="app/src/main/res/layout/bottom_menu_pick_gallery_or_camara.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/cardview_row.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/dialoge_category_editing.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/fragment_account_settings.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_accounts_bottom_menu.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_add_new_account.xml" value="0.14907407407407408" />
         <entry key="app/src/main/res/layout/fragment_all_micro_acounts.xml" value="0.2578125" />
