@@ -85,6 +85,7 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
             TransactionDisplayArgs args = TransactionDisplayArgs.fromBundle(getArguments());
             initializeViews(view);
             selectedTrans = Caching.INSTANCE.getTransaction(args.getId());
+            viewModel.setTransaction(selectedTrans);
             displayInformation();
 
             mainActivity.setTitle(selectedTrans.getTitle());

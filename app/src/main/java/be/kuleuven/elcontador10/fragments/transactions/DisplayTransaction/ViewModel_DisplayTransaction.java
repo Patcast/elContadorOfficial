@@ -15,9 +15,12 @@ import com.squareup.picasso.Target;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.ImageFireBase;
 import be.kuleuven.elcontador10.background.model.Interfaces.ViewModelCamaraInterface;
+import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 
 public class ViewModel_DisplayTransaction extends ViewModel implements ViewModelCamaraInterface {
     FirebaseStorage storage = FirebaseStorage.getInstance();
+
+
     private final Target target = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -47,6 +50,23 @@ public class ViewModel_DisplayTransaction extends ViewModel implements ViewModel
     }
     public void setIsLoading(boolean value){
         isLoading.setValue(value);
+    }
+    // transaction used
+
+    private final MutableLiveData<ProcessedTransaction> transaction = new MutableLiveData<>();
+    private LiveData<ProcessedTransaction> getTransaction() {
+        return transaction;
+    }
+    public void setTransaction(ProcessedTransaction trans){
+        transaction.setValue(trans);
+    }
+    public void deletePicture(Context context){
+        ProcessedTransaction transPic = getTransaction().getValue();
+        if(transPic!=null){
+            transPic.deleteImageFromFireBase(true,context);
+            transaction.setValue(transPic);
+            reset();
+        }
     }
 
     //Chosen Bitmap

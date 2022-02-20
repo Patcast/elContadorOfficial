@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private TextView stakeHolderBalance, stakeholderRole;
     private ConstraintLayout stakeholderDetails;
-    SharedPreferences.Editor editor;
+    private SharedPreferences.Editor editor;
     private static final String SAVED_EMAIL_KEY = "email_key";
-    TopMenuHandler currentTopMenuHandler;
+    public TopMenuHandler currentTopMenuHandler;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -129,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         topRightMenu = menu;
         getMenuInflater().inflate(R.menu.top_three_buttons_menu, menu);
-        //item = menu.findItem(R.id.menu_search);
         return super.onCreateOptionsMenu(menu);
     }
 

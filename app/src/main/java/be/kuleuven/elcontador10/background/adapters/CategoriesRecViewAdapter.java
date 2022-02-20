@@ -4,6 +4,7 @@ package be.kuleuven.elcontador10.background.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,14 +33,14 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
     private final List<EmojiCategory> categories = new ArrayList<>();
     private final View viewFromHostingClass;
     private final ViewModelCategory viewModel;
-    private boolean editMode;
+    //private boolean editMode;
     private Fragment hostFragment;
 
     public CategoriesRecViewAdapter(View viewFromHostingClass, ViewModelCategory viewModel, Fragment hostFragment) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.viewModel = viewModel;
         this.hostFragment = hostFragment;
-        editMode = false;
+        //editMode = false;
     }
 
     @NonNull
@@ -51,11 +52,12 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if (editMode) {
+     /*   if (editMode) {
             holder.editingSwitch.setChecked(false);
-            holder.editingSwitch.setVisibility(View.VISIBLE);}
+            holder.editingSwitch.setVisibility(View.VISIBLE);
+            }
 
-        else holder.editingSwitch.setVisibility(View.GONE);
+        else holder.editingSwitch.setVisibility(View.GONE);*/
         holder.textNameCategory.setText(categories.get(position).getTitle());
         String icon = categories.get(position).getIcon();
         holder.imageIconCategory.setText(icon);
@@ -64,13 +66,18 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
             NavController navController = Navigation.findNavController(viewFromHostingClass);
             navController.popBackStack();
         });
-        holder.editingSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        holder.editButton.setOnClickListener(v -> {
+                CategoryDialog dialog =new CategoryDialog(categories.get(position));
+                dialog.setListener((CategoryDialog.DialogCategoriesListener) hostFragment);
+                dialog.show(hostFragment.getParentFragmentManager(),"Category Dialog");
+            });
+      /*  holder.editingSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked){
                 CategoryDialog dialog =new CategoryDialog(categories.get(position));
                 dialog.setListener((CategoryDialog.DialogCategoriesListener) hostFragment);
                 dialog.show(hostFragment.getParentFragmentManager(),"Category Dialog");
             }
-        });
+        });*/
     }
 
     @Override
@@ -80,15 +87,17 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
 
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private final SwitchMaterial editingSwitch;
+        //private final SwitchMaterial editingSwitch;
         private final TextView textNameCategory;
         private final TextView imageIconCategory;
         private final ConstraintLayout parent;
+        private  final ImageButton editButton;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            editingSwitch = itemView.findViewById(R.id.switch_category);
+            //editingSwitch = itemView.findViewById(R.id.switch_category);
+            editButton = itemView.findViewById(R.id.btn_edit_category);
             parent = itemView.findViewById(R.id.recView_item_categories);
             textNameCategory = itemView.findViewById(R.id.textView_category_name);
             imageIconCategory = itemView.findViewById(R.id.imageButton_category_icon);
@@ -99,11 +108,10 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
         categories.clear();
         this.categories.addAll(categoriesListInput);
         notifyDataSetChanged();
-
     }
 
     public void setEditMode(boolean editMode) {
-        this.editMode = editMode;
+        //this.editMode = editMode;
         notifyDataSetChanged();
     }
 }

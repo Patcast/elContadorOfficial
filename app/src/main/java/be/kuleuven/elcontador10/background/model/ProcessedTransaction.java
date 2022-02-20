@@ -2,13 +2,9 @@ package be.kuleuven.elcontador10.background.model;
 
 import android.content.Context;
 
-import android.util.Log;
+
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 
 
@@ -102,6 +98,7 @@ public class ProcessedTransaction implements TransactionInterface {
             }).addOnFailureListener(exception -> {
                 Toast.makeText(context,"photo failed to delete, please try again", Toast.LENGTH_SHORT).show();
             });
+            imageName = null; // the idea is to remove all places where image name was stored.
         }
     }
     //Todo: Maybe use similar method to update after the transaction was created.
@@ -129,15 +126,6 @@ public class ProcessedTransaction implements TransactionInterface {
                 .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show());
     }
     public void deleteTransaction(Context context){
-        /*
-        db.collection(urlNewTransactions).document(getIdOfTransactionInt())
-                .delete()
-                .addOnSuccessListener(aVoid ->{
-                    Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                    Toast.makeText(context, "Transaction deleted", Toast.LENGTH_LONG).show();
-
-                } )
-                .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));*/
         isDeleted = true;
         String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
         db.collection(urlNewTransactions).document(getIdOfTransactionInt())
@@ -194,9 +182,13 @@ public class ProcessedTransaction implements TransactionInterface {
     @Exclude
     @Override
     public int getColorInt() {
-        int colorPositive = R.color.transaction_processed_positive;
-        int colorNegative = R.color.transaction_processed_negative;
-        return (totalAmount<0)? colorNegative : colorPositive;
+        if(getIsDeleted())return R.color.rec_view_scheduled_completed;
+        else{
+            int colorPositive = R.color.transaction_processed_positive;
+            int colorNegative = R.color.transaction_processed_negative;
+            return (totalAmount<0)? colorNegative : colorPositive;
+        }
+
     }
 
     @Exclude

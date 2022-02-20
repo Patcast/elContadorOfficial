@@ -235,7 +235,8 @@ public enum Caching {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void requestCustomCategories() {
-        db.collection("/accounts/"+chosenAccountId+"/customCategories").
+         db.collection("/accounts/"+chosenAccountId+"/customCategories")
+                 .whereEqualTo("isDeleted",false).
                 addSnapshotListener((value, e) -> {
                     if (e != null) {
                         Log.w(TAG, "Listen failed.", e);
