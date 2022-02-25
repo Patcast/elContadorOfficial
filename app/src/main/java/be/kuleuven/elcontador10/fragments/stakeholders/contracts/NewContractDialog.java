@@ -36,6 +36,7 @@ public class NewContractDialog extends Dialog {
         this.contract = contract;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

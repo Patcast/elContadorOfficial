@@ -1,9 +1,19 @@
 package be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -14,6 +24,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.WorkSource;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,11 +57,15 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     //TODO: update starting balance if transactions are deleted
     private RecyclerView recyclerAllTransactions;
     private TransactionsRecViewAdapter adapter;
-    private FloatingActionButton fabNew;
+    private FloatingActionButton fabNew, fabExport;
     private TextView txtStartingBalance,txCurrentBalance,txtSumOfReceivables,txtSumOfPayables,ScheduleBalance,txtSumOfCashOut, txtSumOfCashIn;
     private Button selectMonth;
     private MainActivity mainActivity;
     private ViewModel_AllTransactions viewModel;
+
+    private String selectedMonth;
+    private int selectedYear;
+    private static final int CREATE_FILE = 1;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -81,6 +96,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         txtSumOfPayables = view.findViewById(R.id.text_payables);
         ScheduleBalance = view.findViewById(R.id.text_futureBalance);
         fabNew = view.findViewById(R.id.btn_newFAB);
+        fabExport = view.findViewById(R.id.btn_exportFAB);
         viewModel.getCalendarFilter().observe(getViewLifecycleOwner(), i-> {
             try {
                 updateDateButtonAndListOfTransactions(i);
@@ -100,6 +116,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         super.onViewCreated(view, savedInstanceState);
         selectMonth.setOnClickListener(v -> pickDate());
         fabNew.setOnClickListener(this::onFAB_Clicked);
+        fabExport.setOnClickListener(this::onExport_Clicked);
 
         recyclerAllTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -182,6 +199,8 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         viewModel.selectScheduleTransactions();
         viewModel.selectListOfProcessedTransactions();
 
+        selectedMonth = monthSelected;
+        selectedYear = calendarFilter.get("year");
     }
 
 
@@ -228,6 +247,37 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         }
     }
 
+    public void onExport_Clicked(View view) {
+        String message = "Export the current month?\n" + selectedMonth + " " + selectedYear;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(message)
+                .setPositiveButton("Yes", this::export)
+                .setNegativeButton("No", (dialogInterface, id) -> {})
+                .create().show();
+    }
+
+    private void export(DialogInterface dialogInterface, int id) {
+        // create file
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/xlsx");
+        intent.putExtra(Intent.EXTRA_TITLE, selectedMonth + " " + selectedYear + ".xlsx");
+
+        ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                this::createFile);
+    }
+
+    public void createFile(ActivityResult result) {
+        Intent data = result.getData();
+        Uri uri = null;
+        if (data != null) {
+            uri = data.getData();
+            Toast.makeText(mainActivity, "File created.", Toast.LENGTH_LONG).show();
+            System.out.println(uri.getPath());
+        }
+    }
 
     @Override
     public void onBottomSheetClick() {

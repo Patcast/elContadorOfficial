@@ -65,7 +65,7 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
 
         NumberFormatter formatterPaid = new NumberFormatter(transaction.getAmountPaid());
         NumberFormatter formatterTotal = new NumberFormatter(transaction.getTotalAmount());
-        if(formatterTotal.isNegative()) holder.textPaidBy.setText(R.string.paid_by);
+        if(!formatterTotal.isNegative()) holder.textPaidBy.setText(R.string.paid_by);
 
         String amount = formatterPaid.getFinalNumber() + "/" + formatterTotal.getFinalNumber();
         holder.textAmount.setText(amount);
