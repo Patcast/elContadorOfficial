@@ -65,7 +65,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
     private String selectedMonth;
     private int selectedYear;
-    private static final int CREATE_FILE = 1;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -77,6 +77,11 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        // export activity launcher
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                this::createFile);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -264,9 +269,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         intent.setType("application/xlsx");
         intent.putExtra(Intent.EXTRA_TITLE, selectedMonth + " " + selectedYear + ".xlsx");
 
-        ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                this::createFile);
+        activityResultLauncher.launch(intent);
     }
 
     public void createFile(ActivityResult result) {
