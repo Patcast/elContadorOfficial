@@ -24,6 +24,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.StrictMode;
 import android.os.WorkSource;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -37,10 +38,12 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
+import com.google.firebase.installations.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
 
+import java.io.File;
 import java.text.ParseException;
 
 import java.util.HashMap;
@@ -50,6 +53,7 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.tools.Exporter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 
@@ -65,7 +69,6 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
     private String selectedMonth;
     private int selectedYear;
-    private ActivityResultLauncher<Intent> activityResultLauncher;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -77,11 +80,6 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        // export activity launcher
-        activityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                this::createFile);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -252,6 +250,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void onExport_Clicked(View view) {
         String message = "Export the current month?\n" + selectedMonth + " " + selectedYear;
 
@@ -262,24 +261,20 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
                 .create().show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void export(DialogInterface dialogInterface, int id) {
-        // create file
-        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("application/xlsx");
-        intent.putExtra(Intent.EXTRA_TITLE, selectedMonth + " " + selectedYear + ".xlsx");
+        File file = Exporter.INSTANCE.createFile(selectedMonth + " " + selectedYear + ".xls");
 
-        activityResultLauncher.launch(intent);
-    }
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
 
-    public void createFile(ActivityResult result) {
-        Intent data = result.getData();
-        Uri uri = null;
-        if (data != null) {
-            uri = data.getData();
-            Toast.makeText(mainActivity, "File created.", Toast.LENGTH_LONG).show();
-            System.out.println(uri.getPath());
-        }
+//        Intent intent = new Intent(Intent.ACTION_SEND);
+//        intent.setType("application/vnd.ms-excel");
+//        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+//        startActivity(Intent.createChooser(intent, "Share file..."));
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
+        startActivity(intent);
     }
 
     @Override
