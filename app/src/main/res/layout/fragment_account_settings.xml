@@ -95,6 +95,18 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/textEmailWarning"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/please_insert_a_valid_email"
+            android:textColor="@color/light_red_warning"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintTop_toBottomOf="@+id/edTextEmailPart" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

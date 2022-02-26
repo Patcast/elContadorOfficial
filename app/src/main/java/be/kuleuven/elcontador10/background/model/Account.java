@@ -25,13 +25,15 @@ public class Account {
     private String name;
     private ArrayList<String> users;
     private String id;
+    private String owner;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public Account( String name,long balance, ArrayList<String> users) {
+    public Account( String name,long balance, ArrayList<String> users , String owner) {
         this.balance = balance;
         this.name = name;
         this.users = users;
+        this.owner = owner;
     }
 
     public Account() {
@@ -50,7 +52,9 @@ public class Account {
 
     }
 
-
+    public String getOwner() {
+        return owner;
+    }
 
     public void setId(String id) {
         this.id = id;
