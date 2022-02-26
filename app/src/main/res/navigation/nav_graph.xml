@@ -101,6 +101,9 @@
         <action
             android:id="@+id/action_stakeholderViewPagerHolder_to_subContractDisplay"
             app:destination="@id/subContractDisplay" />
+        <action
+            android:id="@+id/action_stakeholderViewPagerHolder_to_accountSettings"
+            app:destination="@id/accountSettings" />
     </fragment>
     <fragment
         android:id="@+id/contractDisplay"
@@ -170,6 +173,9 @@
         <action
             android:id="@+id/action_allTransactions2_to_executeScheduledTransaction"
             app:destination="@id/executeScheduledTransaction" />
+        <action
+            android:id="@+id/action_allTransactions2_to_accountSettings"
+            app:destination="@id/accountSettings" />
     </fragment>
     <fragment
         android:id="@+id/stakeholders"
@@ -182,12 +188,10 @@
         <action
             android:id="@+id/action_stakeholders_to_stakeholder"
             app:destination="@id/stakeholderViewPagerHolder" />
+        <action
+            android:id="@+id/action_stakeholders_to_accountSettings"
+            app:destination="@id/accountSettings" />
     </fragment>
-    <fragment
-        android:id="@+id/properties"
-        android:name="be.kuleuven.elcontador10.fragments.properties.Properties"
-        android:label="fragment_properties"
-        tools:layout="@layout/fragment_properties" />
     <fragment
         android:id="@+id/executeScheduledTransaction"
         android:name="be.kuleuven.elcontador10.fragments.transactions.scheduledTransaction.ExecuteScheduledTransaction"
@@ -200,4 +204,9 @@
             android:name="id"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/accountSettings"
+        android:name="be.kuleuven.elcontador10.fragments.accounts.accountSettings"
+        android:label="fragment_account_settings"
+        tools:layout="@layout/fragment_account_settings" />
 </navigation>

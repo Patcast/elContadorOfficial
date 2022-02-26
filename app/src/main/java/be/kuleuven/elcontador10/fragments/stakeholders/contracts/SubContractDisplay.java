@@ -151,4 +151,9 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
         SubContractFilterDialog filterDialog = new SubContractFilterDialog(getViewLifecycleOwner());
         filterDialog.show(getParentFragmentManager(), "SubContractDisplay");
     }
+
+    @Override
+    public void onToolbarTitleClick() {
+
+    }
 }

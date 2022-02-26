@@ -38,18 +38,16 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     private ViewPager2 viewPager;
 
     private FloatingActionButton fab;
-    private FloatingActionButton newTransaction;
+    private MainActivity mainActivity;
+    private StakeholderViewModel viewModel;
+/*    private FloatingActionButton newTransaction;
     private FloatingActionButton newPayableReceivable;
-
     private TextView labelNewTransaction;
     private TextView labelNewPayableReceivable;
-
-    private MainActivity mainActivity;
     private boolean fabClicked;
+    private Animation rotateOpen,rotateClose,popOpen,popClose;*/
 
-    private Animation rotateOpen,rotateClose,popOpen,popClose;
 
-    private StakeholderViewModel viewModel;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -69,16 +67,16 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         viewPager.setPageTransformer(new ZoomOutPageTransformer(this));
 
         fab = view.findViewById(R.id.btn_stakeholder_view_holder);
-        newTransaction = view.findViewById(R.id.btn_stakeholder_new_transaction);
+       /* newTransaction = view.findViewById(R.id.btn_stakeholder_new_transaction);
         newPayableReceivable = view.findViewById(R.id.btn_stakeholder_new_ReceivableOrPayable);
 
         labelNewTransaction = view.findViewById(R.id.lbl_stakeholder_newTransaction);
-        labelNewPayableReceivable = view.findViewById(R.id.lbl_stakeholder_newPayableReceivable);
+        labelNewPayableReceivable = view.findViewById(R.id.lbl_stakeholder_newPayableReceivable);*/
 
         viewModel = new ViewModelProvider(requireActivity()).get(StakeholderViewModel.class);
 
         viewModel.getFabClicked().observe(getViewLifecycleOwner(), item -> {
-            fabClicked = item;
+            //fabClicked = item;
 //            setVisibility();
 //            setAnimation();
         });
@@ -104,10 +102,10 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
 
         Caching.INSTANCE.openMicroAccount(stakeHolder.getId()); // set MicroAccount to caching
 
-        rotateOpen = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_open);
+       /* rotateOpen = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_open);
         rotateClose = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_close);
         popOpen= AnimationUtils.loadAnimation(getContext(),R.anim.pop_up_fabs);
-        popClose = AnimationUtils.loadAnimation(getContext(),R.anim.pop_down_fabs);
+        popClose = AnimationUtils.loadAnimation(getContext(),R.anim.pop_down_fabs);*/
     }
 
     private void addFragments(View view) {
@@ -167,10 +165,10 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
                     dialog.show();
                 });
 
-                fabClicked = true;
+               /* fabClicked = true;*/
                 fab.setVisibility(View.VISIBLE);
 //                setVisibility();
-                fabClicked = false;
+                //fabClicked = false;
 
                 break;
         }

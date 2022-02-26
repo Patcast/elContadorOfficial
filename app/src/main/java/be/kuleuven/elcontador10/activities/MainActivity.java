@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -33,8 +34,9 @@ public class MainActivity extends AppCompatActivity {
         void onAddClick();
         void onSearchClick(MenuItem item);
         void onFilterClick();
+        void onToolbarTitleClick();
     }
-    //
+
     //private MenuItem item;
     private Menu topRightMenu;
     private TabLayout tabLayout;
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         bottomMenu = findViewById(R.id.bottomNavigationView);
         NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(bottomMenu,navController);
-
+        toolbar.setOnClickListener(view -> currentTopMenuHandler.onToolbarTitleClick());
     }
 
 

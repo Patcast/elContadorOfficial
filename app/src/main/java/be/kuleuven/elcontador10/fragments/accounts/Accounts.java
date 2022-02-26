@@ -162,4 +162,9 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
     public void onFilterClick() {
 
     }
+
+    @Override
+    public void onToolbarTitleClick() {
+
+    }
 }

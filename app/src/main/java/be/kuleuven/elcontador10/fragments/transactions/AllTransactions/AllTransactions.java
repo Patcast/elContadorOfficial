@@ -51,6 +51,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     private Button selectMonth;
     private MainActivity mainActivity;
     private ViewModel_AllTransactions viewModel;
+    NavController navController;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -98,8 +99,9 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
         selectMonth.setOnClickListener(v -> pickDate());
-        fabNew.setOnClickListener(this::onFAB_Clicked);
+        fabNew.setOnClickListener(v->navController.navigate(R.id.action_allTransactions2_to_newTransaction));
 
         recyclerAllTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -201,11 +203,6 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     }
 
 
-    public void onFAB_Clicked(View view) {
-        NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.action_allTransactions2_to_newTransaction);
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -257,6 +254,11 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     public void onFilterClick() {
         DialogFilterAllTransactions filterDialog = new DialogFilterAllTransactions(getViewLifecycleOwner());
         filterDialog.show(getParentFragmentManager(),"AccountsBottomSheet");
+    }
+
+    @Override
+    public void onToolbarTitleClick() {
+        navController.navigate(R.id.action_allTransactions2_to_accountSettings);
     }
 
 

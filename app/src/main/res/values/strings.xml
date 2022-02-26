@@ -227,9 +227,11 @@
     <string name="fully_paid">This transaction is fully paid.</string>
     <string name="check_errors">Please check for errors.</string>
     <string name="deleted_transactions">Deleted Transactions</string>
-    <string name="share_with_other_people">Share with other people</string>
+    <string name="Accounts_participants">Participants</string>
     <string name="starting_balanace_title">Starting balanace</string>
     <string name="name_of_account_title">Name of account:</string>
+    <string name="new_participant_s_email">New participant\'s email...</string>
+    <string name="add">Add</string>
 
     <string-array name="months_list">
         <item>January</item>

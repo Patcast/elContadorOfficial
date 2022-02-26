@@ -128,4 +128,9 @@ public class ChooseStakeHolder extends Fragment implements MainActivity.TopMenuH
     public void onFilterClick() {
 
     }
+
+    @Override
+    public void onToolbarTitleClick() {
+
+    }
 }

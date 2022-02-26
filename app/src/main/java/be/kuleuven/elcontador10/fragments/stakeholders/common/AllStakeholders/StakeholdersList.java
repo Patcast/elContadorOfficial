@@ -35,10 +35,11 @@ import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_
 // TODO make search bar at the top of list
 public class StakeholdersList extends Fragment implements  MainActivity.TopMenuHandler {
         private StakeholderListRecViewAdapter adapter;
-        MainActivity mainActivity;
+        private MainActivity mainActivity;
         FloatingActionButton addNewMicro;
         ViewModel_AllStakeholders viewModelAllStakes;
         private MenuItem menuItem;
+        private NavController navController;
 
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,13 +60,15 @@ public class StakeholdersList extends Fragment implements  MainActivity.TopMenuH
                 adapter = new StakeholderListRecViewAdapter(view,viewModel);
                 recyclerMicros.setAdapter(adapter);
                 addNewMicro = view.findViewById(R.id.btn_new_MicroFAB);
-                addNewMicro.setOnClickListener(this::onFAB_Clicked);
+
                 return view;
         }
 
         @Override
         public void onViewCreated(@NonNull  View view, @Nullable  Bundle savedInstanceState) {
                 super.onViewCreated(view, savedInstanceState);
+                navController = Navigation.findNavController(view);
+                addNewMicro.setOnClickListener(v-> navController.navigate(R.id.action_allMicroAccounts2_to_newMicroAccount));
                 viewModelAllStakes.getStakeholdersList().observe(getViewLifecycleOwner(), i->adapter.setStakeListOnAdapter(i));
         }
 
@@ -86,10 +89,7 @@ public class StakeholdersList extends Fragment implements  MainActivity.TopMenuH
                 if( menuItem != null) menuItem.collapseActionView();
         }
 
-        public void onFAB_Clicked(View view) {
-                NavController navController = Navigation.findNavController(view);
-                navController.navigate(R.id.action_allMicroAccounts2_to_newMicroAccount);
-        }
+
 
         @Override
         public void onBottomSheetClick() {
@@ -135,6 +135,12 @@ public class StakeholdersList extends Fragment implements  MainActivity.TopMenuH
 
         @Override
         public void onFilterClick() {
+
+        }
+
+        @Override
+        public void onToolbarTitleClick() {
+                navController.navigate(R.id.action_stakeholders_to_accountSettings);
 
         }
 }
