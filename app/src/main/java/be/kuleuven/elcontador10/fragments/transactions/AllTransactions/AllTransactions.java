@@ -268,10 +268,6 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
-//        Intent intent = new Intent(Intent.ACTION_SEND);
-//        intent.setType("application/vnd.ms-excel");
-//        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-//        startActivity(Intent.createChooser(intent, "Share file..."));
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
         startActivity(intent);
