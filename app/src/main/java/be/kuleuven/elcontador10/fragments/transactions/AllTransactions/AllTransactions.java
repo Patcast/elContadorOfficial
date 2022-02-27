@@ -1,6 +1,10 @@
 package be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -14,6 +18,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +46,7 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.tools.Exporter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 
@@ -108,6 +114,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         navController = Navigation.findNavController(view);
         selectMonth.setOnClickListener(v -> pickDate());
         fabNew.setOnClickListener(v->navController.navigate(R.id.action_allTransactions2_to_newTransaction));
+        fabExport.setOnClickListener(this::onExport_Clicked);
 
         recyclerAllTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -246,7 +253,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void export(DialogInterface dialogInterface, int id) {
-        File file = Exporter.INSTANCE.createFile(selectedMonth + " " + selectedYear + ".xls");
+        File file = Exporter.INSTANCE.createFile(selectedMonth + "_" + selectedYear + ".xls");
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
