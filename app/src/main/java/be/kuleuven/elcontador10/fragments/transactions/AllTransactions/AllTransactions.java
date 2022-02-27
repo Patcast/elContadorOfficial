@@ -26,10 +26,12 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
+import com.google.firebase.installations.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
 
+import java.io.File;
 import java.text.ParseException;
 
 import java.util.HashMap;
@@ -46,12 +48,15 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     //TODO: update starting balance if transactions are deleted
     private RecyclerView recyclerAllTransactions;
     private TransactionsRecViewAdapter adapter;
-    private FloatingActionButton fabNew;
+    private FloatingActionButton fabNew, fabExport;
     private TextView txtStartingBalance,txCurrentBalance,txtSumOfReceivables,txtSumOfPayables,ScheduleBalance,txtSumOfCashOut, txtSumOfCashIn;
     private Button selectMonth;
     private MainActivity mainActivity;
     private ViewModel_AllTransactions viewModel;
     NavController navController;
+
+    private String selectedMonth;
+    private int selectedYear;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -82,6 +87,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         txtSumOfPayables = view.findViewById(R.id.text_payables);
         ScheduleBalance = view.findViewById(R.id.text_futureBalance);
         fabNew = view.findViewById(R.id.btn_newFAB);
+        fabExport = view.findViewById(R.id.btn_exportFAB);
         viewModel.getCalendarFilter().observe(getViewLifecycleOwner(), i-> {
             try {
                 updateDateButtonAndListOfTransactions(i);
@@ -184,6 +190,8 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         viewModel.selectScheduleTransactions();
         viewModel.selectListOfProcessedTransactions();
 
+        selectedMonth = monthSelected;
+        selectedYear = calendarFilter.get("year");
     }
 
 
@@ -225,6 +233,28 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void onExport_Clicked(View view) {
+        String message = "Export the current month?\n" + selectedMonth + " " + selectedYear;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(message)
+                .setPositiveButton("Yes", this::export)
+                .setNegativeButton("No", (dialogInterface, id) -> {})
+                .create().show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void export(DialogInterface dialogInterface, int id) {
+        File file = Exporter.INSTANCE.createFile(selectedMonth + " " + selectedYear + ".xls");
+
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
+        startActivity(intent);
+    }
 
     @Override
     public void onBottomSheetClick() {

@@ -12,7 +12,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 
@@ -151,8 +153,31 @@ public enum DatabaseDatesFunctions {
         }
 
         result.removeLast();
-        result.add(startDate.format(formatter) + " - " + j.format(formatter));
+        result.add(startDate.format(formatter) + " - " + j.format(formatter)); // period text
 
         return result;
+    }
+
+    /**
+     * Get the data from customPeriod to return a list of scheduled transactions
+     * @param data result from customPeriod
+     * @return returns a list of scheduled transactions
+     */
+    public ArrayList<ScheduledTransaction> textToTransaction(LinkedList<String> data) {
+        ArrayList<ScheduledTransaction> transactions = new ArrayList<>();
+        data.removeLast();
+
+        for (String current : data) {
+            if (current.contains("/")) { // its a date
+                String[] split = current.split(": ");
+                String date = split[1]; // get date
+                Timestamp timestamp = stringToTimestamp(date);
+
+                ScheduledTransaction transaction = new ScheduledTransaction(0, 0, timestamp, null);
+                transactions.add(transaction);
+            }
+        }
+
+        return transactions;
     }
 }

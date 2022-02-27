@@ -293,7 +293,7 @@ public class ContractNewSubContract extends Fragment {
                         int frequency_unit = custom_frequency_spinner.getSelectedItemPosition();
 
                         if (!frequency_value.equals("")) {
-                            frequency_text = frequency_value + "-" + frequency_unit;
+                            frequency_text = frequency_value + " - " + frequency_unit;
 
                             LinkedList<String> data = DatabaseDatesFunctions.INSTANCE.customPeriod(start_date, durationValue,
                                     frequency_text);
@@ -308,6 +308,7 @@ public class ContractNewSubContract extends Fragment {
                                                 .map(String::toString)
                                                 .collect(Collectors.joining("\n"));
 
+                                transactions = DatabaseDatesFunctions.INSTANCE.textToTransaction(data);
                                 info.setText(info_text);
                             } else {
                                 info.setText(R.string.error_period);
