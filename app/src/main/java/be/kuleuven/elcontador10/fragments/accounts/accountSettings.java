@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -42,13 +45,14 @@ public class accountSettings extends Fragment {
     EditText edTextNewEmail;
     TextView textEmailWarning;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private RecyclerView recUsersOfAccount;
     private AccountSettingsRecViewAdapter adapter_custom;
+    private MainActivity mainActivity;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity = (MainActivity) getActivity();
         mainActivity.setHeaderText(getString(R.string.account_settings));
     }
 
@@ -65,13 +69,14 @@ public class accountSettings extends Fragment {
 
         edTextNewEmail = view.findViewById(R.id.edTextEmailPart);
         Button btnAddEmail = view.findViewById(R.id.butAddEmail);
-        recUsersOfAccount = view.findViewById(R.id.recParticipants);
+        RecyclerView recUsersOfAccount = view.findViewById(R.id.recParticipants);
         TextView textAccountName = view.findViewById(R.id.textAccountName);
         textEmailWarning = view.findViewById(R.id.textEmailWarning);
 
 
+
         recUsersOfAccount.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        adapter_custom = new AccountSettingsRecViewAdapter();
+        adapter_custom = new AccountSettingsRecViewAdapter(getContext(), mainActivity.returnSavedLoggedEmail());
         recUsersOfAccount.setAdapter(adapter_custom);
 
         textAccountName.setText(Caching.INSTANCE.getAccountName());
@@ -94,10 +99,10 @@ public class accountSettings extends Fragment {
         }
         else{
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle("Confirm email")
-                    .setMessage("Do you want to add this email to the account?\n\n" + emailToAdd)
-                    .setPositiveButton("Yes", (dialog, which) ->addEmail(emailToAdd))
-                    .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+            builder.setTitle(getString(R.string.confirm_email))
+                    .setMessage(getString(R.string.add_email_question)+"\n\n" + emailToAdd)
+                    .setPositiveButton(getString(R.string.yes), (dialog, which) ->addEmail(emailToAdd))
+                    .setNegativeButton(getString(R.string.no), (dialog, which) -> dialog.dismiss())
                     .create()
                     .show();
         }

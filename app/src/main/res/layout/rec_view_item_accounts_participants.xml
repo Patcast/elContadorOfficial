@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parent_allMicros"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="80dp"
     android:layout_marginTop="3dp"
     android:background="@color/rec_view_transactions"
-    android:paddingHorizontal="10dp"
+    android:paddingHorizontal="8dp"
     android:paddingVertical="5dp"
-    >
+    android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar">
 
 
     <TextView
@@ -18,50 +18,57 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
+        android:paddingEnd="10dp"
+        android:paddingRight="10dp"
         android:text="Juan Martinez"
         android:textColor="@color/title_rec_view_stake"
         android:textSize="15sp"
+
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/textInputLayout"
+        app:layout_constraintEnd_toStartOf="@+id/textInputLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textInputLayout" />
 
-        app:layout_constraintBottom_toBottomOf="@+id/buttonType"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="16dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="241dp" />
 
     <Button
         android:id="@+id/buttonType"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:backgroundTint="@color/button"
+        android:drawableRight="@drawable/ic_baseline_arrow_drop_down_24"
         android:text="Owner"
         android:textStyle="bold"
-        android:drawableRight="@drawable/ic_baseline_arrow_drop_down_24"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textEmailUser"
-        app:layout_constraintTop_toTopOf="parent"
-        android:backgroundTint="@color/button"
-       />
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:boxBackgroundColor="@color/button"
+        app:counterTextColor="@color/white"
+        app:endIconTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <AutoCompleteTextView
+            android:id="@+id/autMenuParticipant"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:text="Owner"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:theme="@style/Autocomplete"
+            tools:ignore="TouchTargetSizeCheck" />
 
-
-
+    </com.google.android.material.textfield.TextInputLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

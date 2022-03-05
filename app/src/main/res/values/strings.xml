@@ -234,6 +234,16 @@
     <string name="add">Add</string>
     <string name="account_settings">Account Settings</string>
     <string name="please_insert_a_valid_email">Please, insert a valid email.</string>
+    <string name="confirm_email">Confirm email</string>
+    <string name="add_email_question">Do you want to add this email to the account?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="toast_for_wrong_input_from_owner">Please, make another user the owner, before editing the current owner.</string>
+    <string name="no_owner_rights">Please, contact the owner to make modifications</string>
+    <string name="confirm_change_owner">Confirm change of owner</string>
+    <string name="new_owner_1">\Do you confirm that \</string>
+    <string name="new_owner2">\ is assigned as the owner of the account?\</string>
+    <string name="delete_user2">\ will be deleted from this account?\</string>
 
     <string-array name="months_list">
         <item>January</item>

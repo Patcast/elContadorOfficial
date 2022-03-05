@@ -7,7 +7,7 @@ buildscript {
         maven { url "https://www.jitpack.io" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath 'com.android.tools.build:gradle:7.1.2'
         // Feature of safe Args
         def nav_version = "2.4.1"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"

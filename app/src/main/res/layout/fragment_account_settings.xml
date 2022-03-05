@@ -107,8 +107,8 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintTop_toBottomOf="@+id/edTextEmailPart" />
 
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 </ScrollView>
