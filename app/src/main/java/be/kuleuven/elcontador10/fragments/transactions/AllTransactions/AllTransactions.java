@@ -39,13 +39,17 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.text.ParseException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
+import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.tools.Exporter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
@@ -63,6 +67,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
     private String selectedMonth;
     private int selectedYear;
+    private long startingBalance, cashIn, cashOut, currentBalance, receivables, payables, scheduleBalance;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -152,39 +157,45 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         NumberFormatter formatter = new NumberFormatter(0);
         String inputSB = "NA";
         if(inputsForSummary.get("startingBalance")!=null){
-            formatter.setOriginalNumber(inputsForSummary.get("startingBalance"));
+            startingBalance = inputsForSummary.get("startingBalance");
+            formatter.setOriginalNumber(startingBalance);
             inputSB = formatter.getFinalNumber();
         }
         txtStartingBalance.setText(inputSB);
 
         String inputCI = "NA";
         if(inputsForSummary.get("cashIn")!=null){
-            formatter.setOriginalNumber(inputsForSummary.get("cashIn"));
+            cashIn = inputsForSummary.get("cashIn");
+            formatter.setOriginalNumber(cashIn);
             inputCI = formatter.getFinalNumber();
         }
         txtSumOfCashIn.setText(inputCI);
 
         String inputCO = "NA";
         if(inputsForSummary.get("cashOut")!=null){
-            formatter.setOriginalNumber(inputsForSummary.get("cashOut"));
+            cashOut = inputsForSummary.get("cashOut");
+            formatter.setOriginalNumber(cashOut);
             inputCO = formatter.getFinalNumber();
         }
         txtSumOfCashOut.setText(inputCO);
 
-
-
-
         String inputCB = "NA";
         if(inputsForSummary.get("currentBalance")!=null){
-            formatter.setOriginalNumber(inputsForSummary.get("currentBalance"));
+            currentBalance = inputsForSummary.get("currentBalance");
+            formatter.setOriginalNumber(currentBalance);
             inputCB = formatter.getFinalNumber();
         }
+
+        receivables = inputsForSummary.get("receivables");
+        payables = inputsForSummary.get("payables");
+        scheduleBalance = inputsForSummary.get("scheduleBalance");
+
         txCurrentBalance.setText(inputCB);
-        formatter.setOriginalNumber(inputsForSummary.get("receivables"));
+        formatter.setOriginalNumber(receivables);
         txtSumOfReceivables.setText(formatter.getFinalNumber());
-        formatter.setOriginalNumber(inputsForSummary.get("payables"));
+        formatter.setOriginalNumber(payables);
         txtSumOfPayables.setText(formatter.getFinalNumber());
-        formatter.setOriginalNumber(inputsForSummary.get("scheduleBalance"));
+        formatter.setOriginalNumber(scheduleBalance);
         ScheduleBalance.setText(formatter.getFinalNumber());
     }
 
@@ -253,15 +264,21 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void export(DialogInterface dialogInterface, int id) {
-        File file = Exporter.INSTANCE.createFile(selectedMonth + "_" + selectedYear + ".xls");
+        List<ProcessedTransaction> processed = viewModel.getMonthlyListOfProcessedTransactions();
+        List<ScheduledTransaction> scheduled = viewModel.getMonthlyListOfScheduleTransactions();
+
+        File file = Exporter.INSTANCE.createFile(selectedMonth + "_" + selectedYear + ".xls", processed, scheduled,
+                startingBalance, cashIn, cashOut, currentBalance, receivables, payables, scheduleBalance);
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
         Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Financial report for " + selectedMonth + "/" + selectedYear);
-        intent.putExtra(Intent.EXTRA_TEXT, "Brought to you by elContador.");
-        intent.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
+        intent.setType("application/vnd.ms-excel");
+//        intent.putExtra(Intent.EXTRA_EMAIL, "");
+//        intent.putExtra(Intent.EXTRA_SUBJECT, "Financial report for " + selectedMonth + "/" + selectedYear);
+//        intent.putExtra(Intent.EXTRA_TEXT, "Brought to you by elContador.");
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
         startActivity(intent);
     }
 
