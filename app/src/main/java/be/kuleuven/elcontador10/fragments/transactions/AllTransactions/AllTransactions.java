@@ -81,7 +81,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_transactions, container, false);
-        mainActivity = (MainActivity) getActivity();
+        mainActivity = (MainActivity) requireActivity();
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         selectMonth = view.findViewById(R.id.btn_selectMonth);
@@ -258,7 +258,9 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Financial report for " + selectedMonth + "/" + selectedYear);
+        intent.putExtra(Intent.EXTRA_TEXT, "Brought to you by elContador.");
         intent.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
         startActivity(intent);
     }

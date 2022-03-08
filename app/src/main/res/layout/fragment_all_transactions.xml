@@ -316,6 +316,7 @@
             android:layout_toLeftOf="@+id/btn_newFAB"
             android:alpha="1"
             android:contentDescription="@string/settings"
+            android:visibility="visible"
             app:backgroundTint="@color/fb_color"
             app:fabCustomSize="60dp"
             app:maxImageSize="40dp"

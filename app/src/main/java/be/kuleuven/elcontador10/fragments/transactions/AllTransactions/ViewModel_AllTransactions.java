@@ -244,4 +244,12 @@ public class ViewModel_AllTransactions extends ViewModel {
         monthlyListOfScheduleTransactions.clear();
         monthlyListOfProcessedTransactions.clear();
     }
+
+    public List<ProcessedTransaction> getMonthlyListOfProcessedTransactions() {
+        return monthlyListOfProcessedTransactions;
+    }
+
+    public List<ScheduledTransaction> getMonthlyListOfScheduleTransactions() {
+        return monthlyListOfScheduleTransactions;
+    }
 }
