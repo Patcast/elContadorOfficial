@@ -9,6 +9,7 @@ import com.google.firebase.Timestamp;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -45,6 +46,11 @@ public enum DatabaseDatesFunctions {
     public String timestampToString(Timestamp date) {
         LocalDate localDate = date.toDate().toInstant().atZone(zone).toLocalDate();
         return  localDate.format(formatter);
+    }
+
+    public String timestampToStringDetailed(Timestamp date) {
+        LocalDateTime localDateTime = date.toDate().toInstant().atZone(zone).toLocalDateTime();
+        return localDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss"));
     }
 
     public LocalDate stringToDate(@NonNull String text) {
