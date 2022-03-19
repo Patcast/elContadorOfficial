@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         void onAddClick();
         void onSearchClick(MenuItem item);
         void onFilterClick();
+        void onExportClick();
         void onToolbarTitleClick();
     }
 
@@ -155,7 +156,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_filter:
                 currentTopMenuHandler.onFilterClick();
                 return true;
-
+            case R.id.menu_export:
+                currentTopMenuHandler.onExportClick();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

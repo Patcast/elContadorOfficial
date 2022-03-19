@@ -24,15 +24,17 @@ import be.kuleuven.elcontador10.fragments.accounts.ViewModel_AccountSettings;
 
 
 public class AccountSettingsRecViewAdapter extends RecyclerView.Adapter<AccountSettingsRecViewAdapter.ViewHolder> {
-    private ArrayList<String> listOfUsers = new ArrayList<>();
+    private final ArrayList<String> listOfUsers = new ArrayList<>();
     private String owner = "";
 
     private Context context;
-    private String loggedInUser;
+    private final String loggedInUser;
     public AccountSettingsRecViewAdapter(Context context,String loggedInUser) {
         this.context = context;
         this.loggedInUser= loggedInUser;
+        sharingStatuses = context.getResources().getStringArray(R.array.sharing_status);
     }
+    String[] sharingStatuses;
 
     @NonNull
     @Override
@@ -46,33 +48,32 @@ public class AccountSettingsRecViewAdapter extends RecyclerView.Adapter<AccountS
     public void onBindViewHolder(@NonNull AccountSettingsRecViewAdapter.ViewHolder holder, int position) {
         String email = listOfUsers.get(position);
         holder.textEmail.setText(email);
-        String partLabel = (email.equals(owner))?"Owner":"Editor";
+        String partLabel = (email.equals(owner))?sharingStatuses[0]:sharingStatuses[1];
         holder.participantsMenu.setText(partLabel,false);
-        holder.participantsMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        holder.participantsMenu.setOnItemClickListener((adapterView, view, position1, id) -> {
 
-                if (email.equals(owner)&&loggedInUser.equals(owner)){
-                    if(position != 0) Toast.makeText(context, context.getString(R.string.toast_for_wrong_input_from_owner) , Toast.LENGTH_LONG).show();
-                }
-                else if(loggedInUser.equals(owner)){
-                    if(position != 1){
-                        boolean executed = false;
-                        AccountSettingsModel ac = new AccountSettingsModel(email,context);
-                        if(position == 2){
-                            executed = ac.deleteAccountUser();
-                        }
-                        if(position == 0){
-                            executed = ac.changeOwner();
-                        }
-                        if (!executed ) holder.participantsMenu.setText(adapterView.getItemAtPosition(1).toString(),false);//holder.participantsMenu.setText(adapterView.getItemAtPosition(position).toString(),false);
+            if (email.equals(owner)&&loggedInUser.equals(owner)){
+                if(position1 != 0) Toast.makeText(context, context.getString(R.string.toast_for_wrong_input_from_owner) , Toast.LENGTH_LONG).show();
+                holder.participantsMenu.setText(sharingStatuses[0] ,false);
+
+            }
+            else if(loggedInUser.equals(owner)){
+                if(position1 != 1){
+                    boolean executed = false;
+                    AccountSettingsModel ac = new AccountSettingsModel(email,context);
+                    if(position1 == 2){
+                        executed = ac.deleteAccountUser();
                     }
+                    if(position1 == 0){
+                        executed = ac.changeOwner();
+                    }
+                    if (!executed ) holder.participantsMenu.setText(adapterView.getItemAtPosition(1).toString(),false);//holder.participantsMenu.setText(adapterView.getItemAtPosition(position).toString(),false);
                 }
-                else {
-                    int pos  = (email.equals(owner))?0:1;
-                    holder.participantsMenu.setText(adapterView.getItemAtPosition(pos).toString(),false);
-                    Toast.makeText(context, context.getString(R.string.no_owner_rights) , Toast.LENGTH_LONG).show();
-                }
+            }
+            else {
+                int pos  = (email.equals(owner))?0:1;
+                holder.participantsMenu.setText(adapterView.getItemAtPosition(pos).toString(),false);
+                Toast.makeText(context, context.getString(R.string.no_owner_rights) , Toast.LENGTH_LONG).show();
             }
         });
 
@@ -90,10 +91,9 @@ public class AccountSettingsRecViewAdapter extends RecyclerView.Adapter<AccountS
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            String [] items = {"Owner","Editor","Remove"};
             textEmail = itemView.findViewById(R.id.textEmailUser);
             participantsMenu = itemView.findViewById(R.id.autMenuParticipant);
-            adapterItems = new ArrayAdapter<>(itemView.getContext(), R.layout.list_item, items);
+            adapterItems = new ArrayAdapter<>(itemView.getContext(), R.layout.list_item, sharingStatuses);
             participantsMenu.setAdapter(adapterItems );
 
         }

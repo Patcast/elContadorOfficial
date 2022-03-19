@@ -92,7 +92,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/title"
             android:inputType="text"
-            app:layout_constraintEnd_toStartOf="@+id/guideline5"
+
+            app:layout_constraintEnd_toStartOf="@+id/constraintLayout4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -108,29 +109,29 @@
             android:layout_marginStart="5dp" />
 
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout3"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:background="@drawable/new_account_category_outline"
             app:layout_constraintBottom_toBottomOf="@+id/text_newTransaction_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/text_newTransaction_title"
-            android:background="@drawable/new_account_category_outline"
-            >
+            app:layout_constraintTop_toTopOf="@+id/text_newTransaction_title">
+
             <ImageView
-               android:padding="5dp"
                 android:id="@+id/imageView_final"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:srcCompat="@tools:sample/avatars"
                 android:background="@drawable/new_account_category_outline"
+                android:padding="5dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
 
-           <ImageButton
+            <ImageButton
                 android:id="@+id/imageButton_addPicture"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -145,46 +146,40 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="268dp" />
-
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout4"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            app:layout_constraintBottom_toBottomOf="@+id/text_newTransaction_title"
-            app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toTopOf="@+id/text_newTransaction_title"
-            android:background="@drawable/new_account_category_outline">
+            android:layout_marginRight="10dp"
+            android:background="@drawable/new_account_category_outline"
+            app:layout_constraintBottom_toBottomOf="@+id/constraintLayout3"
+            app:layout_constraintEnd_toStartOf="@+id/constraintLayout3"
+            app:layout_constraintTop_toTopOf="@+id/constraintLayout3">
+
             <TextView
                 android:id="@+id/text_emoji_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🏘️"
                 android:textSize="25sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:visibility="gone"
-                />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/imageButton_chooseCategory"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:background="@color/transparent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_tag"
-                android:background="@color/transparent"
 
                 />
 

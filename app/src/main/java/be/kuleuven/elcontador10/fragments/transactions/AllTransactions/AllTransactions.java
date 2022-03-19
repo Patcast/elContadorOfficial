@@ -114,7 +114,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         navController = Navigation.findNavController(view);
         selectMonth.setOnClickListener(v -> pickDate());
         fabNew.setOnClickListener(v->navController.navigate(R.id.action_allTransactions2_to_newTransaction));
-        fabExport.setOnClickListener(this::onExport_Clicked);
+        //fabExport.setOnClickListener(this::onExport_Clicked);
 
         recyclerAllTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -135,6 +135,8 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         mainActivity.setCurrentMenuClicker(this);
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,true);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_export,true);
+
         recyclerAllTransactions.setAdapter(adapter);
 
     }
@@ -144,6 +146,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         super.onStop();
         mainActivity.displayBottomNavigationMenu(false);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,false);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_export,false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -241,7 +244,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void onExport_Clicked(View view) {
+    public void onExport_Clicked() {
         String message = "Export the current month?\n" + selectedMonth + " " + selectedYear;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -296,6 +299,11 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     @Override
     public void onToolbarTitleClick() {
         navController.navigate(R.id.action_allTransactions2_to_accountSettings);
+    }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void onExportClick() {
+        onExport_Clicked();
     }
 
 

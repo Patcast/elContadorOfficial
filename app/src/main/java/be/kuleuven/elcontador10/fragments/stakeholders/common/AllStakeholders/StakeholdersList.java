@@ -137,6 +137,10 @@ public class StakeholdersList extends Fragment implements  MainActivity.TopMenuH
         public void onFilterClick() {
 
         }
+        @Override
+        public void onExportClick() {
+
+        }
 
         @Override
         public void onToolbarTitleClick() {

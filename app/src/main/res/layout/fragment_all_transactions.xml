@@ -272,7 +272,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="20dp" />
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/relativeLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -286,6 +286,8 @@
             android:id="@+id/RecViewTransactionsHolder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="2dp" />
 
 
@@ -293,9 +295,8 @@
             android:id="@+id/btn_newFAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
+           app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="30dp"
@@ -324,7 +325,7 @@
             app:maxImageSize="40dp"
             app:srcCompat="@drawable/ic_export" />
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

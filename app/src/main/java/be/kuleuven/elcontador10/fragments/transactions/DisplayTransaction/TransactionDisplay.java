@@ -276,6 +276,10 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
     public void onToolbarTitleClick() {
 
     }
+    @Override
+    public void onExportClick() {
+
+    }
 
     //
     ////// CAMARA
