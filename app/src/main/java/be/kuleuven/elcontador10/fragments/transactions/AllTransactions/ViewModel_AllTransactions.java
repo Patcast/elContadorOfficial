@@ -157,13 +157,13 @@ public class ViewModel_AllTransactions extends ViewModel {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date dateEnd = dateFormat.parse("01/"+(month+1)+"/"+year);
         Timestamp dateSelectedTop = new Timestamp(dateEnd);
-        Date dateBottom = dateFormat.parse("01/"+month+"/"+year);
-        Timestamp dateSelectedBottom = new Timestamp(dateBottom);
+        //Date dateBottom = dateFormat.parse("01/"+month+"/"+year);
+        //Timestamp dateSelectedBottom = new Timestamp(dateBottom);
 
         db.collectionGroup("scheduledTransactions").
                 whereEqualTo("idOfAccount", Caching.INSTANCE.getChosenAccountId()).
                 whereEqualTo("completed", false).
-                whereGreaterThanOrEqualTo("dueDate", dateSelectedBottom).
+               // whereGreaterThanOrEqualTo("dueDate", dateSelectedBottom).
                 whereLessThan("dueDate", dateSelectedTop).
                 addSnapshotListener((value,e ) -> {
 

@@ -32,7 +32,7 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
-// TODO make search bar at the top of list
+
 public class StakeholdersList extends Fragment implements  MainActivity.TopMenuHandler {
         private StakeholderListRecViewAdapter adapter;
         private MainActivity mainActivity;

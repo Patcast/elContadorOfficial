@@ -35,11 +35,11 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
     private final List<StakeHolder> stakeholdersList = new ArrayList<>();
     private final ArrayList<StakeHolder> stakeHoldersFull = new ArrayList<>();
     private final View viewFromHostingClass;
-    private final ViewModel_NewTransaction viewModel;
+    //private final ViewModel_NewTransaction viewModel;
 
     public StakeholderListRecViewAdapter(View viewFromHostingClass, ViewModel_NewTransaction viewModel) {
         this.viewFromHostingClass = viewFromHostingClass;
-        this.viewModel = viewModel;
+        //this.viewModel = viewModel;
     }
 
     @NonNull
@@ -65,10 +65,11 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
             if (balance > 0) holder.textBalance.setTextColor(viewFromHostingClass.getContext().getColor(R.color.transaction_processed_positive));
             else holder.textBalance.setTextColor(viewFromHostingClass.getContext().getColor(R.color.rec_view_negative_amount));
 
-        } else holder.textBalance.setVisibility(View.GONE); // hide 0 balance
+        }
+        else holder.textBalance.setVisibility(View.GONE); // hide 0 balance
 
         holder.parent.setOnClickListener(v -> {
-                    viewModel.selectStakeholder(stakeholdersList.get(position));
+                    //viewModel.selectStakeholder(stakeholdersList.get(position));
                     NavController navController = Navigation.findNavController(viewFromHostingClass);
                     StakeholdersListDirections.ActionStakeholdersToStakeholder action  = StakeholdersListDirections.actionStakeholdersToStakeholder(stakeholdersList.get(position));
                     navController.navigate(action);
