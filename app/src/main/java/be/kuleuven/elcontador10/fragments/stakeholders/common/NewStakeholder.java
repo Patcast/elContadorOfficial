@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import be.kuleuven.elcontador10.R;
+import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.model.MicroAccount;
 
 public class NewStakeholder extends Fragment {
@@ -54,6 +55,8 @@ public class NewStakeholder extends Fragment {
 
         confirm = view.findViewById(R.id.btn_confirm_NewMicro);
         confirm.setOnClickListener(this::onConfirm_Clicked);
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.setHeaderText(getString(R.string.new_stake));
     }
 
     public void onConfirm_Clicked(View view) {
@@ -61,7 +64,7 @@ public class NewStakeholder extends Fragment {
         String role = inputRole.getSelectedItem().toString();
 
         if (name.isEmpty()) {
-            Toast.makeText(getActivity(), R.string.zero_amount, Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "The new stakeholder must have a name.", Toast.LENGTH_LONG).show();
         }
         else {
             navController.popBackStack();

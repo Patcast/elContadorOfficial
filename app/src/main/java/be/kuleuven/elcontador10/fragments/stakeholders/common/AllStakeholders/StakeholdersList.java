@@ -76,8 +76,9 @@ public class StakeholdersList extends Fragment implements  MainActivity.TopMenuH
                 mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
                 Caching.INSTANCE.setChosenMicroAccountId(null);
                 mainActivity.displayBottomNavigationMenu(true);
-                mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add_stake,true);
                 mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,true);
+                mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add_stake,true);
+
 
         }
 
