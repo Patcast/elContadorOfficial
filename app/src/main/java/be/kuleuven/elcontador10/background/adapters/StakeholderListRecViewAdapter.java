@@ -37,7 +37,7 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
     private final View viewFromHostingClass;
     //private final ViewModel_NewTransaction viewModel;
 
-    public StakeholderListRecViewAdapter(View viewFromHostingClass, ViewModel_NewTransaction viewModel) {
+    public StakeholderListRecViewAdapter(View viewFromHostingClass) {
         this.viewFromHostingClass = viewFromHostingClass;
         //this.viewModel = viewModel;
     }

@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         void onFilterClick();
         void onExportClick();
         void onToolbarTitleClick();
+        void addStakeholder();
     }
 
     //private MenuItem item;
@@ -158,6 +159,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.menu_export:
                 currentTopMenuHandler.onExportClick();
+                return true;
+            case R.id.menu_add_stake:
+                currentTopMenuHandler.addStakeholder();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

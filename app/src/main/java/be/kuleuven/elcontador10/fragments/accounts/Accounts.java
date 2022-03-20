@@ -171,4 +171,9 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
     public void onExportClick() {
 
     }
+
+    @Override
+    public void addStakeholder() {
+
+    }
 }

@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.ChooseStakeHolderRecViewAdapter;
-import be.kuleuven.elcontador10.fragments.stakeholders.common.AllStakeholders.ViewModel_AllStakeholders;
+import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.ViewModel_AllTransactions;
 
 
 public class ChooseStakeHolder extends Fragment implements MainActivity.TopMenuHandler{
@@ -59,8 +59,8 @@ public class ChooseStakeHolder extends Fragment implements MainActivity.TopMenuH
         super.onViewCreated(view, savedInstanceState);
         noStakeLayout.setOnClickListener(i->noStakeSelected());
         navController = Navigation.findNavController(view);
-        ViewModel_AllStakeholders viewModelAllStakeHolders = new ViewModelProvider(requireActivity()).get(ViewModel_AllStakeholders.class);
-        viewModelAllStakeHolders.getStakeholdersList().observe(getViewLifecycleOwner(), i->adapter.setStakeholdersList(i));
+        ViewModel_AllTransactions viewModel_allTransactions = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
+        viewModel_allTransactions.getStakeholdersList().observe(getViewLifecycleOwner(), i->adapter.setStakeholdersList(i));
 
 
     }
@@ -135,6 +135,10 @@ public class ChooseStakeHolder extends Fragment implements MainActivity.TopMenuH
     }
     @Override
     public void onExportClick() {
+
+    }
+    @Override
+    public void addStakeholder() {
 
     }
 }

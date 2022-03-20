@@ -160,4 +160,8 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
     public void onExportClick() {
 
     }
+    @Override
+    public void addStakeholder() {
+
+    }
 }

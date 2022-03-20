@@ -32,6 +32,7 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.BalanceRecord;
 import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
+import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.Summary.SummaryHeader;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 
@@ -181,7 +182,8 @@ public class ViewModel_AllTransactions extends ViewModel {
                     }
                     monthlyListOfScheduleTransactions.addAll(listTransSchedule);
                     Caching.INSTANCE.setScheduledTransactions(listTransSchedule);
-        });
+                    requestGroupOFStakeHolders(Caching.INSTANCE.getChosenAccountId()); // updates the balance of each stakeholder.
+                });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -191,7 +193,6 @@ public class ViewModel_AllTransactions extends ViewModel {
         initialiseBooleanFilter();
         selectScheduleTransactions();
         selectListOfProcessedTransactions();
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -244,4 +245,63 @@ public class ViewModel_AllTransactions extends ViewModel {
         monthlyListOfScheduleTransactions.clear();
         monthlyListOfProcessedTransactions.clear();
     }
+    ////////////////  QUERY ALL STAKEHOLDERS
+
+
+
+    private final MutableLiveData<List<StakeHolder>> stakeholderList = new MutableLiveData<>();
+    public LiveData<List<StakeHolder>> getStakeholdersList() {
+        return stakeholderList;
+    }
+    public void setStakeholdersList(List<StakeHolder> inputStakeholders){
+        stakeholderList.setValue(inputStakeholders);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void requestGroupOFStakeHolders(String chosenAccountId){
+        String stakeHoldersUrl = "/accounts/"+chosenAccountId+"/stakeHolders";
+        Query getStakeHolders = db.collection(stakeHoldersUrl)
+                .orderBy("name", Query.Direction.ASCENDING);
+
+        getStakeHolders.addSnapshotListener((value, e) -> {
+            if (e != null) {
+                return;
+            }
+            List<StakeHolder> list = new ArrayList<>();
+            assert value != null;
+            for (QueryDocumentSnapshot doc : value) {
+                StakeHolder myStakeHolder =  doc.toObject(StakeHolder.class);
+                myStakeHolder.setId(doc.getId());
+                list.add(myStakeHolder);
+            }
+            updateBalancesStakeHolders(list);
+            setStakeholdersList(list);
+        });
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void updateBalancesStakeHolders(List<StakeHolder> list) {
+            for (StakeHolder stakeholder : list) {
+                // get past / now scheduled transactions for the stakeholder
+                List <ScheduledTransaction> stakeholderScheduledTransactions =
+                        monthlyListOfScheduleTransactions.stream()
+                                                .filter(transaction -> transaction.getIdOfStakeInt().equals(stakeholder.getId()))
+                                                .filter(transaction -> transaction.getDueDate().getSeconds() <= Timestamp.now().getSeconds())
+                                                .collect(Collectors.toList());
+
+                int sum = stakeholderScheduledTransactions.stream()
+                        .mapToInt(ScheduledTransaction::getTotalAmount)
+                        .sum();
+
+                int paid = stakeholderScheduledTransactions.stream()
+                        .mapToInt(ScheduledTransaction::getAmountPaid)
+                        .sum();
+
+                stakeholder.setBalance(sum - paid);
+            }
+    }
+
+
+
 }

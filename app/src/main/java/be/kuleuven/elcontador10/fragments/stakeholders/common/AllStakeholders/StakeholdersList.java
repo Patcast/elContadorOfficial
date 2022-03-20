@@ -22,24 +22,22 @@ import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.StakeholderListRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
+
+import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.ViewModel_AllTransactions;
 
 
 public class StakeholdersList extends Fragment implements  MainActivity.TopMenuHandler {
         private StakeholderListRecViewAdapter adapter;
         private MainActivity mainActivity;
-        FloatingActionButton addNewMicro;
-        ViewModel_AllStakeholders viewModelAllStakes;
+        ViewModel_AllTransactions viewModel_allTransactions;
         private MenuItem menuItem;
         private NavController navController;
+
 
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +45,8 @@ public class StakeholdersList extends Fragment implements  MainActivity.TopMenuH
                 mainActivity = (MainActivity) getActivity();
                 assert mainActivity != null;
                 mainActivity.setCurrentMenuClicker(this);
-                viewModelAllStakes = new ViewModelProvider(requireActivity()).get(ViewModel_AllStakeholders.class);
+
+                viewModel_allTransactions = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
         }
 
         @Override
@@ -56,10 +55,8 @@ public class StakeholdersList extends Fragment implements  MainActivity.TopMenuH
                 View view = inflater.inflate(R.layout.fragment_all_micro_acounts, container, false);
                 RecyclerView recyclerMicros = view.findViewById(R.id.recyclerViewAllMicro);
                 recyclerMicros.setLayoutManager(new LinearLayoutManager(this.getContext()));
-                ViewModel_NewTransaction viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
-                adapter = new StakeholderListRecViewAdapter(view,viewModel);
+                adapter = new StakeholderListRecViewAdapter(view);
                 recyclerMicros.setAdapter(adapter);
-                addNewMicro = view.findViewById(R.id.btn_new_MicroFAB);
 
                 return view;
         }
@@ -68,23 +65,27 @@ public class StakeholdersList extends Fragment implements  MainActivity.TopMenuH
         public void onViewCreated(@NonNull  View view, @Nullable  Bundle savedInstanceState) {
                 super.onViewCreated(view, savedInstanceState);
                 navController = Navigation.findNavController(view);
-                addNewMicro.setOnClickListener(v-> navController.navigate(R.id.action_allMicroAccounts2_to_newMicroAccount));
-                viewModelAllStakes.getStakeholdersList().observe(getViewLifecycleOwner(), i->adapter.setStakeListOnAdapter(i));
+                viewModel_allTransactions.getStakeholdersList().observe(getViewLifecycleOwner(), i->adapter.setStakeListOnAdapter(i));
         }
 
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void onStart() {
                 super.onStart();
+                mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
                 Caching.INSTANCE.setChosenMicroAccountId(null);
                 mainActivity.displayBottomNavigationMenu(true);
+                mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add_stake,true);
                 mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,true);
+
         }
 
         @Override
         public void onStop() {
                 super.onStop();
                 mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,false);
+                mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add_stake,false);
                 mainActivity.displayBottomNavigationMenu(false);
                 if( menuItem != null) menuItem.collapseActionView();
         }
@@ -141,6 +142,11 @@ public class StakeholdersList extends Fragment implements  MainActivity.TopMenuH
         public void onExportClick() {
 
         }
+        @Override
+        public void addStakeholder() {
+                navController.navigate(R.id.action_allMicroAccounts2_to_newMicroAccount);
+        }
+
 
         @Override
         public void onToolbarTitleClick() {

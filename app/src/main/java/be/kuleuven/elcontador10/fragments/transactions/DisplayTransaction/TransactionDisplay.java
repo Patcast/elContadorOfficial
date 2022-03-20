@@ -280,6 +280,10 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
     public void onExportClick() {
 
     }
+    @Override
+    public void addStakeholder() {
+
+    }
 
     //
     ////// CAMARA

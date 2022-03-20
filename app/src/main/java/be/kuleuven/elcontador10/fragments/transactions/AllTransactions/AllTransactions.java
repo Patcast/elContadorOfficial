@@ -284,6 +284,10 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     public void onAddClick() {
 
     }
+    @Override
+    public void addStakeholder() {
+
+    }
 
     @Override
     public void onSearchClick(MenuItem item) {
