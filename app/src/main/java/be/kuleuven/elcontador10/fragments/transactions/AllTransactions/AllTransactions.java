@@ -112,7 +112,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         return view;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -251,8 +251,16 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void onExport_Clicked(View view) {
+        HashMap<String, Boolean> filter = new HashMap<>();
+
+        filter.put("transaction",true);
+        filter.put("receivable",true);
+        filter.put("payable",true);
+        filter.put("deletedTrans",false);
+        viewModel.setBooleanFilter(filter);
+
         String message = "Export the current month?\n" + selectedMonth + " " + selectedYear;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -262,12 +270,12 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
                 .create().show();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void export(DialogInterface dialogInterface, int id) {
         List<ProcessedTransaction> processed = viewModel.getMonthlyListOfProcessedTransactions();
         List<ScheduledTransaction> scheduled = viewModel.getMonthlyListOfScheduleTransactions();
 
-        File file = Exporter.INSTANCE.createFile(selectedMonth + "_" + selectedYear + ".xls", processed, scheduled,
+        File file = Exporter.INSTANCE.createFile(selectedMonth + "_" + selectedYear, processed, scheduled,
                 startingBalance, cashIn, cashOut, currentBalance, receivables, payables, scheduleBalance);
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();

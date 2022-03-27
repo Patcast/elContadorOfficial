@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi;
 import com.google.firebase.Timestamp;
 
 import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.Font;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,12 +27,12 @@ public enum Exporter {
     String TAG = "Excel Export";
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public File createFile(String fileName, List<ProcessedTransaction> processed, List<ScheduledTransaction> scheduled,
+    public File createFile(String monthYear, List<ProcessedTransaction> processed, List<ScheduledTransaction> scheduled,
                            long startingBalance, long cashIn, long cashOut, long currentBalance, long receivables,
                            long payables, long scheduleBalance) {
-        HSSFWorkbook workbook = formatExcel(processed, scheduled, startingBalance, cashIn, cashOut,
+        HSSFWorkbook workbook = formatExcel(monthYear, processed, scheduled, startingBalance, cashIn, cashOut,
                 currentBalance, receivables, payables, scheduleBalance);
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), fileName);
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), monthYear + ".xls");
         FileOutputStream fileOutputStream = null;
 
         try {
@@ -55,75 +56,105 @@ public enum Exporter {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private HSSFWorkbook formatExcel(List<ProcessedTransaction> processed, List<ScheduledTransaction> scheduled,
+    private HSSFWorkbook formatExcel(String monthYear, List<ProcessedTransaction> processed, List<ScheduledTransaction> scheduled,
                                      long startingBalance, long cashIn, long cashOut, long currentBalance, long receivables,
                                      long payables, long scheduleBalance) {
         HSSFWorkbook workbook = new HSSFWorkbook();
+
         HSSFCellStyle styleCurrency = workbook.createCellStyle();
         styleCurrency.setDataFormat((short) 8);
 
-        summarySheet(workbook, styleCurrency, startingBalance, cashIn, cashOut, currentBalance, receivables, payables, scheduleBalance);
-        transactionsSheet(workbook, styleCurrency, processed);
-        lateSheet(workbook, styleCurrency, scheduled);
+        HSSFCellStyle styleTitle = workbook.createCellStyle();
+        HSSFFont font = workbook.createFont();
+        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        font.setFontHeight((short) (20 * 20));
+        styleTitle.setFont(font);
+
+        HSSFCellStyle styleBold = workbook.createCellStyle();
+        font = workbook.createFont();
+        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        styleBold.setFont(font);
+
+        summarySheet(workbook, monthYear, styleCurrency, styleTitle, styleBold,
+                startingBalance, cashIn, cashOut, currentBalance, receivables, payables, scheduleBalance);
+        transactionsSheet(workbook, styleCurrency, styleTitle, styleBold, processed);
+        lateSheet(workbook, styleCurrency, styleTitle, styleBold, scheduled);
 
         return workbook;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void summarySheet(HSSFWorkbook workbook, HSSFCellStyle styleCurrency, long startingBalance, long cashIn, long cashOut, long currentBalance, long receivables,
+    private void summarySheet(HSSFWorkbook workbook, String monthYear, HSSFCellStyle styleCurrency, HSSFCellStyle styleTitle, HSSFCellStyle styleBold,
+                              long startingBalance, long cashIn, long cashOut, long currentBalance, long receivables,
                               long payables, long scheduleBalance) {
         HSSFSheet sheet = workbook.createSheet("Summary");
 
+        sheet.setColumnWidth(0, (int) (30 * 1.14388) * 256);
+        sheet.setColumnWidth(1, (int) (15 * 1.14388) * 256);
+
         HSSFRow row = sheet.createRow(0);
+        row.setHeight((short) -1);
         HSSFCell cell = row.createCell(0);
+        cell.setCellValue("Summary of " + monthYear);
+        cell.setCellStyle(styleTitle);
+
+        row = sheet.createRow(2);
+        cell = row.createCell(0);
         cell.setCellValue("Cash in the beginning:");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(startingBalance);
         cell.setCellStyle(styleCurrency);
 
-        row = sheet.createRow(1);
+        row = sheet.createRow(3);
         cell = row.createCell(0);
         cell.setCellValue("Sum of cash in:");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(cashIn);
         cell.setCellStyle(styleCurrency);
 
-        row = sheet.createRow(2);
+        row = sheet.createRow(4);
         cell = row.createCell(0);
         cell.setCellValue("Sum of cash out:");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(cashOut);
         cell.setCellStyle(styleCurrency);
 
-        row = sheet.createRow(3);
+        row = sheet.createRow(5);
         cell = row.createCell(0);
         cell.setCellValue("Cash at end:");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(currentBalance);
         cell.setCellStyle(styleCurrency);
 
-        row = sheet.createRow(4);
+        row = sheet.createRow(6);
         cell = row.createCell(0);
         cell.setCellValue("Sum of receivables:");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(receivables);
         cell.setCellStyle(styleCurrency);
 
-        row = sheet.createRow(5);
+        row = sheet.createRow(7);
         cell = row.createCell(0);
         cell.setCellValue("Sum of payables:");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(payables);
         cell.setCellStyle(styleCurrency);
 
-        row = sheet.createRow(6);
+        row = sheet.createRow(8);
         cell = row.createCell(0);
         cell.setCellValue("Schedule balance:");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(scheduleBalance);
         cell.setCellStyle(styleCurrency);
 
-        row = sheet.createRow(9);
+        row = sheet.createRow(10);
         cell = row.createCell(0);
         cell.setCellValue(MessageFormat.format("Exported by {0} at {1}",
                 Caching.INSTANCE.getAccountName(), DatabaseDatesFunctions.INSTANCE.timestampToString(Timestamp.now())));
@@ -135,30 +166,56 @@ public enum Exporter {
      *      |       |             |          |             |               |
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void transactionsSheet(HSSFWorkbook workbook, HSSFCellStyle styleCurrency, List<ProcessedTransaction> processed) {
+    private void transactionsSheet(HSSFWorkbook workbook, HSSFCellStyle styleCurrency, HSSFCellStyle styleTitle, HSSFCellStyle styleBold,
+                                   List<ProcessedTransaction> processed) {
         HSSFSheet sheet = workbook.createSheet("Transactions");
 
         // income
         HSSFRow row = sheet.createRow(0);
+        row.setHeight((short) -1);
         HSSFCell cell = row.createCell(0);
 
+        sheet.setColumnWidth(0, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(1, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(2, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(3, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(4, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(5, (int) (20 * 1.14388) * 256);
+        sheet.setColumnWidth(6, (int) (30 * 1.14388) * 256);
+
+        sheet.setColumnWidth(8, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(9, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(10, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(11, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(12, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(13, (int) (20 * 1.14388) * 256);
+        sheet.setColumnWidth(14, (int) (30 * 1.14388) * 256);
+
         cell.setCellValue("Income");
+        cell.setCellStyle(styleTitle);
 
         row = sheet.createRow(1);
         cell = row.createCell(0);
         cell.setCellValue("Date & Time");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue("Title");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(2);
         cell.setCellValue("Amount ($)");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(3);
         cell.setCellValue("Category");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(4);
         cell.setCellValue("Stakeholder");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(5);
         cell.setCellValue("Registered by");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(6);
         cell.setCellValue("Notes");
+        cell.setCellStyle(styleBold);
 
         List<ProcessedTransaction> income = processed.stream()
                 .filter(i -> !i.getIsDeleted())
@@ -200,22 +257,30 @@ public enum Exporter {
         cell = row.createCell(8);
 
         cell.setCellValue("Expenses");
+        cell.setCellStyle(styleTitle);
 
         row = sheet.getRow(1);
         cell = row.createCell(8);
         cell.setCellValue("Date & Time");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(9);
         cell.setCellValue("Title");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(10);
         cell.setCellValue("Amount ($)");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(11);
         cell.setCellValue("Category");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(12);
         cell.setCellValue("Stakeholder");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(13);
         cell.setCellValue("Registered by");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(14);
         cell.setCellValue("Notes");
+        cell.setCellStyle(styleBold);
 
         List<ProcessedTransaction> expenses = processed.stream()
                 .filter(i -> !i.getIsDeleted())
@@ -261,7 +326,8 @@ public enum Exporter {
      */
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void lateSheet(HSSFWorkbook workbook, HSSFCellStyle styleCurrency, List<ScheduledTransaction> scheduled) {
+    private void lateSheet(HSSFWorkbook workbook, HSSFCellStyle styleCurrency, HSSFCellStyle styleTitle, HSSFCellStyle styleBold,
+                           List<ScheduledTransaction> scheduled) {
         HSSFSheet sheet = workbook.createSheet("Incomplete schedule transactions");
         List<ScheduledTransaction> late = scheduled.stream()
                 .filter(t -> t.getStatus() == ScheduledTransaction.ScheduledTransactionStatus.LATE)
@@ -274,24 +340,49 @@ public enum Exporter {
                 .collect(Collectors.toList());
 
         HSSFRow row = sheet.createRow(0);
+        row.setHeight((short) -1);
         HSSFCell cell = row.createCell(0);
         cell.setCellValue("Receivables");
+        cell.setCellStyle(styleTitle);
+
+        sheet.setColumnWidth(0, (int) (20 * 1.14388) * 256);
+        sheet.setColumnWidth(1, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(2, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(3, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(4, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(5, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(6, (int) (20 * 1.14388) * 256);
+
+        sheet.setColumnWidth(8, (int) (20 * 1.14388) * 256);
+        sheet.setColumnWidth(9, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(10, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(11, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(12, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(13, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(14, (int) (20 * 1.14388) * 256);
 
         row = sheet.createRow(1);
         cell = row.createCell(0);
         cell.setCellValue("Stakeholder");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue("Title");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(2);
         cell.setCellValue("Amount Paid ($)");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(3);
         cell.setCellValue("Amount to Pay ($)");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(4);
         cell.setCellValue("Due date");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(5);
         cell.setCellValue("Category");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(6);
         cell.setCellValue("Registered by");
+        cell.setCellStyle(styleBold);
 
         int totalAmountToReceive = 0;
         int counter = 2;
@@ -326,11 +417,13 @@ public enum Exporter {
             counter++;
         }
 
-        row = sheet.createRow(counter);
+        row = sheet.createRow(counter + 1);
         cell = row.createCell(0);
         cell.setCellValue("Total late receivables ($):");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(totalAmountToReceive);
+        cell.setCellStyle(styleCurrency);
 
         // payables
         List<ScheduledTransaction> payables = late.stream()
@@ -340,22 +433,30 @@ public enum Exporter {
         row = sheet.getRow(0);
         cell = row.createCell(8);
         cell.setCellValue("Payables");
+        cell.setCellStyle(styleTitle);
 
         row = sheet.getRow(1);
         cell = row.createCell(8);
         cell.setCellValue("Stakeholder");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(9);
         cell.setCellValue("Title");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(10);
         cell.setCellValue("Amount Paid ($)");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(11);
         cell.setCellValue("Amount to Pay ($)");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(12);
         cell.setCellValue("Due date");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(13);
         cell.setCellValue("Category");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(14);
         cell.setCellValue("Registered by");
+        cell.setCellStyle(styleBold);
 
         int totalAmountToPay = 0;
         counter = 2;
@@ -391,11 +492,13 @@ public enum Exporter {
             counter++;
         }
 
-        row = sheet.getRow(counter);
+        row = sheet.getRow(counter + 1);
         if (row == null) row = sheet.createRow(counter);
-        cell = row.createCell(9);
+        cell = row.createCell(8);
         cell.setCellValue("Total late payables ($):");
+        cell.setCellStyle(styleBold);
         cell = row.createCell(9);
         cell.setCellValue(totalAmountToPay);
+        cell.setCellStyle(styleCurrency);
     }
 }
