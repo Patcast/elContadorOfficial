@@ -304,4 +304,12 @@ public class ViewModel_AllTransactions extends ViewModel {
 
 
 
+
+    public List<ProcessedTransaction> getMonthlyListOfProcessedTransactions() {
+        return monthlyListOfProcessedTransactions;
+    }
+
+    public List<ScheduledTransaction> getMonthlyListOfScheduleTransactions() {
+        return monthlyListOfScheduleTransactions;
+    }
 }
