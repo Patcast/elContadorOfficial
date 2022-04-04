@@ -100,6 +100,7 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
             textBalance = itemView.findViewById(R.id.text_micros_balance);
         }
     }
+    /////------------
 
     public void setStakeListOnAdapter(List <StakeHolder> stakeholdersListInput) {
         stakeHoldersFull.clear();
