@@ -39,7 +39,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.text.ParseException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,7 +85,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_transactions, container, false);
-        mainActivity = (MainActivity) requireActivity();
+        mainActivity = (MainActivity) getActivity();
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         selectMonth = view.findViewById(R.id.btn_selectMonth);
@@ -119,7 +118,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         navController = Navigation.findNavController(view);
         selectMonth.setOnClickListener(v -> pickDate());
         fabNew.setOnClickListener(v->navController.navigate(R.id.action_allTransactions2_to_newTransaction));
-        //fabExport.setOnClickListener(this::onExport_Clicked);
+        fabExport.setOnClickListener(this::onExport_Clicked);
 
         recyclerAllTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -133,6 +132,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         });
 
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onStart() {
@@ -182,6 +182,9 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         }
         txtSumOfCashOut.setText(inputCO);
 
+
+
+
         String inputCB = "NA";
         if(inputsForSummary.get("currentBalance")!=null){
             currentBalance = inputsForSummary.get("currentBalance");
@@ -194,12 +197,31 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         scheduleBalance = inputsForSummary.get("scheduleBalance");
 
         txCurrentBalance.setText(inputCB);
-        formatter.setOriginalNumber(receivables);
+        formatter.setOriginalNumber(inputsForSummary.get("receivables"));
         txtSumOfReceivables.setText(formatter.getFinalNumber());
-        formatter.setOriginalNumber(payables);
+        formatter.setOriginalNumber(inputsForSummary.get("payables"));
         txtSumOfPayables.setText(formatter.getFinalNumber());
-        formatter.setOriginalNumber(scheduleBalance);
+        formatter.setOriginalNumber(inputsForSummary.get("scheduleBalance"));
         ScheduleBalance.setText(formatter.getFinalNumber());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void onExport_Clicked(View view) {
+        HashMap<String, Boolean> filter = new HashMap<>();
+
+        filter.put("transaction",true);
+        filter.put("receivable",true);
+        filter.put("payable",true);
+        filter.put("deletedTrans",false);
+        viewModel.setBooleanFilter(filter);
+
+        String message = "Export the current month?\n" + selectedMonth + " " + selectedYear;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(message)
+                .setPositiveButton("Yes", this::export)
+                .setNegativeButton("No", (dialogInterface, id) -> {})
+                .create().show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -255,15 +277,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void onExport_Clicked(View view) {
-        HashMap<String, Boolean> filter = new HashMap<>();
-
-        filter.put("transaction",true);
-        filter.put("receivable",true);
-        filter.put("payable",true);
-        filter.put("deletedTrans",false);
-        viewModel.setBooleanFilter(filter);
-
+    public void onExport_Clicked() {
         String message = "Export the current month?\n" + selectedMonth + " " + selectedYear;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -286,9 +300,6 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("application/vnd.ms-excel");
-//        intent.putExtra(Intent.EXTRA_EMAIL, "");
-//        intent.putExtra(Intent.EXTRA_SUBJECT, "Financial report for " + selectedMonth + "/" + selectedYear);
-//        intent.putExtra(Intent.EXTRA_TEXT, "Brought to you by elContador.");
         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
         startActivity(intent);
     }
@@ -331,7 +342,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     public void onToolbarTitleClick() {
         navController.navigate(R.id.action_allTransactions2_to_accountSettings);
     }
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onExportClick() {
         onExport_Clicked();
