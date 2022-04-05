@@ -40,12 +40,15 @@ import java.io.File;
 import java.text.ParseException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
+import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.tools.Exporter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
@@ -63,6 +66,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
     private String selectedMonth;
     private int selectedYear;
+    private long startingBalance, cashIn, cashOut, currentBalance, receivables, payables, scheduleBalance;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -114,7 +118,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         navController = Navigation.findNavController(view);
         selectMonth.setOnClickListener(v -> pickDate());
         fabNew.setOnClickListener(v->navController.navigate(R.id.action_allTransactions2_to_newTransaction));
-        //fabExport.setOnClickListener(this::onExport_Clicked);
+        fabExport.setOnClickListener(this::onExport_Clicked);
 
         recyclerAllTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -128,6 +132,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         });
 
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onStart() {
@@ -155,21 +160,24 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         NumberFormatter formatter = new NumberFormatter(0);
         String inputSB = "NA";
         if(inputsForSummary.get("startingBalance")!=null){
-            formatter.setOriginalNumber(inputsForSummary.get("startingBalance"));
+            startingBalance = inputsForSummary.get("startingBalance");
+            formatter.setOriginalNumber(startingBalance);
             inputSB = formatter.getFinalNumber();
         }
         txtStartingBalance.setText(inputSB);
 
         String inputCI = "NA";
         if(inputsForSummary.get("cashIn")!=null){
-            formatter.setOriginalNumber(inputsForSummary.get("cashIn"));
+            cashIn = inputsForSummary.get("cashIn");
+            formatter.setOriginalNumber(cashIn);
             inputCI = formatter.getFinalNumber();
         }
         txtSumOfCashIn.setText(inputCI);
 
         String inputCO = "NA";
         if(inputsForSummary.get("cashOut")!=null){
-            formatter.setOriginalNumber(inputsForSummary.get("cashOut"));
+            cashOut = inputsForSummary.get("cashOut");
+            formatter.setOriginalNumber(cashOut);
             inputCO = formatter.getFinalNumber();
         }
         txtSumOfCashOut.setText(inputCO);
@@ -179,9 +187,15 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
         String inputCB = "NA";
         if(inputsForSummary.get("currentBalance")!=null){
-            formatter.setOriginalNumber(inputsForSummary.get("currentBalance"));
+            currentBalance = inputsForSummary.get("currentBalance");
+            formatter.setOriginalNumber(currentBalance);
             inputCB = formatter.getFinalNumber();
         }
+
+        receivables = inputsForSummary.get("receivables");
+        payables = inputsForSummary.get("payables");
+        scheduleBalance = inputsForSummary.get("scheduleBalance");
+
         txCurrentBalance.setText(inputCB);
         formatter.setOriginalNumber(inputsForSummary.get("receivables"));
         txtSumOfReceivables.setText(formatter.getFinalNumber());
@@ -189,6 +203,25 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         txtSumOfPayables.setText(formatter.getFinalNumber());
         formatter.setOriginalNumber(inputsForSummary.get("scheduleBalance"));
         ScheduleBalance.setText(formatter.getFinalNumber());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void onExport_Clicked(View view) {
+        HashMap<String, Boolean> filter = new HashMap<>();
+
+        filter.put("transaction",true);
+        filter.put("receivable",true);
+        filter.put("payable",true);
+        filter.put("deletedTrans",false);
+        viewModel.setBooleanFilter(filter);
+
+        String message = "Export the current month?\n" + selectedMonth + " " + selectedYear;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(message)
+                .setPositiveButton("Yes", this::export)
+                .setNegativeButton("No", (dialogInterface, id) -> {})
+                .create().show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -256,13 +289,18 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void export(DialogInterface dialogInterface, int id) {
-        File file = Exporter.INSTANCE.createFile(selectedMonth + "_" + selectedYear + ".xls");
+        List<ProcessedTransaction> processed = viewModel.getMonthlyListOfProcessedTransactions();
+        List<ScheduledTransaction> scheduled = viewModel.getMonthlyListOfScheduleTransactions();
+
+        File file = Exporter.INSTANCE.createFile(selectedMonth + "_" + selectedYear, processed, scheduled,
+                startingBalance, cashIn, cashOut, currentBalance, receivables, payables, scheduleBalance);
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("application/vnd.ms-excel");
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
         startActivity(intent);
     }
 
