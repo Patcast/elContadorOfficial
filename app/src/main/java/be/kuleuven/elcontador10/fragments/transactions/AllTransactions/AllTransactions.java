@@ -111,7 +111,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         return view;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -205,7 +205,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         ScheduleBalance.setText(formatter.getFinalNumber());
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void onExport_Clicked(View view) {
         HashMap<String, Boolean> filter = new HashMap<>();
 
@@ -276,7 +276,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void onExport_Clicked() {
         String message = "Export the current month?\n" + selectedMonth + " " + selectedYear;
 
@@ -287,7 +287,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
                 .create().show();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void export(DialogInterface dialogInterface, int id) {
         List<ProcessedTransaction> processed = viewModel.getMonthlyListOfProcessedTransactions();
         List<ScheduledTransaction> scheduled = viewModel.getMonthlyListOfScheduleTransactions();
@@ -342,7 +342,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     public void onToolbarTitleClick() {
         navController.navigate(R.id.action_allTransactions2_to_accountSettings);
     }
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onExportClick() {
         onExport_Clicked();
