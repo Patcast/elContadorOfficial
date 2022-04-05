@@ -57,7 +57,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     //TODO: update starting balance if transactions are deleted
     private RecyclerView recyclerAllTransactions;
     private TransactionsRecViewAdapter adapter;
-    private FloatingActionButton fabNew, fabExport;
+    private FloatingActionButton fabNew;
     private TextView txtStartingBalance,txCurrentBalance,txtSumOfReceivables,txtSumOfPayables,ScheduleBalance,txtSumOfCashOut, txtSumOfCashIn;
     private Button selectMonth;
     private MainActivity mainActivity;
@@ -97,7 +97,6 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         txtSumOfPayables = view.findViewById(R.id.text_payables);
         ScheduleBalance = view.findViewById(R.id.text_futureBalance);
         fabNew = view.findViewById(R.id.btn_newFAB);
-        fabExport = view.findViewById(R.id.btn_exportFAB);
         viewModel.getCalendarFilter().observe(getViewLifecycleOwner(), i-> {
             try {
                 updateDateButtonAndListOfTransactions(i);
@@ -118,7 +117,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         navController = Navigation.findNavController(view);
         selectMonth.setOnClickListener(v -> pickDate());
         fabNew.setOnClickListener(v->navController.navigate(R.id.action_allTransactions2_to_newTransaction));
-        fabExport.setOnClickListener(this::onExport_Clicked);
+
 
         recyclerAllTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -289,7 +288,8 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void export(DialogInterface dialogInterface, int id) {
-        List<ProcessedTransaction> processed = viewModel.getMonthlyListOfProcessedTransactions();
+        List<ProcessedTransaction> processed;
+        processed = viewModel.getMonthlyListOfProcessedTransactions();
         List<ScheduledTransaction> scheduled = viewModel.getMonthlyListOfScheduleTransactions();
 
         File file = Exporter.INSTANCE.createFile(selectedMonth + "_" + selectedYear, processed, scheduled,
