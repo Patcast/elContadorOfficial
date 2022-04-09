@@ -277,6 +277,14 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void onExport_Clicked() {
+        HashMap<String, Boolean> filter = new HashMap<>();
+
+        filter.put("transaction",true);
+        filter.put("receivable",true);
+        filter.put("payable",true);
+        filter.put("deletedTrans",false);
+        viewModel.setBooleanFilter(filter);
+
         String message = "Export the current month?\n" + selectedMonth + " " + selectedYear;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
