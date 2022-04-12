@@ -17,7 +17,6 @@ public class SubContract {
     private long amount;
     private Timestamp startDate;
     private Timestamp endDate;
-    private String notes;
     private String registeredBy;
 
     private static final String TAG = "subContract";
@@ -27,15 +26,13 @@ public class SubContract {
      * @param amount amount of payment
      * @param startDate start date for subcontract
      * @param endDate end date for subcontract
-     * @param notes notes of the subcontract
      * @param registeredBy email of account
      */
-    public SubContract(String title, long amount, Timestamp startDate, Timestamp endDate, String notes, String registeredBy) {
+    public SubContract(String title, long amount, Timestamp startDate, Timestamp endDate, String registeredBy) {
         this.title = title;
         this.amount = amount;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.notes = notes;
         this.registeredBy = registeredBy;
     }
 
@@ -98,14 +95,6 @@ public class SubContract {
 
     public void setEndDate(Timestamp endDate) {
         this.endDate = endDate;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
     }
 
     public String getRegisteredBy() {

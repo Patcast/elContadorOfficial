@@ -53,7 +53,7 @@ public class ContractNewSubContract extends Fragment {
     private NavController navController;
 
     //views
-    private TextView title, amount, custom_frequency, duration, info, notes, emoji;
+    private TextView title, amount, custom_frequency, duration, info, emoji;
     private Spinner frequency_spinner, custom_frequency_spinner, duration_spinner;
     private RadioButton in, out;
     private Button start, confirm;
@@ -94,7 +94,6 @@ public class ContractNewSubContract extends Fragment {
         duration = view.findViewById(R.id.payment_new_duration);
         duration.addTextChangedListener(new TextChangeWatcher());
         info = view.findViewById(R.id.payment_new_info);
-        notes = view.findViewById(R.id.payment_new_notes);
 
         duration_layout = view.findViewById(R.id.payment_new_duration_layout);
         custom_frequency_layout = view.findViewById(R.id.payment_new_customFrequencyLayout);
@@ -188,10 +187,9 @@ public class ContractNewSubContract extends Fragment {
                     return;
                 }
             }
-            String note_text = notes.getText().toString();
 
             // create sub contract
-            SubContract newSubContract = new SubContract(title_text, amount_value, startDate, endDate, note_text, mainActivity.returnSavedLoggedEmail());
+            SubContract newSubContract = new SubContract(title_text, amount_value, startDate, endDate, mainActivity.returnSavedLoggedEmail());
             String subContractId = SubContract.newSubContract(newSubContract, contractId);
 
             // create scheduled payments

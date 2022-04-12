@@ -223,17 +223,6 @@
             android:textColor="#FF0000"
             android:textSize="18sp" />
 
-        <EditText
-            android:id="@+id/payment_new_notes"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_marginTop="20dp"
-            android:gravity="top|left"
-            android:hint="@string/notes"
-            android:inputType="number"
-            android:maxLength="22"
-            android:minHeight="48dp" />
-
         <Button
             android:id="@+id/payment_new_confirm"
             android:layout_width="match_parent"
