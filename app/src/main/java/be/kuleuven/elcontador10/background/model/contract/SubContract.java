@@ -9,6 +9,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.annotation.Nullable;
+
 import be.kuleuven.elcontador10.background.database.Caching;
 
 public class SubContract {
@@ -40,6 +42,7 @@ public class SubContract {
 
     // database functions
 
+    @Nullable
     public static String newSubContract(SubContract subContract, String contractId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + Caching.INSTANCE.getChosenMicroAccountId() +

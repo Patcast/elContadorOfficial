@@ -31,7 +31,7 @@
 
     <TextView
         android:id="@+id/payment_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
 
         android:layout_marginStart="16dp"
@@ -39,6 +39,7 @@
         android:layout_marginTop="16dp"
         android:textColor="@color/rec_view_title"
         android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/payment_amount"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
