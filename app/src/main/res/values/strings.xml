@@ -245,6 +245,7 @@
     <string name="new_owner2">\ is assigned as the owner of the account?\</string>
     <string name="delete_user2">\ will be deleted from this account?\</string>
     <string name="new_stake">Add new a stakeholder</string>
+    <string name="invalid_amount">Invalid amount.</string>
     <string-array name="sharing_status">
         <item>Owner</item>
         <item>Editor</item>

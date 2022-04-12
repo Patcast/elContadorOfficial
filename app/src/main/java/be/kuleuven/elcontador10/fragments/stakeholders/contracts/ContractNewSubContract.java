@@ -163,61 +163,65 @@ public class ContractNewSubContract extends Fragment {
         else if (info.getCurrentTextColor() == Color.RED && duration_layout.getVisibility() == View.VISIBLE) { // error visible
             Toast.makeText(mainActivity, R.string.check_errors, Toast.LENGTH_SHORT).show();
         } else {
-            int amount_value = Integer.parseInt(amount_text);
-            if (out.isChecked()) amount_value = - amount_value;
+            try {
+                int amount_value = Integer.parseInt(amount_text);
+                if (out.isChecked()) amount_value = -amount_value;
 
-            Timestamp startDate;
-            Timestamp endDate;
+                Timestamp startDate;
+                Timestamp endDate;
 
-            String start_text = start.getText().toString();
-            startDate = DatabaseDatesFunctions.INSTANCE.stringToTimestamp(start_text); // initial payment at the start of contract
+                String start_text = start.getText().toString();
+                startDate = DatabaseDatesFunctions.INSTANCE.stringToTimestamp(start_text); // initial payment at the start of contract
 
-            int frequency_value = frequency_spinner.getSelectedItemPosition();
+                int frequency_value = frequency_spinner.getSelectedItemPosition();
 
-            if (frequency_value == 0) {
-                endDate = null;
-
-                period_text = "N/A";
-                paymentsLeft = 0;
-            } else {
-                endDate = DatabaseDatesFunctions.INSTANCE.stringToTimestamp(period_text.split(" - ")[1]);
-
-                if (paymentsLeft == 0) {
-                    Toast.makeText(mainActivity, R.string.error_no_payments_can_be_made, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-
-            // create sub contract
-            SubContract newSubContract = new SubContract(title_text, amount_value, startDate, endDate, mainActivity.returnSavedLoggedEmail());
-            String subContractId = SubContract.newSubContract(newSubContract, contractId);
-
-            // create scheduled payments
-            if (subContractId != null) {
                 if (frequency_value == 0) {
-                    ScheduledTransaction transaction = new ScheduledTransaction(amount_value, 0,
-                            startDate, Caching.INSTANCE.getChosenMicroAccountId());
+                    endDate = null;
 
-                    transaction.setTitle(title_text);
-                    transaction.setCategory(idCatSelected);
-
-                    ScheduledTransaction.newScheduledTransaction(transaction, contractId, subContractId);
+                    period_text = "N/A";
+                    paymentsLeft = 0;
                 } else {
-                    // final copies of variables for foreach
-                    final int final_amount = amount_value;
-                    final String final_ID = Caching.INSTANCE.getChosenMicroAccountId();
+                    endDate = DatabaseDatesFunctions.INSTANCE.stringToTimestamp(period_text.split(" - ")[1]);
 
-                    transactions.forEach(e -> e.setTotalAmount(final_amount));
-                    transactions.forEach(e -> e.setIdOfStakeholder(final_ID));
-                    transactions.forEach(e -> e.setTitle(title_text));
-                    transactions.forEach(e -> e.setCategory(idCatSelected));
-
-                    // add all scheduled transactions
-                    transactions.forEach(e -> ScheduledTransaction.newScheduledTransaction(e, contractId, subContractId));
+                    if (paymentsLeft == 0) {
+                        Toast.makeText(mainActivity, R.string.error_no_payments_can_be_made, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
-            }
 
-            navController.popBackStack();
+                // create sub contract
+                SubContract newSubContract = new SubContract(title_text, amount_value, startDate, endDate, mainActivity.returnSavedLoggedEmail());
+                String subContractId = SubContract.newSubContract(newSubContract, contractId);
+
+                // create scheduled payments
+                if (subContractId != null) {
+                    if (frequency_value == 0) {
+                        ScheduledTransaction transaction = new ScheduledTransaction(amount_value, 0,
+                                startDate, Caching.INSTANCE.getChosenMicroAccountId());
+
+                        transaction.setTitle(title_text);
+                        transaction.setCategory(idCatSelected);
+
+                        ScheduledTransaction.newScheduledTransaction(transaction, contractId, subContractId);
+                    } else {
+                        // final copies of variables for foreach
+                        final int final_amount = amount_value;
+                        final String final_ID = Caching.INSTANCE.getChosenMicroAccountId();
+
+                        transactions.forEach(e -> e.setTotalAmount(final_amount));
+                        transactions.forEach(e -> e.setIdOfStakeholder(final_ID));
+                        transactions.forEach(e -> e.setTitle(title_text));
+                        transactions.forEach(e -> e.setCategory(idCatSelected));
+
+                        // add all scheduled transactions
+                        transactions.forEach(e -> ScheduledTransaction.newScheduledTransaction(e, contractId, subContractId));
+                    }
+                }
+
+                navController.popBackStack();
+            } catch (NumberFormatException e) {
+                Toast.makeText(mainActivity, R.string.invalid_amount, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
