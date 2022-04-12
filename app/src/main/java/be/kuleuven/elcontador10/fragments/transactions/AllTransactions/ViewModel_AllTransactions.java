@@ -164,7 +164,8 @@ public class ViewModel_AllTransactions extends ViewModel {
         db.collectionGroup("scheduledTransactions").
                 whereEqualTo("idOfAccount", Caching.INSTANCE.getChosenAccountId()).
                 whereEqualTo("completed", false).
-               // whereGreaterThanOrEqualTo("dueDate", dateSelectedBottom).
+                whereEqualTo("ignored", false).
+               // whereGreaterThanOrEqualTo("dueDate", dateSelectedBottom). // previous months late transactions
                 whereLessThan("dueDate", dateSelectedTop).
                 addSnapshotListener((value,e ) -> {
 

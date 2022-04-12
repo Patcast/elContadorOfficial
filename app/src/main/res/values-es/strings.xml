@@ -20,6 +20,10 @@
     <string name="warning_amount_paid_will_be_larger_than_amount_to_pay">Warning! Amount paid will be larger than amount to pay.</string>
     <string name="execute_scheduled_transaction">Execute Scheduled Transaction</string>
     <string name="invalid_amount">Invalid amount.</string>
+    <string name="ignore_transaction_message">Are you sure you want to ignore this transaction?</string>
+    <string name="ignored">Ignored</string>
+    <string name="un_ignore">Validate</string>
+    <string name="unable_execute_ignored">Unable to execute transaction as it is currently ignored</string>
     <string-array name="months_list">
         <item>January</item>
         <item>February</item>

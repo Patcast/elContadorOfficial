@@ -246,6 +246,14 @@
     <string name="delete_user2">\ will be deleted from this account?\</string>
     <string name="new_stake">Add new a stakeholder</string>
     <string name="invalid_amount">Invalid amount.</string>
+    <string name="ignore">Ignore</string>
+    <string name="ignore_transaction_message">Are you sure you want to ignore this transaction?</string>
+    <string name="ignore_transaction_title">Ignore scheduled transaction</string>
+    <string name="ignored">Ignored</string>
+    <string name="un_ignore">Unignore</string>
+    <string name="uningnore_transaction_title">Unignore schedule transaction</string>
+    <string name="unignore_transaction_message">Are you sure you want to unignore this transaction?</string>
+    <string name="unable_execute_ignored">Unable to execute transaction as it is currently ignored</string>
     <string-array name="sharing_status">
         <item>Owner</item>
         <item>Editor</item>

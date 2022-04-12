@@ -1,5 +1,6 @@
 package be.kuleuven.elcontador10.fragments.transactions.scheduledTransaction;
 
+import android.app.AlertDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -36,7 +37,6 @@ public class ExecuteScheduledTransaction extends Fragment {
     // views
     private TextView selectStakeholder, selectTransaction, amountTotal, amountPaid, amountLeft, warning, payableOrReceivable;
     private EditText increase;
-    private Button confirm;
 
     // variables
     private MainActivity mainActivity;
@@ -47,7 +47,9 @@ public class ExecuteScheduledTransaction extends Fragment {
     private NavController navController;
     private long left;
     private boolean isReceivable;
+    private Button ignore;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,8 +69,11 @@ public class ExecuteScheduledTransaction extends Fragment {
         increase = view.findViewById(R.id.execute_amount);
         increase.addTextChangedListener(new CustomTextWatcher());
 
-        confirm = view.findViewById(R.id.execute_confirm);
+        Button confirm = view.findViewById(R.id.execute_confirm);
         confirm.setOnClickListener(this::onConfirm_Clicked);
+
+        ignore = view.findViewById(R.id.execute_ignore);
+        ignore.setOnClickListener(this::onIgnore_Clicked);
 
         viewModel = new ViewModelProvider(mainActivity).get(ExecuteScheduledViewModel.class);
 
@@ -103,6 +108,9 @@ public class ExecuteScheduledTransaction extends Fragment {
                         text = transaction.getTitle();
 
                     selectTransaction.setText(text);
+
+                    if (transaction.isIgnored())
+                        ignore.setText(R.string.un_ignore);
 
                     setTexts();
                 } else {
@@ -153,6 +161,8 @@ public class ExecuteScheduledTransaction extends Fragment {
             Toast.makeText(mainActivity, R.string.input_amount_to_pay, Toast.LENGTH_SHORT).show();
         else if (warning.getVisibility() == View.VISIBLE) {
             Toast.makeText(mainActivity, R.string.warning_amount_paid_will_be_larger_than_amount_to_pay, Toast.LENGTH_SHORT).show();
+        } else if (transaction.isIgnored()) {
+            Toast.makeText(mainActivity, R.string.unable_execute_ignored, Toast.LENGTH_SHORT).show();
         } else {
             int toPay = Integer.parseInt(pay_text);
 
@@ -177,6 +187,27 @@ public class ExecuteScheduledTransaction extends Fragment {
 
             navController.popBackStack();
         }
+    }
+
+    public void onIgnore_Clicked(View view) {
+        int title = (transaction.isIgnored())? R.string.uningnore_transaction_title : R.string.ignore_transaction_title;
+        int message = (transaction.isIgnored())? R.string.unignore_transaction_message : R.string.ignore_transaction_message;
+
+        AlertDialog dialog = new AlertDialog.Builder(mainActivity)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Yes", (dialogInterface, i) -> {
+                    transaction.toggleIgnore();
+                    if (transaction.isIgnored())
+                        navController.popBackStack();
+                    else { // now not ignored
+                        ignore.setText(R.string.ignore);
+                    }
+                })
+                .setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss())
+                .create();
+
+        dialog.show();
     }
 
     private class CustomTextWatcher implements TextWatcher {

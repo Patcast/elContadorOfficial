@@ -17,7 +17,7 @@ import be.kuleuven.elcontador10.R;
 
 public class SubContractFilterDialog extends DialogFragment {
     private final LifecycleOwner owner;
-    private CheckBox late, future, completed;
+    private CheckBox late, future, completed, ignored;
     private SubContractViewModel viewModel;
 
     public SubContractFilterDialog(LifecycleOwner owner) {
@@ -36,12 +36,14 @@ public class SubContractFilterDialog extends DialogFragment {
         late = view.findViewById(R.id.check_box_late);
         future = view.findViewById(R.id.check_box_future);
         completed = view.findViewById(R.id.check_box_completed);
+        ignored = view.findViewById(R.id.check_box_ignored);
 
         // access view model
         viewModel = new ViewModelProvider(requireActivity()).get(SubContractViewModel.class);
         viewModel.getIsLate().observe(owner, this::updateLate);
         viewModel.getIsFuture().observe(owner, this::updateFuture);
         viewModel.getIsCompleted().observe(owner, this::updateCompleted);
+        viewModel.getIsIgnored().observe(owner, this::updateIgnored);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
@@ -57,6 +59,7 @@ public class SubContractFilterDialog extends DialogFragment {
         viewModel.setIsLate(late.isChecked());
         viewModel.setIsFuture(future.isChecked());
         viewModel.setIsCompleted(completed.isChecked());
+        viewModel.setIsIgnored(ignored.isChecked());
 
         viewModel.setFiltered();
     }
@@ -71,5 +74,9 @@ public class SubContractFilterDialog extends DialogFragment {
 
     private void updateCompleted(boolean completed) {
         this.completed.setChecked(completed);
+    }
+
+    private void updateIgnored(boolean ignored) {
+        this.ignored.setChecked(ignored);
     }
 }

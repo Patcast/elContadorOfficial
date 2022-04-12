@@ -2,6 +2,7 @@ package be.kuleuven.elcontador10.background.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,6 +79,14 @@ public class ScheduledTransactionsRecViewAdapter extends RecyclerView.Adapter<Sc
         // setting colours
         holder.textTitle.setTextColor(context.getResources().getColor(transaction.getColorInt()));
         holder.textAmount.setTextColor(context.getResources().getColor(transaction.getColorInt()));
+
+        if (transaction.isIgnored()) {
+            holder.textTitle.setPaintFlags(holder.textTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.textAmount.setPaintFlags(holder.textAmount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            holder.textTitle.setPaintFlags(holder.textTitle.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.textAmount.setPaintFlags(holder.textAmount.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+        }
 
         if (transaction.getCategory() != null)
             holder.txtEmojiCategory.setText(Caching.INSTANCE.getCategoryEmoji(transaction.getCategory()));

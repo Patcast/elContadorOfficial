@@ -31,4 +31,12 @@
         android:text="@string/completed"
         android:textSize="18sp" />
 
+    <CheckBox
+        android:id="@+id/check_box_ignored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="15dp"
+        android:text="@string/ignored"
+        android:textSize="18sp" />
+
 </LinearLayout>

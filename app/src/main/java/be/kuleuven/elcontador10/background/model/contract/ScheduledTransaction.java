@@ -23,10 +23,10 @@ public class ScheduledTransaction implements TransactionInterface {
     private String path;
     private int color;
     private ScheduledTransactionStatus status;
-    private boolean completed;
+    private boolean completed, ignored;
 
     public enum ScheduledTransactionStatus {
-        LATE, FUTURE, COMPLETED
+        LATE, FUTURE, COMPLETED, IGNORED
     }
 
     private static final String TAG = "scheduledTransaction";
@@ -38,6 +38,7 @@ public class ScheduledTransaction implements TransactionInterface {
         this.idOfStakeholder = idOfStakeholder;
         this.idOfAccount = Caching.INSTANCE.getChosenAccountId();
         this.completed = false;
+        this.ignored = false;
         setColor();
     }
 
@@ -114,10 +115,14 @@ public class ScheduledTransaction implements TransactionInterface {
         if (amountPaid == totalAmount) { // completed
             status = ScheduledTransactionStatus.COMPLETED;
             color = R.color.rec_view_scheduled_completed;
+        } else if (ignored) { // ignored
+            status = ScheduledTransactionStatus.IGNORED;
+            color = R.color.rec_view_scheduled_completed;
         } else if (dueDate.getSeconds() > Timestamp.now().getSeconds()) { // future
             status = ScheduledTransactionStatus.FUTURE;
             color = R.color.rec_view_scheduled_future;
-        } else { // late
+        }
+        else { // late
             status = ScheduledTransactionStatus.LATE;
             color = R.color.rec_view_scheduled_late;
         }
@@ -212,5 +217,18 @@ public class ScheduledTransaction implements TransactionInterface {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public boolean isIgnored() {
+        return ignored;
+    }
+
+    public void setIgnored(boolean ignored) {
+        this.ignored = ignored;
+    }
+
+    public void toggleIgnore() {
+        setIgnored(!ignored);
+        updateScheduledTransaction(this);
     }
 }

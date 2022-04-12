@@ -94,6 +94,14 @@
             android:visibility="gone" />
 
         <Button
+            android:id="@+id/execute_ignore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/background_buttons_red"
+            android:text="@string/ignore" />
+
+        <Button
             android:id="@+id/execute_confirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
