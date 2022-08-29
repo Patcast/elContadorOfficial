@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -57,7 +58,12 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     //TODO: update starting balance if transactions are deleted
     private RecyclerView recyclerAllTransactions;
     private TransactionsRecViewAdapter adapter;
-    private FloatingActionButton fabNew;
+    private FloatingActionButton fabNewTransaction,fabPayableOrReceivable,fabNew;
+    private TextView textFabNewTransaction,textFabReceivable;
+    private Animation rotateOpen,rotateClose,popOpen,popClose;
+
+
+
     private TextView txtStartingBalance,txCurrentBalance,txtSumOfReceivables,txtSumOfPayables,ScheduleBalance,txtSumOfCashOut, txtSumOfCashIn;
     private Button selectMonth;
     private MainActivity mainActivity;
@@ -107,6 +113,14 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         viewModel.getAllChosenTransactions().observe(getViewLifecycleOwner(), i->adapter.setAllTransactions(i));
         viewModel.getMapOfMonthlySummaryValues().observe(getViewLifecycleOwner(), this::updateSummaryUi);
         startRecycler(view);
+        textFabNewTransaction = view.findViewById(R.id.text_fabNewTransaction);
+        textFabReceivable = view.findViewById(R.id.text_fabReceivable);
+        fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
+        fabPayableOrReceivable = view.findViewById(R.id.btn_new_ReceivableOrPayable);
+        fabNew = view.findViewById(R.id.btn_newFAB);
+
+
+
         return view;
     }
 
@@ -204,7 +218,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         ScheduleBalance.setText(formatter.getFinalNumber());
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+/*    @RequiresApi(api = Build.VERSION_CODES.O)
     private void onExport_Clicked(View view) {
         HashMap<String, Boolean> filter = new HashMap<>();
 
@@ -221,7 +235,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
                 .setPositiveButton("Yes", this::export)
                 .setNegativeButton("No", (dialogInterface, id) -> {})
                 .create().show();
-    }
+    }*/
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateDateButtonAndListOfTransactions(Map<String, Integer> calendarFilter) throws ParseException {
