@@ -24,8 +24,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,7 +63,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     private FloatingActionButton fabNewTransaction,fabPayableOrReceivable,fabNew;
     private TextView textFabNewTransaction,textFabReceivable;
     private Animation rotateOpen,rotateClose,popOpen,popClose;
-
+    private LinearLayout coverLayout;
 
 
     private TextView txtStartingBalance,txCurrentBalance,txtSumOfReceivables,txtSumOfPayables,ScheduleBalance,txtSumOfCashOut, txtSumOfCashIn;
@@ -73,6 +75,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     private String selectedMonth;
     private int selectedYear;
     private long startingBalance, cashIn, cashOut, currentBalance, receivables, payables, scheduleBalance;
+    private boolean isClicked;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -102,7 +105,6 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         txtSumOfReceivables = view.findViewById(R.id.text_receivables);
         txtSumOfPayables = view.findViewById(R.id.text_payables);
         ScheduleBalance = view.findViewById(R.id.text_futureBalance);
-        fabNew = view.findViewById(R.id.btn_newFAB);
         viewModel.getCalendarFilter().observe(getViewLifecycleOwner(), i-> {
             try {
                 updateDateButtonAndListOfTransactions(i);
@@ -113,13 +115,14 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         viewModel.getAllChosenTransactions().observe(getViewLifecycleOwner(), i->adapter.setAllTransactions(i));
         viewModel.getMapOfMonthlySummaryValues().observe(getViewLifecycleOwner(), this::updateSummaryUi);
         startRecycler(view);
+
+
         textFabNewTransaction = view.findViewById(R.id.text_fabNewTransaction);
         textFabReceivable = view.findViewById(R.id.text_fabReceivable);
         fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
         fabPayableOrReceivable = view.findViewById(R.id.btn_new_ReceivableOrPayable);
         fabNew = view.findViewById(R.id.btn_newFAB);
-
-
+        coverLayout = view.findViewById(R.id.coverLayout);
 
         return view;
     }
@@ -130,8 +133,17 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
         selectMonth.setOnClickListener(v -> pickDate());
-        fabNew.setOnClickListener(v->navController.navigate(R.id.action_allTransactions2_to_newTransaction));
+        //fabNew.setOnClickListener(v->navController.navigate(R.id.action_allTransactions2_to_newTransaction));
 
+        coverLayout.setOnClickListener(v->closeCover());
+        fabNew.setOnClickListener(v->fabOpenAnimation());
+        fabNewTransaction.setOnClickListener(v->navController.navigate(R.id.action_allTransactions2_to_newTransaction));
+        fabPayableOrReceivable.setOnClickListener(v -> Toast.makeText(getContext(), "Payables Or Receivables", Toast.LENGTH_SHORT).show());
+        rotateOpen = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_open);
+        rotateClose = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_close);
+        popOpen= AnimationUtils.loadAnimation(getContext(),R.anim.pop_up_fabs);
+        popClose = AnimationUtils.loadAnimation(getContext(),R.anim.pop_down_fabs);
+        isClicked= false;
 
         recyclerAllTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -317,6 +329,61 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
         startActivity(intent);
     }
+
+    ///******  ANIMATIONS METHODS
+
+
+    public void closeCover() {
+        if(isClicked){
+            setAnimation(true);
+            setVisibility(true);
+            isClicked = false;
+        }
+    }
+
+    private void fabOpenAnimation() {
+        setVisibility(isClicked);
+        setAnimation(isClicked);
+        isClicked = !isClicked;
+    }
+
+    private void setAnimation(boolean addButtonClicked) {
+        if(!addButtonClicked){
+            coverLayout.setVisibility(View.VISIBLE);
+            textFabNewTransaction.startAnimation(popOpen);
+            textFabReceivable.startAnimation(popOpen);
+            fabNewTransaction.startAnimation(popOpen);
+            fabPayableOrReceivable.startAnimation(popOpen);
+            fabNew.startAnimation(rotateOpen);
+        }
+        else{
+            coverLayout.setVisibility(View.INVISIBLE);
+            textFabNewTransaction.startAnimation(popClose);
+            textFabReceivable.startAnimation(popClose);
+            fabNewTransaction.startAnimation(popClose);
+            fabPayableOrReceivable.startAnimation(popClose);
+            fabNew.startAnimation(rotateClose);
+        }
+
+    }
+
+    private void setVisibility(boolean addButtonClicked) {
+        if(!addButtonClicked){
+            textFabReceivable.setVisibility(View.VISIBLE);
+            textFabNewTransaction.setVisibility(View.VISIBLE);
+            fabNewTransaction.setVisibility(View.VISIBLE);
+            fabPayableOrReceivable.setVisibility(View.VISIBLE);
+        }
+        else{
+            textFabNewTransaction.setVisibility(View.INVISIBLE);
+            textFabReceivable.setVisibility(View.INVISIBLE);
+            fabNewTransaction.setVisibility(View.INVISIBLE);
+            fabPayableOrReceivable.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    ///////*******
 
     @Override
     public void onBottomSheetClick() {
