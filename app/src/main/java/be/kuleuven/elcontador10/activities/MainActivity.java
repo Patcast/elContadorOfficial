@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         void onExportClick();
         void onToolbarTitleClick();
         void addStakeholder();
+        void addProperty();
     }
 
     //private MenuItem item;
@@ -163,6 +164,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_add_stake:
                 currentTopMenuHandler.addStakeholder();
                 return true;
+            case R.id.menu_add_property:
+                currentTopMenuHandler.addProperty();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

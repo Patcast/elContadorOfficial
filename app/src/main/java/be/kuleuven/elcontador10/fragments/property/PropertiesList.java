@@ -1,17 +1,11 @@
-package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
-
+package be.kuleuven.elcontador10.fragments.property;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import androidx.appcompat.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -19,39 +13,45 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+
+
+
+
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.adapters.ChooseStakeHolderRecViewAdapter;
+import be.kuleuven.elcontador10.background.adapters.PropertiesListRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.ViewModel_AllTransactions;
 
-
-public class ChooseStakeHolder extends Fragment implements MainActivity.TopMenuHandler{
-    private ConstraintLayout noStakeLayout;
-    private ChooseStakeHolderRecViewAdapter adapter;
-    private ViewModel_NewTransaction viewModel;
-    private NavController navController;
+public class PropertiesList extends Fragment implements  MainActivity.TopMenuHandler {
+    private PropertiesListRecViewAdapter adapter;
     private MainActivity mainActivity;
+    PropertyListViewModel viewModelPropertiesList;
     private MenuItem menuItem;
+    private NavController navController;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
+        mainActivity = (MainActivity) getActivity();
+        assert mainActivity != null;
+        mainActivity.setCurrentMenuClicker(this);
+        viewModelPropertiesList = new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_choose_stake_holder, container, false);
-        mainActivity = (MainActivity) requireActivity();
-        mainActivity.setHeaderText(getString(R.string.select_a_stakeholder));
-        mainActivity.setCurrentMenuClicker(this);
-        RecyclerView recyclerStakeHolds = view.findViewById(R.id.recyclerViewChooseStake);
-        noStakeLayout = view.findViewById(R.id.layoutNoStakeHolder);
-        recyclerStakeHolds.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        adapter = new ChooseStakeHolderRecViewAdapter(view,viewModel);
-        recyclerStakeHolds.setAdapter(adapter);
+        View view = inflater.inflate(R.layout.fragment_all_properties, container, false);
+        RecyclerView recyclerView = view.findViewById(R.id.rec_all_properties);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        adapter = new PropertiesListRecViewAdapter(view);
+        recyclerView.setAdapter(adapter);
+
         return view;
     }
 
@@ -59,31 +59,32 @@ public class ChooseStakeHolder extends Fragment implements MainActivity.TopMenuH
     @Override
     public void onViewCreated(@NonNull  View view, @Nullable  Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        noStakeLayout.setOnClickListener(i->noStakeSelected());
         navController = Navigation.findNavController(view);
-        ViewModel_AllTransactions viewModel_allTransactions = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
-        viewModel_allTransactions.requestGroupOFStakeHolders(Caching.INSTANCE.getChosenAccountId());
-        viewModel_allTransactions.getStakeholdersList().observe(getViewLifecycleOwner(), i->adapter.setStakeholdersList(i));
+        viewModelPropertiesList.getListOfProperties().observe(getViewLifecycleOwner(), i->adapter.setPropertyListOnAdapter(i));
     }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
+        mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
+        //Caching.INSTANCE.setChosenMicroAccountId(null);
+        mainActivity.displayBottomNavigationMenu(true);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,true);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add_property,true);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,false);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add_property,false);
+        mainActivity.displayBottomNavigationMenu(false);
         if( menuItem != null) menuItem.collapseActionView();
     }
 
-    private void noStakeSelected() {
-        viewModel.reset();
-        navController.popBackStack();
-    }
+
 
     @Override
     public void onBottomSheetClick() {
@@ -123,15 +124,12 @@ public class ChooseStakeHolder extends Fragment implements MainActivity.TopMenuH
                 return false;
             }
         });
+
     }
+
 
     @Override
     public void onFilterClick() {
-
-    }
-
-    @Override
-    public void onToolbarTitleClick() {
 
     }
     @Override
@@ -145,6 +143,14 @@ public class ChooseStakeHolder extends Fragment implements MainActivity.TopMenuH
 
     @Override
     public void addProperty() {
+        navController.navigate(R.id.action_propertiesList_to_addProperty);
+
+    }
+
+
+    @Override
+    public void onToolbarTitleClick() {
+        //navController.navigate(R.id.action_stakeholders_to_accountSettings);
 
     }
 }

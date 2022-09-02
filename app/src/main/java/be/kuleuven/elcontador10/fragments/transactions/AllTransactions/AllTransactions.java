@@ -409,6 +409,11 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     }
 
     @Override
+    public void addProperty() {
+
+    }
+
+    @Override
     public void onSearchClick(MenuItem item) {
 
     }

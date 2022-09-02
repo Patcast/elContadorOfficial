@@ -131,7 +131,6 @@
     <string name="concerning">Concerning:</string>
     <string name="add_account">Add account</string>
     <string name="name_of_account">Name Of Account</string>
-    <string name="starting_balance">Starting Balance ( Default $0.00 )</string>
     <string name="paid_to">Paid to </string>
     <string name="title">Title</string>
     <string name="no_transactions">No transactions to show</string>
@@ -265,6 +264,24 @@
         <item>November</item>
         <item>December</item>
     </string-array>
+    <string name="starting_balance">Starting Balance (Default $0.00)</string>
+    <string name="Also_consider_for">Classification</string>
+    <string name="add_new_property">Add new property</string>
+    <string name="warning_new_properties">The new property must have a name.</string>
+    <string name="Property_to_match">Property to match</string>
+    <string name="property">Property</string>
+    <string name="none">None</string>
+    <string-array name="type_of_cash_transaction">
+        <item>Any</item>
+        <item>Receivables</item>
+        <item>Payables</item>
+    </string-array>
+    <string-array name="type_of_transaction">
+        <item>CASH</item>
+        <item>RECEIVABLE</item>
+        <item>PAYABLE</item>
+    </string-array>
+
 
 
 </resources>

@@ -5,7 +5,7 @@
     <string name="app_name">elContador</string>
     <string name="new_transaction_title">Nueva Transacción</string>
     <string name="receive">Recibe</string>
-    <string name="amount">Cantidad</string>
+    <string name="amount">Monto</string>
     <string name="paid_by"> Pagado por</string>
     <string name="comments">Notas</string>
     <string name="comments_hint">Notas</string>
@@ -67,7 +67,7 @@
     <string name="filter">Filtrar</string>
     <string name="dd_mm_yyyy">DD/MM/YYYY</string>
     <string name="pay_to">Pagar a</string>
-    <string name="stakeholder"> Participantes </string>
+    <string name="stakeholder"> Participante </string>
     <string name="additional_comments">Comentarios adicionales</string>
     <string name="select_a_category">Elige una categoria</string>
     <string name="select_a_sub_category">Elige una sub-categoria</string>
@@ -101,13 +101,12 @@
     <string name="to_date">Del</string>
     <string name="From_date">Al</string>
     <string name="clear">Borrar</string>
-    <string name="from_display">\" from \"</string>
-    <string name="for_display">\" for \"</string>
-    <string name="few_moments_ago">Few moments ago</string>
-    <string name="minutes_ago">\" minutes ago\"</string>
-    <string name="yesterday_at">\"Yesterday at \"</string>
+    <string name="from_display">De</string>
+    <string name="for_display">Para</string>
+    <string name="few_moments_ago">Hace unos momentos...</string>
+    <string name="yesterday_at">"Ayer a las "</string>
     <string name="role_display"> Role: </string>
-    <string name="has_deposited_updated">" has deposited "</string>
+    <string name="has_deposited_updated">"ha depositado "</string>
     <string-array name="roles">
         <item>Empleado</item>
         <item>Administrador</item>
@@ -118,4 +117,10 @@
     <string name="succesful_registration">El usuario ha sido registrado, contacte al administrador para poder accesar</string>
     <string name="unsuccesful_registration">No se ha podido registrar al usuario</string>
     <string name="Access_denied">Acceso denegado para </string>
+    <string-array name="type_of_cash_transaction">
+        <item>Otros</item>
+        <item>Cuenta por pagar</item>
+        <item>Cuenta por cobrar</item>
+    </string-array>
+
 </resources>

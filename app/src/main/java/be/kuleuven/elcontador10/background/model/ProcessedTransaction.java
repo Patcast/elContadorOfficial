@@ -15,9 +15,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 
-
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import be.kuleuven.elcontador10.R;
@@ -26,8 +27,6 @@ import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 public class ProcessedTransaction implements TransactionInterface {
-    private static final String TAG = "newTransaction";
-
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
@@ -42,11 +41,15 @@ public class ProcessedTransaction implements TransactionInterface {
     private String notes;
     private String imageName;
     private boolean isDeleted;
+    private List <String>type = new ArrayList<>();
+    private int collectionIndex;
+    private int collectionSize;
+
 
     public ProcessedTransaction() {
     }
 
-    public ProcessedTransaction(String title, int amount, String registeredBy, String idOfStakeInt, String idOfCategoryInt, String notes, String imageName) {
+    public ProcessedTransaction(String title, int amount, String registeredBy, String idOfStakeInt, String idOfCategoryInt, String notes, String imageName,List <String> type_input , int collectionIndex, int collectionSize) {
         this.title = title;
         this.totalAmount = amount;
         this.registeredBy = registeredBy;
@@ -56,8 +59,33 @@ public class ProcessedTransaction implements TransactionInterface {
         this.notes = notes;
         this.imageName = imageName;
         isDeleted = false;
+        this.type.addAll(type_input);
+        this.collectionIndex = collectionIndex;
+        this.collectionSize = collectionSize;
     }
 
+    public void sendTransaction(ProcessedTransaction newTrans,Context context){
+        String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
+
+        db.collection(urlNewTransactions)
+                .add(newTrans)
+                .addOnSuccessListener(documentReference -> {
+                    documentReference.update("id",documentReference.getId());
+                })
+                .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show());
+    }
+    public void deleteTransaction(Context context){
+        isDeleted = true;
+        String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
+        db.collection(urlNewTransactions).document(getIdOfTransactionInt())
+                .update("isDeleted", true)
+                .addOnSuccessListener(aVoid -> successfulDelete(context))
+                .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete transaction.", Toast.LENGTH_SHORT).show());
+    }
+    public void successfulDelete(Context context){
+        Toast.makeText(context, "Transaction deleted.", Toast.LENGTH_SHORT).show();
+        //delete picture too here
+    }
     public void updateImageFromFireBase(ProcessedTransaction newTransactionInput,ImageFireBase ImageSelected,Context context) {
         String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
         Map<String, Object> data = new HashMap<>();
@@ -115,28 +143,7 @@ public class ProcessedTransaction implements TransactionInterface {
             Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show();
         });
     }
-    public void sendTransaction(ProcessedTransaction newTrans,Context context){
-        String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
 
-        db.collection(urlNewTransactions)
-                .add(newTrans)
-                .addOnSuccessListener(documentReference -> {
-                    documentReference.update("id",documentReference.getId());
-                })
-                .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show());
-    }
-    public void deleteTransaction(Context context){
-        isDeleted = true;
-        String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
-        db.collection(urlNewTransactions).document(getIdOfTransactionInt())
-                .update("isDeleted", true)
-                .addOnSuccessListener(aVoid -> successfulDelete(context))
-                .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete transaction.", Toast.LENGTH_SHORT).show());
-    }
-    public void successfulDelete(Context context){
-        Toast.makeText(context, "Transaction deleted.", Toast.LENGTH_SHORT).show();
-        //delete picture too here
-    }
 
     public void setId(String id) {
         this.id = id;
@@ -150,6 +157,7 @@ public class ProcessedTransaction implements TransactionInterface {
     public String getNotes() {
         return notes;
     }
+
     @Override
     public int getTotalAmount() {
         return totalAmount;
@@ -208,6 +216,17 @@ public class ProcessedTransaction implements TransactionInterface {
         return isDeleted;
     }
 
+    public List <String> getType() {
+        return type;
+    }
+
+    public int getCollectionIndex() {
+        return collectionIndex;
+    }
+
+    public int getCollectionSize() {
+        return collectionSize;
+    }
 
 }
 

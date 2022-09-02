@@ -7,8 +7,6 @@ import android.util.Log;
 
 
 import androidx.annotation.RequiresApi;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 
 
 import com.google.firebase.Timestamp;
@@ -23,13 +21,11 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 
-import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.model.Account;
 
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
@@ -607,7 +603,7 @@ public enum Caching {
     public String getAccountBalance(){
         Optional<String> selectedAccount = getAccounts().stream()
                 .filter(a->a.getId().equals(chosenAccountId))
-                .map(Account::getBalance)
+                .map(Account::getCash)
                 .map(this::formatNumber)
                 .findFirst();
         return selectedAccount.orElse(context.getString(R.string.error_loading));

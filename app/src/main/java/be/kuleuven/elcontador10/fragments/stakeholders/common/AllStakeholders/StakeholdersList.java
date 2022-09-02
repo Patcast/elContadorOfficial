@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 import be.kuleuven.elcontador10.R;
@@ -146,6 +145,11 @@ public class StakeholdersList extends Fragment implements  MainActivity.TopMenuH
         @Override
         public void addStakeholder() {
                 navController.navigate(R.id.action_allMicroAccounts2_to_newMicroAccount);
+        }
+
+        @Override
+        public void addProperty() {
+
         }
 
 

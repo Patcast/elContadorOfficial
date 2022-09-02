@@ -9,11 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 
@@ -26,6 +29,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import be.kuleuven.elcontador10.R;
@@ -33,6 +38,7 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.ImageFireBase;
+import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.tools.CamaraSetUp;
@@ -41,7 +47,7 @@ import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 //Todo: Remove mandatory Stakeholder.
-public class TransactionNew extends Fragment implements EasyPermissions.PermissionCallbacks  {
+public class TransactionNew extends Fragment implements  EasyPermissions.PermissionCallbacks, AdapterView.OnItemSelectedListener {
     RadioGroup radGroup;
     TextView txtWordsCounterTitle,accountSelected,txtEmojiCategory,txtStakeHolder,txtWordsCounterNotes,txtMustHaveAmount;
     ImageButton btnAddCategory,btnAddPicture;
@@ -53,6 +59,8 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
     ImageFireBase imageSelected;
     StakeHolder selectedStakeHolder;
     String idCatSelected;
+    String additional_transaction;
+    List <String>trans_type = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +81,16 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
         navController = Navigation.findNavController(view);
 
-///      Initialize views
+        additional_transaction = mainActivity.getResources().getStringArray(R.array.type_of_cash_transaction)[0];
+        Spinner spinner = (Spinner) view.findViewById(R.id.type_of_cash_transaction);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.type_of_cash_transaction,
+                android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
+        ///      Initialize views
         imageFinal =view.findViewById(R.id.imageView_final);
         btnAddPicture =view.findViewById(R.id.imageButton_addPicture);
         accountSelected = view.findViewById(R.id.textView_currentAccount);
@@ -165,7 +182,7 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
             selectedStakeHolder = stakeHolder;
         }
         else{
-            txtStakeHolder.setText(R.string.select_a_stakeholder);
+            txtStakeHolder.setText(R.string.none);
         }
     }
     private void confirmTransaction(){
@@ -188,7 +205,6 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
     }
 
     private void makeNewTrans(){
-
         ProcessedTransaction newTransaction = new ProcessedTransaction(
                 txtTitle.getText().toString(),
                 (radGroup.getCheckedRadioButtonId() == R.id.radio_CashOut)?Integer.parseInt(txtAmount.getText().toString())*-1:Integer.parseInt(txtAmount.getText().toString()),
@@ -196,7 +212,10 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
                 (selectedStakeHolder!=null)?selectedStakeHolder.getId():"",
                 (idCatSelected!=null)?idCatSelected:"",
                 txtNotes.getText().toString(),
-                (imageSelected!=null)?imageSelected.getNameOfImage():""
+                (imageSelected!=null)?imageSelected.getNameOfImage():"",
+                trans_type,
+                1,
+                1
                 );
         if (imageSelected!=null)newTransaction.uploadImageToFireBase(newTransaction,imageSelected,requireContext());
         else newTransaction.sendTransaction(newTransaction,requireContext());
@@ -238,4 +257,24 @@ public class TransactionNew extends Fragment implements EasyPermissions.Permissi
         }
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        if(i==0){
+            trans_type.clear();
+            trans_type.addAll(Arrays.asList("CASH",null,null));
+        }
+        else if(i==1){
+            trans_type.clear();
+            trans_type.addAll(Arrays.asList("CASH","PAYABLES",null));
+        }
+        else{
+            trans_type.clear();
+            trans_type.addAll(Arrays.asList("CASH",null,"RECEIVABLES"));
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
 }

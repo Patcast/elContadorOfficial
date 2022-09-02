@@ -209,4 +209,16 @@
         android:name="be.kuleuven.elcontador10.fragments.accounts.accountSettings"
         android:label="fragment_account_settings"
         tools:layout="@layout/fragment_account_settings" />
+    <fragment
+        android:id="@+id/propertiesList"
+        android:name="be.kuleuven.elcontador10.fragments.property.PropertiesList"
+        android:label="PropertiesList" >
+        <action
+            android:id="@+id/action_propertiesList_to_addProperty"
+            app:destination="@id/addProperty" />
+    </fragment>
+    <fragment
+        android:id="@+id/addProperty"
+        android:name="be.kuleuven.elcontador10.fragments.property.AddProperty"
+        android:label="AddProperty" />
 </navigation>

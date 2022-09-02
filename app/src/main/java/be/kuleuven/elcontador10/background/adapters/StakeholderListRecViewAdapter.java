@@ -26,7 +26,6 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.fragments.stakeholders.common.AllStakeholders.StakeholdersListDirections;
-import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 
 
@@ -58,6 +57,7 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
 
         long balance = stake.getBalance();
         if (balance != 0) {
+            holder.textBalance.setVisibility(View.VISIBLE);
             NumberFormatter formatter = new NumberFormatter(balance);
             String formatted = formatter.getFinalNumber();
             holder.textBalance.setText(formatted);

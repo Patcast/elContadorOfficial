@@ -164,4 +164,9 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
     public void addStakeholder() {
 
     }
+
+    @Override
+    public void addProperty() {
+
+    }
 }

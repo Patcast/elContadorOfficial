@@ -46,7 +46,7 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
     @Override
     public void onBindViewHolder(@NonNull  AccountsRecViewAdapter.ViewHolder holder, int position) {
         holder.textName.setText(accounts.get(position).getName());
-        long amount = accounts.get(position).getBalance();
+        long amount = accounts.get(position).getCash();
         NumberFormatter formatter = new NumberFormatter(amount);
         holder.textBalance.setText(formatter.getFinalNumber());
 

@@ -196,7 +196,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/amount"
         android:inputType="number"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         />
     <TextView
         android:id="@+id/textView_fillAmount"
@@ -205,33 +205,78 @@
         android:textColor="@color/light_red_warning"/>
 
     <TextView
-                android:id="@+id/actv_stakeholder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/stakeholder"
-                android:layout_marginTop="30dp"
+        android:id="@+id/actv_property"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/property"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/text_propertySelected"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="left"
+        android:layout_marginTop="5dp"
+        android:background="@color/rec_view_gray"
+        android:text="@string/none"
+        android:textColor="@color/white"
         />
+
+    <TextView
+        android:id="@+id/actv_stakeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/stakeholder"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/text_stakeholderSelected"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="left"
         android:layout_marginTop="5dp"
         android:background="@color/rec_view_gray"
-        android:text="@string/select_a_stakeholder"
+        android:text="@string/none"
+        android:textColor="@color/white"
         />
+    <TextView
+        android:id="@+id/textView_fillStakeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/light_red_warning"/>
 
+    <TextView
+        android:id="@+id/actv_stakeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/Also_consider_for"
+        android:textSize="18sp" />
+
+
+    <Spinner
+        android:layout_marginTop="5dp"
+        android:id="@+id/type_of_cash_transaction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="10dp"
+        android:gravity="center"
+        android:background="@color/rec_view_gray"
+        />
 
 
     <EditText
-                android:id="@+id/ed_txt_notes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:hint="@string/additional_comments"
-                android:layout_marginTop="30dp"
-        />
+        android:id="@+id/ed_txt_notes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:hint="@string/additional_comments"
+        android:inputType="textMultiLine"
+        android:minHeight="48dp" />
     <TextView
         android:id="@+id/text_newTransaction_wordCounter_notes"
         android:layout_width="match_parent"
