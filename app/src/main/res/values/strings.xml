@@ -147,10 +147,9 @@
         <item>One-time</item>
         <item>Daily</item>
         <item>Weekly</item>
+        <item>Every two weeks</item>
         <item>Monthly</item>
-        <item>Quarterly</item>
         <item>Yearly</item>
-        <item>Custom</item>
     </string-array>
     <string-array name="frequency_names">
         <item>days</item>
@@ -190,7 +189,7 @@
     <string name="select_frequency">Please select frequency</string>
     <string name="number_of_payments">Number of subContracts</string>
     <string name="date_before_error">Date chosen is before today</string>
-    <string name="error_period">ERROR: the last subContract is not a full period. Please use a lower unit of time for the duration.</string>
+    <string name="error_period">ERROR: the last Future Transactions are not a full period. Please use a lower unit of time for the duration.</string>
     <string name="camara_permission_denied">Camara permission is required to use the camara</string>
     <string name="upload_failed">Upload has failed</string>
     <string name="image_uploaded">Image Uploaded</string>
@@ -250,6 +249,7 @@
         <item>Remove</item>
     </string-array>
 
+
     <string-array name="months_list">
         <item>January</item>
         <item>February</item>
@@ -271,6 +271,20 @@
     <string name="Property_to_match">Property to match</string>
     <string name="property">Property</string>
     <string name="none">None</string>
+    <string name="sum_of_cash_in">Sum of cash in:</string>
+    <string name="cash_at_the_end">Cash at the end:</string>
+    <string name="sum_of_cash_out">Sum of cash out:</string>
+    <string name="selected_period">Selected Period:</string>
+    <string name="cash_in_the_beginning">Cash in the beginning:</string>
+    <string name="sum_of_receivables">Sum of receivables:</string>
+    <string name="sum_of_payables">Sum of payables:</string>
+    <string name="equity">Equity:</string>
+    <string name="New_Future_Transaction">New Future Transaction</string>
+    <string name="add_title">Please add  a title</string>
+    <string name="starting_date">Starting Date</string>
+    <string name="future_dates">\n\nFuture transactions\' dates:\n</string>
+    <string name="add_transaction">Add Transaction</string>
+    <string name="add_future_transaction">Add future transaction</string>
     <string-array name="type_of_cash_transaction">
         <item>Any</item>
         <item>Receivables</item>

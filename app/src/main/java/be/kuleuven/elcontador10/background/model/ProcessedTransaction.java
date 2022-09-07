@@ -28,6 +28,7 @@ import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 public class ProcessedTransaction implements TransactionInterface {
 
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
 
@@ -36,6 +37,7 @@ public class ProcessedTransaction implements TransactionInterface {
     private String idOfStakeInt;
     private String id;
     private String idOfCategoryInt;
+    private String idOfProperty;
     private Timestamp dueDate;
     private String registeredBy;
     private String notes;
@@ -48,13 +50,19 @@ public class ProcessedTransaction implements TransactionInterface {
 
     public ProcessedTransaction() {
     }
+    public ProcessedTransaction(Timestamp dueDate,int collectionIndex) {
+        this.dueDate=dueDate;
+        this.collectionIndex = collectionIndex;
+    }
 
-    public ProcessedTransaction(String title, int amount, String registeredBy, String idOfStakeInt, String idOfCategoryInt, String notes, String imageName,List <String> type_input , int collectionIndex, int collectionSize) {
+
+    public ProcessedTransaction(String title, int amount, String registeredBy, String idOfStakeInt, String idOfCategoryInt, String notes, String imageName,List <String> type_input , int collectionIndex, int collectionSize, String idOfProperty) {
         this.title = title;
         this.totalAmount = amount;
         this.registeredBy = registeredBy;
         this.idOfStakeInt = idOfStakeInt;
         this.idOfCategoryInt = idOfCategoryInt;
+        this.idOfProperty = idOfProperty;
         this.dueDate = new Timestamp(new Date());
         this.notes = notes;
         this.imageName = imageName;
@@ -62,6 +70,19 @@ public class ProcessedTransaction implements TransactionInterface {
         this.type.addAll(type_input);
         this.collectionIndex = collectionIndex;
         this.collectionSize = collectionSize;
+    }
+    public  void setFutureTransactionsFields(String title, int amount, String registeredBy, String idOfStakeInt, String idOfCategoryInt, String notes, String imageName,List <String> type_input , String idOfProperty) {
+        this.title = title;
+        this.totalAmount = amount;
+        this.registeredBy = registeredBy;
+        this.idOfStakeInt = idOfStakeInt;
+        this.idOfCategoryInt = idOfCategoryInt;
+        this.idOfProperty = idOfProperty;
+        this.notes = notes;
+        this.imageName = imageName;
+        isDeleted = false;
+        this.type.addAll(type_input);
+
     }
 
     public void sendTransaction(ProcessedTransaction newTrans,Context context){
@@ -82,6 +103,7 @@ public class ProcessedTransaction implements TransactionInterface {
                 .addOnSuccessListener(aVoid -> successfulDelete(context))
                 .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete transaction.", Toast.LENGTH_SHORT).show());
     }
+
     public void successfulDelete(Context context){
         Toast.makeText(context, "Transaction deleted.", Toast.LENGTH_SHORT).show();
         //delete picture too here
@@ -92,7 +114,6 @@ public class ProcessedTransaction implements TransactionInterface {
         data.put("imageName",ImageSelected.getNameOfImage());
         db.collection(urlNewTransactions).document(newTransactionInput.id)
                 .set(data, SetOptions.merge());
-
         StringBuilder saveUrl = new StringBuilder();
         saveUrl.append(Caching.INSTANCE.getChosenAccountId());
         saveUrl.append("/");
@@ -228,6 +249,13 @@ public class ProcessedTransaction implements TransactionInterface {
         return collectionSize;
     }
 
+    public String getIdOfProperty() {
+        return idOfProperty;
+    }
+
+    public void setCollectionSize(int collectionSize) {
+        this.collectionSize = collectionSize;
+    }
 }
 
 

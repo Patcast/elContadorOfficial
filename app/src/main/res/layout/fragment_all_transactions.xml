@@ -60,7 +60,7 @@
         android:id="@+id/text_currentBalanceFix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cash at the end:"
+        android:text="@string/cash_at_the_end"
         app:layout_constraintBottom_toBottomOf="@+id/main_container"
         app:layout_constraintStart_toStartOf="@+id/guidelineHeaders"
         app:layout_constraintTop_toBottomOf="@+id/text_selectedMonthFix"
@@ -88,7 +88,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:alpha="0"
-        android:text="Sum of cash in:"
+        android:text="@string/sum_of_cash_in"
         app:layout_constraintStart_toStartOf="@+id/guidelineHeaders"
         app:layout_constraintTop_toBottomOf="@+id/text_startBalanceFix"
 
@@ -115,7 +115,7 @@
         android:id="@+id/text_sumCashOutFix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sum of cash out:"
+        android:text="@string/sum_of_cash_out"
         android:alpha="0"
         app:layout_constraintStart_toStartOf="@+id/guidelineHeaders"
         app:layout_constraintTop_toBottomOf="@+id/text_startBalanceFix"
@@ -129,7 +129,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginBottom="10dp"
-        android:text="Selected Period:"
+        android:text="@string/selected_period"
         app:layout_constraintBottom_toTopOf="@+id/text_currentBalanceFix"
         app:layout_constraintStart_toStartOf="@+id/main_container"
 
@@ -155,7 +155,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:alpha="0"
-        android:text="Cash in the beginning:"
+        android:text="@string/cash_in_the_beginning"
         app:layout_constraintBottom_toTopOf="@+id/text_currentBalanceFix"
         app:layout_constraintStart_toStartOf="@+id/guidelineHeaders" />
 
@@ -179,7 +179,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:alpha="0"
-        android:text="Sum of receivables:"
+        android:text="@string/sum_of_receivables"
         app:layout_constraintStart_toStartOf="@+id/guidelineHeaders"
         app:layout_constraintTop_toBottomOf="@+id/text_currentBalanceFix" />
 
@@ -203,7 +203,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:alpha="0"
-        android:text="Sum of payables:"
+        android:text="@string/sum_of_payables"
         app:layout_constraintStart_toStartOf="@+id/guidelineHeaders"
         app:layout_constraintTop_toBottomOf="@+id/text_receivablesFix" />
 
@@ -228,7 +228,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:alpha="0"
-        android:text="Schedule balance:"
+        android:text="@string/equity"
         app:layout_constraintStart_toStartOf="@+id/guidelineHeaders"
         app:layout_constraintTop_toBottomOf="@+id/text_payablesFix" />
 
@@ -360,7 +360,7 @@
             android:layout_toLeftOf="@+id/btn_new_TransactionFAB"
             android:background="@drawable/backgorund_fab_titles"
             android:padding="10dp"
-            android:text="New Transaction"
+            android:text="@string/add_transaction"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:visibility="invisible" />
@@ -377,7 +377,7 @@
             android:layout_toLeftOf="@+id/btn_new_ReceivableOrPayable"
             android:background="@drawable/backgorund_fab_titles"
             android:padding="10dp"
-            android:text="Payables and Receivables"
+            android:text="@string/add_future_transaction"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:visibility="invisible" />

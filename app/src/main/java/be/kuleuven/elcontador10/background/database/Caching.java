@@ -538,7 +538,7 @@ public enum Caching {
                         .mapToInt(ScheduledTransaction::getAmountPaid)
                         .sum();
 
-                stakeholder.setBalance(sum - paid);
+                stakeholder.setEquity(sum - paid);
             }
         }
     }

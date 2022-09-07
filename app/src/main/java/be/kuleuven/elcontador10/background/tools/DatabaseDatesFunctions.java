@@ -17,11 +17,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
 
+import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public enum DatabaseDatesFunctions {
     INSTANCE;
+    private final int ONE_TIME=0, DAILY=1, WEEKLY=2, TWO_WEEKS = 3, MONTHLY=4,YEARLY=5, CUSTOM=6;
+
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final ZoneId zone = ZoneId.systemDefault();
@@ -57,77 +60,41 @@ public enum DatabaseDatesFunctions {
         return LocalDate.parse(text, formatter);
     }
 
-    /**
-     * Used for standard frequency
-     * @param start start date (dd/MM/yyyy)
-     * @param frequency how many times the payment repeats (value)
-     *                  1 - daily, 2 - weekly, 3 - monthly, 4 - quarterly, 5 - yearly
-     * @param duration how many weeks, months...
-     * @param unit index of duration_spinner
-     *             unit + frequency. 1 - days, 2 - weeks, 3 - months, 4 - quarters, 5 - years
-     * @return String start date - end date
-     */
-    public String getPeriod(String start, int frequency, int duration, int unit) {
-        LocalDate startDate = stringToDate(start);
-        String end;
-        unit += frequency;
 
-        if (unit == 1) {
-            LocalDate newDate = startDate.plusDays(duration);
-            end = newDate.format(formatter);
-        } else if (unit == 2) {
-            LocalDate newDate = startDate.plusWeeks(duration);
-            end = newDate.format(formatter);
-        } else if (unit == 3) {
-            LocalDate newDate = startDate.plusMonths(duration);
-            end = newDate.format(formatter);
-        } else if (unit == 4) {
-            LocalDate newDate = startDate.plusMonths(duration * 3L);
-            end = newDate.format(formatter);
-        } else if (unit == 5) {
-            LocalDate newDate = startDate.plusYears(duration);
-            end = newDate.format(formatter);
-        } else return null;
+    public ArrayList<ProcessedTransaction> makeFutureTransactions(String startDateString, int frequency, int collectionSize) {
+        LocalDate startDate = stringToDate(startDateString);
+        ArrayList<ProcessedTransaction> futureTransactions = new ArrayList<>();
+        LocalDate date_future_trans = startDate;
 
-        return start + " - " + end;
-    }
+        for(int i = 0; i <collectionSize;i++){
+            switch (frequency){
+                case ONE_TIME:
+                    break;
+                case DAILY:
+                    date_future_trans = startDate.plusDays(i);
+                    break;
+                case WEEKLY:
+                    date_future_trans = startDate.plusWeeks(i);
+                    break;
+                case TWO_WEEKS:
+                    date_future_trans = startDate.plusWeeks(2L * i);
+                    break;
+                case MONTHLY:
+                    date_future_trans = startDate.plusMonths(i);
+                    break;
 
-    /**
-     * Used for standard frequency
-     * Gets a list of dates in a given period with the frequency code
-     * @param period String "start - end"
-     * @param frequency 1 - daily, 2 - weekly, 3 - monthly, 4 - quarterly, 5 - yearly
-     * @return ArrayList of ScheduledTransaction. size() is the amount of payments,
-     *          null if last payment is after end date
-     */
-    public ArrayList<ScheduledTransaction> getScheduledTransactions(String period, int frequency) {
-        String[] dates = period.split(" - ");
-        LocalDate startDate = stringToDate(dates[0]);
-        LocalDate endDate = stringToDate(dates[1]);
+                case YEARLY:
+                    date_future_trans = startDate.plusYears(i);
+                    break;
+                default:
+                    return null;
+            }
+            ProcessedTransaction transaction = new ProcessedTransaction(localDateToTimestamp(date_future_trans),i);
+            futureTransactions.add(transaction);
 
-        ArrayList<ScheduledTransaction> transactions = new ArrayList<>();
-        LocalDate j = startDate;
-        int i = 0;
-
-        while (j.isBefore(endDate)) {
-
-            if (frequency == 1)      j = startDate.plusDays((long) i);
-            else if (frequency == 2) j = startDate.plusWeeks((long) i);
-            else if (frequency == 3) j = startDate.plusMonths((long) i);
-            else if (frequency == 4) j = startDate.plusMonths(3L * i);
-            else if (frequency == 5) j = startDate.plusYears((long) i);
-            else return null;
-
-            // set totalAmount and idOfStakeholder later
-            ScheduledTransaction transaction = new ScheduledTransaction(0, 0, localDateToTimestamp(j), null);
-
-            if (j.isEqual(endDate)) break; // successful
-            else if (j.isAfter(endDate)) return null; // unsuccessful - period not full
-            i++;
-            transactions.add(transaction);
         }
-
-        return transactions;
+        futureTransactions.forEach(t->t.setCollectionSize(futureTransactions.size()));
+        return futureTransactions;
     }
 
     /**

@@ -172,7 +172,7 @@ public class ExecuteScheduledTransaction extends Fragment {
                     DatabaseDatesFunctions.INSTANCE.timestampToString(Timestamp.now()));
 
             ProcessedTransaction processedTransaction = new ProcessedTransaction(transaction.getTitle(), toPay, mainActivity.returnSavedLoggedEmail(),
-                    transaction.getIdOfStakeholder(), transaction.getCategory(), notes, transaction.getImageName(),null,1,1);
+                    transaction.getIdOfStakeholder(), transaction.getCategory(), notes, transaction.getImageName(),null,1,1,"");
 
             processedTransaction.sendTransaction(processedTransaction, getContext());
 

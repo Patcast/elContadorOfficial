@@ -5,9 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -97,7 +94,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         Caching.INSTANCE.setChosenStakeHolder(stakeHolder);
 
         // set details
-        String balance = new NumberFormatter(stakeHolder.getBalance()).getFinalNumber();
+        String balance = new NumberFormatter(stakeHolder.getEquity()).getFinalNumber();
         mainActivity.displayStakeHolderDetails(true, balance, stakeHolder.getRole());
 
         Caching.INSTANCE.openMicroAccount(stakeHolder.getId()); // set MicroAccount to caching

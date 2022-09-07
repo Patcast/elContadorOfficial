@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_newTransaction_to_chooseCategory"
             app:destination="@id/chooseCategory" />
+        <action
+            android:id="@+id/action_newTransaction_to_propertiesList"
+            app:destination="@id/propertiesList" />
     </fragment>
     <fragment
         android:id="@+id/signIn"
@@ -176,6 +179,9 @@
         <action
             android:id="@+id/action_allTransactions2_to_accountSettings"
             app:destination="@id/accountSettings" />
+        <action
+            android:id="@+id/action_allTransactions2_to_contractNewPayment"
+            app:destination="@id/contractNewPayment" />
     </fragment>
     <fragment
         android:id="@+id/stakeholders"
@@ -216,6 +222,12 @@
         <action
             android:id="@+id/action_propertiesList_to_addProperty"
             app:destination="@id/addProperty" />
+        <argument
+            android:name="previousFragment"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_propertiesList_to_accountSettings"
+            app:destination="@id/accountSettings" />
     </fragment>
     <fragment
         android:id="@+id/addProperty"

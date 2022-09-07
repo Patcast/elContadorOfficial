@@ -39,17 +39,19 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.ImageFireBase;
 import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
+import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.tools.CamaraSetUp;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
+import be.kuleuven.elcontador10.fragments.property.PropertiesListDirections;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 //Todo: Remove mandatory Stakeholder.
 public class TransactionNew extends Fragment implements  EasyPermissions.PermissionCallbacks, AdapterView.OnItemSelectedListener {
     RadioGroup radGroup;
-    TextView txtWordsCounterTitle,accountSelected,txtEmojiCategory,txtStakeHolder,txtWordsCounterNotes,txtMustHaveAmount;
+    TextView txtWordsCounterTitle,accountSelected,txtEmojiCategory,txtStakeHolder,txtWordsCounterNotes,txtMustHaveAmount,txt_property_selected;
     ImageButton btnAddCategory,btnAddPicture;
     ImageView imageFinal;
     EditText txtAmount,txtTitle,txtNotes;
@@ -58,9 +60,11 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
     ViewModel_NewTransaction viewModel;
     ImageFireBase imageSelected;
     StakeHolder selectedStakeHolder;
+    Property selectedProperty;
     String idCatSelected;
     String additional_transaction;
     List <String>trans_type = new ArrayList<>();
+    private final String TAG  = "TransactionNew";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +86,7 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         navController = Navigation.findNavController(view);
 
         additional_transaction = mainActivity.getResources().getStringArray(R.array.type_of_cash_transaction)[0];
-        Spinner spinner = (Spinner) view.findViewById(R.id.type_of_cash_transaction);
+        Spinner spinner =  view.findViewById(R.id.type_of_cash_transaction);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.type_of_cash_transaction,
                 android.R.layout.simple_spinner_item);
@@ -100,6 +104,7 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         txtTitle = view.findViewById(R.id.text_newTransaction_title);
         txtWordsCounterTitle = view.findViewById(R.id.text_newTransaction_wordCounter);
         txtAmount = view.findViewById(R.id.ed_txt_amount);
+        txt_property_selected = view.findViewById(R.id.text_propertySelected);
         txtStakeHolder = view.findViewById(R.id.text_stakeholderSelected);
         txtNotes = view.findViewById(R.id.ed_txt_notes);
         txtWordsCounterNotes = view.findViewById(R.id.text_newTransaction_wordCounter_notes);
@@ -107,6 +112,7 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         Button confirmButton = view.findViewById(R.id.btn_confirm_NewTransaction);
         // listeners
         txtStakeHolder.setOnClickListener(v -> { navController.navigate(R.id.action_newTransaction_to_chooseStakeHolderDialog); });
+        txt_property_selected.setOnClickListener(v->lookForProperty());
         confirmButton.setOnClickListener(v -> confirmTransaction());
         btnAddCategory.setOnClickListener(this::onCategory_Clicked);
         btnAddPicture.setOnClickListener(v -> startCamara());
@@ -114,6 +120,12 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         setWordCounters();
         accountSelected.setText(Caching.INSTANCE.getAccountName());
     }
+
+    private void lookForProperty() {
+        TransactionNewDirections.ActionNewTransactionToPropertiesList action = TransactionNewDirections.actionNewTransactionToPropertiesList(TAG);
+        navController.navigate(action);
+    }
+
 
     public void onCategory_Clicked(View view) {
         TransactionNewDirections.ActionNewTransactionToChooseCategory action =
@@ -135,7 +147,10 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         viewModel.getChosenStakeholder().observe(getViewLifecycleOwner(), this::setStakeChosenText);
         viewModel.getChosenCategory().observe(getViewLifecycleOwner(), this::setCategoryChosen);
         viewModel.getChosenImage().observe(getViewLifecycleOwner(),this::setImageChosen);
+        viewModel.getChosenProperty().observe(getViewLifecycleOwner(),this::setPropertyChosen);
     }
+
+
 
     @Override
     public void onStop() {
@@ -147,8 +162,26 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         viewModel.reset();
         viewModel.resetCategory();
         viewModel.resetImage();
+        viewModel.resetChosenProperty();
     }
-
+    private void setPropertyChosen(Property property) {
+        if(property!=null){
+            txt_property_selected.setText(property.getName());
+            selectedProperty = property;
+        }
+        else{
+            txt_property_selected.setText(R.string.none);
+        }
+    }
+    private void setStakeChosenText(StakeHolder stakeHolder) {
+        if(stakeHolder!=null){
+            txtStakeHolder.setText(stakeHolder.getName());
+            selectedStakeHolder = stakeHolder;
+        }
+        else{
+            txtStakeHolder.setText(R.string.none);
+        }
+    }
     private void setImageChosen(ImageFireBase imageFireBase) {
         if(imageFireBase==null){
             imageFinal.setVisibility(View.GONE);
@@ -176,15 +209,7 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
             }
         }
     }
-    private void setStakeChosenText(StakeHolder stakeHolder) {
-        if(stakeHolder!=null){
-            txtStakeHolder.setText(stakeHolder.getName());
-            selectedStakeHolder = stakeHolder;
-        }
-        else{
-            txtStakeHolder.setText(R.string.none);
-        }
-    }
+
     private void confirmTransaction(){
 
         String amount = txtAmount.getText().toString() ;
@@ -215,7 +240,8 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
                 (imageSelected!=null)?imageSelected.getNameOfImage():"",
                 trans_type,
                 1,
-                1
+                1,
+                (selectedProperty!=null)?selectedProperty.getId():""
                 );
         if (imageSelected!=null)newTransaction.uploadImageToFireBase(newTransaction,imageSelected,requireContext());
         else newTransaction.sendTransaction(newTransaction,requireContext());
@@ -261,15 +287,15 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         if(i==0){
             trans_type.clear();
-            trans_type.addAll(Arrays.asList("CASH",null,null));
+            trans_type.addAll(Arrays.asList("CASH",null,null,null));
         }
         else if(i==1){
             trans_type.clear();
-            trans_type.addAll(Arrays.asList("CASH","PAYABLES",null));
+            trans_type.addAll(Arrays.asList("CASH","PAYABLES",null,null));
         }
         else{
             trans_type.clear();
-            trans_type.addAll(Arrays.asList("CASH",null,"RECEIVABLES"));
+            trans_type.addAll(Arrays.asList("CASH",null,"RECEIVABLES",null));
         }
     }
 

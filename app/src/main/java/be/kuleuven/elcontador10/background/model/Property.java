@@ -9,14 +9,21 @@ import be.kuleuven.elcontador10.background.database.Caching;
 public class Property {
     private static final String TAG = "Add property fragment";
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private long balance;
-    private long pendingBalance;
+
+
+    private long equity;
+    private long cash;
+    private long sumOfPayables;
+    private long sumOfReceivables;
+    private long equityPending;
+    private long sumOfPayablesPending;
+    private long sumOfReceivablesPending;
+
+
     private String name;
     private String id;
 
     public Property(String name) {
-        this.balance = 0;
-        this.pendingBalance = 0;
         this.name = name;
     }
 
@@ -31,13 +38,7 @@ public class Property {
                 .addOnFailureListener(e -> Log.w(TAG, "Error adding property document", e));
     }
 
-    public long getBalance() {
-        return balance;
-    }
 
-    public long getPendingBalance() {
-        return pendingBalance;
-    }
 
     public String getName() {
         return name;
@@ -51,4 +52,34 @@ public class Property {
         this.id = id;
     }
 
+    public long getEquity() {
+        return equity;
+    }
+
+    public long getCash() {
+        return cash;
+    }
+
+    public long getSumOfPayables() {
+        return sumOfPayables;
+    }
+
+    public long getSumOfReceivables() {
+        return sumOfReceivables;
+    }
+
+    public long getEquityPending() {
+        return equityPending;
+    }
+
+    public long getSumOfPayablesPending() {
+        return sumOfPayablesPending;
+    }
+
+    public long getSumOfReceivablesPending() {
+        return sumOfReceivablesPending;
+    }
+    public long getSummary(){
+        return (sumOfReceivables-sumOfPayables);
+    }
 }

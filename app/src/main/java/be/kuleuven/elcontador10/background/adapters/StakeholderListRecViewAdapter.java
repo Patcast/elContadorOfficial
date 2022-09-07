@@ -1,6 +1,7 @@
 package be.kuleuven.elcontador10.background.adapters;
 
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,14 +32,13 @@ import be.kuleuven.elcontador10.fragments.stakeholders.common.AllStakeholders.St
 
 public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<StakeholderListRecViewAdapter.ViewHolder> implements Filterable {
 
+    private static final String TAG = "RV_stakeholder";
     private final List<StakeHolder> stakeholdersList = new ArrayList<>();
     private final ArrayList<StakeHolder> stakeHoldersFull = new ArrayList<>();
     private final View viewFromHostingClass;
-    //private final ViewModel_NewTransaction viewModel;
 
     public StakeholderListRecViewAdapter(View viewFromHostingClass) {
         this.viewFromHostingClass = viewFromHostingClass;
-        //this.viewModel = viewModel;
     }
 
     @NonNull
@@ -53,11 +53,12 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
         StakeHolder stake = stakeholdersList.get(position);
         holder.textName.setText(stake.getName());
-        holder.textRole.setText(String.valueOf(stake.getRole()));
+        //holder.textRole.setText(String.valueOf(stake.getRole()));
+        holder.textBalance.setVisibility(View.VISIBLE);
+        long balance = stake.getSummary();
 
-        long balance = stake.getBalance();
+        Log.w(TAG,"Balance: "+balance);
         if (balance != 0) {
-            holder.textBalance.setVisibility(View.VISIBLE);
             NumberFormatter formatter = new NumberFormatter(balance);
             String formatted = formatter.getFinalNumber();
             holder.textBalance.setText(formatted);
@@ -88,7 +89,7 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView textName;
-        private TextView textRole;
+        //private TextView textRole;
         private TextView textBalance;
         private ConstraintLayout parent;
 
@@ -96,7 +97,7 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
             super(itemView);
             parent = itemView.findViewById(R.id.parent_allMicros);
             textName = itemView.findViewById(R.id.text_Account_name_Micros);
-            textRole = itemView.findViewById(R.id.text_micros_role);
+            //textRole = itemView.findViewById(R.id.text_micros_role);
             textBalance = itemView.findViewById(R.id.text_micros_balance);
         }
     }

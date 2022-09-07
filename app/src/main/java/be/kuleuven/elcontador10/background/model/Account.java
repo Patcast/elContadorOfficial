@@ -13,22 +13,24 @@ import java.util.Date;
 
 public class Account {
     private static final String TAG = "account";
-    private long cash;
-    private long sumOfReceivables;
-    private long sumOfPayables;
-    private long equity;
     private String name;
     private ArrayList<String> users;
     private String id;
     private String owner;
+
+    private long equity;
+    private long cash;
+    private long sumOfPayables;
+    private long sumOfReceivables;
+    private long equityPending;
+    private long sumOfPayablesPending;
+    private long sumOfReceivablesPending;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public Account( String name,long cash, ArrayList<String> users , String owner) {
         this.cash = cash;
         this.equity = cash;
-        this.sumOfReceivables= 0;
-        sumOfPayables = 0;
         this.name = name;
         this.users = users;
         this.owner = owner;
@@ -74,15 +76,32 @@ public class Account {
         return users;
     }
 
-    public long getSumOfReceivables() {
-        return sumOfReceivables;
+    public long getEquity() {
+        return equity;
     }
 
     public long getSumOfPayables() {
         return sumOfPayables;
     }
 
-    public long getEquity() {
-        return equity;
+    public long getSumOfReceivables() {
+        return sumOfReceivables;
+    }
+
+    public long getEquityPending() {
+        return equityPending;
+    }
+
+    public long getSumOfPayablesPending() {
+        return sumOfPayablesPending;
+    }
+
+    public long getSumOfReceivablesPending() {
+        return sumOfReceivablesPending;
+    }
+    public void setEquityPayablesAndReceivables(long sumOfPayables,long sumOfReceivables,  long equity){
+        this.equity =equity;
+        this.sumOfReceivables = sumOfReceivables;
+        this.sumOfPayables = sumOfPayables;
     }
 }

@@ -26,51 +26,67 @@ import java.util.stream.Collectors;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<PropertiesListRecViewAdapter.ViewHolder> implements Filterable {
     private static final String TAG = "RV Properties List:" ;
     private final List<Property> propertyList = new ArrayList<>();
     private final List<Property> propertyListFull = new ArrayList<>();
     private final View viewFromHostingClass;
+    private String prevTAG;
+    NavController navController;
+    private ViewModel_NewTransaction viewModel;
 
-    public PropertiesListRecViewAdapter(View viewFromHostingClass) {
+    public PropertiesListRecViewAdapter(View viewFromHostingClass, String TAG, ViewModel_NewTransaction viewModel) {
             this.viewFromHostingClass = viewFromHostingClass;
+            this.viewModel= viewModel;
+            prevTAG = TAG;
     }
 
+    public PropertiesListRecViewAdapter(View viewFromHostingClass) {
+        this.viewFromHostingClass = viewFromHostingClass;
+        prevTAG=null;
+    }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View viewParent = LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_view_item_all_micros,parent,false);
+        navController = Navigation.findNavController(viewFromHostingClass);
         return new PropertiesListRecViewAdapter.ViewHolder(viewParent);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Log.w(TAG,"\n\t\tonBindViewHolder.position / size : "+position+"/"+propertyList.size());
         Property property = propertyList.get(position);
         holder.textName.setText(property.getName());
         holder.textInfo.setText("");
-        long balance = property.getBalance();
-        if (balance != 0) {
-            holder.textBalance.setVisibility(View.VISIBLE);
-            NumberFormatter formatter = new NumberFormatter(balance);
-            String formatted = formatter.getFinalNumber();
-            holder.textBalance.setText(formatted);
 
-            if (balance > 0) holder.textBalance.setTextColor(viewFromHostingClass.getContext().getColor(R.color.transaction_processed_positive));
-            else holder.textBalance.setTextColor(viewFromHostingClass.getContext().getColor(R.color.rec_view_negative_amount));
+        if(prevTAG==null){
+            long balance = property.getSummary();
+            Log.w(TAG,"Balance: " + balance);
+            if (balance != 0) {
+                holder.textBalance.setVisibility(View.VISIBLE);
+                NumberFormatter formatter = new NumberFormatter(balance);
+                String formatted = formatter.getFinalNumber();
+                holder.textBalance.setText(formatted);
+                if (balance > 0) holder.textBalance.setTextColor(viewFromHostingClass.getContext().getColor(R.color.transaction_processed_positive));
+                else holder.textBalance.setTextColor(viewFromHostingClass.getContext().getColor(R.color.rec_view_negative_amount));
+
+            }
+            else holder.textBalance.setVisibility(View.GONE); // hide 0 balance
 
         }
-        else holder.textBalance.setVisibility(View.GONE); // hide 0 balance
-
-     /*   holder.parent.setOnClickListener(v -> {
-                    NavController navController = Navigation.findNavController(viewFromHostingClass);
-                    //StakeholdersListDirections.ActionStakeholdersToStakeholder action  = StakeholdersListDirections.actionStakeholdersToStakeholder(stakeholdersList.get(position));
-                    //navController.navigate(action);
-                }
-        );*/
+        else if (prevTAG.equals("TransactionNew")){
+            Log.w(TAG,"Moving to transaction new");
+            holder.textBalance.setVisibility(View.GONE);
+            holder.parent.setOnClickListener(v -> {
+                viewModel.selectProperty(property);
+                navController.popBackStack();
+            }
+            );
+        }
 
     }
     @Override

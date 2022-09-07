@@ -44,11 +44,10 @@ import java.util.Map;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.database.Caching;
 
 
 public class SignIn extends Fragment {
-    private final int RC_SIGN_IN = 9001;
+    private final int RC_SIGN_IN = 9000;
     private final String TAG = "SignInActivity";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     NavController navController;
@@ -73,6 +72,8 @@ public class SignIn extends Fragment {
          mainActivity = (MainActivity) requireActivity();
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> mainActivity.displayToolBar(false));
+
+
         mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.
                 Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).

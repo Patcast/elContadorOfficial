@@ -34,7 +34,6 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
-import com.google.firebase.installations.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -57,16 +56,16 @@ import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 
 public class AllTransactions extends Fragment implements  DatePickerDialog.OnDateSetListener, MainActivity.TopMenuHandler {
-    //TODO: update starting balance if transactions are deleted
+
     private RecyclerView recyclerAllTransactions;
     private TransactionsRecViewAdapter adapter;
-    private FloatingActionButton fabNewTransaction,fabPayableOrReceivable,fabNew;
+    private FloatingActionButton fabNewTransaction, fabNewFutureTransaction,fabNew;
     private TextView textFabNewTransaction,textFabReceivable;
     private Animation rotateOpen,rotateClose,popOpen,popClose;
     private LinearLayout coverLayout;
 
 
-    private TextView txtStartingBalance,txCurrentBalance,txtSumOfReceivables,txtSumOfPayables,ScheduleBalance,txtSumOfCashOut, txtSumOfCashIn;
+    private TextView txtStartingCash, txCurrentCash,txtSumOfReceivables,txtSumOfPayables, txtEquity,txtSumOfCashOut, txtSumOfCashIn;
     private Button selectMonth;
     private MainActivity mainActivity;
     private ViewModel_AllTransactions viewModel;
@@ -100,11 +99,11 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         selectMonth = view.findViewById(R.id.btn_selectMonth);
         txtSumOfCashOut = view.findViewById(R.id.text_sumCashOut);
         txtSumOfCashIn = view.findViewById(R.id.text_sumCashIn);
-        txtStartingBalance = view.findViewById(R.id.text_startingBalance);
-        txCurrentBalance = view.findViewById(R.id.text_currentBalance);
+        txtStartingCash = view.findViewById(R.id.text_startingBalance);
+        txCurrentCash = view.findViewById(R.id.text_currentBalance);
         txtSumOfReceivables = view.findViewById(R.id.text_receivables);
         txtSumOfPayables = view.findViewById(R.id.text_payables);
-        ScheduleBalance = view.findViewById(R.id.text_futureBalance);
+        txtEquity = view.findViewById(R.id.text_futureBalance);
         viewModel.getCalendarFilter().observe(getViewLifecycleOwner(), i-> {
             try {
                 updateDateButtonAndListOfTransactions(i);
@@ -120,7 +119,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         textFabNewTransaction = view.findViewById(R.id.text_fabNewTransaction);
         textFabReceivable = view.findViewById(R.id.text_fabReceivable);
         fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
-        fabPayableOrReceivable = view.findViewById(R.id.btn_new_ReceivableOrPayable);
+        fabNewFutureTransaction = view.findViewById(R.id.btn_new_ReceivableOrPayable);
         fabNew = view.findViewById(R.id.btn_newFAB);
         coverLayout = view.findViewById(R.id.coverLayout);
 
@@ -138,7 +137,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         coverLayout.setOnClickListener(v->closeCover());
         fabNew.setOnClickListener(v->fabOpenAnimation());
         fabNewTransaction.setOnClickListener(v->navController.navigate(R.id.action_allTransactions2_to_newTransaction));
-        fabPayableOrReceivable.setOnClickListener(v -> Toast.makeText(getContext(), "Payables Or Receivables", Toast.LENGTH_SHORT).show());
+        fabNewFutureTransaction.setOnClickListener(v -> navController.navigate(R.id.action_allTransactions2_to_contractNewPayment));
         rotateOpen = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_open);
         rotateClose = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_close);
         popOpen= AnimationUtils.loadAnimation(getContext(),R.anim.pop_up_fabs);
@@ -157,6 +156,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         });
 
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -189,7 +189,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
             formatter.setOriginalNumber(startingBalance);
             inputSB = formatter.getFinalNumber();
         }
-        txtStartingBalance.setText(inputSB);
+        txtStartingCash.setText(inputSB);
 
         String inputCI = "NA";
         if(inputsForSummary.get("cashIn")!=null){
@@ -201,7 +201,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
         String inputCO = "NA";
         if(inputsForSummary.get("cashOut")!=null){
-            cashOut = inputsForSummary.get("cashOut");
+            cashOut =(-inputsForSummary.get("cashOut")) ;
             formatter.setOriginalNumber(cashOut);
             inputCO = formatter.getFinalNumber();
         }
@@ -221,13 +221,13 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         payables = inputsForSummary.get("payables");
         scheduleBalance = inputsForSummary.get("scheduleBalance");
 
-        txCurrentBalance.setText(inputCB);
+        txCurrentCash.setText(inputCB);
         formatter.setOriginalNumber(inputsForSummary.get("receivables"));
         txtSumOfReceivables.setText(formatter.getFinalNumber());
         formatter.setOriginalNumber(inputsForSummary.get("payables"));
         txtSumOfPayables.setText(formatter.getFinalNumber());
         formatter.setOriginalNumber(inputsForSummary.get("scheduleBalance"));
-        ScheduleBalance.setText(formatter.getFinalNumber());
+        txtEquity.setText(formatter.getFinalNumber());
     }
 
 /*    @RequiresApi(api = Build.VERSION_CODES.O)
@@ -353,7 +353,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
             textFabNewTransaction.startAnimation(popOpen);
             textFabReceivable.startAnimation(popOpen);
             fabNewTransaction.startAnimation(popOpen);
-            fabPayableOrReceivable.startAnimation(popOpen);
+            fabNewFutureTransaction.startAnimation(popOpen);
             fabNew.startAnimation(rotateOpen);
         }
         else{
@@ -361,7 +361,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
             textFabNewTransaction.startAnimation(popClose);
             textFabReceivable.startAnimation(popClose);
             fabNewTransaction.startAnimation(popClose);
-            fabPayableOrReceivable.startAnimation(popClose);
+            fabNewFutureTransaction.startAnimation(popClose);
             fabNew.startAnimation(rotateClose);
         }
 
@@ -372,13 +372,13 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
             textFabReceivable.setVisibility(View.VISIBLE);
             textFabNewTransaction.setVisibility(View.VISIBLE);
             fabNewTransaction.setVisibility(View.VISIBLE);
-            fabPayableOrReceivable.setVisibility(View.VISIBLE);
+            fabNewFutureTransaction.setVisibility(View.VISIBLE);
         }
         else{
             textFabNewTransaction.setVisibility(View.INVISIBLE);
             textFabReceivable.setVisibility(View.INVISIBLE);
             fabNewTransaction.setVisibility(View.INVISIBLE);
-            fabPayableOrReceivable.setVisibility(View.INVISIBLE);
+            fabNewFutureTransaction.setVisibility(View.INVISIBLE);
         }
 
     }

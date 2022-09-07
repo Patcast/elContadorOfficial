@@ -11,27 +11,20 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.model.MicroAccount;
+import be.kuleuven.elcontador10.background.model.StakeHolder;
 
 public class NewStakeholder extends Fragment {
     private NavController navController;
 
     private TextView inputName;
-    private Spinner inputRole;
     private Button confirm;
 
     @Nullable
@@ -50,8 +43,6 @@ public class NewStakeholder extends Fragment {
         // initialise view
         inputName = view.findViewById(R.id.ed_txt_name);
 
-        inputRole = view.findViewById(R.id.sp_MicroRole);
-        makeSpinnerRole();
 
         confirm = view.findViewById(R.id.btn_confirm_NewMicro);
         confirm.setOnClickListener(this::onConfirm_Clicked);
@@ -61,7 +52,6 @@ public class NewStakeholder extends Fragment {
 
     public void onConfirm_Clicked(View view) {
         String name = inputName.getText().toString();
-        String role = inputRole.getSelectedItem().toString();
 
         if (name.isEmpty()) {
             Toast.makeText(getActivity(), "The new stakeholder must have a name.", Toast.LENGTH_LONG).show();
@@ -69,15 +59,8 @@ public class NewStakeholder extends Fragment {
         else {
             navController.popBackStack();
 
-            MicroAccount account = new MicroAccount(name, role);
+            StakeHolder account = new StakeHolder(name);
             account.addAccount(account);
         }
-    }
-
-    public void makeSpinnerRole() {
-        List<String> roles = new ArrayList<>((Arrays.asList(this.getResources().getStringArray(R.array.roles))));
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, roles);
-        inputRole.setAdapter(adapter);
     }
 }

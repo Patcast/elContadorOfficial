@@ -92,7 +92,6 @@
             android:layout_height="wrap_content"
             android:hint="@string/title"
             android:inputType="text"
-
             app:layout_constraintEnd_toStartOf="@+id/constraintLayout4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -265,7 +264,9 @@
         android:layout_height="wrap_content"
         android:paddingVertical="10dp"
         android:gravity="center"
+        android:spinnerMode="dropdown"
         android:background="@color/rec_view_gray"
+        android:popupBackground="@color/rec_view_gray"
         />
 
 

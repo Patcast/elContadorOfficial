@@ -3,12 +3,19 @@ package be.kuleuven.elcontador10.background.model;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import be.kuleuven.elcontador10.background.database.Caching;
+
 public class StakeHolder implements Parcelable {
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static final String TAG = "microAccount";
+
     private String id;
-    private long balance;
     private String name;
     private String role;
     private boolean deleted;
@@ -17,8 +24,19 @@ public class StakeHolder implements Parcelable {
     private String idOfGlobalAccount;
     private boolean authorized;
 
+    private long equity;
+    private long cash;
+    private long sumOfPayables;
+    private long sumOfReceivables;
+    private long equityPending;
+    private long sumOfPayablesPending;
+    private long sumOfReceivablesPending;
+
+
+
+
     public StakeHolder(long balance, String name, String role, boolean deleted, String email, int phoneNumber, String idOfGlobalAccount, boolean authorized) {
-        this.balance = balance;
+        this.equity = balance;
         this.name = name;
         this.role = role;
         this.deleted = deleted;
@@ -30,7 +48,7 @@ public class StakeHolder implements Parcelable {
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     protected StakeHolder(Parcel in) {
-        this.balance = in.readLong();
+        this.equity = in.readLong();
         this.name = in.readString();
         this.role = in.readString();
         this.deleted = in.readBoolean();
@@ -40,7 +58,19 @@ public class StakeHolder implements Parcelable {
         this.authorized = in.readBoolean();
     }
 
+    public StakeHolder(String name) {
+        this.name = name;
+    }
+
     public StakeHolder() {    }
+    public void addAccount(StakeHolder account) {
+        String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders";
+
+        db.collection(url)
+                .add(account)
+                .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId()))
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+    }
 
     public static final Creator<StakeHolder> CREATOR = new Creator<StakeHolder>() {
         @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -63,7 +93,7 @@ public class StakeHolder implements Parcelable {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeDouble(balance);
+        parcel.writeDouble(equity);
         parcel.writeString(name);
         parcel.writeString(role);
         parcel.writeBoolean(deleted);
@@ -85,9 +115,7 @@ public class StakeHolder implements Parcelable {
         return id;
     }
 
-    public long getBalance() {
-        return balance;
-    }
+
 
     public String getName() {
         return name;
@@ -112,8 +140,38 @@ public class StakeHolder implements Parcelable {
         this.id = id;
     }
 
-    public void setBalance(int balance) {
-        this.balance = balance;
+    public void setEquity(int equity) {
+        this.equity = equity;
     }
 
+    public long getEquity() {
+        return equity;
+    }
+
+    public long getCash() {
+        return cash;
+    }
+
+    public long getSumOfPayables() {
+        return sumOfPayables;
+    }
+
+    public long getSumOfReceivables() {
+        return sumOfReceivables;
+    }
+
+    public long getEquityPending() {
+        return equityPending;
+    }
+
+    public long getSumOfPayablesPending() {
+        return sumOfPayablesPending;
+    }
+
+    public long getSumOfReceivablesPending() {
+        return sumOfReceivablesPending;
+    }
+    public long getSummary(){
+        return (sumOfReceivables-sumOfPayables);
+    }
 }

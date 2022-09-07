@@ -20,13 +20,9 @@ import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.model.MicroAccount;
 import be.kuleuven.elcontador10.background.model.Property;
 
 public class AddProperty extends Fragment {
