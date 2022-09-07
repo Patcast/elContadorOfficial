@@ -88,6 +88,11 @@
             android:inputType="numberDecimal"
             android:maxLength="22"
             android:minHeight="48dp" />
+        <TextView
+            android:id="@+id/textView_fillAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/light_red_warning"/>
 
         <RadioGroup
             android:id="@+id/radioGroup"
@@ -141,6 +146,7 @@
             android:textColor="@color/white"
             />
 
+
         <TextView
             android:id="@+id/actv_stakeholder"
             android:layout_width="match_parent"
@@ -160,6 +166,11 @@
             android:text="@string/none"
             android:textColor="@color/white"
             />
+        <TextView
+            android:id="@+id/textView_fillStakeholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/light_red_warning"/>
 
         <TextView
             android:id="@+id/payment_new_frequency_label"
@@ -193,6 +204,11 @@
             android:background="@drawable/background_buttons"
             android:text="N/A"
             android:textSize="18sp" />
+        <TextView
+            android:id="@+id/textView_fillStartingDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/light_red_warning"/>
 
         <EditText
             android:id="@+id/payment_new_duration"
