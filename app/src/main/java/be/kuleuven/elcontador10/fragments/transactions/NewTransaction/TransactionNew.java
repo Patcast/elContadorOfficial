@@ -137,6 +137,7 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
     private void setWordCounters() {
         new MaxWordsCounter(30,txtTitle,txtWordsCounterTitle,getContext());
         new MaxWordsCounter(100,txtNotes,txtWordsCounterNotes,getContext());
+        new MaxWordsCounter(8,txtAmount,txtMustHaveAmount,getContext());
 
     }
 

@@ -253,6 +253,10 @@ public class ProcessedTransaction implements TransactionInterface {
         return idOfProperty;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public void setCollectionSize(int collectionSize) {
         this.collectionSize = collectionSize;
     }

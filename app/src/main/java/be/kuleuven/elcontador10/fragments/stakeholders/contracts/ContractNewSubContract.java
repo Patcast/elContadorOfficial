@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -43,34 +44,44 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.ViewModelCategory;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
+import be.kuleuven.elcontador10.background.model.Property;
+import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
+import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.TransactionNewDirections;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 public class ContractNewSubContract extends Fragment {
 
-    private final int ONE_TIME=0, DAILY=1, WEEKLY=2, TWO_WEEKS = 3, MONTHLY=4,YEARLY=5, CUSTOM=6;
+    private static final String TAG = "NewFutureTransaction";
+    private final int ONE_TIME=0,  CUSTOM=6;
     private NavController navController;
 
     //views
-    private TextView titleTxt, amountTxt, numOfFutureTransTxt, summaryOfFutureTransactionsTxt, notesTxt, emojiTxt;
+    private TextView   numOfFutureTransTxt, summaryOfFutureTransactionsTxt, emojiTxt
+    , stakeTxt,fillStakeTxt,propertyTxt,fillAmountTxt,wordCountNotesTxt,fillTitleTxt;
+    EditText notesTxt,titleTxt,amountTxt;
     private Spinner frequency_spinner;
     private RadioButton payablesButton;
     private Button btnChooseStartingDate, btnConfirm;
     private ImageButton selectCategory;
+    StakeHolder selectedStakeHolder;
+    Property selectedProperty;
 
     //variables
     private MainActivity mainActivity;
     private String  idCatSelected;
     private boolean isStartingDatePicked = false;
-    private int paymentsLeft, collectionSize;
+    private int  collectionSize;
     private ArrayList<ProcessedTransaction> transactions;
-    private ViewModelCategory viewModel;
+    private ViewModel_NewTransaction viewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contract_new_sub_contract, container, false);
         mainActivity = (MainActivity) requireActivity();
-        mainActivity.setHeaderText(getString(R.string.New_Future_Transaction));
+        mainActivity.setHeaderText(getString(R.string.new_future_transaction));
         idCatSelected = null;
         return view;
     }
@@ -82,9 +93,45 @@ public class ContractNewSubContract extends Fragment {
         startViews(view);
         setButtonsListeners();
         setSpinners();
-        viewModel = new ViewModelProvider(requireActivity()).get(ViewModelCategory.class);
-        viewModel.getChosenCategory().observe(getViewLifecycleOwner(), this::setChosenCategory);
+        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
+        ViewModelCategory viewModelCategory = new ViewModelProvider(requireActivity()).get(ViewModelCategory.class);
+        viewModelCategory.getChosenCategory().observe(getViewLifecycleOwner(), this::setChosenCategory);
+        setWordCounters();
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        viewModel.getChosenStakeholder().observe(getViewLifecycleOwner(), this::setStakeChosenText);
+        viewModel.getChosenProperty().observe(getViewLifecycleOwner(),this::setPropertyChosen);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.reset();
+    }
+
+    private void setPropertyChosen(Property property) {
+        if(property!=null){
+            propertyTxt.setText(property.getName());
+            selectedProperty = property;
+        }
+        else{
+            selectedProperty=null;
+            propertyTxt.setText(R.string.none);
+        }
+    }
+    private void setStakeChosenText(StakeHolder stakeHolder) {
+        if(stakeHolder!=null){
+            stakeTxt.setText(stakeHolder.getName());
+            selectedStakeHolder = stakeHolder;
+        }
+        else{
+            selectedStakeHolder = null;
+            stakeTxt.setText(R.string.none);
+        }
+    }
+
     private void setSpinners() {
 
         ArrayAdapter<String> frequency_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.frequency));
@@ -92,10 +139,22 @@ public class ContractNewSubContract extends Fragment {
         frequency_spinner.setAdapter(frequency_adapter);
         frequency_spinner.setOnItemSelectedListener(new FrequencyAdapter());
     }
+
+    private void setWordCounters() {
+        new MaxWordsCounter(30,titleTxt,fillTitleTxt,getContext());
+        new MaxWordsCounter(100,notesTxt,wordCountNotesTxt,getContext());
+        new MaxWordsCounter(8,amountTxt,fillAmountTxt,getContext());
+    }
     private void startViews(View view) {
+        stakeTxt = view.findViewById(R.id.text_stakeholderSelected);
+        fillStakeTxt = view.findViewById(R.id.textView_fillStakeholder);
+        propertyTxt = view.findViewById(R.id.text_propertySelected);
+        fillAmountTxt = view.findViewById(R.id.textView_fillAmount);
+        fillTitleTxt =view.findViewById(R.id.text_fillTitle);
+        wordCountNotesTxt = view.findViewById(R.id.text_newTransaction_wordCounter_notes);
+
         titleTxt = view.findViewById(R.id.payment_new_title);
         amountTxt = view.findViewById(R.id.payment_new_amount);
-
         numOfFutureTransTxt = view.findViewById(R.id.payment_new_duration);
         numOfFutureTransTxt.addTextChangedListener(new TextChangeWatcher());
         summaryOfFutureTransactionsTxt = view.findViewById(R.id.payment_new_info);
@@ -106,6 +165,14 @@ public class ContractNewSubContract extends Fragment {
         btnConfirm = view.findViewById(R.id.payment_new_confirm);
         selectCategory = view.findViewById(R.id.imageButton_chooseCategory);
         emojiTxt = view.findViewById(R.id.text_emoji_category);
+        propertyTxt.setOnClickListener(v->lookForProperty());
+        stakeTxt.setOnClickListener(v -> { navController.navigate(R.id.action_contractNewPayment_to_chooseStakeHolderDialog); });
+
+    }
+
+    private void lookForProperty() {
+        ContractNewSubContractDirections.ActionContractNewPaymentToPropertiesList action = ContractNewSubContractDirections.actionContractNewPaymentToPropertiesList(TAG);
+        navController.navigate(action);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -170,39 +237,41 @@ public class ContractNewSubContract extends Fragment {
     public void onConfirm_Clicked(View view) {
         String title_text = titleTxt.getText().toString();
         String amount_text = amountTxt.getText().toString();
-        String numOfFutureTrans = numOfFutureTransTxt.getText().toString();
 
-        if(noInputErrors(title_text,amount_text,numOfFutureTrans)){
+        if(noInputErrors(title_text,amount_text)){
             List <String> type_input = (payablesButton.isChecked())? Arrays.asList(null,"PAYABLE", null,"PENDING"):Arrays.asList(null,null, "RECEIVABLES","PENDING");
-
+            String propertyId = (selectedProperty!=null)?selectedProperty.getId():null;
             transactions.forEach(t->t.setFutureTransactionsFields(
                     title_text,
                     Integer.parseInt(amount_text),
                     mainActivity.returnSavedLoggedEmail(),
-                    null,
+                    selectedStakeHolder.getId(),
                     idCatSelected,
                     notesTxt.getText().toString(),
                     null,
                     type_input,
-                    null
+                    propertyId
             ));
             transactions.forEach(t->t.sendTransaction(t,getContext()));
             navController.popBackStack();
         }
     }
 
-    private boolean noInputErrors(String title_text,String amount_text,String numOfFutureTrans) {
-        if (title_text.equals("")) Toast.makeText(mainActivity, R.string.add_title, Toast.LENGTH_SHORT).show();
-        else if (amount_text.equals("")) Toast.makeText(mainActivity, R.string.zero_amount, Toast.LENGTH_SHORT).show();
-        else if ( collectionSize == 0 )errorOnDates(getString(R.string.please_fill_in_duration));
+    private boolean noInputErrors(String title_text,String amount_text) {
+
+        if (title_text.equals("")) {
+            fillTitleTxt.setText(R.string.add_title);
+            fillTitleTxt.setTextColor(getContext().getResources().getColor(R.color.light_red_warning));
+        }
+        else if (amount_text.equals("")) {
+            fillAmountTxt.setText(R.string.zero_amount);
+            fillAmountTxt.setTextColor(getContext().getResources().getColor(R.color.light_red_warning));
+        }
+        else if (selectedStakeHolder==null) fillStakeTxt.setText(R.string.this_field_is_requiered);
         else if (!isStartingDatePicked) errorOnDates(getString(R.string.select_starting_date));
-        else if (summaryOfFutureTransactionsTxt.getCurrentTextColor() == Color.RED ) { // error visible
-            Toast.makeText(mainActivity, R.string.check_errors, Toast.LENGTH_SHORT).show();
-        }
-        else if (paymentsLeft == 0) { // Why would this variable be zero???
-            Toast.makeText(mainActivity, R.string.error_no_payments_can_be_made, Toast.LENGTH_SHORT).show();
-        }
+        else if ( transactions==null||transactions.size()==0 )errorOnDates(getString(R.string.please_fill_in_duration));
         else return true;
+
         return false;
     }
 
@@ -218,7 +287,6 @@ public class ContractNewSubContract extends Fragment {
             transactions = DatabaseDatesFunctions.INSTANCE.makeFutureTransactions(start_date, frequencyID,collectionSize);//
 
             if (transactions != null) {
-                paymentsLeft = transactions.size();
                 String summary =
                         getString(R.string.future_dates)+"\n"
                         + transactions  .stream()
@@ -228,8 +296,7 @@ public class ContractNewSubContract extends Fragment {
                 summaryOfFutureTransactionsTxt.setTextColor(Color.WHITE);// move for later
                 return true;
             } else {
-                summaryOfFutureTransactionsTxt.setText(R.string.error_period);
-                summaryOfFutureTransactionsTxt.setTextColor(Color.RED);
+                errorOnDates(getString(R.string.error_period));
                 return false;
             }
         }
@@ -237,8 +304,7 @@ public class ContractNewSubContract extends Fragment {
     }
     private void errorOnDates(String errorMsg){
         summaryOfFutureTransactionsTxt.setText(errorMsg);
-        summaryOfFutureTransactionsTxt.setTextColor(Color.RED);
-
+        summaryOfFutureTransactionsTxt.setTextColor(getContext().getResources().getColor(R.color.light_red_warning));
     }
 
     private class TextChangeWatcher implements TextWatcher{
@@ -264,20 +330,15 @@ public class ContractNewSubContract extends Fragment {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            if(transactions!=null)transactions.clear();
             if (i == 0) { // one time
                 numOfFutureTransTxt.setVisibility(View.GONE);
-
                 calculateMultipleFutureTransaction();
             }
             else {
                 numOfFutureTransTxt.setVisibility(View.VISIBLE);
-                if (i == 6) { // custom
-                    numOfFutureTransTxt.setHint(R.string.number_of_payments);
-                }
-                else { // standard
-                    calculateMultipleFutureTransaction();
-                    numOfFutureTransTxt.setHint(R.string.duration);
-                }
+                calculateMultipleFutureTransaction();
+                numOfFutureTransTxt.setHint(R.string.duration);
             }
         }
 

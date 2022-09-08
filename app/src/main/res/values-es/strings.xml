@@ -10,7 +10,7 @@
     <string name="duration">"Número de repeticiones "</string>
     <string name="payments_left">"Pagos restantes: "</string>
     <string name="next_payment">Next subContract:</string>
-    <string name="please_fill_in_duration">"Por favor indica la duración "</string>
+    <string name="please_fill_in_duration">"Indica el numero de repeticiones"</string>
     <string name="select_frequency">"Favor de seleccionar la frecuencia "</string>
     <string name="number_of_payments">Number of subContracts</string>
     <string name="date_before_error">Fecha seleccionada no es válida.</string>
@@ -261,4 +261,5 @@
     <string name="future_dates">Fechas de las futuras transacciones:</string>
     <string name="add_transaction">Añadir Transacción</string>
     <string name="add_future_transaction">Añadir Transacción Futura</string>
+    <string name="new_future_transaction">Nueva Transacción futura</string>
 </resources>

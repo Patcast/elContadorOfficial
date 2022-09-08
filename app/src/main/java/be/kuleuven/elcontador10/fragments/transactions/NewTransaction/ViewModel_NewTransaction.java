@@ -22,6 +22,7 @@ public class ViewModel_NewTransaction extends ViewModelCategory implements ViewM
     }
     public void reset(){
         chosenStakeholder.setValue(null);
+        chosenProperty.setValue(null);
     }
 
     //ChosenProperty

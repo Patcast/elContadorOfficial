@@ -136,6 +136,12 @@
         <action
             android:id="@+id/action_contractNewPayment_to_chooseCategory"
             app:destination="@id/chooseCategory" />
+        <action
+            android:id="@+id/action_contractNewPayment_to_chooseStakeHolderDialog"
+            app:destination="@id/chooseStakeHolderDialog" />
+        <action
+            android:id="@+id/action_contractNewPayment_to_propertiesList"
+            app:destination="@id/propertiesList" />
     </fragment>
     <fragment
         android:id="@+id/chooseCategory"

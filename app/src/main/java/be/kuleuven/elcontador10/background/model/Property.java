@@ -79,7 +79,7 @@ public class Property {
     public long getSumOfReceivablesPending() {
         return sumOfReceivablesPending;
     }
-    public long getSummary(){
+    public long calculatePropertySummary(){
         return (sumOfReceivables-sumOfPayables);
     }
 }

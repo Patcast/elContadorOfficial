@@ -70,6 +70,8 @@ public class ChooseStakeHolder extends Fragment implements MainActivity.TopMenuH
     public void onStart(){
         super.onStart();
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,true);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add,false);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_bottom_sheet,false);
     }
 
     @Override

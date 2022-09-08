@@ -54,7 +54,8 @@ public class ChooseStakeHolderRecViewAdapter extends RecyclerView.Adapter<Choose
         holder.parent.setOnClickListener(v -> {
                viewModel.selectStakeholder(stakeHolder);
                NavController navController = Navigation.findNavController(viewFromHostingClass);
-               navController.navigate(R.id.action_chooseStakeHolderDialog_to_newTransaction);
+               navController.popBackStack();
+               //navController.navigate(R.id.action_chooseStakeHolderDialog_to_newTransaction);
             });
     }
 

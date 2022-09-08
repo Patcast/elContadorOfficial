@@ -64,8 +64,7 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
         holder.textInfo.setText("");
 
         if(prevTAG==null){
-            long balance = property.getSummary();
-            Log.w(TAG,"Balance: " + balance);
+            long balance = property.calculatePropertySummary();
             if (balance != 0) {
                 holder.textBalance.setVisibility(View.VISIBLE);
                 NumberFormatter formatter = new NumberFormatter(balance);
@@ -78,7 +77,7 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
             else holder.textBalance.setVisibility(View.GONE); // hide 0 balance
 
         }
-        else if (prevTAG.equals("TransactionNew")){
+        else  {
             Log.w(TAG,"Moving to transaction new");
             holder.textBalance.setVisibility(View.GONE);
             holder.parent.setOnClickListener(v -> {

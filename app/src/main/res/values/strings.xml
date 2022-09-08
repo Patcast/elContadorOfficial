@@ -279,12 +279,13 @@
     <string name="sum_of_receivables">Sum of receivables:</string>
     <string name="sum_of_payables">Sum of payables:</string>
     <string name="equity">Equity:</string>
-    <string name="New_Future_Transaction">New Future Transaction</string>
+
     <string name="add_title">Please add  a title</string>
     <string name="starting_date">Starting Date</string>
     <string name="future_dates">\n\nFuture transactions\' dates:\n</string>
     <string name="add_transaction">Add Transaction</string>
     <string name="add_future_transaction">Add future transaction</string>
+    <string name="new_future_transaction">New Future Transaction</string>
     <string-array name="type_of_cash_transaction">
         <item>Any</item>
         <item>Receivables</item>

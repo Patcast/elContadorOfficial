@@ -166,6 +166,8 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,true);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_export,true);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add,false);
+        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_bottom_sheet,false);
 
         recyclerAllTransactions.setAdapter(adapter);
 

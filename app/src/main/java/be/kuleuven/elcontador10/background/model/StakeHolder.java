@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import be.kuleuven.elcontador10.background.database.Caching;
@@ -171,7 +172,8 @@ public class StakeHolder implements Parcelable {
     public long getSumOfReceivablesPending() {
         return sumOfReceivablesPending;
     }
-    public long getSummary(){
+    @Exclude
+    public long calculateSummary(){
         return (sumOfReceivables-sumOfPayables);
     }
 }

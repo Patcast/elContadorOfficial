@@ -29,7 +29,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
             <TextView
-                android:id="@+id/text_newTransaction_wordCounter"
+                android:id="@+id/text_fillTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -204,11 +204,6 @@
             android:background="@drawable/background_buttons"
             android:text="N/A"
             android:textSize="18sp" />
-        <TextView
-            android:id="@+id/textView_fillStartingDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/light_red_warning"/>
 
         <EditText
             android:id="@+id/payment_new_duration"
@@ -228,7 +223,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top|left"
-            android:textColor="#FF0000"
+            android:textColor="@color/light_red_warning"
             android:textSize="18sp" />
 
         <EditText

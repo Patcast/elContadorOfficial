@@ -55,7 +55,7 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
         holder.textName.setText(stake.getName());
         //holder.textRole.setText(String.valueOf(stake.getRole()));
         holder.textBalance.setVisibility(View.VISIBLE);
-        long balance = stake.getSummary();
+        long balance = stake.calculateSummary();
 
         Log.w(TAG,"Balance: "+balance);
         if (balance != 0) {

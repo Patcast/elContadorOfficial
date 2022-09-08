@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -94,8 +95,12 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
     public void onStop() {
         super.onStop();
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,false);
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add_property,false);
+
         mainActivity.displayBottomNavigationMenu(false);
+        if(prevTAG==null) {
+            mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add_property,false);
+            mainActivity.displayBottomNavigationMenu(false);
+        }
         if( menuItem != null) menuItem.collapseActionView();
     }
 
