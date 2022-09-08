@@ -133,7 +133,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         topRightMenu = menu;
         getMenuInflater().inflate(R.menu.top_three_buttons_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+        //return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     @Override
@@ -173,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void modifyVisibilityOfMenuItem(int itemId,boolean display){
-        topRightMenu.findItem(itemId)
-                .setVisible(display);
+        invalidateOptionsMenu();
+        if(topRightMenu!=null)topRightMenu.findItem(itemId).setVisible(display);
     }
 }

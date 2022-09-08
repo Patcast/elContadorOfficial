@@ -93,7 +93,9 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_transactions, container, false);
-        mainActivity = (MainActivity) getActivity();
+        mainActivity = (MainActivity) requireActivity();
+        mainActivity.setCurrentMenuClicker(this);
+
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         selectMonth = view.findViewById(R.id.btn_selectMonth);
@@ -162,13 +164,12 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     @Override
     public void onStart() {
         super.onStart();
-        mainActivity.setCurrentMenuClicker(this);
+
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,true);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_export,true);
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add,false);
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_bottom_sheet,false);
-
+        //mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add,false);
+        //mainActivity.modifyVisibilityOfMenuItem(R.id.menu_bottom_sheet,false);
         recyclerAllTransactions.setAdapter(adapter);
 
     }
@@ -176,6 +177,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     @Override
     public void onStop() {
         super.onStop();
+
         mainActivity.displayBottomNavigationMenu(false);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,false);
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_export,false);

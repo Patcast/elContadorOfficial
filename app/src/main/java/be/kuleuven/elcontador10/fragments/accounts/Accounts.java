@@ -50,7 +50,6 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
-        //newAccountButton= view.findViewById(R.id.btn_new_AccountFAB);
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle(getString(R.string.accounts));
         mainActivity.setCurrentMenuClicker(this);
@@ -107,7 +106,10 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
             mainActivity.modifyVisibilityOfMenuItem(R.id.menu_bottom_sheet,false);
 
         }
-        catch(Exception e){}
+        catch(Exception e){
+
+        }
+
         Caching.INSTANCE.deAttachAccountsObservers(this);
     }
 

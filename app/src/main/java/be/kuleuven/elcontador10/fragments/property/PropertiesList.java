@@ -42,11 +42,6 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainActivity = (MainActivity) getActivity();
-        assert mainActivity != null;
-        mainActivity.setCurrentMenuClicker(this);
-        viewModelPropertiesList = new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);
-        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
 
     }
 
@@ -56,6 +51,12 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
         View view = inflater.inflate(R.layout.fragment_all_properties, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.rec_all_properties);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        mainActivity = (MainActivity) requireActivity();
+        viewModelPropertiesList = new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
+
+        mainActivity.setCurrentMenuClicker(this);
+
 
         try{
             prevTAG = PropertiesListArgs.fromBundle(getArguments()).getPreviousFragment();
@@ -83,6 +84,7 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
     @Override
     public void onStart() {
         super.onStart();
+
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,true);
         if(prevTAG==null) {
@@ -95,8 +97,6 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
     public void onStop() {
         super.onStop();
         mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,false);
-
-        mainActivity.displayBottomNavigationMenu(false);
         if(prevTAG==null) {
             mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add_property,false);
             mainActivity.displayBottomNavigationMenu(false);
@@ -164,7 +164,6 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
     @Override
     public void addProperty() {
         navController.navigate(R.id.action_propertiesList_to_addProperty);
-
     }
 
 
