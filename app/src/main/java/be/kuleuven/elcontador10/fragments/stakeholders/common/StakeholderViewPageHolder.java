@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import be.kuleuven.elcontador10.R;
@@ -25,19 +23,18 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.tools.ZoomOutPageTransformer;
+import be.kuleuven.elcontador10.fragments.stakeholders.StakeDetailsList;
+import be.kuleuven.elcontador10.fragments.stakeholders.StakeholderViewModel;
 import be.kuleuven.elcontador10.fragments.stakeholders.contracts.ContractsList;
-import be.kuleuven.elcontador10.fragments.stakeholders.contracts.NewContractDialog;
-import be.kuleuven.elcontador10.fragments.stakeholders.transactions.StakeholderTransactionsList;
 
 
 // move FAB here
 public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTransformer.PageChangeListener {
     private ViewPagerAdapter mAdapter;
     private ViewPager2 viewPager;
-
-    private FloatingActionButton fab;
     private MainActivity mainActivity;
     private StakeholderViewModel viewModel;
+    StakeHolder stakeHolder;
 
 
 
@@ -57,12 +54,9 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         viewPager = view.findViewById(R.id.viewPagerHolder);
         mAdapter = new ViewPagerAdapter(mainActivity.getSupportFragmentManager(), getLifecycle());
         viewPager.setPageTransformer(new ZoomOutPageTransformer(this));
-
         viewModel = new ViewModelProvider(requireActivity()).get(StakeholderViewModel.class);
 
-
-
-        addFragments(view);
+        addFragments();
 
         return view;
     }
@@ -71,40 +65,45 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        StakeHolder stakeHolder = StakeholderViewPageHolderArgs.fromBundle(getArguments()).getStakeHolder();
+        stakeHolder = StakeholderViewPageHolderArgs.fromBundle(getArguments()).getStakeHolder();
         mainActivity.setHeaderText(stakeHolder.getName() + " - " + Caching.INSTANCE.getAccountName());
-        mainActivity.displayTabLayout(true);
         Caching.INSTANCE.setChosenStakeHolder(stakeHolder);
-
-        // set details
-        String balance = new NumberFormatter(stakeHolder.getEquity()).getFinalNumber();
-        mainActivity.displayStakeHolderDetails(true, balance, stakeHolder.getRole());
-
+        viewModel.setSelectedStakeholder(stakeHolder);
         Caching.INSTANCE.openMicroAccount(stakeHolder.getId()); // set MicroAccount to caching
-
-       /* rotateOpen = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_open);
-        rotateClose = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_close);
-        popOpen= AnimationUtils.loadAnimation(getContext(),R.anim.pop_up_fabs);
-        popClose = AnimationUtils.loadAnimation(getContext(),R.anim.pop_down_fabs);*/
     }
 
-    private void addFragments(View view) {
-        mAdapter.addFragment(new StakeholderTransactionsList());
-        mAdapter.addFragment(new ContractsList());
+    private void addFragments() {
+        mAdapter.addFragment(new StakeDetailsList(Caching.INSTANCE.TYPE_CASH));
+        mAdapter.addFragment(new StakeDetailsList(Caching.INSTANCE.TYPE_RECEIVABLES));
+        mAdapter.addFragment(new StakeDetailsList(Caching.INSTANCE.TYPE_PAYABLES));
         viewPager.setAdapter(mAdapter);
 
         new TabLayoutMediator(mainActivity.getTabLayout(), viewPager, (t, p) -> {
             switch (p) {
                 case 0:
-                    t.setText("Transactions");
+                    t.setText(R.string.transactions);
                     t.setIcon(R.drawable.icon_transaction);
                     break;
                 case 1:
-                    t.setText("Contracts");
+                    t.setText(R.string.receivables);
+                    t.setIcon(R.drawable.icon_contracts);
+                    break;
+                case 2:
+                    t.setText(R.string.payables);
                     t.setIcon(R.drawable.icon_contracts);
                     break;
             }
         }).attach();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // set details
+        String balance = new NumberFormatter(stakeHolder.getEquity()).getFinalNumber();
+        mainActivity.displayStakeHolderDetails(true, balance, stakeHolder.getRole());
+        mainActivity.displayToolBar(true);
+        mainActivity.displayTabLayout(true);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -112,8 +111,6 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     public void onStop() {
         super.onStop();
 
-        mainActivity.displayToolBar(true);
-        mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         mainActivity.displayTabLayout(false);
         mainActivity.displayStakeholderDetails(false);
     }
@@ -122,69 +119,10 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     public void onPageChange() {
         switch(viewPager.getCurrentItem()){
             case 0:
-                // transactions
-                fab.setVisibility(View.GONE);
 
- /*
-                if (fabClicked)
-                    viewModel.setFabClicked(true);
-
-                fab.setOnClickListener(view -> {
-                    setVisibility();
-                    setAnimation();
-                    fabClicked = !fabClicked;
-                    viewModel.setFabClicked(fabClicked);
-                });
-*/
                 break;
-            case 1:
-                // contracts
-
-                fab.setOnClickListener(view -> {
-                    NewContractDialog dialog = new NewContractDialog((MainActivity) getActivity());
-                    dialog.show();
-                });
-
-               /* fabClicked = true;*/
-                fab.setVisibility(View.VISIBLE);
-//                setVisibility();
-                //fabClicked = false;
-
+            default:
                 break;
         }
     }
-
-/*
-    private void setVisibility() {
-        if (!fabClicked) {
-            labelNewPayableReceivable.setVisibility(View.VISIBLE);
-            labelNewTransaction.setVisibility(View.VISIBLE);
-            newTransaction.setVisibility(View.VISIBLE);
-            newPayableReceivable.setVisibility(View.VISIBLE);
-        } else {
-            labelNewPayableReceivable.setVisibility(View.GONE);
-            labelNewTransaction.setVisibility(View.GONE);
-            newTransaction.setVisibility(View.GONE);
-            newPayableReceivable.setVisibility(View.GONE);
-        }
-    }
-
-    private void setAnimation() {
-        if (!fabClicked) {
-            labelNewPayableReceivable.startAnimation(popOpen);
-            labelNewTransaction.startAnimation(popOpen);
-            newTransaction.startAnimation(popOpen);
-            newPayableReceivable.startAnimation(popOpen);
-
-            fab.startAnimation(rotateOpen);
-        } else {
-            labelNewPayableReceivable.startAnimation(popClose);
-            labelNewTransaction.startAnimation(popClose);
-            newTransaction.startAnimation(popClose);
-            newPayableReceivable.startAnimation(popClose);
-
-            fab.startAnimation(rotateClose);
-        }
-    }
-*/
 }

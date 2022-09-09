@@ -6,8 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,17 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
-import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewModel;
+import be.kuleuven.elcontador10.fragments.stakeholders.StakeholderViewModel;
 
 public class StakeholderTransactionsList extends Fragment implements Caching.MicroAccountTransactionObserver {
     private RecyclerView recyclerView;
@@ -64,12 +59,14 @@ public class StakeholderTransactionsList extends Fragment implements Caching.Mic
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(requireActivity()).get(StakeholderViewModel.class);
+/*
         viewModel.getFabClicked().observe(getViewLifecycleOwner(), item -> {
             fabClicked = item;
 
             if (!fabClicked) coverLayout.setVisibility(View.VISIBLE);
             else coverLayout.setVisibility(View.GONE);
         });
+*/
     }
 
     @Override
@@ -100,6 +97,6 @@ public class StakeholderTransactionsList extends Fragment implements Caching.Mic
 
         fabClicked = !fabClicked;
 
-        viewModel.setFabClicked(fabClicked);
+        //viewModel.setFabClicked(fabClicked);
     }
 }

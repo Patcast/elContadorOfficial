@@ -41,7 +41,7 @@ import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.ViewModel
 
 public enum Caching {
     INSTANCE;
-
+    public String TYPE_CASH = "CASH", TYPE_PAYABLES = "PAYABLES",TYPE_RECEIVABLES = "RECEIVABLES",TYPE_PENDING = "PENDING";
     /// interfaces******
     public interface CategoriesObserver{
         void notifyCatObserver(List <EmojiCategory> customCategoriesInput);

@@ -12,93 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/lbl_stakeholder_newPayableReceivable"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_toStartOf="@+id/btn_new_ReceivableOrPayable"
-        android:layout_toLeftOf="@+id/btn_new_ReceivableOrPayable"
-        android:background="@drawable/backgorund_fab_titles"
-        android:padding="10dp"
-        android:text="Payables and Receivables"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toStartOf="@+id/btn_stakeholder_new_ReceivableOrPayable"
-        app:layout_constraintTop_toTopOf="@+id/btn_stakeholder_new_ReceivableOrPayable" />
-
-    <TextView
-        android:id="@+id/lbl_stakeholder_newTransaction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_toStartOf="@+id/btn_new_TransactionFAB"
-        android:layout_toLeftOf="@+id/btn_new_TransactionFAB"
-        android:background="@drawable/backgorund_fab_titles"
-        android:padding="10dp"
-        android:text="New Transaction"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toStartOf="@+id/btn_stakeholder_new_transaction"
-        app:layout_constraintTop_toTopOf="@+id/btn_stakeholder_new_transaction" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_stakeholder_new_transaction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_new_ReceivableOrPayable"
-        android:layout_alignEnd="@+id/btn_newFAB"
-        android:layout_alignRight="@+id/btn_newFAB"
-        android:layout_marginBottom="30dp"
-        android:alpha="1"
-        android:contentDescription="@string/settings"
-        android:visibility="invisible"
-        app:backgroundTint="@color/black"
-        app:fabCustomSize="60dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_stakeholder_new_ReceivableOrPayable"
-        app:layout_constraintEnd_toEndOf="@+id/btn_stakeholder_new_ReceivableOrPayable"
-        app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_baseline_add_24" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_stakeholder_view_holder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="15dp"
-
-        android:contentDescription="@string/settings"
-        app:backgroundTint="@color/fb_color"
-        app:fabCustomSize="60dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_baseline_add_24" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_stakeholder_new_ReceivableOrPayable"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_newFAB"
-        android:layout_alignEnd="@+id/btn_newFAB"
-        android:layout_alignRight="@+id/btn_newFAB"
-        android:layout_marginBottom="30dp"
-        android:alpha="1"
-        android:contentDescription="@string/settings"
-        android:visibility="invisible"
-        app:backgroundTint="@color/black"
-        app:fabCustomSize="60dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_stakeholder_view_holder"
-        app:layout_constraintEnd_toEndOf="@+id/btn_stakeholder_view_holder"
-        app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_baseline_add_24" />
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

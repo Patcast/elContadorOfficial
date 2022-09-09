@@ -289,6 +289,7 @@
     <string name="choose">Choose</string>
     <string name="receivable_of">\"Rec. of \"</string>
     <string name="payable_of">Pay. of</string>
+    <string name="balance_stake">Balance:</string>
     <string-array name="type_of_cash_transaction">
         <item>Any</item>
         <item>Receivables</item>
