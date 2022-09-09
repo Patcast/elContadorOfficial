@@ -13,7 +13,7 @@
     <string name="please_fill_in_duration">"Indica el numero de repeticiones"</string>
     <string name="select_frequency">"Favor de seleccionar la frecuencia "</string>
     <string name="number_of_payments">Number of subContracts</string>
-    <string name="date_before_error">Fecha seleccionada no es válida.</string>
+    <string name="date_before_error">La fecha de inicio debe se ser igual o posterior al día de hoy.</string>
     <string name="scheduled_transaction">"Transacción futura "</string>
     <string name="select_a_transaction">"Elige una transacción "</string>
     <string name="increase_amount_paid">Increase amount paid</string>
@@ -262,4 +262,6 @@
     <string name="add_transaction">Añadir Transacción</string>
     <string name="add_future_transaction">Añadir Transacción Futura</string>
     <string name="new_future_transaction">Nueva Transacción futura</string>
+    <string name="add_title">Añade un titulo</string>
+    <string name="choose">Elegir</string>
 </resources>

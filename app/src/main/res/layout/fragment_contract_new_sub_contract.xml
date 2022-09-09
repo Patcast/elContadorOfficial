@@ -87,6 +87,7 @@
             android:hint="@string/amount"
             android:inputType="numberDecimal"
             android:maxLength="22"
+            android:textSize="25sp"
             android:minHeight="48dp" />
         <TextView
             android:id="@+id/textView_fillAmount"
@@ -202,7 +203,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_buttons"
-            android:text="N/A"
+            android:text="@string/choose"
             android:textSize="18sp" />
 
         <EditText

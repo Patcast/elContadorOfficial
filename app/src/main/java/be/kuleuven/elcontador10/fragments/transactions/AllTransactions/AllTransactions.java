@@ -160,6 +160,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         });
         setTopMenu();
     }
+
     private void setTopMenu(){
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override

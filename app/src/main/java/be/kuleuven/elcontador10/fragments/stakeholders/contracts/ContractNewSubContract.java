@@ -212,14 +212,13 @@ public class ContractNewSubContract extends Fragment {
                 getContext(),android.R.style.Theme_Holo_Dialog_MinWidth,
                 (view1, year, month, dayOfMonth) -> {
                     month += 1;
-
                     String date = ((dayOfMonth < 10)? "0" : "" ) + dayOfMonth + "/" + ((month < 10)? "0" : "") + month + "/" + year;
                     LocalDate dateChosen = DatabaseDatesFunctions.INSTANCE.stringToDate(date);
 
                     // time chosen before now
                     if (dateChosen.isBefore(LocalDate.now())) {
-                        Toast.makeText(getContext(), R.string.date_before_error, Toast.LENGTH_SHORT).show();
-                        btnChooseStartingDate.setText(R.string.select_starting_date);
+                        Toast.makeText(getContext(), R.string.date_before_error, Toast.LENGTH_LONG).show();
+                        btnChooseStartingDate.setText(R.string.choose);
                         isStartingDatePicked=false;
 
                     } else {
