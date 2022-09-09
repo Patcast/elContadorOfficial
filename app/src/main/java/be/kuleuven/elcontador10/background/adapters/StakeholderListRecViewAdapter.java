@@ -69,7 +69,6 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
         else holder.textBalance.setVisibility(View.GONE); // hide 0 balance
 
         holder.parent.setOnClickListener(v -> {
-                    //viewModel.selectStakeholder(stakeholdersList.get(position));
                     NavController navController = Navigation.findNavController(viewFromHostingClass);
                     StakeholdersListDirections.ActionStakeholdersToStakeholder action  = StakeholdersListDirections.actionStakeholdersToStakeholder(stakeholdersList.get(position));
                     navController.navigate(action);

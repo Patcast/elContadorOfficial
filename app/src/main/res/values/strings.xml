@@ -287,6 +287,8 @@
     <string name="add_future_transaction">Add future transaction</string>
     <string name="new_future_transaction">New Future Transaction</string>
     <string name="choose">Choose</string>
+    <string name="receivable_of">\"Rec. of \"</string>
+    <string name="payable_of">Pay. of</string>
     <string-array name="type_of_cash_transaction">
         <item>Any</item>
         <item>Receivables</item>

@@ -115,6 +115,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
                 e.printStackTrace();
             }
         });
+
         viewModel.getAllChosenTransactions().observe(getViewLifecycleOwner(), i->adapter.setAllTransactions(i));
         viewModel.getMapOfMonthlySummaryValues().observe(getViewLifecycleOwner(), this::updateSummaryUi);
         startRecycler(view);
@@ -282,7 +283,6 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         String monthYear = ""+monthSelected+" "+calendarFilter.get("year");
         selectMonth.setText(monthYear);
         viewModel.resetListOfTransactions();
-        viewModel.selectScheduleTransactions();
         viewModel.selectListOfProcessedTransactions();
 
         selectedMonth = monthSelected;
@@ -343,9 +343,8 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     private void export(DialogInterface dialogInterface, int id) {
         List<ProcessedTransaction> processed;
         processed = viewModel.getMonthlyListOfProcessedTransactions();
-        List<ScheduledTransaction> scheduled = viewModel.getMonthlyListOfScheduleTransactions();
 
-        File file = Exporter.INSTANCE.createFile(selectedMonth + "_" + selectedYear, processed, scheduled,
+        File file = Exporter.INSTANCE.createFile(selectedMonth + "_" + selectedYear, processed, null,
                 startingBalance, cashIn, cashOut, currentBalance, receivables, payables, scheduleBalance);
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();

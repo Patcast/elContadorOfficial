@@ -264,4 +264,6 @@
     <string name="new_future_transaction">Nueva Transacción futura</string>
     <string name="add_title">Añade un titulo</string>
     <string name="choose">Elegir</string>
+    <string name="receivable_of">"c.p.cobrar: "</string>
+    <string name="payable_of">c.p.pagar: </string>
 </resources>

@@ -24,16 +24,14 @@ import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
-import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.tools.DateFormatter;
 import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolderDirections;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.AllTransactionsDirections;
 
 
 public class TransactionsRecViewAdapter extends RecyclerView.Adapter<TransactionsRecViewAdapter.ViewHolder>  {
-    private List<TransactionInterface> allTransactions = new ArrayList<>();
+    private List<ProcessedTransaction> allTransactions = new ArrayList<>();
     NavController navController;
     View viewFromHostingClass;
     Context context;
@@ -54,10 +52,9 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
-        TransactionInterface transaction = allTransactions.get(position);
-        // show stakeholder
-        if(transaction.getTotalAmount()<0)holder.textPaidBy.setText(R.string.paid_to);
-        else holder.textPaidBy.setText(R.string.paid_by);
+        ProcessedTransaction transaction = allTransactions.get(position);
+
+        holder.textPaidBy.setText(transaction.transText());
         holder.textNameOfParticipant.setText(Caching.INSTANCE.getStakeholderName(transaction.getIdOfStakeInt()));
         // show Amount
         holder.textAmount.setText(transaction.getAmountToDisplay());
@@ -74,7 +71,6 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         else holder.camaraIcon.setVisibility(View.VISIBLE);
 
         holder.parent.setOnClickListener(v -> {
-            if (transaction instanceof ProcessedTransaction) {
                 try {
                     // from Account ViewHolder
                     ProcessedTransaction castTransaction = (ProcessedTransaction) transaction;
@@ -84,22 +80,12 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
                         navController.navigate(action);
                     }
 
-                } catch (Exception e) {
+                } catch (Exception e) { // there must be a better way
                     // from MicroAccount ViewHolder
                     StakeholderViewPageHolderDirections.ActionMicroAccountViewPagerHolderToTransactionDisplay action =
                             StakeholderViewPageHolderDirections.actionMicroAccountViewPagerHolderToTransactionDisplay(transaction.getIdOfTransactionInt());
                     navController.navigate(action);
                 }
-            }
-            else if (allTransactions.get(position) instanceof ScheduledTransaction) {
-                    AllTransactionsDirections.ActionAllTransactions2ToExecuteScheduledTransaction action =
-                            AllTransactionsDirections.actionAllTransactions2ToExecuteScheduledTransaction(transaction.getIdOfTransactionInt());
-
-                    Caching.INSTANCE.setChosenStakeHolder(transaction.getIdOfStakeInt());
-
-                    navController.navigate(action);
-
-                } else Toast.makeText(context, "Error!", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -130,7 +116,7 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
     }
 
 
-    public void setAllTransactions (List<TransactionInterface> NewTransactions) {
+    public void setAllTransactions (List<ProcessedTransaction> NewTransactions) {
         this.allTransactions = NewTransactions;
         notifyDataSetChanged();
     }

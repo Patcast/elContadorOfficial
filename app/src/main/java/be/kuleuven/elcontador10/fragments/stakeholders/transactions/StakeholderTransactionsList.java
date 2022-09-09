@@ -32,7 +32,7 @@ public class StakeholderTransactionsList extends Fragment implements Caching.Mic
     private RecyclerView recyclerView;
     private LinearLayout coverLayout;
     private TransactionsRecViewAdapter adapter;
-    private ArrayList<TransactionInterface> transactions;
+    private List<ProcessedTransaction> transactions;
 
     private StakeholderViewModel viewModel;
     private boolean fabClicked;

@@ -212,12 +212,26 @@ public class ProcessedTransaction implements TransactionInterface {
     @Override
     public int getColorInt() {
         if(getIsDeleted())return R.color.rec_view_scheduled_completed;
+
+        else if(getType().contains("CASH")){
+            if(getTotalAmount()<0) return R.color.transaction_processed_positive;
+            else return R.color.transaction_processed_negative;
+        }
         else{
-            int colorPositive = R.color.transaction_processed_positive;
-            int colorNegative = R.color.transaction_processed_negative;
-            return (totalAmount<0)? colorNegative : colorPositive;
+            if(getType().contains("RECEIVABLES"))return R.color.rec_view_receivable;
+            else return R.color.rec_view_payable;
         }
 
+    }
+    public int transText(){
+        if(getType().contains("CASH")){
+            if(getTotalAmount()<0) return (R.string.paid_to);
+            else return (R.string.paid_by);
+        }
+        else{
+            if(getType().contains("RECEIVABLES"))return (R.string.receivable_of);
+            else return(R.string.payable_of);
+        }
     }
 
     @Exclude

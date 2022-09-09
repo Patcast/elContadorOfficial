@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,12 +38,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     private FloatingActionButton fab;
     private MainActivity mainActivity;
     private StakeholderViewModel viewModel;
-/*    private FloatingActionButton newTransaction;
-    private FloatingActionButton newPayableReceivable;
-    private TextView labelNewTransaction;
-    private TextView labelNewPayableReceivable;
-    private boolean fabClicked;
-    private Animation rotateOpen,rotateClose,popOpen,popClose;*/
+
 
 
 
@@ -50,7 +46,6 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mainActivity = (MainActivity) requireActivity();
         mainActivity.displayToolBar(true);
     }
@@ -63,20 +58,9 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         mAdapter = new ViewPagerAdapter(mainActivity.getSupportFragmentManager(), getLifecycle());
         viewPager.setPageTransformer(new ZoomOutPageTransformer(this));
 
-        fab = view.findViewById(R.id.btn_stakeholder_view_holder);
-       /* newTransaction = view.findViewById(R.id.btn_stakeholder_new_transaction);
-        newPayableReceivable = view.findViewById(R.id.btn_stakeholder_new_ReceivableOrPayable);
-
-        labelNewTransaction = view.findViewById(R.id.lbl_stakeholder_newTransaction);
-        labelNewPayableReceivable = view.findViewById(R.id.lbl_stakeholder_newPayableReceivable);*/
-
         viewModel = new ViewModelProvider(requireActivity()).get(StakeholderViewModel.class);
 
-        viewModel.getFabClicked().observe(getViewLifecycleOwner(), item -> {
-            //fabClicked = item;
-//            setVisibility();
-//            setAnimation();
-        });
+
 
         addFragments(view);
 
@@ -87,7 +71,6 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         StakeHolder stakeHolder = StakeholderViewPageHolderArgs.fromBundle(getArguments()).getStakeHolder();
         mainActivity.setHeaderText(stakeHolder.getName() + " - " + Caching.INSTANCE.getAccountName());
         mainActivity.displayTabLayout(true);

@@ -34,11 +34,9 @@ import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.SummaryHeader;
-import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 
 public class ViewModel_AllTransactions extends ViewModel {
     private static final String TAG = "All Transactions VM";
-    //ChosenTypesOfTransactions
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Account currentAccounts;
 
@@ -49,9 +47,9 @@ public class ViewModel_AllTransactions extends ViewModel {
         requestBalanceRecords();
         initialiseCalendarFilter();
         initialiseBooleanFilter();
-        selectScheduleTransactions();
         selectListOfProcessedTransactions();
         requestCurrentAccount();
+        requestGroupOFStakeHolders(Caching.INSTANCE.getChosenAccountId());
     }
 
 
@@ -86,6 +84,8 @@ public class ViewModel_AllTransactions extends ViewModel {
                 listTrans.add(myTransaction);
             }
             monthlyListOfProcessedTransactions.clear();
+            // IF WE WANT TO FILTER PENDING
+            //monthlyListOfProcessedTransactions.addAll(listTrans.stream().filter(i->!i.getType().contains("PENDING")).collect(Collectors.toList()));
             monthlyListOfProcessedTransactions.addAll(listTrans);
             setListOfTransactions();
         });
@@ -96,8 +96,8 @@ public class ViewModel_AllTransactions extends ViewModel {
         setMapOfSummary(currentAccounts.getSumOfPayables(),currentAccounts.getSumOfReceivables(),currentAccounts.getEquity());
     }
     /// List of transactions displayed
-    private final MutableLiveData<List<TransactionInterface>> allChosenTransactions = new MutableLiveData<>();
-    public LiveData<List<TransactionInterface>> getAllChosenTransactions() {
+    private final MutableLiveData<List<ProcessedTransaction>> allChosenTransactions = new MutableLiveData<>();
+    public LiveData<List<ProcessedTransaction>> getAllChosenTransactions() {
         return allChosenTransactions;
     }
 
@@ -165,12 +165,6 @@ public class ViewModel_AllTransactions extends ViewModel {
     }
 
 
-
-    ///UNKOWN IF IT WILL REMAIN
-
-
-    private final List<ScheduledTransaction> monthlyListOfScheduleTransactions = new ArrayList<>();
-
     /// Boolean filter
     private final MutableLiveData<Map<String,Boolean>> booleanFilter = new MutableLiveData<>();
     public LiveData<Map<String,Boolean>> getBooleanFilter() {
@@ -228,66 +222,20 @@ public class ViewModel_AllTransactions extends ViewModel {
         });
     }
 
-
-
-
-
-
-
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void selectScheduleTransactions() throws ParseException {
-        int month = getCalendarFilter().getValue().get("month");
-        int year = getCalendarFilter().getValue().get("year");// this will cause trouble
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date dateEnd = dateFormat.parse("01/"+(month+1)+"/"+year);
-        Timestamp dateSelectedTop = new Timestamp(dateEnd);
-        //Date dateBottom = dateFormat.parse("01/"+month+"/"+year);
-        //Timestamp dateSelectedBottom = new Timestamp(dateBottom);
-
-        db.collectionGroup("scheduledTransactions").
-                whereEqualTo("idOfAccount", Caching.INSTANCE.getChosenAccountId()).
-                whereEqualTo("completed", false).
-               // whereGreaterThanOrEqualTo("dueDate", dateSelectedBottom).
-                whereLessThan("dueDate", dateSelectedTop).
-                addSnapshotListener((value,e ) -> {
-
-                    if (e != null) {
-                    Log.w(TAG, "Listen failed.", e);
-                    return;
-                     }
-                    List<ScheduledTransaction> listTransSchedule = new ArrayList<>();
-                    monthlyListOfScheduleTransactions.clear();
-                    for (QueryDocumentSnapshot doc : value) {
-                        ScheduledTransaction myTransaction =  doc.toObject(ScheduledTransaction.class);
-                        myTransaction.setId(doc.getId());
-                        myTransaction.setPath(doc.getReference().getPath());
-                        listTransSchedule.add(myTransaction);
-                    }
-                    monthlyListOfScheduleTransactions.addAll(listTransSchedule);
-                    Caching.INSTANCE.setScheduledTransactions(listTransSchedule);
-                    requestGroupOFStakeHolders(Caching.INSTANCE.getChosenAccountId()); // updates the balance of each stakeholder.
-                });
-    }
-
-
-
-
-
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private List<TransactionInterface> filterTransactions() {
-        List<TransactionInterface> listAllTransactionsFiltered = new ArrayList<>();
+    private List<ProcessedTransaction> filterTransactions() {
+        List<ProcessedTransaction> listAllTransactionsFiltered = new ArrayList<>();
         if(booleanFilter.getValue().get("transaction"))
         {
-            listAllTransactionsFiltered.addAll(monthlyListOfProcessedTransactions.stream().filter(i-> !i.getIsDeleted()).collect(Collectors.toList()));
+            listAllTransactionsFiltered.addAll(monthlyListOfProcessedTransactions.stream().filter(i-> !i.getIsDeleted()).filter(i->i.getType().contains("CASH")).collect(Collectors.toList()));
         }
         if(booleanFilter.getValue().get("receivable"))
         {
-            listAllTransactionsFiltered.addAll(monthlyListOfScheduleTransactions.stream().filter(i->i.getTotalAmount()>0).collect(Collectors.toList()));
+            listAllTransactionsFiltered.addAll(monthlyListOfProcessedTransactions.stream().filter(i->!i.getType().contains("CASH")).filter(i->i.getType().contains("RECEIVABLES")).collect(Collectors.toList()));
         }
         if(booleanFilter.getValue().get("payable"))
         {
-            listAllTransactionsFiltered.addAll(monthlyListOfScheduleTransactions.stream().filter(i->i.getTotalAmount()<0).collect(Collectors.toList()));
+            listAllTransactionsFiltered.addAll(monthlyListOfProcessedTransactions.stream().filter(i->!i.getType().contains("CASH")).filter(i->i.getType().contains("PAYABLES")).collect(Collectors.toList()));
         }
         if(booleanFilter.getValue().get("deletedTrans"))
         {
@@ -315,7 +263,6 @@ public class ViewModel_AllTransactions extends ViewModel {
         setBooleanFilter(transTypes);
     }
     public void resetListOfTransactions() {
-        monthlyListOfScheduleTransactions.clear();
         monthlyListOfProcessedTransactions.clear();
     }
 
@@ -348,9 +295,7 @@ public class ViewModel_AllTransactions extends ViewModel {
     public List<ProcessedTransaction> getMonthlyListOfProcessedTransactions() {
         return monthlyListOfProcessedTransactions;
     }
-    public List<ScheduledTransaction> getMonthlyListOfScheduleTransactions() {
-        return monthlyListOfScheduleTransactions;
-    }
+
 
 
 
