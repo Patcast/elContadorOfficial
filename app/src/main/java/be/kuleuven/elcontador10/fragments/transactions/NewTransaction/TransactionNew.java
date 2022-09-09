@@ -144,7 +144,6 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
     @Override
     public void onStart() {
         super.onStart();
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,false);
         viewModel.getChosenStakeholder().observe(getViewLifecycleOwner(), this::setStakeChosenText);
         viewModel.getChosenCategory().observe(getViewLifecycleOwner(), this::setCategoryChosen);
         viewModel.getChosenImage().observe(getViewLifecycleOwner(),this::setImageChosen);

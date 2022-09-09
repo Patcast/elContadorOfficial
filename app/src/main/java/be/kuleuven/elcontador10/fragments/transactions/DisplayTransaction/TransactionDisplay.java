@@ -12,13 +12,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +49,7 @@ import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class TransactionDisplay extends Fragment implements MainActivity.TopMenuHandler,EasyPermissions.PermissionCallbacks {
+public class TransactionDisplay extends Fragment implements EasyPermissions.PermissionCallbacks {
     private MainActivity mainActivity;
     TextView concerning, registeredBy,account, amount, category,emojiCategory, date,time, notes;
     ProcessedTransaction selectedTrans;
@@ -96,25 +100,39 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
         }
         imViewPhotoIn.setOnClickListener(v->navController.navigate(R.id.action_transactionDisplay_to_displayPhoto2));
         layoutAddPhotoIcon.setOnClickListener(v->startCamara());
+        setTopMenu();
     }
 
+      private void setTopMenu(){
+       requireActivity().addMenuProvider(new MenuProvider() {
+           @Override
+           public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+               menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
+               menu.findItem(R.id.menu_delete).setVisible(true);
+           }
+
+           @RequiresApi(api = Build.VERSION_CODES.N)
+           @Override
+           public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+               switch (menuItem.getItemId()){
+                   case R.id.menu_delete:
+                       onDeleteClick();
+                       return true;
+                   default:
+                       return false;
+               }
+           }
+       }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+   }
     @Override
     public void onStart() {
         super.onStart();
         checkIfImageExists();
-        mainActivity.setCurrentMenuClicker(this);
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_delete,true);
         viewModel.getChosenBitMap().observe(getViewLifecycleOwner(), i -> setImage(null,i));
         viewModel.getIsLoading().observe(getViewLifecycleOwner(),this::setLoadingBar);
         viewModel.getChosenImage().observe(getViewLifecycleOwner(),b -> setImage(b,null));
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_delete,false);
-
-    }
 
     private void setLoadingBar(Boolean aBoolean) {
         if (aBoolean){
@@ -235,13 +253,8 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
     }
 
 
-    @Override
-    public void onBottomSheetClick() {
-
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
     public void onDeleteClick() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Delete transaction")
@@ -251,45 +264,6 @@ public class TransactionDisplay extends Fragment implements MainActivity.TopMenu
                 .create()
                 .show();
     }
-
-    @Override
-    public void onEditingClick() {
-
-    }
-
-    @Override
-    public void onAddClick() {
-
-    }
-
-    @Override
-    public void onSearchClick(MenuItem item) {
-
-    }
-
-    @Override
-    public void onFilterClick() {
-
-    }
-
-    @Override
-    public void onToolbarTitleClick() {
-
-    }
-    @Override
-    public void onExportClick() {
-
-    }
-    @Override
-    public void addStakeholder() {
-
-    }
-
-    @Override
-    public void addProperty() {
-
-    }
-
     //
     ////// CAMARA
     /////

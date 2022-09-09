@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +15,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,7 +33,7 @@ import be.kuleuven.elcontador10.background.model.Account;
 
 
 
-public class Accounts extends Fragment implements Caching.AccountsObserver, MainActivity.TopMenuHandler, AccountsBottomMenu.AccountsBottomSheetListener {
+public class Accounts extends Fragment implements Caching.AccountsObserver, AccountsBottomMenu.AccountsBottomSheetListener {
 
 
     private static final String TAG = "Accounts";
@@ -52,7 +56,6 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
         view = inflater.inflate(R.layout.fragment_home, container, false);
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitle(getString(R.string.accounts));
-        mainActivity.setCurrentMenuClicker(this);
         return view;
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -64,6 +67,31 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
         checkLogIn(mainActivity.returnSavedLoggedEmail());
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> mainActivity.displayToolBar(true));
+        setTopMenu();
+    }
+       private void setTopMenu(){
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
+                menu.findItem(R.id.menu_bottom_sheet).setVisible(true);
+                menu.findItem(R.id.menu_add).setVisible(true);
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.menu_bottom_sheet:
+                        onBottomSheetClick();
+                        return true;
+                    case R.id.menu_add:
+                        onAddClick();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
 
     private void startRecyclerView(View view){
@@ -92,8 +120,6 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
         Caching.INSTANCE.attachAccountsObservers(this, mainActivity.returnSavedLoggedEmail());
         try{
             mainActivity.displayBottomNavigationMenu(false);
-            mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add,true);
-            mainActivity.modifyVisibilityOfMenuItem(R.id.menu_bottom_sheet,true);
         }
         catch(Exception e){}
     }
@@ -101,15 +127,6 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
     @Override
     public void onStop() {
         super.onStop();
-        try{
-            mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add,false);
-            mainActivity.modifyVisibilityOfMenuItem(R.id.menu_bottom_sheet,false);
-
-        }
-        catch(Exception e){
-
-        }
-
         Caching.INSTANCE.deAttachAccountsObservers(this);
     }
 
@@ -134,53 +151,13 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Main
         navController.navigate(R.id.signIn);
     }
     //Menu
-    @Override
+
     public void onBottomSheetClick() {
         bottomSheet = new AccountsBottomMenu(this);
         bottomSheet.show(getParentFragmentManager(),"AccountsBottomSheet");
     }
-
-    @Override
-    public void onDeleteClick() {
-
-    }
-
-    @Override
-    public void onEditingClick() {
-
-    }
-
-    @Override
     public void onAddClick() {
         navController.navigate(R.id.action_accounts_to_addNewAccount);
     }
 
-    @Override
-    public void onSearchClick(MenuItem item) {
-
-    }
-
-    @Override
-    public void onFilterClick() {
-
-    }
-
-    @Override
-    public void onToolbarTitleClick() {
-
-    }
-    @Override
-    public void onExportClick() {
-
-    }
-
-    @Override
-    public void addStakeholder() {
-
-    }
-
-    @Override
-    public void addProperty() {
-
-    }
 }

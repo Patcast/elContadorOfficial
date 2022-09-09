@@ -29,7 +29,7 @@ import be.kuleuven.elcontador10.background.model.contract.SubContract;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
-public class SubContractDisplay extends Fragment implements Caching.SubContractObserver, MainActivity.TopMenuHandler {
+public class SubContractDisplay extends Fragment implements Caching.SubContractObserver {
 
     //views
     private TextView amount, period, title;
@@ -50,8 +50,8 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
 
         // set variables
         mainActivity = (MainActivity) requireActivity();
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter, true);
-        mainActivity.setCurrentMenuClicker(this);
+        //mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter, true);
+       // mainActivity.setCurrentMenuClicker(this);
 
         scheduledTransactions = new ArrayList<>();
         adapter = new ScheduledTransactionsRecViewAdapter(view, getContext());
@@ -114,59 +114,17 @@ public class SubContractDisplay extends Fragment implements Caching.SubContractO
     @Override
     public void onStop() {
         super.onStop();
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter, false);
+        //mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter, false);
         mainActivity.setCurrentMenuClicker(null);
     }
 
     // activity handler functions
 
-    @Override
-    public void onBottomSheetClick() {
 
-    }
-
-    @Override
-    public void onDeleteClick() {
-
-    }
-
-    @Override
-    public void onEditingClick() {
-
-    }
-
-    @Override
-    public void onAddClick() {
-
-    }
-
-    @Override
-    public void onSearchClick(MenuItem item) {
-
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
     public void onFilterClick() {
         SubContractFilterDialog filterDialog = new SubContractFilterDialog(getViewLifecycleOwner());
         filterDialog.show(getParentFragmentManager(), "SubContractDisplay");
     }
 
-    @Override
-    public void onToolbarTitleClick() {
 
-    }
-    @Override
-    public void onExportClick() {
-
-    }
-    @Override
-    public void addStakeholder() {
-
-    }
-
-    @Override
-    public void addProperty() {
-
-    }
 }

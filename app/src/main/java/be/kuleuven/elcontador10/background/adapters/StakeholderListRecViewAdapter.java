@@ -26,8 +26,7 @@ import java.util.stream.Collectors;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
-import be.kuleuven.elcontador10.fragments.stakeholders.common.AllStakeholders.StakeholdersListDirections;
-
+import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholdersListDirections;
 
 
 public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<StakeholderListRecViewAdapter.ViewHolder> implements Filterable {

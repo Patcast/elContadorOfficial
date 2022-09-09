@@ -27,7 +27,6 @@ import be.kuleuven.elcontador10.background.model.Property;
 
 public class AddProperty extends Fragment {
     private NavController navController;
-
     private TextView inputName;
 
     @Nullable

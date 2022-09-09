@@ -11,7 +11,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -20,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.StrictMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,9 +98,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_transactions, container, false);
         mainActivity = (MainActivity) requireActivity();
-        mainActivity.setCurrentMenuClicker(this);
 
-        mainActivity.displayBottomNavigationMenu(true);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         selectMonth = view.findViewById(R.id.btn_selectMonth);
         txtSumOfCashOut = view.findViewById(R.id.text_sumCashOut);
@@ -156,20 +158,41 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
                 else fabNew.setVisibility(View.VISIBLE);
             }
         });
-
+        setTopMenu();
     }
+    private void setTopMenu(){
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
+                menu.findItem(R.id.menu_filter).setVisible(true);
+                menu.findItem(R.id.menu_export).setVisible(true);
+            }
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.menu_filter:
+                        onFilterClick();
+                        return true;
+                    case R.id.menu_export:
+                        onExportClick();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+    }
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onStart() {
         super.onStart();
-
         mainActivity.displayBottomNavigationMenu(true);
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,true);
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_export,true);
-        //mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add,false);
-        //mainActivity.modifyVisibilityOfMenuItem(R.id.menu_bottom_sheet,false);
+        mainActivity.setCurrentMenuClicker(this);
         recyclerAllTransactions.setAdapter(adapter);
 
     }
@@ -177,10 +200,9 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     @Override
     public void onStop() {
         super.onStop();
-
+        mainActivity.setCurrentMenuClicker(null);
         mainActivity.displayBottomNavigationMenu(false);
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_filter,false);
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_export,false);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -389,40 +411,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
     ///////*******
 
-    @Override
-    public void onBottomSheetClick() {
-    }
 
-    @Override
-    public void onDeleteClick() {
-
-    }
-
-    @Override
-    public void onEditingClick() {
-
-    }
-
-    @Override
-    public void onAddClick() {
-
-    }
-    @Override
-    public void addStakeholder() {
-
-    }
-
-    @Override
-    public void addProperty() {
-
-    }
-
-    @Override
-    public void onSearchClick(MenuItem item) {
-
-    }
-
-    @Override
     public void onFilterClick() {
         DialogFilterAllTransactions filterDialog = new DialogFilterAllTransactions(getViewLifecycleOwner());
         filterDialog.show(getParentFragmentManager(),"AccountsBottomSheet");
@@ -433,7 +422,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         navController.navigate(R.id.action_allTransactions2_to_accountSettings);
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
+
     public void onExportClick() {
         onExport_Clicked();
     }

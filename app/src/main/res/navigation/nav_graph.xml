@@ -191,7 +191,7 @@
     </fragment>
     <fragment
         android:id="@+id/stakeholders"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.common.AllStakeholders.StakeholdersList"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholdersList"
         android:label="fragment_all_micro_acounts"
         tools:layout="@layout/fragment_all_micro_acounts" >
         <action

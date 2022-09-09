@@ -3,6 +3,8 @@ package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -26,7 +30,7 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.ViewModel_AllTransactions;
 
 
-public class ChooseStakeHolder extends Fragment implements MainActivity.TopMenuHandler{
+public class ChooseStakeHolder extends Fragment {
     private ConstraintLayout noStakeLayout;
     private ChooseStakeHolderRecViewAdapter adapter;
     private ViewModel_NewTransaction viewModel;
@@ -46,7 +50,6 @@ public class ChooseStakeHolder extends Fragment implements MainActivity.TopMenuH
         View view = inflater.inflate(R.layout.fragment_choose_stake_holder, container, false);
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setHeaderText(getString(R.string.select_a_stakeholder));
-        mainActivity.setCurrentMenuClicker(this);
         RecyclerView recyclerStakeHolds = view.findViewById(R.id.recyclerViewChooseStake);
         noStakeLayout = view.findViewById(R.id.layoutNoStakeHolder);
         recyclerStakeHolds.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -64,21 +67,34 @@ public class ChooseStakeHolder extends Fragment implements MainActivity.TopMenuH
         ViewModel_AllTransactions viewModel_allTransactions = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
         viewModel_allTransactions.requestGroupOFStakeHolders(Caching.INSTANCE.getChosenAccountId());
         viewModel_allTransactions.getStakeholdersList().observe(getViewLifecycleOwner(), i->adapter.setStakeholdersList(i));
+        setTopMenu();
+    }
+      private void setTopMenu(){
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
+                menu.findItem(R.id.menu_bottom_sheet).setVisible(true);
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.menu_search:
+                        onSearchClick(menuItem);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
 
-    @Override
-    public void onStart(){
-        super.onStart();
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,true);
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add,false);
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_bottom_sheet,false);
-    }
+
 
     @Override
     public void onStop() {
         super.onStop();
-
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,false);
         if( menuItem != null) menuItem.collapseActionView();
     }
 
@@ -87,27 +103,6 @@ public class ChooseStakeHolder extends Fragment implements MainActivity.TopMenuH
         navController.popBackStack();
     }
 
-    @Override
-    public void onBottomSheetClick() {
-
-    }
-
-    @Override
-    public void onDeleteClick() {
-
-    }
-
-    @Override
-    public void onEditingClick() {
-
-    }
-
-    @Override
-    public void onAddClick() {
-
-    }
-
-    @Override
     public void onSearchClick(MenuItem item) {
         this.menuItem = item;
         SearchView searchView = (SearchView)  item.getActionView();
@@ -125,28 +120,5 @@ public class ChooseStakeHolder extends Fragment implements MainActivity.TopMenuH
                 return false;
             }
         });
-    }
-
-    @Override
-    public void onFilterClick() {
-
-    }
-
-    @Override
-    public void onToolbarTitleClick() {
-
-    }
-    @Override
-    public void onExportClick() {
-
-    }
-    @Override
-    public void addStakeholder() {
-
-    }
-
-    @Override
-    public void addProperty() {
-
     }
 }

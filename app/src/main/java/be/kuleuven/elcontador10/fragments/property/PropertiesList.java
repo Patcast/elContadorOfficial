@@ -6,7 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -15,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,10 +58,6 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
         mainActivity = (MainActivity) requireActivity();
         viewModelPropertiesList = new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
-
-        mainActivity.setCurrentMenuClicker(this);
-
-
         try{
             prevTAG = PropertiesListArgs.fromBundle(getArguments()).getPreviousFragment();
             adapter = new PropertiesListRecViewAdapter(view,prevTAG,viewModel);
@@ -77,6 +77,33 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
         viewModelPropertiesList.getListOfProperties().observe(getViewLifecycleOwner(), i->adapter.setPropertyListOnAdapter(i));
+        setTopMenu();
+    }
+       private void setTopMenu(){
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
+                menu.findItem(R.id.menu_search).setVisible(true);
+                menu.findItem(R.id.menu_add_property).setVisible(true);
+
+            }
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+
+                    case R.id.menu_search:
+                        onSearchClick(menuItem);
+                        return true;
+                    case R.id.menu_add_property:
+                        addProperty();
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
 
 
@@ -84,11 +111,9 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
     @Override
     public void onStart() {
         super.onStart();
-
+        mainActivity.setCurrentMenuClicker(this);
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,true);
         if(prevTAG==null) {
-            mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add_property,true);
             mainActivity.displayBottomNavigationMenu(true);
         }
     }
@@ -96,37 +121,12 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
     @Override
     public void onStop() {
         super.onStop();
-        mainActivity.modifyVisibilityOfMenuItem(R.id.menu_search,false);
+        mainActivity.setCurrentMenuClicker(null);
         if(prevTAG==null) {
-            mainActivity.modifyVisibilityOfMenuItem(R.id.menu_add_property,false);
             mainActivity.displayBottomNavigationMenu(false);
         }
         if( menuItem != null) menuItem.collapseActionView();
     }
-
-
-
-    @Override
-    public void onBottomSheetClick() {
-
-    }
-
-    @Override
-    public void onDeleteClick() {
-
-    }
-
-    @Override
-    public void onEditingClick() {
-
-    }
-
-    @Override
-    public void onAddClick() {
-
-    }
-
-    @Override
     public void onSearchClick(MenuItem item) {
         this.menuItem = item;
         SearchView searchView = (SearchView)  item.getActionView();
@@ -147,21 +147,6 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
 
     }
 
-
-    @Override
-    public void onFilterClick() {
-
-    }
-    @Override
-    public void onExportClick() {
-
-    }
-    @Override
-    public void addStakeholder() {
-
-    }
-
-    @Override
     public void addProperty() {
         navController.navigate(R.id.action_propertiesList_to_addProperty);
     }
