@@ -290,6 +290,7 @@
     <string name="receivable_of">\"Rec. of \"</string>
     <string name="payable_of">Pay. of</string>
     <string name="balance_stake">Balance:</string>
+    <string name="f_transaction_for">\"Future transaction for \"</string>
     <string-array name="type_of_cash_transaction">
         <item>Any</item>
         <item>Receivables</item>

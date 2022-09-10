@@ -2,6 +2,7 @@ package be.kuleuven.elcontador10.fragments.stakeholders.common;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +15,24 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.firebase.Timestamp;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.ViewPagerAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 
+import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.tools.ZoomOutPageTransformer;
 import be.kuleuven.elcontador10.fragments.stakeholders.StakeDetailsList;
 import be.kuleuven.elcontador10.fragments.stakeholders.StakeholderViewModel;
-import be.kuleuven.elcontador10.fragments.stakeholders.contracts.ContractsList;
+import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.ViewModel_AllTransactions;
 
 
 // move FAB here
@@ -35,7 +42,9 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     private MainActivity mainActivity;
     private StakeholderViewModel viewModel;
     StakeHolder stakeHolder;
-
+    String summary,sumOfTransactions,initialSummary;
+    List<ProcessedTransaction> processedTransactionList = new ArrayList<>();
+    private ViewModel_AllTransactions viewModelAllTransactions;
 
 
 
@@ -55,6 +64,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         mAdapter = new ViewPagerAdapter(mainActivity.getSupportFragmentManager(), getLifecycle());
         viewPager.setPageTransformer(new ZoomOutPageTransformer(this));
         viewModel = new ViewModelProvider(requireActivity()).get(StakeholderViewModel.class);
+        viewModelAllTransactions = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
 
         addFragments();
 
@@ -66,11 +76,60 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         stakeHolder = StakeholderViewPageHolderArgs.fromBundle(getArguments()).getStakeHolder();
-        mainActivity.setHeaderText(stakeHolder.getName() + " - " + Caching.INSTANCE.getAccountName());
+        mainActivity.setHeaderText(stakeHolder.getName());
         Caching.INSTANCE.setChosenStakeHolder(stakeHolder);
         viewModel.setSelectedStakeholder(stakeHolder);
         Caching.INSTANCE.openMicroAccount(stakeHolder.getId()); // set MicroAccount to caching
+        viewModel.getListOfStakeHolderTrans().observe(getViewLifecycleOwner(), this::updateSummaryWithTransactions);
+        viewModelAllTransactions.getStakeholdersList().observe(getViewLifecycleOwner(),s->updateSummaryWithStakeholder(s));
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void updateSummaryWithStakeholder(List<StakeHolder> s) {
+        Optional<StakeHolder> matchingObject = s.stream().
+                filter(p -> p.getId().equals(stakeHolder.getId())).
+                findFirst();
+        matchingObject.ifPresent(this::setStakeHolder);
+        if(processedTransactionList.size()>0)updateSummaryWithTransactions(processedTransactionList);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void updateSummaryWithTransactions(List<ProcessedTransaction> transactionList) {
+        processedTransactionList.clear();
+        processedTransactionList.addAll(transactionList);
+        int currentMonth = Timestamp.now().toDate().getMonth();
+        NumberFormatter formatter = new NumberFormatter(0);
+        formatter.setOriginalNumber(stakeHolder.calculateSummary());
+        summary = formatter.getFinalNumber();
+
+        formatter.setOriginalNumber(transactionList
+                        .stream()
+                        .filter(i-> !i.getIsDeleted())
+                        .filter(t->!t.getType().contains(Caching.INSTANCE.TYPE_PENDING))
+                        .filter(t->t.getType().contains(Caching.INSTANCE.TYPE_CASH))
+                        .filter(t->t.getDueDate().toDate().getMonth()==currentMonth)
+                        .map(ProcessedTransaction::getTotalAmount)
+                        .reduce(0, Integer::sum)
+        );
+        sumOfTransactions = formatter.getFinalNumber();
+
+        formatter.setOriginalNumber(transactionList
+                .stream()
+                .filter(i-> !i.getIsDeleted())
+                .filter(t->!t.getType().contains(Caching.INSTANCE.TYPE_PENDING))
+                .filter(ProcessedTransaction::isPayableOrReceivable)
+                .filter(t->t.getDueDate().toDate().getMonth()==currentMonth)
+                .map(ProcessedTransaction::calculateSummaryTotalAmount)
+                .map(t->-t)
+                .reduce((int) (stakeHolder.getSumOfReceivables()- stakeHolder.getSumOfPayables()), Integer::sum)
+        );
+
+        initialSummary=formatter.getFinalNumber();
+        mainActivity.displayStakeHolderDetails(true, summary,initialSummary ,sumOfTransactions);
+        Log.w("Stakeholder"," "+summary+" "+sumOfTransactions+" "+initialSummary);
+    }
+
+
 
     private void addFragments() {
         mAdapter.addFragment(new StakeDetailsList(Caching.INSTANCE.TYPE_CASH));
@@ -99,9 +158,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     @Override
     public void onStart() {
         super.onStart();
-        // set details
-        String balance = new NumberFormatter(stakeHolder.getEquity()).getFinalNumber();
-        mainActivity.displayStakeHolderDetails(true, balance, stakeHolder.getRole());
+        mainActivity.displayStakeHolderDetails(true, summary,initialSummary ,sumOfTransactions);
         mainActivity.displayToolBar(true);
         mainActivity.displayTabLayout(true);
     }
@@ -124,5 +181,9 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
             default:
                 break;
         }
+    }
+
+    public void setStakeHolder(StakeHolder stakeHolder) {
+        this.stakeHolder = stakeHolder;
     }
 }

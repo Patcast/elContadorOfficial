@@ -22,10 +22,7 @@ public class StakeholderViewModel extends ViewModel {
     private static final String TAG = "StakeHolder List VM";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     StakeHolder selectedStakeHolder;
-/*    StakeholderViewModel(StakeHolder selectedStakeHolder){
-        this.selectedStakeHolder=selectedStakeHolder;
-        selectListOfStakeHolder();
-    }*/
+
     public void setSelectedStakeholder(StakeHolder stake){
         selectedStakeHolder = stake;
         requestListOfStakeHolder();
@@ -45,8 +42,9 @@ public class StakeholderViewModel extends ViewModel {
     public void requestListOfStakeHolder() {
 
         String urlGetAccountTransactions = "/accounts/"+ Caching.INSTANCE.getChosenAccountId()+"/transactions";
-        Query stakeTransQuery = db.collection(urlGetAccountTransactions).whereEqualTo("idOfStakeInt",selectedStakeHolder.getId()).orderBy("dueDate", Query.Direction.ASCENDING);
-
+        Query stakeTransQuery = db.collection(urlGetAccountTransactions).
+                whereEqualTo("idOfStakeInt",selectedStakeHolder.getId()).
+                orderBy("dueDate", Query.Direction.DESCENDING);
         stakeTransQuery.addSnapshotListener((value, e) -> {
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e);

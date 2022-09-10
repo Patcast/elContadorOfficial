@@ -35,6 +35,10 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
     NavController navController;
     View viewFromHostingClass;
     Context context;
+
+    private final int VIEW_TYPE_ITEM = 0;
+    private final int VIEW_TYPE_LOADING = 1;
+
     public TransactionsRecViewAdapter(View viewFromHostingClass, Context context) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.context = context;

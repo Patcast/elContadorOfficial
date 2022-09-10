@@ -125,8 +125,8 @@
     <string name="selected_period">"Periodo "</string>
     <string name="cash_in_the_beginning">Efectivo inicial</string>
     <string name="sum_of_cash_in">Ingresos</string>
-    <string name="sum_of_receivables">Cuentas por cobrar</string>
-    <string name="sum_of_payables">"Cuentas por pagar "</string>
+    <string name="sum_of_receivables">Por cobrar</string>
+    <string name="sum_of_payables">"Por pagar "</string>
     <string name="equity">Patrimonio</string>
     <string name="Transaction_new">Nueva Transacción</string>
     <string name="Transaction_filter"> Filtro Transacciones </string>
@@ -264,7 +264,8 @@
     <string name="new_future_transaction">Nueva Transacción futura</string>
     <string name="add_title">Añade un titulo</string>
     <string name="choose">Elegir</string>
-    <string name="receivable_of">"por cobrar: "</string>
-    <string name="payable_of">por pagar: </string>
+    <string name="receivable_of">"por cobrar a "</string>
+    <string name="payable_of">por pagara </string>
     <string name="balance_stake">"Balance: "</string>
+    <string name="f_transaction_for">T. futura para</string>
 </resources>

@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomMenu;
     private Toolbar toolbar;
     private SharedPreferences sharedPreferences;
-    private TextView stakeHolderBalance, stakeholderRole;
+    private TextView stakeHolderBalance,stakeHolderInitialBalance,stakeHolderSumOfTransactions;
     private ConstraintLayout stakeholderDetails;
     private SharedPreferences.Editor editor;
     private static final String SAVED_EMAIL_KEY = "email_key";
@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         stakeholderDetails = findViewById(R.id.stakeHolderDetails);
         stakeHolderBalance = findViewById(R.id.txtViewBalance);
-        stakeholderRole = findViewById(R.id.txtViewRole);
-
+        stakeHolderInitialBalance =findViewById(R.id.textInitialBalance);
+        stakeHolderSumOfTransactions =findViewById(R.id.textSumOfCash);
         Caching.INSTANCE.setContext(this);
         setSupportActionBar(toolbar);
 
@@ -105,11 +105,13 @@ public class MainActivity extends AppCompatActivity {
         bottomMenu.setVisibility(visibility);
     }
 
-    public void displayStakeHolderDetails(boolean display, String balance, String role) {
+    public void displayStakeHolderDetails(boolean display, String summary,String sumOfTrans, String initialBalance) {
         if (display) {
             stakeholderDetails.setVisibility(View.VISIBLE);
-            stakeHolderBalance.setText(balance);
-            stakeholderRole.setText(role);
+            stakeHolderBalance.setText(summary);
+            stakeHolderSumOfTransactions.setText(initialBalance);
+            stakeHolderInitialBalance.setText(sumOfTrans);
+
         } else stakeholderDetails.setVisibility(View.GONE);
     }
 

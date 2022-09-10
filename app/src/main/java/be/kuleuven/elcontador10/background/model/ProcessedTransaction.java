@@ -213,22 +213,28 @@ public class ProcessedTransaction implements TransactionInterface {
     public int getColorInt() {
         if(getIsDeleted())return R.color.rec_view_scheduled_completed;
 
-        else if(getType().contains("CASH")){
+        else if(getType().contains(Caching.INSTANCE.TYPE_CASH)){
             if(getTotalAmount()<0) return R.color.transaction_processed_positive;
             else return R.color.transaction_processed_negative;
         }
+        else if(getType().contains(Caching.INSTANCE.TYPE_PENDING)){
+            return R.color.rec_view_receivable_future;
+        }
         else{
-            if(getType().contains("RECEIVABLES"))return R.color.rec_view_receivable;
-            else return R.color.rec_view_payable;
+            if(getType().contains(Caching.INSTANCE.TYPE_PAYABLES))return R.color.transaction_Schedule_payables;
+            else return R.color.transaction_Schedule_receivables;
         }
 
     }
     public int transText(){
-        if(getType().contains("CASH")){
+        if(getType().contains(Caching.INSTANCE.TYPE_CASH)){
             if(getTotalAmount()<0) return (R.string.paid_to);
             else return (R.string.paid_by);
         }
-        else{
+        else if(getType().contains(Caching.INSTANCE.TYPE_PENDING)) {
+             return(R.string.f_transaction_for);
+        }
+        else {
             if(getType().contains("RECEIVABLES"))return (R.string.receivable_of);
             else return(R.string.payable_of);
         }
@@ -273,6 +279,13 @@ public class ProcessedTransaction implements TransactionInterface {
 
     public void setCollectionSize(int collectionSize) {
         this.collectionSize = collectionSize;
+    }
+    public int calculateSummaryTotalAmount(){
+        if (type.contains(Caching.INSTANCE.TYPE_PAYABLES)) return -getTotalAmount();
+        else  return getTotalAmount();
+    }
+    public boolean isPayableOrReceivable(){
+        return type.contains(Caching.INSTANCE.TYPE_PAYABLES) || type.contains(Caching.INSTANCE.TYPE_RECEIVABLES);
     }
 }
 

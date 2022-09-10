@@ -67,7 +67,7 @@
         <entry key="app/src/main/res/drawable/new_account_category_outline.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/rec_view_item_accounts_test.xml" value="0.22870370370370371" />
         <entry key="app/src/main/res/font/architects_daughter.xml" value="0.2835897435897436" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.335" />
         <entry key="app/src/main/res/layout/bottom_menu_accounts.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/bottom_menu_all_transactions.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/bottom_menu_categories.xml" value="0.335" />
@@ -97,6 +97,7 @@
         <entry key="app/src/main/res/layout/fragment_transaction_display.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_transaction_new.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_view_pager_holder.xml" value="0.18796296296296297" />
+        <entry key="app/src/main/res/layout/item_loading.xml" value="0.2388888888888889" />
         <entry key="app/src/main/res/layout/list_item.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/rec_view_contracts.xml" value="0.1328125" />
         <entry key="app/src/main/res/layout/rec_view_item_accounts.xml" value="0.2430379746835443" />

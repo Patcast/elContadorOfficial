@@ -67,11 +67,11 @@ public class ContractNewSubContract extends Fragment {
     private ImageButton selectCategory;
     StakeHolder selectedStakeHolder;
     Property selectedProperty;
+    String date=null;
 
     //variables
     private MainActivity mainActivity;
     private String  idCatSelected;
-    private boolean isStartingDatePicked = false;
     private int  collectionSize;
     private ArrayList<ProcessedTransaction> transactions;
     private ViewModel_NewTransaction viewModel;
@@ -212,18 +212,17 @@ public class ContractNewSubContract extends Fragment {
                 getContext(),android.R.style.Theme_Holo_Dialog_MinWidth,
                 (view1, year, month, dayOfMonth) -> {
                     month += 1;
-                    String date = ((dayOfMonth < 10)? "0" : "" ) + dayOfMonth + "/" + ((month < 10)? "0" : "") + month + "/" + year;
+                    date = ((dayOfMonth < 10)? "0" : "" ) + dayOfMonth + "/" + ((month < 10)? "0" : "") + month + "/" + year;
                     LocalDate dateChosen = DatabaseDatesFunctions.INSTANCE.stringToDate(date);
 
                     // time chosen before now
                     if (dateChosen.isBefore(LocalDate.now())) {
                         Toast.makeText(getContext(), R.string.date_before_error, Toast.LENGTH_LONG).show();
                         btnChooseStartingDate.setText(R.string.choose);
-                        isStartingDatePicked=false;
+                        date=null;
 
                     } else {
                         btnChooseStartingDate.setText(date);
-                        isStartingDatePicked=true;
                         calculateMultipleFutureTransaction();
                     }
                 }, year_int, month_int, day_int);
@@ -267,7 +266,7 @@ public class ContractNewSubContract extends Fragment {
             fillAmountTxt.setTextColor(getContext().getResources().getColor(R.color.light_red_warning));
         }
         else if (selectedStakeHolder==null) fillStakeTxt.setText(R.string.this_field_is_requiered);
-        else if (!isStartingDatePicked) errorOnDates(getString(R.string.select_starting_date));
+        else if (date==null) errorOnDates(getString(R.string.select_starting_date));
         else if ( transactions==null||transactions.size()==0 )errorOnDates(getString(R.string.please_fill_in_duration));
         else return true;
 
@@ -277,17 +276,16 @@ public class ContractNewSubContract extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private boolean calculateMultipleFutureTransaction(){
 
-        String start_date = btnChooseStartingDate.getText().toString();
         int frequencyID = frequency_spinner.getSelectedItemPosition();
         String collectionSizeString =numOfFutureTransTxt.getText().toString();
-        if ((frequencyID == ONE_TIME ||(frequencyID != CUSTOM && collectionSizeString.length()>0))&& isStartingDatePicked) {
+        if ((frequencyID == ONE_TIME ||(frequencyID != CUSTOM && collectionSizeString.length()>0))&& date!=null) {
             collectionSize = (collectionSizeString.length()>0)? Integer.parseInt(collectionSizeString):1;
 
-            transactions = DatabaseDatesFunctions.INSTANCE.makeFutureTransactions(start_date, frequencyID,collectionSize);//
+            transactions = DatabaseDatesFunctions.INSTANCE.makeFutureTransactions(date, frequencyID,collectionSize);//
 
             if (transactions != null) {
                 String summary =
-                        getString(R.string.future_dates)+"\n"
+                        getString(R.string.future_dates)+"\n\n"
                         + transactions  .stream()
                         .map(e -> DatabaseDatesFunctions.INSTANCE.timestampToString(e.getDueDate()))
                         .collect(Collectors.joining("\n"));

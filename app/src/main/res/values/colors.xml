@@ -21,7 +21,7 @@
     <color name="transaction_Schedule_payables">#669999</color>
     <color name="transaction_Schedule_receivables">#6699cc</color>
     <color name="rec_view_negative_amount">#e4b31d</color>
-    <color name="fb_color">#cfa219</color>
+    <color name="fb_color">#a17e14</color>
     <color name="text_titles">#e4b31d</color>
     <color name="button">#cfa219</color>
     <color name="light_grey">#8d8c8c</color>
@@ -36,7 +36,10 @@
     <color name="rec_view_scheduled_completed">#82898d</color>
     <color name="rec_view_scheduled_late">#770000</color>
     <color name="title_rec_view_stake">#E2D8D7</color>
-    <color name="rec_view_payable">#f3ac23</color>
-    <color name="rec_view_receivable">#eaad81</color>
+    <color name="rec_view_payable">#efa20d</color>
+    <color name="rec_view_payable_future">#f7c76c</color>
+    <color name="rec_view_receivable">#e69f6b</color>
+    <color name="rec_view_receivable_future">#edd9cb</color>
+
 
 </resources>
