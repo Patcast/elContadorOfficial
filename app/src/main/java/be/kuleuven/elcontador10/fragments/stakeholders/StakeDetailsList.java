@@ -3,9 +3,11 @@ package be.kuleuven.elcontador10.fragments.stakeholders;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,7 +35,7 @@ public class StakeDetailsList extends Fragment {
     private String tabId;
     List<ProcessedTransaction> transactionList = new ArrayList<>();
     List<ProcessedTransaction> transactionListFuture = new ArrayList<>();
-    List<ProcessedTransaction> transactionListFull = new ArrayList<>();
+    List<ProcessedTransaction> transactionListDisplayed = new ArrayList<>();
     boolean isLoading = false;
 
     public StakeDetailsList(String tabId){
@@ -58,46 +60,71 @@ public class StakeDetailsList extends Fragment {
         return view;
     }
 
+
     private void initScrollListener() {
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                Log.w("Details", "On scroll");
+                if (!isLoading) {
+                    Log.w("Details", "On scroll is not loading");
+
+                    if (linearLayoutManager != null && linearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
+                        Log.w("Details", "On scroll is TOP");
+                        loadMore();
+                        isLoading = true;
+                    }
+                }
+
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-
+               /* LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                Log.w("Details", "On scroll");
                 if (!isLoading) {
-                    //if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == transactionList.size() - 1) {
+                    Log.w("Details", "On scroll is not loading");
+
                     if (linearLayoutManager != null && linearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
-                    loadMore();
+                        Log.w("Details", "On scroll is TOP");
+                        loadMore();
                         isLoading = true;
                     }
-                }
+                }*/
             }
         });
 
 
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        isLoading=false;
+    }
+
     private void loadMore() {
-        if(transactionListFuture.size()>0){
-            transactionList.add(0,null);
+        if(transactionListDisplayed.size()<transactionList.size()+transactionListFuture.size()){
+            Log.w("Details", "LLLLLLLoading");
+            transactionListDisplayed.add(0,null);
             recyclerViewAdapter.notifyItemInserted(0);
             Handler handler = new Handler();
             handler.postDelayed(() -> {
-                transactionList.remove(0);
+                transactionListDisplayed.remove(0);
                 recyclerViewAdapter.notifyItemRemoved(0);
-                transactionList.addAll(0,transactionListFuture);
-                transactionListFuture.clear();
+                transactionListDisplayed.addAll(0,transactionListFuture);
                 recyclerViewAdapter.notifyDataSetChanged();
                 isLoading = false;
-            }, 1000);
+            }, 2000);
         }
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -108,10 +135,10 @@ public class StakeDetailsList extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateAdapter(List<ProcessedTransaction> i) {
-        transactionListFull.clear();
-        transactionListFull.addAll(i);
-        prepareListsForAdapter(transactionListFull);
-        recyclerViewAdapter.setAllTransactions(transactionList);
+        transactionListDisplayed.clear();
+        prepareListsForAdapter(i);
+        transactionListDisplayed.addAll(transactionList);
+        recyclerViewAdapter.setAllTransactions(transactionListDisplayed);
 
     }
 

@@ -280,13 +280,8 @@ public class ProcessedTransaction implements TransactionInterface {
     public void setCollectionSize(int collectionSize) {
         this.collectionSize = collectionSize;
     }
-    public int calculateSummaryTotalAmount(){
-        if (type.contains(Caching.INSTANCE.TYPE_PAYABLES)) return -getTotalAmount();
-        else  return getTotalAmount();
-    }
-    public boolean isPayableOrReceivable(){
-        return type.contains(Caching.INSTANCE.TYPE_PAYABLES) || type.contains(Caching.INSTANCE.TYPE_RECEIVABLES);
-    }
+
+
 }
 
 

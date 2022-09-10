@@ -24,7 +24,6 @@ public class StakeHolder implements Parcelable {
     private int phoneNumber;
     private String idOfGlobalAccount;
     private boolean authorized;
-
     private long equity;
     private long cash;
     private long sumOfPayables;
@@ -176,4 +175,6 @@ public class StakeHolder implements Parcelable {
     public long calculateSummary(){
         return (sumOfReceivables-sumOfPayables);
     }
+
+
 }

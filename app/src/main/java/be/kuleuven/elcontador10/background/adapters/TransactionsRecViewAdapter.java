@@ -130,7 +130,7 @@ public class TransactionsRecViewAdapter extends  RecyclerView.Adapter<RecyclerVi
             try {
                 // from Account ItemViewHolder
                 ProcessedTransaction castTransaction = (ProcessedTransaction) transaction;
-                if(castTransaction.getIsDeleted()) Toast.makeText(context ,"This transaction is deleted. The details cannot be displayed", Toast.LENGTH_SHORT).show();
+                if(castTransaction.getIsDeleted()) Toast.makeText(context ,context.getString(R.string.cannot_open_is_deleted) , Toast.LENGTH_SHORT).show();
                 else{
                     AllTransactionsDirections.ActionAllTransactions2ToTransactionDisplay action = AllTransactionsDirections.actionAllTransactions2ToTransactionDisplay(transaction.getIdOfTransactionInt());
                     navController.navigate(action);

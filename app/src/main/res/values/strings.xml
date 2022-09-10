@@ -291,6 +291,14 @@
     <string name="payable_of">Pay. of</string>
     <string name="balance_stake">Balance:</string>
     <string name="f_transaction_for">\"Future transaction for \"</string>
+    <string name="sum_of_this_month_transactions">Sum of this month transactions</string>
+    <string name="receivables_in_the_beginning">Receivables(In the beginning)</string>
+    <string name="payables_in_the_beginning">Payables in the beginning</string>
+    <string name="montly_summary_stake">Montly Summary</string>
+    <string name="not_delete_past_transactions">The transaction belongs to a previous month, so it is not possible to delete it.</string>
+    <string name="delete_transaction">Delete transaction</string>
+    <string name="sure_delete_transaction">Are you sure you want to delete this transaction?</string>
+    <string name="cannot_open_is_deleted">This transaction is deleted. The details cannot be displayed</string>
     <string-array name="type_of_cash_transaction">
         <item>Any</item>
         <item>Receivables</item>

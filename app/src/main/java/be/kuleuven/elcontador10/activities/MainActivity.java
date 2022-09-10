@@ -18,7 +18,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomMenu;
     private Toolbar toolbar;
     private SharedPreferences sharedPreferences;
-    private TextView stakeHolderBalance,stakeHolderInitialBalance,stakeHolderSumOfTransactions;
+    private TextView  stakeHolderInitialReceivables,stakeHolderInitialPayables,stakeHolderSumOfTransactions,txtTitlePayables,txtTitleReceivables,txtMonthlySummary;
     private ConstraintLayout stakeholderDetails;
     private SharedPreferences.Editor editor;
     private static final String SAVED_EMAIL_KEY = "email_key";
@@ -52,9 +51,13 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         tabLayout = findViewById(R.id.tabLayout);
         stakeholderDetails = findViewById(R.id.stakeHolderDetails);
-        stakeHolderBalance = findViewById(R.id.txtViewBalance);
-        stakeHolderInitialBalance =findViewById(R.id.textInitialBalance);
+        //stakeHolderBalance = findViewById(R.id.txtViewBalance);
+        stakeHolderInitialPayables=findViewById(R.id.textInitialPayables);
+        stakeHolderInitialReceivables =findViewById(R.id.textInitialRecivables);
         stakeHolderSumOfTransactions =findViewById(R.id.textSumOfCash);
+        txtMonthlySummary=findViewById(R.id.txt_montly_summary);
+        txtTitlePayables =findViewById(R.id.textTitlePayables);
+        txtTitleReceivables =findViewById(R.id.textTitleReceivables);
         Caching.INSTANCE.setContext(this);
         setSupportActionBar(toolbar);
 
@@ -105,14 +108,31 @@ public class MainActivity extends AppCompatActivity {
         bottomMenu.setVisibility(visibility);
     }
 
-    public void displayStakeHolderDetails(boolean display, String summary,String sumOfTrans, String initialBalance) {
+    public void displayStakeHolderDetails(boolean display,String sumOfTrans, String initialReceivables,String initialPayables) {
         if (display) {
+            txtMonthlySummary.setVisibility(View.VISIBLE);
             stakeholderDetails.setVisibility(View.VISIBLE);
-            stakeHolderBalance.setText(summary);
-            stakeHolderSumOfTransactions.setText(initialBalance);
-            stakeHolderInitialBalance.setText(sumOfTrans);
+            txtTitleReceivables.setVisibility(View.VISIBLE);
+            stakeHolderInitialReceivables.setVisibility(View.VISIBLE);
+            txtTitlePayables.setVisibility(View.VISIBLE);
+            stakeHolderInitialPayables.setVisibility(View.VISIBLE);
+            stakeHolderSumOfTransactions.setText(sumOfTrans);
+            stakeHolderInitialReceivables.setText(initialReceivables);
+            stakeHolderInitialPayables.setText(initialPayables);
+            if(initialReceivables==null|| initialReceivables.equals("$0.00")){
+                txtTitleReceivables.setVisibility(View.GONE);
+                stakeHolderInitialReceivables.setVisibility(View.GONE);
+            }
+            if(initialPayables==null||initialPayables.equals("$0.00")){
+                txtTitlePayables.setVisibility(View.GONE);
+                stakeHolderInitialPayables.setVisibility(View.GONE);
+            }
 
-        } else stakeholderDetails.setVisibility(View.GONE);
+
+        } else {
+            stakeholderDetails.setVisibility(View.GONE);
+            txtMonthlySummary.setVisibility(View.GONE);
+        }
     }
 
     public void displayStakeholderDetails(boolean display) {

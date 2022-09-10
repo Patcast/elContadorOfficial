@@ -35,17 +35,18 @@ import be.kuleuven.elcontador10.fragments.stakeholders.StakeholderViewModel;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.ViewModel_AllTransactions;
 
 
-// move FAB here
 public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTransformer.PageChangeListener {
     private ViewPagerAdapter mAdapter;
     private ViewPager2 viewPager;
     private MainActivity mainActivity;
     private StakeholderViewModel viewModel;
     StakeHolder stakeHolder;
-    String summary,sumOfTransactions,initialSummary;
+    String sumOfTransactions, initialReceivables,initialPayables;
     List<ProcessedTransaction> processedTransactionList = new ArrayList<>();
     private ViewModel_AllTransactions viewModelAllTransactions;
-
+    StakeDetailsList cashTab;
+    StakeDetailsList receivablesTab;
+    StakeDetailsList payablesTab;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -99,9 +100,6 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         processedTransactionList.addAll(transactionList);
         int currentMonth = Timestamp.now().toDate().getMonth();
         NumberFormatter formatter = new NumberFormatter(0);
-        formatter.setOriginalNumber(stakeHolder.calculateSummary());
-        summary = formatter.getFinalNumber();
-
         formatter.setOriginalNumber(transactionList
                         .stream()
                         .filter(i-> !i.getIsDeleted())
@@ -112,29 +110,24 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
                         .reduce(0, Integer::sum)
         );
         sumOfTransactions = formatter.getFinalNumber();
-
-        formatter.setOriginalNumber(transactionList
-                .stream()
-                .filter(i-> !i.getIsDeleted())
-                .filter(t->!t.getType().contains(Caching.INSTANCE.TYPE_PENDING))
-                .filter(ProcessedTransaction::isPayableOrReceivable)
-                .filter(t->t.getDueDate().toDate().getMonth()==currentMonth)
-                .map(ProcessedTransaction::calculateSummaryTotalAmount)
-                .map(t->-t)
-                .reduce((int) (stakeHolder.getSumOfReceivables()- stakeHolder.getSumOfPayables()), Integer::sum)
-        );
-
-        initialSummary=formatter.getFinalNumber();
-        mainActivity.displayStakeHolderDetails(true, summary,initialSummary ,sumOfTransactions);
-        Log.w("Stakeholder"," "+summary+" "+sumOfTransactions+" "+initialSummary);
+        formatter.setOriginalNumber(stakeHolder.getSumOfReceivables());
+        initialReceivables = formatter.getFinalNumber();
+        formatter.setOriginalNumber(stakeHolder.getSumOfPayables());
+        initialPayables = formatter.getFinalNumber();
+        initialPayables =formatter.getFinalNumber();
+        mainActivity.displayStakeHolderDetails(true,sumOfTransactions ,initialReceivables,initialPayables);
     }
 
 
 
     private void addFragments() {
-        mAdapter.addFragment(new StakeDetailsList(Caching.INSTANCE.TYPE_CASH));
-        mAdapter.addFragment(new StakeDetailsList(Caching.INSTANCE.TYPE_RECEIVABLES));
-        mAdapter.addFragment(new StakeDetailsList(Caching.INSTANCE.TYPE_PAYABLES));
+         cashTab = new StakeDetailsList(Caching.INSTANCE.TYPE_CASH);
+         receivablesTab = new StakeDetailsList(Caching.INSTANCE.TYPE_RECEIVABLES);
+         payablesTab = new StakeDetailsList(Caching.INSTANCE.TYPE_PAYABLES);
+
+        mAdapter.addFragment(cashTab);
+        mAdapter.addFragment(receivablesTab);
+        mAdapter.addFragment(payablesTab);
         viewPager.setAdapter(mAdapter);
 
         new TabLayoutMediator(mainActivity.getTabLayout(), viewPager, (t, p) -> {
@@ -158,11 +151,10 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     @Override
     public void onStart() {
         super.onStart();
-        mainActivity.displayStakeHolderDetails(true, summary,initialSummary ,sumOfTransactions);
+        mainActivity.displayStakeHolderDetails(true, sumOfTransactions,initialReceivables,initialPayables);
         mainActivity.displayToolBar(true);
         mainActivity.displayTabLayout(true);
     }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onStop() {
@@ -174,13 +166,6 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
 
     @Override
     public void onPageChange() {
-        switch(viewPager.getCurrentItem()){
-            case 0:
-
-                break;
-            default:
-                break;
-        }
     }
 
     public void setStakeHolder(StakeHolder stakeHolder) {

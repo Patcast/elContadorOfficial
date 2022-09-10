@@ -31,7 +31,6 @@ import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholdersListDi
 
 public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<StakeholderListRecViewAdapter.ViewHolder> implements Filterable {
 
-    private static final String TAG = "RV_stakeholder";
     private final List<StakeHolder> stakeholdersList = new ArrayList<>();
     private final ArrayList<StakeHolder> stakeHoldersFull = new ArrayList<>();
     private final View viewFromHostingClass;
@@ -56,7 +55,6 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
         holder.textBalance.setVisibility(View.VISIBLE);
         long balance = stake.calculateSummary();
 
-        Log.w(TAG,"Balance: "+balance);
         if (balance != 0) {
             NumberFormatter formatter = new NumberFormatter(balance);
             String formatted = formatter.getFinalNumber();

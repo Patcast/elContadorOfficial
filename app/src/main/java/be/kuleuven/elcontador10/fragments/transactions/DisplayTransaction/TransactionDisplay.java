@@ -244,8 +244,8 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
     private void confirmDelete(){
         navController.popBackStack();
         Timestamp currentDate = Timestamp.now();
-        if( selectedTrans.getDueDate().toDate().getMonth()!=currentDate.toDate().getMonth()) {
-            Toast.makeText(getContext(), "The transaction belongs to a previous month, so it is not possible to delete it.", Toast.LENGTH_LONG).show();
+        if( selectedTrans.getDueDate().toDate().getMonth()<=currentDate.toDate().getMonth()) {
+            Toast.makeText(getContext(), R.string.not_delete_past_transactions, Toast.LENGTH_LONG).show();
         }
         else{
             selectedTrans.deleteTransaction(getContext());
@@ -257,10 +257,10 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onDeleteClick() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Delete transaction")
-                .setMessage("Are you sure you want to delete this transaction?")
-                .setPositiveButton("Yes", (dialog, which) ->confirmDelete())
-                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+        builder.setTitle(getString(R.string.delete_transaction))
+                .setMessage(getString(R.string.sure_delete_transaction))
+                .setPositiveButton(getString(R.string.yes), (dialog, which) ->confirmDelete())
+                .setNegativeButton(getString(R.string.no), (dialog, which) -> dialog.dismiss())
                 .create()
                 .show();
     }
