@@ -205,33 +205,33 @@ public enum Exporter {
         sheet.setColumnWidth(15, (int) (20 * 1.14388) * 256);
         sheet.setColumnWidth(16, (int) (30 * 1.14388) * 256);
 
-        cell.setCellValue("Income");
+        cell.setCellValue(fragment.getString(R.string.income));
         cell.setCellStyle(styleTitle);
 
         row = sheet.createRow(1);
         cell = row.createCell(0);
-        cell.setCellValue("Date & Time");
+        cell.setCellValue(fragment.getString(R.string.date_and_time_excel));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
-        cell.setCellValue("Title");
+        cell.setCellValue(fragment.getString(R.string.title));
         cell.setCellStyle(styleBold);
         cell = row.createCell(2);
-        cell.setCellValue("Amount ($)");
+        cell.setCellValue(fragment.getString(R.string.amount));
         cell.setCellStyle(styleBold);
         cell = row.createCell(3);
-        cell.setCellValue("Category");
+        cell.setCellValue(fragment.getString(R.string.category_excel));
         cell.setCellStyle(styleBold);
         cell = row.createCell(4);
-        cell.setCellValue("Stakeholder");
+        cell.setCellValue(fragment.getString(R.string.stakeholder));
         cell.setCellStyle(styleBold);
         cell = row.createCell(5);
-        cell.setCellValue("Registered by");
+        cell.setCellValue(fragment.getString(R.string.registered_by));
         cell.setCellStyle(styleBold);
         cell = row.createCell(6);
-        cell.setCellValue("Property");
+        cell.setCellValue(fragment.getString(R.string.property));
         cell.setCellStyle(styleBold);
         cell = row.createCell(7);
-        cell.setCellValue("Notes");
+        cell.setCellValue(fragment.getString(R.string.notes_excel));
         cell.setCellStyle(styleBold);
 
         List<ProcessedTransaction> income = processed.stream()
@@ -277,33 +277,33 @@ public enum Exporter {
         row = sheet.getRow(0);
         cell = row.createCell(8);
 
-        cell.setCellValue("Expenses");
+        cell.setCellValue(fragment.getString(R.string.expenses));
         cell.setCellStyle(styleTitle);
 
         row = sheet.getRow(1);
         cell = row.createCell(9);
-        cell.setCellValue("Date & Time");
+        cell.setCellValue(fragment.getString(R.string.date_and_time_excel));
         cell.setCellStyle(styleBold);
         cell = row.createCell(10);
-        cell.setCellValue("Title");
+        cell.setCellValue(fragment.getString(R.string.title));
         cell.setCellStyle(styleBold);
         cell = row.createCell(11);
-        cell.setCellValue("Amount ($)");
+        cell.setCellValue(fragment.getString(R.string.amount));
         cell.setCellStyle(styleBold);
         cell = row.createCell(12);
-        cell.setCellValue("Category");
+        cell.setCellValue(fragment.getString(R.string.category_excel));
         cell.setCellStyle(styleBold);
         cell = row.createCell(13);
-        cell.setCellValue("Stakeholder");
+        cell.setCellValue(fragment.getString(R.string.stakeholder));
         cell.setCellStyle(styleBold);
         cell = row.createCell(14);
-        cell.setCellValue("Registered by");
+        cell.setCellValue(fragment.getString(R.string.registered_by));
         cell.setCellStyle(styleBold);
         cell = row.createCell(15);
-        cell.setCellValue("Property");
+        cell.setCellValue(fragment.getString(R.string.property));
         cell.setCellStyle(styleBold);
         cell = row.createCell(16);
-        cell.setCellValue("Notes");
+        cell.setCellValue(fragment.getString(R.string.notes_excel));
         cell.setCellStyle(styleBold);
 
         List<ProcessedTransaction> expenses = processed.stream()
@@ -319,26 +319,29 @@ public enum Exporter {
 
             if (row == null) row = sheet.createRow(counter);
 
-            cell = row.createCell(8);
+            cell = row.createCell(9);
             cell.setCellValue(DatabaseDatesFunctions.INSTANCE.timestampToStringDetailed(transaction.getDueDate()));
 
-            cell = row.createCell(9);
+            cell = row.createCell(10);
             cell.setCellValue(transaction.getTitle());
 
-            cell = row.createCell(10);
+            cell = row.createCell(11);
             cell.setCellValue(Math.abs(transaction.getTotalAmount()));
             cell.setCellStyle(styleCurrency);
 
-            cell = row.createCell(11);
+            cell = row.createCell(12);
             cell.setCellValue(Caching.INSTANCE.getCategoryTitle(transaction.getIdOfCategoryInt()));
 
-            cell = row.createCell(12);
+            cell = row.createCell(13);
             cell.setCellValue(Caching.INSTANCE.getStakeholderName(transaction.getIdOfStakeInt()));
 
-            cell = row.createCell(13);
+            cell = row.createCell(14);
             cell.setCellValue(transaction.getRegisteredBy());
 
-            cell = row.createCell(14);
+            cell = row.createCell(15);
+            cell.setCellValue(Caching.INSTANCE.getPropertyNameFromID(transaction.getIdOfProperty()));
+
+            cell = row.createCell(16);
             cell.setCellValue(transaction.getNotes());
 
             counter++;

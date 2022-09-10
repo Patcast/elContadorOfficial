@@ -304,6 +304,12 @@
         <item>PAYABLE</item>
     </string-array>
 
-
+<!--    EXCEL HEADERS, NO COLONS    -->
+    <string name="expenses">Expenses</string>
+    <string name="income">Income</string>
+    <string name="date_and_time_excel">Date &amp; Time</string>
+    <string name="category_excel">Category</string>
+    <string name="registered_by">Registered by</string>
+    <string name="notes_excel">Notes</string>
 
 </resources>
