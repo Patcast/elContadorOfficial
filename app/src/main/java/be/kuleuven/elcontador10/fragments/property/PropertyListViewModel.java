@@ -42,10 +42,12 @@ public class PropertyListViewModel extends ViewModel {
         listOfProperties.setValue(null);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public PropertyListViewModel() {
         selectListOfProcessedTransactions();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void selectListOfProcessedTransactions() {
 
         String urlGetAccountTransactions = "/accounts/"+ Caching.INSTANCE.getChosenAccountId()+"/properties";
@@ -63,6 +65,7 @@ public class PropertyListViewModel extends ViewModel {
                 newListProperties.add(myProperty);
                 //Log.w(TAG, "property name: "+ myProperty.getName(), e);
             }
+            Caching.INSTANCE.setPropertyList(newListProperties);
             selectSProperties(newListProperties);
         });
     }

@@ -166,9 +166,9 @@ public enum Exporter {
     }
 
     /**
-     * Date | title | totalAmount | Category | Stakeholder | Registered by | Notes
-     * -----|-------|-------------|----------|-------------|---------------|-------
-     *      |       |             |          |             |               |
+     * Date | title | totalAmount | Category | Stakeholder | Registered by | Property | Notes
+     * -----|-------|-------------|----------|-------------|---------------|----------|-------
+     *      |       |             |          |             |               |          |
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void transactionsSheet(HSSFWorkbook workbook, List<ProcessedTransaction> processed) {
@@ -185,15 +185,17 @@ public enum Exporter {
         sheet.setColumnWidth(3,  (int) (15 * 1.14388) * 256);
         sheet.setColumnWidth(4,  (int) (15 * 1.14388) * 256);
         sheet.setColumnWidth(5,  (int) (20 * 1.14388) * 256);
-        sheet.setColumnWidth(6,  (int) (30 * 1.14388) * 256);
+        sheet.setColumnWidth(6,  (int) (20 * 1.14388) * 256);
+        sheet.setColumnWidth(7,  (int) (30 * 1.14388) * 256);
 
-        sheet.setColumnWidth(8,  (int) (15 * 1.14388) * 256);
         sheet.setColumnWidth(9,  (int) (15 * 1.14388) * 256);
         sheet.setColumnWidth(10, (int) (15 * 1.14388) * 256);
         sheet.setColumnWidth(11, (int) (15 * 1.14388) * 256);
         sheet.setColumnWidth(12, (int) (15 * 1.14388) * 256);
-        sheet.setColumnWidth(13, (int) (20 * 1.14388) * 256);
-        sheet.setColumnWidth(14, (int) (30 * 1.14388) * 256);
+        sheet.setColumnWidth(13, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(14, (int) (20 * 1.14388) * 256);
+        sheet.setColumnWidth(15, (int) (20 * 1.14388) * 256);
+        sheet.setColumnWidth(16, (int) (30 * 1.14388) * 256);
 
         cell.setCellValue("Income");
         cell.setCellStyle(styleTitle);
@@ -218,6 +220,9 @@ public enum Exporter {
         cell.setCellValue("Registered by");
         cell.setCellStyle(styleBold);
         cell = row.createCell(6);
+        cell.setCellValue("Property");
+        cell.setCellStyle(styleBold);
+        cell = row.createCell(7);
         cell.setCellValue("Notes");
         cell.setCellStyle(styleBold);
 
@@ -252,6 +257,9 @@ public enum Exporter {
             cell.setCellValue(transaction.getRegisteredBy());
 
             cell = row.createCell(6);
+            cell.setCellValue(Caching.INSTANCE.getPropertyNameFromID(transaction.getIdOfProperty()));
+
+            cell = row.createCell(7);
             cell.setCellValue(transaction.getNotes());
 
             counter++;
@@ -265,25 +273,28 @@ public enum Exporter {
         cell.setCellStyle(styleTitle);
 
         row = sheet.getRow(1);
-        cell = row.createCell(8);
+        cell = row.createCell(9);
         cell.setCellValue("Date & Time");
         cell.setCellStyle(styleBold);
-        cell = row.createCell(9);
+        cell = row.createCell(10);
         cell.setCellValue("Title");
         cell.setCellStyle(styleBold);
-        cell = row.createCell(10);
+        cell = row.createCell(11);
         cell.setCellValue("Amount ($)");
         cell.setCellStyle(styleBold);
-        cell = row.createCell(11);
+        cell = row.createCell(12);
         cell.setCellValue("Category");
         cell.setCellStyle(styleBold);
-        cell = row.createCell(12);
+        cell = row.createCell(13);
         cell.setCellValue("Stakeholder");
         cell.setCellStyle(styleBold);
-        cell = row.createCell(13);
+        cell = row.createCell(14);
         cell.setCellValue("Registered by");
         cell.setCellStyle(styleBold);
-        cell = row.createCell(14);
+        cell = row.createCell(15);
+        cell.setCellValue("Property");
+        cell.setCellStyle(styleBold);
+        cell = row.createCell(16);
         cell.setCellValue("Notes");
         cell.setCellStyle(styleBold);
 

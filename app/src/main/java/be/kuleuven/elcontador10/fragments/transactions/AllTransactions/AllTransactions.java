@@ -52,6 +52,7 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.tools.Exporter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
+import be.kuleuven.elcontador10.fragments.property.PropertyListViewModel;
 
 
 public class AllTransactions extends Fragment implements  DatePickerDialog.OnDateSetListener, MainActivity.TopMenuHandler {
@@ -80,6 +81,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
+        new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);  // query properties
         try {
             viewModel.setInitialData();
         } catch (ParseException e) {
