@@ -280,6 +280,9 @@
     <string name="sum_of_payables">Sum of payables:</string>
     <string name="equity">Equity:</string>
 
+    <string name="summary_of">Summary of %1$s</string>
+    <string name="exported_by">Exported by %1$s at %2$s</string>
+
     <string name="add_title">Please add  a title</string>
     <string name="starting_date">Starting Date</string>
     <string name="future_dates">\n\nFuture transactions\' dates:\n</string>

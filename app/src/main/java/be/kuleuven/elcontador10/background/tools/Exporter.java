@@ -1,10 +1,12 @@
 package be.kuleuven.elcontador10.background.tools;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.Timestamp;
 
@@ -18,6 +20,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
@@ -29,13 +32,16 @@ public enum Exporter {
     private HSSFCellStyle styleTitle;
     private HSSFCellStyle styleBold;
     private HSSFCellStyle styleCurrency;
+    private Fragment fragment;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public File createFile(String monthYear, List<ProcessedTransaction> processed,
-                           long startingBalance, long cashIn, long cashOut, long currentBalance, long receivables,
-                           long payables, long scheduleBalance) {
-        HSSFWorkbook workbook = formatExcel(monthYear, processed, startingBalance, cashIn, cashOut,
-                currentBalance, receivables, payables, scheduleBalance);
+                           long cashAtStart, long cashIn, long cashOut, long cashAtEnd, long receivables,
+                           long payables, long equity, Fragment fragment) {
+        this.fragment = fragment;
+
+        HSSFWorkbook workbook = formatExcel(monthYear, processed, cashAtStart, cashIn, cashOut,
+                cashAtEnd, receivables, payables, equity);
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), monthYear + ".xls");
         FileOutputStream fileOutputStream = null;
 
@@ -100,12 +106,12 @@ public enum Exporter {
         HSSFRow row = sheet.createRow(0);
         row.setHeight((short) -1);
         HSSFCell cell = row.createCell(0);
-        cell.setCellValue("Summary of " + monthYear);
+        cell.setCellValue(fragment.getString(R.string.summary_of, monthYear));
         cell.setCellStyle(styleTitle);
 
         row = sheet.createRow(2);
         cell = row.createCell(0);
-        cell.setCellValue("Cash in the beginning:");
+        cell.setCellValue(fragment.getString(R.string.cash_in_the_beginning));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(startingBalance);
@@ -113,7 +119,7 @@ public enum Exporter {
 
         row = sheet.createRow(3);
         cell = row.createCell(0);
-        cell.setCellValue("Sum of cash in:");
+        cell.setCellValue(fragment.getString(R.string.sum_of_cash_in));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(cashIn);
@@ -121,7 +127,7 @@ public enum Exporter {
 
         row = sheet.createRow(4);
         cell = row.createCell(0);
-        cell.setCellValue("Sum of cash out:");
+        cell.setCellValue(fragment.getString(R.string.sum_of_cash_out));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(cashOut);
@@ -129,7 +135,7 @@ public enum Exporter {
 
         row = sheet.createRow(5);
         cell = row.createCell(0);
-        cell.setCellValue("Cash at end:");
+        cell.setCellValue(fragment.getString(R.string.cash_at_the_end));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(currentBalance);
@@ -137,7 +143,7 @@ public enum Exporter {
 
         row = sheet.createRow(6);
         cell = row.createCell(0);
-        cell.setCellValue("Sum of receivables:");
+        cell.setCellValue(fragment.getString(R.string.sum_of_receivables));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(receivables);
@@ -145,7 +151,7 @@ public enum Exporter {
 
         row = sheet.createRow(7);
         cell = row.createCell(0);
-        cell.setCellValue("Sum of payables:");
+        cell.setCellValue(fragment.getString(R.string.sum_of_payables));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(payables);
@@ -153,7 +159,7 @@ public enum Exporter {
 
         row = sheet.createRow(8);
         cell = row.createCell(0);
-        cell.setCellValue("Schedule balance:");
+        cell.setCellValue(fragment.getString(R.string.equity));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(scheduleBalance);
@@ -161,8 +167,10 @@ public enum Exporter {
 
         row = sheet.createRow(10);
         cell = row.createCell(0);
-        cell.setCellValue(MessageFormat.format("Exported by {0} at {1}",
-                Caching.INSTANCE.getAccountName(), DatabaseDatesFunctions.INSTANCE.timestampToString(Timestamp.now())));
+        cell.setCellValue(fragment.getString(
+                R.string.exported_by, Caching.INSTANCE.getAccountName(),
+                DatabaseDatesFunctions.INSTANCE.timestampToString(Timestamp.now()))
+        );
     }
 
     /**
@@ -337,6 +345,7 @@ public enum Exporter {
         }
     }
 
+/*
     /**
      * Stakeholder | title | amountPaid | totalAmount | dueDate | Category | Registered by
      * ------------|-------|------------|-------------|---------|----------|---------------

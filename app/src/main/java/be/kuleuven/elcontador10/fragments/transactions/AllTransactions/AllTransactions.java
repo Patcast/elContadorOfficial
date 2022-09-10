@@ -73,7 +73,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
     private String selectedMonth;
     private int selectedYear;
-    private long startingBalance, cashIn, cashOut, currentBalance, receivables, payables, scheduleBalance;
+    private long cashAtStart, cashIn, cashOut, cashAtEnd, receivables, payables, equity;
     private boolean isClicked;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -210,8 +210,8 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         NumberFormatter formatter = new NumberFormatter(0);
         String inputSB = "NA";
         if(inputsForSummary.get("startingBalance")!=null){
-            startingBalance = inputsForSummary.get("startingBalance");
-            formatter.setOriginalNumber(startingBalance);
+            cashAtStart = inputsForSummary.get("startingBalance");
+            formatter.setOriginalNumber(cashAtStart);
             inputSB = formatter.getFinalNumber();
         }
         txtStartingCash.setText(inputSB);
@@ -237,14 +237,14 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
         String inputCB = "NA";
         if(inputsForSummary.get("currentBalance")!=null){
-            currentBalance = inputsForSummary.get("currentBalance");
-            formatter.setOriginalNumber(currentBalance);
+            cashAtEnd = inputsForSummary.get("currentBalance");
+            formatter.setOriginalNumber(cashAtEnd);
             inputCB = formatter.getFinalNumber();
         }
 
         receivables = inputsForSummary.get("receivables");
         payables = inputsForSummary.get("payables");
-        scheduleBalance = inputsForSummary.get("scheduleBalance");
+        equity = inputsForSummary.get("scheduleBalance");
 
         txCurrentCash.setText(inputCB);
         formatter.setOriginalNumber(inputsForSummary.get("receivables"));
@@ -342,7 +342,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         processed = viewModel.getMonthlyListOfProcessedTransactions();
 
         File file = Exporter.INSTANCE.createFile(selectedMonth + "_" + selectedYear, processed,
-                startingBalance, cashIn, cashOut, currentBalance, receivables, payables, scheduleBalance);
+                cashAtStart, cashIn, cashOut, cashAtEnd, receivables, payables, equity, this);
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
