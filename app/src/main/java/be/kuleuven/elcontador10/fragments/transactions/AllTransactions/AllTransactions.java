@@ -54,15 +54,14 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
-import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.tools.Exporter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 
 public class AllTransactions extends Fragment implements  DatePickerDialog.OnDateSetListener, MainActivity.TopMenuHandler {
 
-    private RecyclerView recyclerAllTransactions;
-    private TransactionsRecViewAdapter adapter;
+    private RecyclerView recyclerView;
+    private TransactionsRecViewAdapter recyclerViewAdapter;
     private FloatingActionButton fabNewTransaction, fabNewFutureTransaction,fabNew;
     private TextView textFabNewTransaction,textFabReceivable;
     private Animation rotateOpen,rotateClose,popOpen,popClose;
@@ -116,7 +115,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
             }
         });
 
-        viewModel.getAllChosenTransactions().observe(getViewLifecycleOwner(), i->adapter.setAllTransactions(i));
+        viewModel.getAllChosenTransactions().observe(getViewLifecycleOwner(), i-> recyclerViewAdapter.setAllTransactions(i));
         viewModel.getMapOfMonthlySummaryValues().observe(getViewLifecycleOwner(), this::updateSummaryUi);
         startRecycler(view);
 
@@ -149,7 +148,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         popClose = AnimationUtils.loadAnimation(getContext(),R.anim.pop_down_fabs);
         isClicked= false;
 
-        recyclerAllTransactions.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -195,7 +194,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         super.onStart();
         mainActivity.displayBottomNavigationMenu(true);
         mainActivity.setCurrentMenuClicker(this);
-        recyclerAllTransactions.setAdapter(adapter);
+        recyclerView.setAdapter(recyclerViewAdapter);
 
     }
 
@@ -299,10 +298,10 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     }
 
     private void startRecycler(View view) {
-        recyclerAllTransactions = view.findViewById(R.id.RecViewTransactionsHolder);
-        recyclerAllTransactions.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        adapter = new TransactionsRecViewAdapter(view,getContext());
-        recyclerAllTransactions.setAdapter(adapter);
+        recyclerView = view.findViewById(R.id.RecViewTransactionsHolder);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        recyclerViewAdapter = new TransactionsRecViewAdapter(view,getContext());
+        recyclerView.setAdapter(recyclerViewAdapter);
     }
 
 

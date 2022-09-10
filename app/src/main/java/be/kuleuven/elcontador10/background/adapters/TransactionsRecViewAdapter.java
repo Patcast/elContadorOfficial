@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +31,7 @@ import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPag
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.AllTransactionsDirections;
 
 
-public class TransactionsRecViewAdapter extends RecyclerView.Adapter<TransactionsRecViewAdapter.ViewHolder>  {
+public class TransactionsRecViewAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<ProcessedTransaction> allTransactions = new ArrayList<>();
     NavController navController;
     View viewFromHostingClass;
@@ -44,20 +45,72 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         this.context = context;
 
     }
-    @NonNull
+
     @NotNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         navController = Navigation.findNavController(viewFromHostingClass);
-        View viewParent = LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_view_item_all_transactions,parent,false);
-        return new ViewHolder(viewParent);
+        if (viewType == VIEW_TYPE_ITEM) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_view_item_all_transactions, parent, false);
+            return new ItemViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false);
+            return new LoadingViewHolder(view);
+        }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
-        ProcessedTransaction transaction = allTransactions.get(position);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ItemViewHolder) {
+            populateItemRows((ItemViewHolder) holder, position);
+        } else if (holder instanceof LoadingViewHolder) {
+            showLoadingView((LoadingViewHolder) holder, position);
+        }
+    }
 
+
+    @Override
+    public int getItemCount() { return allTransactions == null ? 0 : allTransactions.size(); }
+    @Override
+    public int getItemViewType(int position) {
+        return allTransactions.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+    }
+
+    public class ItemViewHolder extends RecyclerView.ViewHolder{
+        private TextView textTitle,textAmount,textDate,textNameOfParticipant,textPaidBy,txtEmojiCategory;
+        private ConstraintLayout parent;
+        private ImageView camaraIcon;
+
+        public ItemViewHolder(@NonNull  View itemView) {
+            super(itemView);
+            camaraIcon = itemView.findViewById(R.id.imageView_camara_icon);
+            txtEmojiCategory = itemView.findViewById(R.id.textView_transaction_emoji);
+            textTitle = itemView.findViewById(R.id.text_title_allTrans);
+            parent = itemView.findViewById(R.id.recVew_Item_AllTransactions);
+            textTitle = itemView.findViewById(R.id.text_title_allTrans);
+            textAmount = itemView.findViewById(R.id.textAmount);
+            textDate = itemView.findViewById(R.id.text_date_allTrans);
+            textPaidBy = itemView.findViewById(R.id.textPaidBy);
+            textNameOfParticipant = itemView.findViewById(R.id.text_nameOfParticipant);
+        }
+    }
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+
+        ProgressBar progressBar;
+
+        public LoadingViewHolder(@NonNull View itemView) {
+            super(itemView);
+            progressBar = itemView.findViewById(R.id.progressBar);
+        }
+    }
+    private void showLoadingView(LoadingViewHolder viewHolder, int position) {
+        //ProgressBar would be displayed
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void populateItemRows(ItemViewHolder holder, int position) {
+
+        ProcessedTransaction transaction = allTransactions.get(position);
         holder.textPaidBy.setText(transaction.transText());
         holder.textNameOfParticipant.setText(Caching.INSTANCE.getStakeholderName(transaction.getIdOfStakeInt()));
         // show Amount
@@ -73,52 +126,25 @@ public class TransactionsRecViewAdapter extends RecyclerView.Adapter<Transaction
         holder.txtEmojiCategory.setText(Caching.INSTANCE.getCategoryEmoji(allTransactions.get(position).getIdOfCategoryInt()));
         if(!(allTransactions.get(position).getImageName()!= null && allTransactions.get(position).getImageName().length()>0))holder.camaraIcon.setVisibility(View.GONE);
         else holder.camaraIcon.setVisibility(View.VISIBLE);
-
         holder.parent.setOnClickListener(v -> {
-                try {
-                    // from Account ViewHolder
-                    ProcessedTransaction castTransaction = (ProcessedTransaction) transaction;
-                    if(castTransaction.getIsDeleted()) Toast.makeText(context ,"This transaction is deleted. The details cannot be displayed", Toast.LENGTH_SHORT).show();
-                    else{
-                        AllTransactionsDirections.ActionAllTransactions2ToTransactionDisplay action = AllTransactionsDirections.actionAllTransactions2ToTransactionDisplay(transaction.getIdOfTransactionInt());
-                        navController.navigate(action);
-                    }
-
-                } catch (Exception e) { // there must be a better way
-                    // from MicroAccount ViewHolder
-                    StakeholderViewPageHolderDirections.ActionMicroAccountViewPagerHolderToTransactionDisplay action =
-                            StakeholderViewPageHolderDirections.actionMicroAccountViewPagerHolderToTransactionDisplay(transaction.getIdOfTransactionInt());
+            try {
+                // from Account ItemViewHolder
+                ProcessedTransaction castTransaction = (ProcessedTransaction) transaction;
+                if(castTransaction.getIsDeleted()) Toast.makeText(context ,"This transaction is deleted. The details cannot be displayed", Toast.LENGTH_SHORT).show();
+                else{
+                    AllTransactionsDirections.ActionAllTransactions2ToTransactionDisplay action = AllTransactionsDirections.actionAllTransactions2ToTransactionDisplay(transaction.getIdOfTransactionInt());
                     navController.navigate(action);
                 }
+
+            } catch (Exception e) { // there must be a better way
+                // from MicroAccount ItemViewHolder
+                StakeholderViewPageHolderDirections.ActionMicroAccountViewPagerHolderToTransactionDisplay action =
+                        StakeholderViewPageHolderDirections.actionMicroAccountViewPagerHolderToTransactionDisplay(transaction.getIdOfTransactionInt());
+                navController.navigate(action);
+            }
         });
+
     }
-
-
-    @Override
-    public int getItemCount() {
-        return allTransactions.size();
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView textTitle,textAmount,textDate,textNameOfParticipant,textPaidBy,txtEmojiCategory;
-        private ConstraintLayout parent;
-        private ImageView camaraIcon;
-
-        public ViewHolder(@NonNull  View itemView) {
-            super(itemView);
-            camaraIcon = itemView.findViewById(R.id.imageView_camara_icon);
-            txtEmojiCategory = itemView.findViewById(R.id.textView_transaction_emoji);
-            textTitle = itemView.findViewById(R.id.text_title_allTrans);
-            parent = itemView.findViewById(R.id.recVew_Item_AllTransactions);
-            textTitle = itemView.findViewById(R.id.text_title_allTrans);
-            textAmount = itemView.findViewById(R.id.textAmount);
-            textDate = itemView.findViewById(R.id.text_date_allTrans);
-            textPaidBy = itemView.findViewById(R.id.textPaidBy);
-            textNameOfParticipant = itemView.findViewById(R.id.text_nameOfParticipant);
-
-        }
-    }
-
 
     public void setAllTransactions (List<ProcessedTransaction> NewTransactions) {
         this.allTransactions = NewTransactions;
