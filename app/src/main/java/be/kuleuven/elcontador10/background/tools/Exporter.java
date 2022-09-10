@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
+import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 
 public enum Exporter {
@@ -89,6 +90,7 @@ public enum Exporter {
         summarySheet(workbook, monthYear, startingBalance, cashIn, cashOut,
                 currentBalance, receivables, payables, scheduleBalance);
         transactionsSheet(workbook, processed);
+        stakeholderSheet(workbook);
 //        lateSheet(workbook, styleCurrency, styleTitle, styleBold, scheduled);
 
         return workbook;
@@ -98,7 +100,7 @@ public enum Exporter {
     private void summarySheet(HSSFWorkbook workbook, String monthYear, long startingBalance,
                               long cashIn, long cashOut, long currentBalance, long receivables,
                               long payables, long scheduleBalance) {
-        HSSFSheet sheet = workbook.createSheet("Summary");
+        HSSFSheet sheet = workbook.createSheet(fragment.getString(R.string.summary));
 
         sheet.setColumnWidth(0, (int) (30 * 1.14388) * 256);
         sheet.setColumnWidth(1, (int) (15 * 1.14388) * 256);
@@ -173,14 +175,14 @@ public enum Exporter {
         );
     }
 
-    /**
+    /*
      * Date | title | totalAmount | Category | Stakeholder | Registered by | Property | Notes
-     * -----|-------|-------------|----------|-------------|---------------|----------|-------
+     * -----|-------|-------------|----------|-------------|---------------|----------|------
      *      |       |             |          |             |               |          |
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void transactionsSheet(HSSFWorkbook workbook, List<ProcessedTransaction> processed) {
-        HSSFSheet sheet = workbook.createSheet("Transactions");
+        HSSFSheet sheet = workbook.createSheet(fragment.getString(R.string.transactions));
 
         // income
         HSSFRow row = sheet.createRow(0);
@@ -343,6 +345,71 @@ public enum Exporter {
 
             cell = row.createCell(16);
             cell.setCellValue(transaction.getNotes());
+
+            counter++;
+        }
+    }
+
+
+    /*
+     *  Stakeholder | Payables | Receivables | Equity | Cash
+     *  ------------|----------|-------------|--------|-----
+     *              |          |             |        |
+     */
+    private void stakeholderSheet(HSSFWorkbook workbook) {
+        HSSFSheet sheet = workbook.createSheet(fragment.getString(R.string.stakeholders));
+
+        sheet.setColumnWidth(0, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(1, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(2, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(3, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(4, (int) (15 * 1.14388) * 256);
+
+        HSSFRow row = sheet.createRow(0);
+        row.setHeight((short) -1);
+
+        HSSFCell cell = row.createCell(0);
+        cell.setCellValue(fragment.getString(R.string.stakeholder));
+        cell.setCellStyle(styleBold);
+
+        cell = row.createCell(1);
+        cell.setCellValue(fragment.getString(R.string.payables));
+        cell.setCellStyle(styleBold);
+
+        cell = row.createCell(2);
+        cell.setCellValue(fragment.getString(R.string.receivables));
+        cell.setCellStyle(styleBold);
+
+        cell = row.createCell(3);
+        cell.setCellValue(fragment.getString(R.string.equity_excel));
+        cell.setCellStyle(styleBold);
+
+        cell = row.createCell(4);
+        cell.setCellValue(fragment.getString(R.string.cash));
+        cell.setCellStyle(styleBold);
+
+        int counter = 1;
+        for (StakeHolder stakeHolder : Caching.INSTANCE.getStakeHolders()) {
+            row = sheet.createRow(counter);
+
+            cell = row.createCell(0);
+            cell.setCellValue(stakeHolder.getName());
+
+            cell = row.createCell(1);
+            cell.setCellValue(stakeHolder.getSumOfPayables());
+            cell.setCellStyle(styleCurrency);
+
+            cell = row.createCell(2);
+            cell.setCellValue(stakeHolder.getSumOfReceivables());
+            cell.setCellStyle(styleCurrency);
+
+            cell = row.createCell(3);
+            cell.setCellValue(stakeHolder.getEquity());
+            cell.setCellStyle(styleCurrency);
+
+            cell = row.createCell(4);
+            cell.setCellValue(stakeHolder.getCash());
+            cell.setCellStyle(styleCurrency);
 
             counter++;
         }
