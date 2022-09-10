@@ -16,15 +16,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultRegistry;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
@@ -327,17 +332,19 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void onExport_Clicked() {
-        String message = "Export the current month?\n" + selectedMonth + " " + selectedYear;
+        String message = getString(R.string.export_prompt, selectedMonth, selectedYear);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(message)
-                .setPositiveButton("Yes", this::export)
-                .setNegativeButton("No", (dialogInterface, id) -> {})
+                .setPositiveButton(R.string.yes, this::export)
+                .setNegativeButton(R.string.no, (dialogInterface, id) -> dialogInterface.dismiss())
                 .create().show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void export(DialogInterface dialogInterface, int id) {
+        dialogInterface.dismiss();
+
         List<ProcessedTransaction> processed;
         processed = viewModel.getMonthlyListOfProcessedTransactions();
 
@@ -347,10 +354,19 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("application/vnd.ms-excel");
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-        startActivity(intent);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        dialogBuilder.setMessage(R.string.file_ready)
+                .setPositiveButton(R.string.send, (dialogInterface1, i) -> {
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("application/vnd.ms-excel");
+                    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                    startActivity(intent);
+                })
+                .setNegativeButton(R.string.save, (dialogInterface1, i) -> {
+                    // TODO: local save
+                })
+                .setNeutralButton(R.string.cancel, (dialogInterface1, i) -> dialogInterface1.dismiss())
+                .create().show();
     }
 
     ///******  ANIMATIONS METHODS

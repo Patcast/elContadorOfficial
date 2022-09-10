@@ -280,9 +280,6 @@
     <string name="sum_of_payables">Sum of payables:</string>
     <string name="equity">Equity:</string>
 
-    <string name="summary_of">Summary of %1$s</string>
-    <string name="exported_by">Exported by %1$s at %2$s</string>
-
     <string name="add_title">Please add  a title</string>
     <string name="starting_date">Starting Date</string>
     <string name="future_dates">\n\nFuture transactions\' dates:\n</string>
@@ -304,6 +301,12 @@
         <item>PAYABLE</item>
     </string-array>
 
+    <string name="export_prompt">Export the current month?\n%1$s %2$d</string>
+    <string name="summary_of">Summary of %1$s</string>
+    <string name="exported_by">Exported by %1$s at %2$s</string>
+    <string name="file_ready">File ready</string>
+    <string name="send">Send</string>
+    <string name="save">Save</string>
 <!--    EXCEL HEADERS, NO COLONS    -->
     <string name="expenses">Expenses</string>
     <string name="income">Income</string>
