@@ -63,8 +63,10 @@ public class ViewModel_AllTransactions extends ViewModel {
         int year = getCalendarFilter().getValue().get("year");// this will cause trouble
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date dateEnd = dateFormat.parse("01/"+(month+1)+"/"+year);
+        assert dateEnd != null;
         Timestamp dateSelectedTop = new Timestamp(dateEnd);
         Date dateBottom = dateFormat.parse("01/"+month+"/"+year);
+        assert dateBottom != null;
         Timestamp dateSelectedBottom = new Timestamp(dateBottom);
 
         String urlGetAccountTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
@@ -78,6 +80,7 @@ public class ViewModel_AllTransactions extends ViewModel {
                 return;
             }
             List<ProcessedTransaction> listTrans = new ArrayList<>();
+            assert value != null;
             for (QueryDocumentSnapshot doc : value) {
                 ProcessedTransaction myTransaction =  doc.toObject(ProcessedTransaction.class);
                 myTransaction.setId(doc.getId());

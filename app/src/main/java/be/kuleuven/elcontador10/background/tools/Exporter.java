@@ -26,11 +26,15 @@ public enum Exporter {
     INSTANCE;
     String TAG = "Excel Export";
 
+    private HSSFCellStyle styleTitle;
+    private HSSFCellStyle styleBold;
+    private HSSFCellStyle styleCurrency;
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public File createFile(String monthYear, List<ProcessedTransaction> processed, List<ScheduledTransaction> scheduled,
+    public File createFile(String monthYear, List<ProcessedTransaction> processed,
                            long startingBalance, long cashIn, long cashOut, long currentBalance, long receivables,
                            long payables, long scheduleBalance) {
-        HSSFWorkbook workbook = formatExcel(monthYear, processed, scheduled, startingBalance, cashIn, cashOut,
+        HSSFWorkbook workbook = formatExcel(monthYear, processed, startingBalance, cashIn, cashOut,
                 currentBalance, receivables, payables, scheduleBalance);
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), monthYear + ".xls");
         FileOutputStream fileOutputStream = null;
@@ -56,36 +60,37 @@ public enum Exporter {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private HSSFWorkbook formatExcel(String monthYear, List<ProcessedTransaction> processed, List<ScheduledTransaction> scheduled,
-                                     long startingBalance, long cashIn, long cashOut, long currentBalance, long receivables,
+    private HSSFWorkbook formatExcel(String monthYear, List<ProcessedTransaction> processed,
+                                     long startingBalance, long cashIn, long cashOut,
+                                     long currentBalance, long receivables,
                                      long payables, long scheduleBalance) {
         HSSFWorkbook workbook = new HSSFWorkbook();
 
-        HSSFCellStyle styleCurrency = workbook.createCellStyle();
+        styleCurrency = workbook.createCellStyle();
         styleCurrency.setDataFormat((short) 8);
 
-        HSSFCellStyle styleTitle = workbook.createCellStyle();
+        styleTitle = workbook.createCellStyle();
         HSSFFont font = workbook.createFont();
         font.setBoldweight(Font.BOLDWEIGHT_BOLD);
         font.setFontHeight((short) (20 * 20));
         styleTitle.setFont(font);
 
-        HSSFCellStyle styleBold = workbook.createCellStyle();
+        styleBold = workbook.createCellStyle();
         font = workbook.createFont();
         font.setBoldweight(Font.BOLDWEIGHT_BOLD);
         styleBold.setFont(font);
 
-        summarySheet(workbook, monthYear, styleCurrency, styleTitle, styleBold,
-                startingBalance, cashIn, cashOut, currentBalance, receivables, payables, scheduleBalance);
-        transactionsSheet(workbook, styleCurrency, styleTitle, styleBold, processed);
-        lateSheet(workbook, styleCurrency, styleTitle, styleBold, scheduled);
+        summarySheet(workbook, monthYear, startingBalance, cashIn, cashOut,
+                currentBalance, receivables, payables, scheduleBalance);
+        transactionsSheet(workbook, processed);
+//        lateSheet(workbook, styleCurrency, styleTitle, styleBold, scheduled);
 
         return workbook;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void summarySheet(HSSFWorkbook workbook, String monthYear, HSSFCellStyle styleCurrency, HSSFCellStyle styleTitle, HSSFCellStyle styleBold,
-                              long startingBalance, long cashIn, long cashOut, long currentBalance, long receivables,
+    private void summarySheet(HSSFWorkbook workbook, String monthYear, long startingBalance,
+                              long cashIn, long cashOut, long currentBalance, long receivables,
                               long payables, long scheduleBalance) {
         HSSFSheet sheet = workbook.createSheet("Summary");
 
@@ -166,8 +171,7 @@ public enum Exporter {
      *      |       |             |          |             |               |
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void transactionsSheet(HSSFWorkbook workbook, HSSFCellStyle styleCurrency, HSSFCellStyle styleTitle, HSSFCellStyle styleBold,
-                                   List<ProcessedTransaction> processed) {
+    private void transactionsSheet(HSSFWorkbook workbook, List<ProcessedTransaction> processed) {
         HSSFSheet sheet = workbook.createSheet("Transactions");
 
         // income
@@ -175,16 +179,16 @@ public enum Exporter {
         row.setHeight((short) -1);
         HSSFCell cell = row.createCell(0);
 
-        sheet.setColumnWidth(0, (int) (15 * 1.14388) * 256);
-        sheet.setColumnWidth(1, (int) (15 * 1.14388) * 256);
-        sheet.setColumnWidth(2, (int) (15 * 1.14388) * 256);
-        sheet.setColumnWidth(3, (int) (15 * 1.14388) * 256);
-        sheet.setColumnWidth(4, (int) (15 * 1.14388) * 256);
-        sheet.setColumnWidth(5, (int) (20 * 1.14388) * 256);
-        sheet.setColumnWidth(6, (int) (30 * 1.14388) * 256);
+        sheet.setColumnWidth(0,  (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(1,  (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(2,  (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(3,  (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(4,  (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(5,  (int) (20 * 1.14388) * 256);
+        sheet.setColumnWidth(6,  (int) (30 * 1.14388) * 256);
 
-        sheet.setColumnWidth(8, (int) (15 * 1.14388) * 256);
-        sheet.setColumnWidth(9, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(8,  (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(9,  (int) (15 * 1.14388) * 256);
         sheet.setColumnWidth(10, (int) (15 * 1.14388) * 256);
         sheet.setColumnWidth(11, (int) (15 * 1.14388) * 256);
         sheet.setColumnWidth(12, (int) (15 * 1.14388) * 256);
@@ -220,6 +224,7 @@ public enum Exporter {
         List<ProcessedTransaction> income = processed.stream()
                 .filter(i -> !i.getIsDeleted())
                 .filter(i -> i.getTotalAmount() > 0)
+                .filter(i -> !i.getType().contains("PENDING"))  // not completed
                 .collect(Collectors.toList());
 
         int counter = 2;    // start from row 2
@@ -285,6 +290,7 @@ public enum Exporter {
         List<ProcessedTransaction> expenses = processed.stream()
                 .filter(i -> !i.getIsDeleted())
                 .filter(i -> i.getTotalAmount() < 0)
+                .filter(i -> !i.getType().contains("PENDING"))
                 .collect(Collectors.toList());
 
         counter = 2;    // start from row 2
@@ -324,7 +330,7 @@ public enum Exporter {
      * Stakeholder | title | amountPaid | totalAmount | dueDate | Category | Registered by
      * ------------|-------|------------|-------------|---------|----------|---------------
      */
-
+/*
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void lateSheet(HSSFWorkbook workbook, HSSFCellStyle styleCurrency, HSSFCellStyle styleTitle, HSSFCellStyle styleBold,
                            List<ScheduledTransaction> scheduled) {
@@ -501,4 +507,5 @@ public enum Exporter {
         cell.setCellValue(totalAmountToPay);
         cell.setCellStyle(styleCurrency);
     }
+*/
 }

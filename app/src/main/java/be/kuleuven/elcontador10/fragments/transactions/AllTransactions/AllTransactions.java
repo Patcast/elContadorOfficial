@@ -7,19 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.core.view.MenuProvider;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,16 +22,25 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.view.MenuProvider;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 
 import org.jetbrains.annotations.NotNull;
 
-
 import java.io.File;
 import java.text.ParseException;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +50,6 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
-import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 import be.kuleuven.elcontador10.background.tools.Exporter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
@@ -344,7 +339,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         List<ProcessedTransaction> processed;
         processed = viewModel.getMonthlyListOfProcessedTransactions();
 
-        File file = Exporter.INSTANCE.createFile(selectedMonth + "_" + selectedYear, processed, null,
+        File file = Exporter.INSTANCE.createFile(selectedMonth + "_" + selectedYear, processed,
                 startingBalance, cashIn, cashOut, currentBalance, receivables, payables, scheduleBalance);
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();

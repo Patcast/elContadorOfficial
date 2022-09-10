@@ -5,6 +5,8 @@ import android.content.Context;
 
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.Timestamp;
 
 
@@ -106,7 +108,7 @@ public class ProcessedTransaction implements TransactionInterface {
 
     public void successfulDelete(Context context){
         Toast.makeText(context, "Transaction deleted.", Toast.LENGTH_SHORT).show();
-        //delete picture too here
+        //TODO: delete picture too here
     }
     public void updateImageFromFireBase(ProcessedTransaction newTransactionInput,ImageFireBase ImageSelected,Context context) {
         String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
