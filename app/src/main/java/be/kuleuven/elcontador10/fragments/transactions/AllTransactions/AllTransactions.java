@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -358,13 +357,7 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
 
     ActivityResultLauncher<Intent> saveIntentLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK &&
-                        result.getData() != null) {
-                    Uri uri = result.getData().getData();
-                    export(uri);
-                }
-            }
+            this::onActivityResult
     );
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -395,9 +388,9 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
                     intent.putExtra(Intent.EXTRA_STREAM, uri);
                     startActivity(intent);
                 })
-                .setNegativeButton(R.string.open_folder, (dialogInterface, i) -> {
+                .setNegativeButton(R.string.open, (dialogInterface, i) -> {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.parse(file.getParent()), "resource/folder");
+                    intent.setDataAndType(uri, "*/*");
                     startActivity(intent);
                 })
                 .setNeutralButton(R.string.cancel,
@@ -478,4 +471,13 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
     }
 
 
+    private void onActivityResult(ActivityResult result) {
+        if (result.getResultCode() == Activity.RESULT_OK &&
+                result.getData() != null) {
+            Uri uri = result.getData().getData();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                export(uri);
+            }
+        }
+    }
 }
