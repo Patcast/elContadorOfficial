@@ -29,6 +29,7 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.Account;
 
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
+import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.TransactionType;
@@ -729,5 +730,20 @@ public enum Caching {
             if (scheduledTransaction.getId().equals(id)) return scheduledTransaction;
         }
         return null;
+    }
+
+    private final HashMap<String, String> propertyList = new HashMap<>();
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setPropertyList(List<Property> properties) {
+        propertyList.clear();
+        properties.forEach( property -> propertyList.put(property.getId(), property.getName()));
+    }
+
+    public String getPropertyNameFromID(String id) {
+        if (!id.equals(""))
+            return propertyList.get(id);
+        else
+            return "N/A";
     }
 }

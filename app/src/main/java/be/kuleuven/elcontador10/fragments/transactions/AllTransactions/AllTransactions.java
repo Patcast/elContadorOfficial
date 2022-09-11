@@ -1,5 +1,6 @@
 package be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
@@ -7,20 +8,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.core.view.MenuProvider;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.os.Environment;
 import android.os.StrictMode;
+import android.provider.DocumentsContract;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,16 +25,28 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.view.MenuProvider;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 
 import org.jetbrains.annotations.NotNull;
 
-
 import java.io.File;
 import java.text.ParseException;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,9 +58,9 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.tools.Exporter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
+import be.kuleuven.elcontador10.fragments.property.PropertyListViewModel;
 
-
-public class AllTransactions extends Fragment implements  DatePickerDialog.OnDateSetListener, MainActivity.TopMenuHandler {
+public class AllTransactions extends Fragment implements DatePickerDialog.OnDateSetListener, MainActivity.TopMenuHandler {
 
     private RecyclerView recyclerView;
     private TransactionsRecViewAdapter recyclerViewAdapter;
@@ -76,7 +78,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
     private String selectedMonth;
     private int selectedYear;
-    private long startingBalance, cashIn, cashOut, currentBalance, receivables, payables, scheduleBalance;
+    private long cashAtStart, cashIn, cashOut, cashAtEnd, receivables, payables, equity;
     private boolean isClicked;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -84,6 +86,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
+        new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);  // query properties
         try {
             viewModel.setInitialData();
         } catch (ParseException e) {
@@ -212,8 +215,8 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
         NumberFormatter formatter = new NumberFormatter(0);
         String inputSB = "NA";
         if(inputsForSummary.get("startingBalance")!=null){
-            startingBalance = inputsForSummary.get("startingBalance");
-            formatter.setOriginalNumber(startingBalance);
+            cashAtStart = inputsForSummary.get("startingBalance");
+            formatter.setOriginalNumber(cashAtStart);
             inputSB = formatter.getFinalNumber();
         }
         txtStartingCash.setText(inputSB);
@@ -239,14 +242,14 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
         String inputCB = "NA";
         if(inputsForSummary.get("currentBalance")!=null){
-            currentBalance = inputsForSummary.get("currentBalance");
-            formatter.setOriginalNumber(currentBalance);
+            cashAtEnd = inputsForSummary.get("currentBalance");
+            formatter.setOriginalNumber(cashAtEnd);
             inputCB = formatter.getFinalNumber();
         }
 
         receivables = inputsForSummary.get("receivables");
         payables = inputsForSummary.get("payables");
-        scheduleBalance = inputsForSummary.get("scheduleBalance");
+        equity = inputsForSummary.get("scheduleBalance");
 
         txCurrentCash.setText(inputCB);
         formatter.setOriginalNumber(inputsForSummary.get("receivables"));
@@ -329,29 +332,71 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void onExport_Clicked() {
-        String message = "Export the current month?\n" + selectedMonth + " " + selectedYear;
+        String message = getString(R.string.export_prompt, selectedMonth, selectedYear);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(message)
-                .setPositiveButton("Yes", this::export)
-                .setNegativeButton("No", (dialogInterface, id) -> {})
-                .create().show();
+                .setPositiveButton(R.string.yes, this::saveFileLocation)
+                .setNegativeButton(R.string.no, (dialogInterface, id) -> dialogInterface.dismiss())
+                .create()
+                .show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void export(DialogInterface dialogInterface, int id) {
-        List<ProcessedTransaction> processed;
-        processed = viewModel.getMonthlyListOfProcessedTransactions().getValue();
-        File file = Exporter.INSTANCE.createFile(selectedMonth + "_" + selectedYear, processed, null,
-                startingBalance, cashIn, cashOut, currentBalance, receivables, payables, scheduleBalance);
+    private void saveFileLocation(DialogInterface dialogInterface, int id) {
+        dialogInterface.dismiss();
+
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/vnd.ms-excel");
+        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI,
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS));
+        intent.putExtra(Intent.EXTRA_TITLE, selectedMonth + "_" + selectedYear + ".xls");
+        saveIntentLauncher.launch(intent);
+    }
+
+    ActivityResultLauncher<Intent> saveIntentLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            this::onActivityResult
+    );
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void export(Uri uri) {
+        List<ProcessedTransaction> processed = viewModel.getMonthlyListOfProcessedTransactions();
+
+        File file = Exporter.INSTANCE.createFile(mainActivity.getContentResolver(), uri,
+                selectedMonth + " " + selectedYear, processed, cashAtStart,
+                cashIn, cashOut, cashAtEnd, receivables, payables, equity, this);
+
+        if (file == null) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+            dialogBuilder.setMessage(R.string.failed_to_create_file)
+                    .setPositiveButton(R.string.ok, ((dialogInterface, i) -> dialogInterface.dismiss()))
+                    .create()
+                    .show();
+            return;
+        }
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("application/vnd.ms-excel");
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-        startActivity(intent);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        dialogBuilder.setMessage(R.string.file_ready)
+                .setPositiveButton(R.string.send, (dialogInterface, i) -> {
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("application/vnd.ms-excel");
+                    intent.putExtra(Intent.EXTRA_STREAM, uri);
+                    startActivity(intent);
+                })
+                .setNegativeButton(R.string.open, (dialogInterface, i) -> {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(uri, "*/*");
+                    startActivity(intent);
+                })
+                .setNeutralButton(R.string.cancel,
+                        (dialogInterface, i) -> dialogInterface.dismiss())
+                .create()
+                .show();
     }
 
     ///******  ANIMATIONS METHODS
@@ -426,4 +471,13 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     }
 
 
+    private void onActivityResult(ActivityResult result) {
+        if (result.getResultCode() == Activity.RESULT_OK &&
+                result.getData() != null) {
+            Uri uri = result.getData().getData();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                export(uri);
+            }
+        }
+    }
 }

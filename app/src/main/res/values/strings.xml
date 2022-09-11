@@ -200,7 +200,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Transaction_upload_failed">Transaction upload failed, please register the transaction again.</string>
-    <string name="stakeholders">Stakeholder</string>
+    <string name="stakeholders">Stakeholders</string>
     <string name="image_captured">Image Captured</string>
     <string name="summary">Summary</string>
     <string name="properties">Properties</string>
@@ -310,6 +310,22 @@
         <item>PAYABLE</item>
     </string-array>
 
-
+    <string name="export_prompt">Export the current month?\n%1$s %2$d</string>
+    <string name="summary_of">Summary of %1$s</string>
+    <string name="exported_by">Exported by %1$s at %2$s</string>
+    <string name="file_ready">File ready</string>
+    <string name="send">Send</string>
+    <string name="open">Open</string>
+    <string name="failed_to_create_file">Failed to create file</string>
+    <string name="ok">Okay</string>
+<!--    EXCEL HEADERS, NO COLONS    -->
+    <string name="expenses">Expenses</string>
+    <string name="income">Income</string>
+    <string name="date_and_time_excel">Date &amp; Time</string>
+    <string name="category_excel">Category</string>
+    <string name="registered_by">Registered by</string>
+    <string name="notes_excel">Notes</string>
+    <string name="equity_excel">Equity</string>
+    <string name="cash">Cash</string>
 
 </resources>

@@ -2,6 +2,7 @@ package be.kuleuven.elcontador10.fragments.property;
 
 
 import android.util.Log;
+import androidx.annotation.RequiresApi;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -35,6 +36,7 @@ public class PropertyListViewModel extends ViewModel {
         listOfProperties.setValue(null);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public PropertyListViewModel() {
         requestListOfProperties();
     }
@@ -55,6 +57,7 @@ public class PropertyListViewModel extends ViewModel {
                 myProperty.setId(doc.getId());
                 newListProperties.add(myProperty);
             }
+            Caching.INSTANCE.setPropertyList(newListProperties);
             selectSProperties(newListProperties);
         });
     }
