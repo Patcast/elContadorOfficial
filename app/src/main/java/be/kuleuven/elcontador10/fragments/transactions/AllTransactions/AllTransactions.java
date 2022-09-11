@@ -1,5 +1,6 @@
 package be.kuleuven.elcontador10.fragments.transactions.AllTransactions;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
@@ -7,7 +8,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
+import android.provider.DocumentsContract;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,20 +19,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultRegistry;
-import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
@@ -59,8 +61,7 @@ import be.kuleuven.elcontador10.background.tools.Exporter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.fragments.property.PropertyListViewModel;
 
-
-public class AllTransactions extends Fragment implements  DatePickerDialog.OnDateSetListener, MainActivity.TopMenuHandler {
+public class AllTransactions extends Fragment implements DatePickerDialog.OnDateSetListener, MainActivity.TopMenuHandler {
 
     private RecyclerView recyclerAllTransactions;
     private TransactionsRecViewAdapter adapter;
@@ -336,37 +337,72 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(message)
-                .setPositiveButton(R.string.yes, this::export)
+                .setPositiveButton(R.string.yes, this::saveFileLocation)
                 .setNegativeButton(R.string.no, (dialogInterface, id) -> dialogInterface.dismiss())
-                .create().show();
+                .create()
+                .show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void export(DialogInterface dialogInterface, int id) {
+    private void saveFileLocation(DialogInterface dialogInterface, int id) {
         dialogInterface.dismiss();
 
-        List<ProcessedTransaction> processed;
-        processed = viewModel.getMonthlyListOfProcessedTransactions();
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/vnd.ms-excel");
+        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI,
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS));
+        intent.putExtra(Intent.EXTRA_TITLE, selectedMonth + "_" + selectedYear + ".xls");
+        saveIntentLauncher.launch(intent);
+    }
 
-        File file = Exporter.INSTANCE.createFile(selectedMonth + "_" + selectedYear, processed,
+    ActivityResultLauncher<Intent> saveIntentLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK &&
+                        result.getData() != null) {
+                    Uri uri = result.getData().getData();
+                    export(uri);
+                }
+            }
+    );
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void export(Uri uri) {
+        List<ProcessedTransaction> processed = viewModel.getMonthlyListOfProcessedTransactions();
+
+        File file = Exporter.INSTANCE.createFile(mainActivity.getContentResolver(), uri, selectedMonth + " " + selectedYear, processed,
                 cashAtStart, cashIn, cashOut, cashAtEnd, receivables, payables, equity, this);
+
+        if (file == null) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+            dialogBuilder.setMessage(R.string.failed_to_create_file)
+                    .setPositiveButton(R.string.ok, ((dialogInterface1, i) -> dialogInterface1.dismiss()))
+                    .create()
+                    .show();
+            return;
+        }
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setMessage(R.string.file_ready)
-                .setPositiveButton(R.string.send, (dialogInterface1, i) -> {
+                .setPositiveButton(R.string.send, (dialogInterface, i) -> {
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("application/vnd.ms-excel");
-                    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                    intent.putExtra(Intent.EXTRA_STREAM, uri);
                     startActivity(intent);
                 })
-                .setNegativeButton(R.string.save, (dialogInterface1, i) -> {
-                    // TODO: local save
+                .setNegativeButton(R.string.open_folder, (dialogInterface, i) -> {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.parse(file.getParent()), "resource/folder");
+                    startActivity(intent);
                 })
-                .setNeutralButton(R.string.cancel, (dialogInterface1, i) -> dialogInterface1.dismiss())
-                .create().show();
+                .setNeutralButton(R.string.cancel,
+                        (dialogInterface, i) -> dialogInterface.dismiss())
+                .create()
+                .show();
     }
 
     ///******  ANIMATIONS METHODS

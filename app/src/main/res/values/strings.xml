@@ -306,7 +306,9 @@
     <string name="exported_by">Exported by %1$s at %2$s</string>
     <string name="file_ready">File ready</string>
     <string name="send">Send</string>
-    <string name="save">Save</string>
+    <string name="open_folder">Open in File Explorer</string>
+    <string name="failed_to_create_file">Failed to create file</string>
+    <string name="ok">Okay</string>
 <!--    EXCEL HEADERS, NO COLONS    -->
     <string name="expenses">Expenses</string>
     <string name="income">Income</string>

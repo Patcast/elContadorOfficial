@@ -1,6 +1,7 @@
 package be.kuleuven.elcontador10.background.tools;
 
-import android.content.Context;
+import android.content.ContentResolver;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
@@ -16,7 +17,6 @@ import org.apache.poi.ss.usermodel.Font;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,22 +36,23 @@ public enum Exporter {
     private Fragment fragment;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public File createFile(String monthYear, List<ProcessedTransaction> processed,
+    public File createFile(ContentResolver resolver, Uri uri, String monthYear, List<ProcessedTransaction> processed,
                            long cashAtStart, long cashIn, long cashOut, long cashAtEnd, long receivables,
                            long payables, long equity, Fragment fragment) {
         this.fragment = fragment;
 
         HSSFWorkbook workbook = formatExcel(monthYear, processed, cashAtStart, cashIn, cashOut,
                 cashAtEnd, receivables, payables, equity);
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), monthYear + ".xls");
+        File file = new File(uri.getPath());
         FileOutputStream fileOutputStream = null;
 
         try {
-            fileOutputStream = new FileOutputStream(file);
+            fileOutputStream = (FileOutputStream) resolver.openOutputStream(uri);
             workbook.write(fileOutputStream);
-            Log.e(TAG, "Write successful!");
+            Log.e(TAG, "Write successful! Path: " + file.getAbsolutePath());
         } catch (IOException e) {
             Log.e(TAG, "I/O exception: ", e);
+            return null;
         } catch (Exception e) {
             Log.e(TAG, "Failed to save file due to: ", e);
         } finally {
@@ -277,7 +278,7 @@ public enum Exporter {
 
         // expenses
         row = sheet.getRow(0);
-        cell = row.createCell(8);
+        cell = row.createCell(9);
 
         cell.setCellValue(fragment.getString(R.string.expenses));
         cell.setCellStyle(styleTitle);
