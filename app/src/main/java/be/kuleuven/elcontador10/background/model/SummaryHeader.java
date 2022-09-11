@@ -31,9 +31,9 @@ public class SummaryHeader {
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public SummaryHeader(List<BalanceRecord> listOfBalanceRecords,List<ProcessedTransaction> monthlyListOfProcessedTransactions,int selectedMonth, int selectedYear,Integer sumOfPayables, Integer sumOfReceivables, Integer equity ) {
+    public SummaryHeader(List<BalanceRecord> listOfBalanceRecords,List<ProcessedTransaction> monthlyList,int selectedMonth, int selectedYear,Integer sumOfPayables, Integer sumOfReceivables, Integer equity ) {
         this.listOfBalanceRecords.addAll(listOfBalanceRecords);
-        this.monthlyListOfProcessedTransactions.addAll(monthlyListOfProcessedTransactions);
+        this.monthlyListOfProcessedTransactions.addAll(monthlyList);
         this.selectedMonth = selectedMonth;
         this.selectedYear = selectedYear;
         this.sumOfPayables = sumOfPayables;

@@ -30,6 +30,7 @@ import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.tools.ZoomOutPageTransformer;
+import be.kuleuven.elcontador10.fragments.property.PropertiesList;
 import be.kuleuven.elcontador10.fragments.stakeholders.StakeDetailsList;
 import be.kuleuven.elcontador10.fragments.stakeholders.StakeholderViewModel;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.ViewModel_AllTransactions;
@@ -44,9 +45,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     String sumOfTransactions, initialReceivables,initialPayables;
     List<ProcessedTransaction> processedTransactionList = new ArrayList<>();
     private ViewModel_AllTransactions viewModelAllTransactions;
-    StakeDetailsList cashTab;
-    StakeDetailsList receivablesTab;
-    StakeDetailsList payablesTab;
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -92,6 +91,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
                 findFirst();
         matchingObject.ifPresent(this::setStakeHolder);
         if(processedTransactionList.size()>0)updateSummaryWithTransactions(processedTransactionList);
+        mainActivity.displayStakeHolderDetails(true, sumOfTransactions,initialReceivables,initialPayables);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -121,20 +121,17 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
 
 
     private void addFragments() {
-         cashTab = new StakeDetailsList(Caching.INSTANCE.TYPE_CASH);
-         receivablesTab = new StakeDetailsList(Caching.INSTANCE.TYPE_RECEIVABLES);
-         payablesTab = new StakeDetailsList(Caching.INSTANCE.TYPE_PAYABLES);
-
-        mAdapter.addFragment(cashTab);
-        mAdapter.addFragment(receivablesTab);
-        mAdapter.addFragment(payablesTab);
+        mAdapter.addFragment(new StakeDetailsList(Caching.INSTANCE.TYPE_CASH));
+        mAdapter.addFragment(new StakeDetailsList(Caching.INSTANCE.TYPE_RECEIVABLES));
+        mAdapter.addFragment(new StakeDetailsList(Caching.INSTANCE.TYPE_PAYABLES));
+        mAdapter.addFragment(new PropertiesList(Caching.INSTANCE.PROPERTY_STAKEHOLDER));
         viewPager.setAdapter(mAdapter);
 
         new TabLayoutMediator(mainActivity.getTabLayout(), viewPager, (t, p) -> {
             switch (p) {
                 case 0:
                     t.setText(R.string.transactions);
-                    t.setIcon(R.drawable.icon_transaction);
+                    t.setIcon(R.drawable.ic_baseline_attach_money_24);
                     break;
                 case 1:
                     t.setText(R.string.receivables);
@@ -144,6 +141,9 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
                     t.setText(R.string.payables);
                     t.setIcon(R.drawable.icon_contracts);
                     break;
+                case 3:
+                    t.setText(R.string.properties);
+                    t.setIcon(R.drawable.ic_baseline_business_24);
             }
         }).attach();
     }

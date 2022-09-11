@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
+import be.kuleuven.elcontador10.fragments.property.PropertiesListDirections;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<PropertiesListRecViewAdapter.ViewHolder> implements Filterable {
@@ -75,6 +76,10 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
 
             }
             else holder.textBalance.setVisibility(View.GONE); // hide 0 balance
+            holder.parent.setOnClickListener(view -> {
+                PropertiesListDirections.ActionPropertiesListToPropertyViewPageHolder action = PropertiesListDirections.actionPropertiesListToPropertyViewPageHolder(property);
+                navController.navigate(action);
+            });
 
         }
         else  {
@@ -102,7 +107,7 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
                 super(itemView);
                 parent = itemView.findViewById(R.id.parent_allMicros);
                 textName = itemView.findViewById(R.id.text_Account_name_Micros);
-                textInfo = itemView.findViewById(R.id.text_micros_role);
+                textInfo = itemView.findViewById(R.id.text_micros_description);
                 textBalance = itemView.findViewById(R.id.text_micros_balance);
             }
     }

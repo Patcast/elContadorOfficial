@@ -24,7 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-
+import java.util.concurrent.ExecutionException;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
@@ -42,11 +42,11 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
     private String prevTAG;
 
 
+    public PropertiesList(String prevTAG) {
+        this.prevTAG = prevTAG;
+    }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public PropertiesList() {
     }
 
     @Override
@@ -58,13 +58,17 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
         mainActivity = (MainActivity) requireActivity();
         viewModelPropertiesList = new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
-        try{
+        try {
             prevTAG = PropertiesListArgs.fromBundle(getArguments()).getPreviousFragment();
-            adapter = new PropertiesListRecViewAdapter(view,prevTAG,viewModel);
-
-        }catch (Exception e){
-            adapter = new PropertiesListRecViewAdapter(view);
         }
+        catch(Exception e){}
+
+         if(prevTAG==null)adapter = new PropertiesListRecViewAdapter(view);
+         else {
+            adapter = new PropertiesListRecViewAdapter(view,prevTAG,viewModel);
+         }
+
+
 
         recyclerView.setAdapter(adapter);
 
@@ -75,9 +79,12 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
     @Override
     public void onViewCreated(@NonNull  View view, @Nullable  Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        navController = Navigation.findNavController(view);
-        viewModelPropertiesList.getListOfProperties().observe(getViewLifecycleOwner(), i->adapter.setPropertyListOnAdapter(i));
-        setTopMenu();
+
+        if (prevTAG == null || !prevTAG.equals(Caching.INSTANCE.PROPERTY_STAKEHOLDER)){
+            navController = Navigation.findNavController(view);
+            viewModelPropertiesList.getListOfProperties().observe(getViewLifecycleOwner(), i->adapter.setPropertyListOnAdapter(i));
+            setTopMenu();
+        }
     }
        private void setTopMenu(){
         requireActivity().addMenuProvider(new MenuProvider() {
@@ -111,21 +118,29 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
     @Override
     public void onStart() {
         super.onStart();
-        mainActivity.setCurrentMenuClicker(this);
-        mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
-        if(prevTAG==null) {
-            mainActivity.displayBottomNavigationMenu(true);
+        if (prevTAG == null || prevTAG.equals(Caching.INSTANCE.PROPERTY_NEW_T)){
+            mainActivity.setCurrentMenuClicker(this);
+            mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
+            if(prevTAG==null) {
+                mainActivity.displayBottomNavigationMenu(true);
+            }
+
         }
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mainActivity.setCurrentMenuClicker(null);
-        if(prevTAG==null) {
-            mainActivity.displayBottomNavigationMenu(false);
+        if (prevTAG == null || prevTAG.equals(Caching.INSTANCE.PROPERTY_NEW_T)){
+            mainActivity.setCurrentMenuClicker(null);
+            if(prevTAG==null) {
+                mainActivity.displayBottomNavigationMenu(false);
+            }
+            if( menuItem != null) menuItem.collapseActionView();
         }
-        if( menuItem != null) menuItem.collapseActionView();
+
+
     }
     public void onSearchClick(MenuItem item) {
         this.menuItem = item;

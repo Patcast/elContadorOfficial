@@ -230,13 +230,25 @@
             app:destination="@id/addProperty" />
         <argument
             android:name="previousFragment"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true" />
         <action
             android:id="@+id/action_propertiesList_to_accountSettings"
             app:destination="@id/accountSettings" />
+        <action
+            android:id="@+id/action_propertiesList_to_propertyViewPageHolder"
+            app:destination="@id/propertyViewPageHolder" />
     </fragment>
     <fragment
         android:id="@+id/addProperty"
         android:name="be.kuleuven.elcontador10.fragments.property.AddProperty"
         android:label="AddProperty" />
+    <fragment
+        android:id="@+id/propertyViewPageHolder"
+        android:name="be.kuleuven.elcontador10.fragments.property.PropertyViewPageHolder"
+        android:label="PropertyViewPageHolder" >
+        <argument
+            android:name="property"
+            app:argType="be.kuleuven.elcontador10.background.model.Property" />
+    </fragment>
 </navigation>

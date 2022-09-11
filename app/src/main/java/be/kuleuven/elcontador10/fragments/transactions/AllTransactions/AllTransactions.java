@@ -341,8 +341,7 @@ public class AllTransactions extends Fragment implements  DatePickerDialog.OnDat
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void export(DialogInterface dialogInterface, int id) {
         List<ProcessedTransaction> processed;
-        processed = viewModel.getMonthlyListOfProcessedTransactions();
-
+        processed = viewModel.getMonthlyListOfProcessedTransactions().getValue();
         File file = Exporter.INSTANCE.createFile(selectedMonth + "_" + selectedYear, processed, null,
                 startingBalance, cashIn, cashOut, currentBalance, receivables, payables, scheduleBalance);
 

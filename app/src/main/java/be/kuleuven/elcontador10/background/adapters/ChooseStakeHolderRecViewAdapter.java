@@ -76,7 +76,7 @@ public class ChooseStakeHolderRecViewAdapter extends RecyclerView.Adapter<Choose
             super(itemView);
             parent = itemView.findViewById(R.id.parent_allMicros);
             textName = itemView.findViewById(R.id.text_Account_name_Micros);
-            textRole = itemView.findViewById(R.id.text_micros_role);
+            textRole = itemView.findViewById(R.id.text_micros_description);
             txtBalance = itemView.findViewById(R.id.text_micros_balance);
 
         }

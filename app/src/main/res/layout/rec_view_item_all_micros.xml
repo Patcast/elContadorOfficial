@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parent_allMicros"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="wrap_content"
     android:layout_marginTop="3dp"
     android:background="@color/rec_view_transactions"
     android:paddingHorizontal="10dp"
+    android:padding="10dp"
     >
 
 
@@ -14,54 +16,67 @@
             android:id="@+id/text_Account_name_Micros"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="Juan Martinez"
-            android:textColor="@color/title_rec_view_stake"
-            android:textStyle="bold"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="Juan Martinez"
+            android:textColor="@color/title_rec_view_stake"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/text_micros_role"
+            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/text_micros_balance"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
             android:layout_marginRight="15dp"
             android:ellipsize="end"
-            android:gravity="end"
+            android:gravity="start"
             android:maxLines="1"
             android:text="$4,000.00"
-            android:textColor="@color/rec_view_title"
+            android:textColor="@color/transaction_Schedule_receivables"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/text_Account_name_Micros"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/text_Account_name_Micros"
             app:layout_constraintTop_toTopOf="@+id/text_Account_name_Micros" />
 
+        <TextView
+            android:id="@+id/text_micros_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Bodega 2 y 5"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="2"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_Account_name_Micros" />
+
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline4"
+            android:id="@+id/guideline2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="16dp" />
+            app:layout_constraintGuide_begin="245dp" />
 
         <TextView
-            android:id="@+id/text_micros_role"
-            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:id="@+id/textViewPayables"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="Tenant"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@+id/guideline4"
-            app:layout_constraintTop_toBottomOf="@+id/text_Account_name_Micros" />
-
-
+            android:text="$8,000.00"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="1"
+            android:textColor="@color/transaction_Schedule_payables"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/text_micros_balance" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -171,10 +171,7 @@ public class StakeHolder implements Parcelable {
     public long getSumOfReceivablesPending() {
         return sumOfReceivablesPending;
     }
-    @Exclude
-    public long calculateSummary(){
-        return (sumOfReceivables-sumOfPayables);
-    }
+
 
 
 }

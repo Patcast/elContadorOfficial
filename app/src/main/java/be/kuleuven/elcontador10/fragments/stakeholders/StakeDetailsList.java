@@ -32,7 +32,7 @@ public class StakeDetailsList extends Fragment {
     RecyclerView recyclerView;
     StakeholderViewModel viewModel;
     View view;
-    private String tabId;
+    private final String tabId;
     List<ProcessedTransaction> transactionList = new ArrayList<>();
     List<ProcessedTransaction> transactionListFuture = new ArrayList<>();
     List<ProcessedTransaction> transactionListDisplayed = new ArrayList<>();
@@ -85,18 +85,6 @@ public class StakeDetailsList extends Fragment {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
-               /* LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                Log.w("Details", "On scroll");
-                if (!isLoading) {
-                    Log.w("Details", "On scroll is not loading");
-
-                    if (linearLayoutManager != null && linearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
-                        Log.w("Details", "On scroll is TOP");
-                        loadMore();
-                        isLoading = true;
-                    }
-                }*/
             }
         });
 
@@ -168,7 +156,6 @@ public class StakeDetailsList extends Fragment {
             transactionList.addAll(
                     transactionListFull
                             .stream()
-                            .filter(t->!t.getType().contains(Caching.INSTANCE.TYPE_CASH))
                             .filter(t->t.getType().contains(tabId))
                             .filter(t->!t.getType().contains(Caching.INSTANCE.TYPE_PENDING))
                             .collect(Collectors.toList())
@@ -176,7 +163,6 @@ public class StakeDetailsList extends Fragment {
             transactionListFuture.addAll(
                     transactionListFull
                             .stream()
-                            .filter(t->!t.getType().contains(Caching.INSTANCE.TYPE_CASH))
                             .filter(t->t.getType().contains(tabId))
                             .filter(t->t.getType().contains(Caching.INSTANCE.TYPE_PENDING))
                             .collect(Collectors.toList())

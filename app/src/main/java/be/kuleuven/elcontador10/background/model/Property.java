@@ -1,12 +1,17 @@
 package be.kuleuven.elcontador10.background.model;
 
+import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import be.kuleuven.elcontador10.background.database.Caching;
 
-public class Property {
+public class Property  implements Parcelable {
     private static final String TAG = "Add property fragment";
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -27,8 +32,34 @@ public class Property {
         this.name = name;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    protected Property(Parcel in) {
+        this.equity = in.readLong();
+        this.cash = in.readLong();
+        this.sumOfPayables = in.readLong();
+        this.sumOfReceivables = in.readLong();
+        this.equityPending = in.readLong();
+        this.sumOfPayablesPending = in.readLong();
+        this.sumOfReceivablesPending = in.readLong();
+        this.name = in.readString();
+        this.id = in.readString();
+    }
     public Property() {
     }
+
+    public static final Creator<Property> CREATOR = new Creator<Property>() {
+        @RequiresApi(api = Build.VERSION_CODES.Q)
+        @Override
+        public Property createFromParcel(Parcel in) {
+            return new Property(in);
+        }
+
+        @Override
+        public Property[] newArray(int size) {
+            return new Property[size];
+        }
+    };
+
     public void addProperty(Property newProperty) {
         String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/properties";
 
@@ -81,5 +112,24 @@ public class Property {
     }
     public long calculatePropertySummary(){
         return (sumOfReceivables-sumOfPayables);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(equity);
+        parcel.writeLong(sumOfPayables);
+        parcel.writeLong(sumOfReceivables);
+        parcel.writeLong(cash);
+        parcel.writeLong(sumOfPayablesPending);
+        parcel.writeLong(sumOfPayablesPending);
+        parcel.writeLong(equityPending);
+
+        parcel.writeString(name);
+        parcel.writeString(id);
     }
 }

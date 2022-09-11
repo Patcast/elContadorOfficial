@@ -1,7 +1,6 @@
 package be.kuleuven.elcontador10.background.adapters;
 
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,19 +51,25 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
         StakeHolder stake = stakeholdersList.get(position);
         holder.textName.setText(stake.getName());
         //holder.textRole.setText(String.valueOf(stake.getRole()));
-        holder.textBalance.setVisibility(View.VISIBLE);
-        long balance = stake.calculateSummary();
+        holder.textReceivables.setVisibility(View.VISIBLE);
+        long receivables = stake.getSumOfReceivables();
 
-        if (balance != 0) {
-            NumberFormatter formatter = new NumberFormatter(balance);
+        if (receivables != 0) {
+            NumberFormatter formatter = new NumberFormatter(receivables);
             String formatted = formatter.getFinalNumber();
-            holder.textBalance.setText(formatted);
-
-            if (balance > 0) holder.textBalance.setTextColor(viewFromHostingClass.getContext().getColor(R.color.transaction_processed_positive));
-            else holder.textBalance.setTextColor(viewFromHostingClass.getContext().getColor(R.color.rec_view_negative_amount));
+            holder.textReceivables.setText(formatted);
 
         }
-        else holder.textBalance.setVisibility(View.GONE); // hide 0 balance
+        else holder.textReceivables.setVisibility(View.GONE);
+
+        long payables = stake.getSumOfPayables();
+        if (payables != 0) {
+            NumberFormatter formatter = new NumberFormatter(payables);
+            String formatted = formatter.getFinalNumber();
+            holder.textViewPayables.setText(formatted);
+
+        }
+        else holder.textViewPayables.setVisibility(View.GONE);
 
         holder.parent.setOnClickListener(v -> {
                     NavController navController = Navigation.findNavController(viewFromHostingClass);
@@ -84,9 +89,7 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
 
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView textName;
-        //private TextView textRole;
-        private TextView textBalance;
+        private TextView textName, textReceivables,textViewPayables;
         private ConstraintLayout parent;
 
         public ViewHolder(@NonNull View itemView) {
@@ -94,7 +97,8 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
             parent = itemView.findViewById(R.id.parent_allMicros);
             textName = itemView.findViewById(R.id.text_Account_name_Micros);
             //textRole = itemView.findViewById(R.id.text_micros_role);
-            textBalance = itemView.findViewById(R.id.text_micros_balance);
+            textReceivables = itemView.findViewById(R.id.text_micros_balance);
+            textViewPayables = itemView.findViewById(R.id.textViewPayables);
         }
     }
     /////------------

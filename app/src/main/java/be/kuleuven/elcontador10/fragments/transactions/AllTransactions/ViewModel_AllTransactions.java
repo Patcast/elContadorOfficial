@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -55,7 +56,15 @@ public class ViewModel_AllTransactions extends ViewModel {
 
 
     /// Querying lists of transactions
-    private final List<ProcessedTransaction> monthlyListOfProcessedTransactions = new ArrayList<>();
+    private final MutableLiveData<List<ProcessedTransaction>> monthlyListOfProcessedTransactions = new MutableLiveData<>();
+    /// Map of summary values
+    public void resetListOfTransactions() {
+        monthlyListOfProcessedTransactions.setValue(null);
+    }
+
+    public LiveData<List<ProcessedTransaction>> getMonthlyListOfProcessedTransactions() {
+        return monthlyListOfProcessedTransactions;
+    }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void selectListOfProcessedTransactions() throws ParseException {
 
@@ -83,10 +92,10 @@ public class ViewModel_AllTransactions extends ViewModel {
                 myTransaction.setId(doc.getId());
                 listTrans.add(myTransaction);
             }
-            monthlyListOfProcessedTransactions.clear();
+            monthlyListOfProcessedTransactions.setValue(null);
             // IF WE WANT TO FILTER PENDING
             //monthlyListOfProcessedTransactions.addAll(listTrans.stream().filter(i->!i.getType().contains("PENDING")).collect(Collectors.toList()));
-            monthlyListOfProcessedTransactions.addAll(listTrans);
+            monthlyListOfProcessedTransactions.setValue(listTrans);
             setListOfTransactions();
         });
     }
@@ -129,7 +138,7 @@ public class ViewModel_AllTransactions extends ViewModel {
             }
             listOfBalanceRecords.clear();
             listOfBalanceRecords.addAll(listRec);
-            setMapOfSummary(currentAccounts.getSumOfPayables(),currentAccounts.getSumOfReceivables(),currentAccounts.getEquity());
+            if(monthlyListOfProcessedTransactions.getValue()!=null)setMapOfSummary(currentAccounts.getSumOfPayables(),currentAccounts.getSumOfReceivables(),currentAccounts.getEquity());
         });
     }
 
@@ -179,7 +188,7 @@ public class ViewModel_AllTransactions extends ViewModel {
 
 
 
-    /// Map of summary values
+
     private final MutableLiveData<Map<String, Integer>> mapOfMonthlySummaryValues = new MutableLiveData<>();
     public LiveData<Map<String, Integer>> getMapOfMonthlySummaryValues() {
         return mapOfMonthlySummaryValues;
@@ -188,7 +197,7 @@ public class ViewModel_AllTransactions extends ViewModel {
     private void setMapOfSummary(long payables,long receivables,long equity) {
             SummaryHeader header = new SummaryHeader(
                     listOfBalanceRecords,
-                    monthlyListOfProcessedTransactions,
+                    monthlyListOfProcessedTransactions.getValue(),
                     calendarFilter.getValue().get("month"),
                     calendarFilter.getValue().get("year"),
                     (int)payables,
@@ -227,19 +236,19 @@ public class ViewModel_AllTransactions extends ViewModel {
         List<ProcessedTransaction> listAllTransactionsFiltered = new ArrayList<>();
         if(booleanFilter.getValue().get("transaction"))
         {
-            listAllTransactionsFiltered.addAll(monthlyListOfProcessedTransactions.stream().filter(i-> !i.getIsDeleted()).filter(i->i.getType().contains("CASH")).collect(Collectors.toList()));
+            listAllTransactionsFiltered.addAll(Objects.requireNonNull(monthlyListOfProcessedTransactions.getValue()).stream().filter(i-> !i.getIsDeleted()).filter(i->i.getType().contains("CASH")).collect(Collectors.toList()));
         }
         if(booleanFilter.getValue().get("receivable"))
         {
-            listAllTransactionsFiltered.addAll(monthlyListOfProcessedTransactions.stream().filter(i->!i.getType().contains("CASH")).filter(i->i.getType().contains("RECEIVABLES")).collect(Collectors.toList()));
+            listAllTransactionsFiltered.addAll(Objects.requireNonNull(monthlyListOfProcessedTransactions.getValue()).stream().filter(i->!i.getType().contains("CASH")).filter(i->i.getType().contains("RECEIVABLES")).collect(Collectors.toList()));
         }
         if(booleanFilter.getValue().get("payable"))
         {
-            listAllTransactionsFiltered.addAll(monthlyListOfProcessedTransactions.stream().filter(i->!i.getType().contains("CASH")).filter(i->i.getType().contains("PAYABLES")).collect(Collectors.toList()));
+            listAllTransactionsFiltered.addAll(Objects.requireNonNull(monthlyListOfProcessedTransactions.getValue()).stream().filter(i->!i.getType().contains("CASH")).filter(i->i.getType().contains("PAYABLES")).collect(Collectors.toList()));
         }
         if(booleanFilter.getValue().get("deletedTrans"))
         {
-            listAllTransactionsFiltered.addAll(monthlyListOfProcessedTransactions.stream().filter(ProcessedTransaction::getIsDeleted).collect(Collectors.toList()));
+            listAllTransactionsFiltered.addAll(Objects.requireNonNull(monthlyListOfProcessedTransactions.getValue()).stream().filter(ProcessedTransaction::getIsDeleted).collect(Collectors.toList()));
         }
        return listAllTransactionsFiltered.stream().
                                                 sorted(Comparator.comparing(TransactionInterface::getDueDate).reversed()).
@@ -262,9 +271,7 @@ public class ViewModel_AllTransactions extends ViewModel {
         transTypes.put("deletedTrans",false);
         setBooleanFilter(transTypes);
     }
-    public void resetListOfTransactions() {
-        monthlyListOfProcessedTransactions.clear();
-    }
+
 
 
 
@@ -291,10 +298,6 @@ public class ViewModel_AllTransactions extends ViewModel {
 
 
 
-
-    public List<ProcessedTransaction> getMonthlyListOfProcessedTransactions() {
-        return monthlyListOfProcessedTransactions;
-    }
 
 
 
