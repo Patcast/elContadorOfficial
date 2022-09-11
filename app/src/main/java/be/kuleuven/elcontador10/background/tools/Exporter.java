@@ -3,7 +3,6 @@ package be.kuleuven.elcontador10.background.tools;
 import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
@@ -24,7 +23,6 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 
 public enum Exporter {
     INSTANCE;
@@ -90,7 +88,8 @@ public enum Exporter {
 
         summarySheet(workbook, monthYear, startingBalance, cashIn, cashOut,
                 currentBalance, receivables, payables, scheduleBalance);
-        transactionsSheet(workbook, processed);
+        incomeSheet(workbook, processed);
+        expenseSheet(workbook, processed);
         stakeholderSheet(workbook);
 //        lateSheet(workbook, styleCurrency, styleTitle, styleBold, scheduled);
 
@@ -182,13 +181,8 @@ public enum Exporter {
      *      |       |             |          |             |               |          |
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void transactionsSheet(HSSFWorkbook workbook, List<ProcessedTransaction> processed) {
-        HSSFSheet sheet = workbook.createSheet(fragment.getString(R.string.transactions));
-
-        // income
-        HSSFRow row = sheet.createRow(0);
-        row.setHeight((short) -1);
-        HSSFCell cell = row.createCell(0);
+    private void incomeSheet(HSSFWorkbook workbook, List<ProcessedTransaction> processed) {
+        HSSFSheet sheet = workbook.createSheet(fragment.getString(R.string.income));
 
         sheet.setColumnWidth(0,  (int) (15 * 1.14388) * 256);
         sheet.setColumnWidth(1,  (int) (15 * 1.14388) * 256);
@@ -199,20 +193,10 @@ public enum Exporter {
         sheet.setColumnWidth(6,  (int) (20 * 1.14388) * 256);
         sheet.setColumnWidth(7,  (int) (30 * 1.14388) * 256);
 
-        sheet.setColumnWidth(9,  (int) (15 * 1.14388) * 256);
-        sheet.setColumnWidth(10, (int) (15 * 1.14388) * 256);
-        sheet.setColumnWidth(11, (int) (15 * 1.14388) * 256);
-        sheet.setColumnWidth(12, (int) (15 * 1.14388) * 256);
-        sheet.setColumnWidth(13, (int) (15 * 1.14388) * 256);
-        sheet.setColumnWidth(14, (int) (20 * 1.14388) * 256);
-        sheet.setColumnWidth(15, (int) (20 * 1.14388) * 256);
-        sheet.setColumnWidth(16, (int) (30 * 1.14388) * 256);
-
-        cell.setCellValue(fragment.getString(R.string.income));
-        cell.setCellStyle(styleTitle);
-
-        row = sheet.createRow(1);
-        cell = row.createCell(0);
+        // income
+        HSSFRow row = sheet.createRow(0);
+        row.setHeight((short) -1);
+        HSSFCell cell = row.createCell(0);
         cell.setCellValue(fragment.getString(R.string.date_and_time_excel));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
@@ -243,7 +227,7 @@ public enum Exporter {
                 .filter(i -> !i.getType().contains("PENDING"))  // not completed
                 .collect(Collectors.toList());
 
-        int counter = 2;    // start from row 2
+        int counter = 1;    // start from row 1
 
         for (ProcessedTransaction transaction : income) {
             row = sheet.createRow(counter);
@@ -275,37 +259,45 @@ public enum Exporter {
 
             counter++;
         }
+    }
 
-        // expenses
-        row = sheet.getRow(0);
-        cell = row.createCell(9);
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void expenseSheet(HSSFWorkbook workbook, List<ProcessedTransaction> processed) {
+        HSSFSheet sheet = workbook.createSheet(fragment.getString(R.string.expenses));
 
-        cell.setCellValue(fragment.getString(R.string.expenses));
-        cell.setCellStyle(styleTitle);
+        sheet.setColumnWidth(0, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(1, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(2, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(3, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(4, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(5, (int) (20 * 1.14388) * 256);
+        sheet.setColumnWidth(6, (int) (20 * 1.14388) * 256);
+        sheet.setColumnWidth(7, (int) (30 * 1.14388) * 256);
 
-        row = sheet.getRow(1);
-        cell = row.createCell(9);
+        HSSFRow row = sheet.createRow(0);
+        row.setHeight((short) -1);
+        HSSFCell cell = row.createCell(0);
         cell.setCellValue(fragment.getString(R.string.date_and_time_excel));
         cell.setCellStyle(styleBold);
-        cell = row.createCell(10);
+        cell = row.createCell(1);
         cell.setCellValue(fragment.getString(R.string.title));
         cell.setCellStyle(styleBold);
-        cell = row.createCell(11);
+        cell = row.createCell(2);
         cell.setCellValue(fragment.getString(R.string.amount));
         cell.setCellStyle(styleBold);
-        cell = row.createCell(12);
+        cell = row.createCell(3);
         cell.setCellValue(fragment.getString(R.string.category_excel));
         cell.setCellStyle(styleBold);
-        cell = row.createCell(13);
+        cell = row.createCell(4);
         cell.setCellValue(fragment.getString(R.string.stakeholder));
         cell.setCellStyle(styleBold);
-        cell = row.createCell(14);
+        cell = row.createCell(5);
         cell.setCellValue(fragment.getString(R.string.registered_by));
         cell.setCellStyle(styleBold);
-        cell = row.createCell(15);
+        cell = row.createCell(6);
         cell.setCellValue(fragment.getString(R.string.property));
         cell.setCellStyle(styleBold);
-        cell = row.createCell(16);
+        cell = row.createCell(7);
         cell.setCellValue(fragment.getString(R.string.notes_excel));
         cell.setCellStyle(styleBold);
 
@@ -315,42 +307,41 @@ public enum Exporter {
                 .filter(i -> !i.getType().contains("PENDING"))
                 .collect(Collectors.toList());
 
-        counter = 2;    // start from row 2
+        int counter = 1;    // start from row 1
 
         for (ProcessedTransaction transaction : expenses) {
             row = sheet.getRow(counter);
 
             if (row == null) row = sheet.createRow(counter);
 
-            cell = row.createCell(9);
+            cell = row.createCell(0);
             cell.setCellValue(DatabaseDatesFunctions.INSTANCE.timestampToStringDetailed(transaction.getDueDate()));
 
-            cell = row.createCell(10);
+            cell = row.createCell(1);
             cell.setCellValue(transaction.getTitle());
 
-            cell = row.createCell(11);
+            cell = row.createCell(2);
             cell.setCellValue(Math.abs(transaction.getTotalAmount()));
             cell.setCellStyle(styleCurrency);
 
-            cell = row.createCell(12);
+            cell = row.createCell(3);
             cell.setCellValue(Caching.INSTANCE.getCategoryTitle(transaction.getIdOfCategoryInt()));
 
-            cell = row.createCell(13);
+            cell = row.createCell(4);
             cell.setCellValue(Caching.INSTANCE.getStakeholderName(transaction.getIdOfStakeInt()));
 
-            cell = row.createCell(14);
+            cell = row.createCell(5);
             cell.setCellValue(transaction.getRegisteredBy());
 
-            cell = row.createCell(15);
+            cell = row.createCell(6);
             cell.setCellValue(Caching.INSTANCE.getPropertyNameFromID(transaction.getIdOfProperty()));
 
-            cell = row.createCell(16);
+            cell = row.createCell(7);
             cell.setCellValue(transaction.getNotes());
 
             counter++;
         }
     }
-
 
     /*
      *  Stakeholder | Payables | Receivables | Equity | Cash
