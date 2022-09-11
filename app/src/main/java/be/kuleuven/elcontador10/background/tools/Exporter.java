@@ -32,14 +32,16 @@ public enum Exporter {
     private HSSFCellStyle styleBold;
     private HSSFCellStyle styleCurrency;
     private Fragment fragment;
+    private List<ProcessedTransaction> processed;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public File createFile(ContentResolver resolver, Uri uri, String monthYear, List<ProcessedTransaction> processed,
                            long cashAtStart, long cashIn, long cashOut, long cashAtEnd, long receivables,
                            long payables, long equity, Fragment fragment) {
         this.fragment = fragment;
+        this.processed = processed;
 
-        HSSFWorkbook workbook = formatExcel(monthYear, processed, cashAtStart, cashIn, cashOut,
+        HSSFWorkbook workbook = formatExcel(monthYear, cashAtStart, cashIn, cashOut,
                 cashAtEnd, receivables, payables, equity);
         File file = new File(uri.getPath());
         FileOutputStream fileOutputStream = null;
@@ -66,10 +68,8 @@ public enum Exporter {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private HSSFWorkbook formatExcel(String monthYear, List<ProcessedTransaction> processed,
-                                     long startingBalance, long cashIn, long cashOut,
-                                     long currentBalance, long receivables,
-                                     long payables, long scheduleBalance) {
+    private HSSFWorkbook formatExcel(String monthYear, long startingBalance, long cashIn, long cashOut,
+                                     long currentBalance, long receivables, long payables, long scheduleBalance) {
         HSSFWorkbook workbook = new HSSFWorkbook();
 
         styleCurrency = workbook.createCellStyle();
@@ -88,8 +88,8 @@ public enum Exporter {
 
         summarySheet(workbook, monthYear, startingBalance, cashIn, cashOut,
                 currentBalance, receivables, payables, scheduleBalance);
-        incomeSheet(workbook, processed);
-        expenseSheet(workbook, processed);
+        incomeSheet(workbook);
+        expenseSheet(workbook);
         stakeholderSheet(workbook);
 //        lateSheet(workbook, styleCurrency, styleTitle, styleBold, scheduled);
 
@@ -181,7 +181,7 @@ public enum Exporter {
      *      |       |             |          |             |               |          |
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void incomeSheet(HSSFWorkbook workbook, List<ProcessedTransaction> processed) {
+    private void incomeSheet(HSSFWorkbook workbook) {
         HSSFSheet sheet = workbook.createSheet(fragment.getString(R.string.income));
 
         sheet.setColumnWidth(0,  (int) (15 * 1.14388) * 256);
@@ -224,7 +224,7 @@ public enum Exporter {
         List<ProcessedTransaction> income = processed.stream()
                 .filter(i -> !i.getIsDeleted())
                 .filter(i -> i.getTotalAmount() > 0)
-                .filter(i -> !i.getType().contains("PENDING"))  // not completed
+                .filter(i -> !i.getType().contains(Caching.INSTANCE.TYPE_PENDING))  // not completed
                 .collect(Collectors.toList());
 
         int counter = 1;    // start from row 1
@@ -262,7 +262,7 @@ public enum Exporter {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void expenseSheet(HSSFWorkbook workbook, List<ProcessedTransaction> processed) {
+    private void expenseSheet(HSSFWorkbook workbook) {
         HSSFSheet sheet = workbook.createSheet(fragment.getString(R.string.expenses));
 
         sheet.setColumnWidth(0, (int) (15 * 1.14388) * 256);
@@ -304,7 +304,7 @@ public enum Exporter {
         List<ProcessedTransaction> expenses = processed.stream()
                 .filter(i -> !i.getIsDeleted())
                 .filter(i -> i.getTotalAmount() < 0)
-                .filter(i -> !i.getType().contains("PENDING"))
+                .filter(i -> !i.getType().contains(Caching.INSTANCE.TYPE_PENDING))
                 .collect(Collectors.toList());
 
         int counter = 1;    // start from row 1
@@ -344,10 +344,11 @@ public enum Exporter {
     }
 
     /*
-     *  Stakeholder | Payables | Receivables | Equity | Cash
-     *  ------------|----------|-------------|--------|-----
-     *              |          |             |        |
+     *  Stakeholder | Payables | Receivables | Equity | Cash in | Cash out
+     *  ------------|----------|-------------|--------|---------|---------
+     *              |          |             |        |         |
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void stakeholderSheet(HSSFWorkbook workbook) {
         HSSFSheet sheet = workbook.createSheet(fragment.getString(R.string.stakeholders));
 
@@ -356,6 +357,7 @@ public enum Exporter {
         sheet.setColumnWidth(2, (int) (15 * 1.14388) * 256);
         sheet.setColumnWidth(3, (int) (15 * 1.14388) * 256);
         sheet.setColumnWidth(4, (int) (15 * 1.14388) * 256);
+        sheet.setColumnWidth(5, (int) (15 * 1.14388) * 256);
 
         HSSFRow row = sheet.createRow(0);
         row.setHeight((short) -1);
@@ -377,6 +379,18 @@ public enum Exporter {
         cell.setCellStyle(styleBold);
 
         cell = row.createCell(4);
+        cell.setCellValue(fragment.getString(R.string.cash_in));
+        cell.setCellStyle(styleBold);
+
+        cell = row.createCell(5);
+        cell.setCellValue(fragment.getString(R.string.cash_out));
+        cell.setCellStyle(styleBold);
+
+        cell = row.createCell(6);
+        cell.setCellValue(fragment.getString(R.string.cash));
+        cell.setCellStyle(styleBold);
+
+        cell = row.createCell(7);
         cell.setCellValue(fragment.getString(R.string.cash));
         cell.setCellStyle(styleBold);
 
@@ -399,8 +413,38 @@ public enum Exporter {
             cell.setCellValue(stakeHolder.getEquity());
             cell.setCellStyle(styleCurrency);
 
+            int sumIn = processed
+                    .stream()
+                    .filter(i -> i.getIdOfStakeInt().equals(stakeHolder.getId()))
+                    .filter(i -> !i.getIsDeleted())
+                    .filter(i -> !i.getType().contains(Caching.INSTANCE.TYPE_PENDING))
+                    .filter(i -> i.getType().contains(Caching.INSTANCE.TYPE_CASH))
+                    .map(ProcessedTransaction::getTotalAmount)
+                    .filter(totalAmount -> totalAmount > 0)
+                    .reduce(0, Integer::sum);
+
             cell = row.createCell(4);
-            cell.setCellValue(stakeHolder.getCash());
+            cell.setCellValue(sumIn);
+            cell.setCellStyle(styleCurrency);
+
+            int sumOut = Math.abs(processed
+                    .stream()
+                    .filter(i -> i.getIdOfStakeInt().equals(stakeHolder.getId()))
+                    .filter(i -> !i.getIsDeleted())
+                    .filter(i -> !i.getType().contains(Caching.INSTANCE.TYPE_PENDING))
+                    .filter(i -> i.getType().contains(Caching.INSTANCE.TYPE_CASH))
+                    .map(ProcessedTransaction::getTotalAmount)
+                    .filter(totalAmount -> totalAmount < 0)
+                    .reduce(0, Integer::sum));
+
+            cell = row.createCell(5);
+            cell.setCellValue(sumOut);
+            cell.setCellStyle(styleCurrency);
+
+            int sum = sumIn - sumOut;
+
+            cell = row.createCell(6);
+            cell.setCellValue(sum);
             cell.setCellStyle(styleCurrency);
 
             counter++;
