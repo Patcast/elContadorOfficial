@@ -318,6 +318,7 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
             if(year <lastYear || (year == lastYear) && month < lastMonth){
                 Toast.makeText(getContext(), "Invalid date! The latest Balance Summary available is for "+(getResources().getStringArray(R.array.months_list))[lastMonth-1]+" / "+lastYear, Toast.LENGTH_LONG).show();
             }
+
             else {
                 Map<String,Integer> chosenDateMap = new HashMap<>();
                 chosenDateMap.put("month",month);
@@ -362,7 +363,7 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void export(Uri uri) {
-        List<ProcessedTransaction> processed = viewModel.getMonthlyListOfProcessedTransactions();
+        List<ProcessedTransaction> processed = viewModel.getMonthlyListOfProcessedTransactions().getValue();
 
         File file = Exporter.INSTANCE.createFile(mainActivity.getContentResolver(), uri,
                 selectedMonth + " " + selectedYear, processed, cashAtStart,

@@ -741,7 +741,7 @@ public enum Caching {
     }
 
     public String getPropertyNameFromID(String id) {
-        if (!id.equals(""))
+        if (id!=null&&!id.equals(""))
             return propertyList.get(id);
         else
             return "N/A";

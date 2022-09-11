@@ -1,6 +1,7 @@
 package be.kuleuven.elcontador10.fragments.property;
 
 
+import android.os.Build;
 import android.util.Log;
 import androidx.annotation.RequiresApi;
 
@@ -41,6 +42,7 @@ public class PropertyListViewModel extends ViewModel {
         requestListOfProperties();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestListOfProperties() {
 
         String urlGetAccountTransactions = "/accounts/"+ Caching.INSTANCE.getChosenAccountId()+"/properties";
