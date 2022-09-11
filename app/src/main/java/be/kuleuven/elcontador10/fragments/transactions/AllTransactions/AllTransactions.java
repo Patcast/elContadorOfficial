@@ -371,13 +371,14 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
     public void export(Uri uri) {
         List<ProcessedTransaction> processed = viewModel.getMonthlyListOfProcessedTransactions();
 
-        File file = Exporter.INSTANCE.createFile(mainActivity.getContentResolver(), uri, selectedMonth + " " + selectedYear, processed,
-                cashAtStart, cashIn, cashOut, cashAtEnd, receivables, payables, equity, this);
+        File file = Exporter.INSTANCE.createFile(mainActivity.getContentResolver(), uri,
+                selectedMonth + " " + selectedYear, processed, cashAtStart,
+                cashIn, cashOut, cashAtEnd, receivables, payables, equity, this);
 
         if (file == null) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
             dialogBuilder.setMessage(R.string.failed_to_create_file)
-                    .setPositiveButton(R.string.ok, ((dialogInterface1, i) -> dialogInterface1.dismiss()))
+                    .setPositiveButton(R.string.ok, ((dialogInterface, i) -> dialogInterface.dismiss()))
                     .create()
                     .show();
             return;
