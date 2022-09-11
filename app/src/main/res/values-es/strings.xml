@@ -271,7 +271,7 @@
     <string name="sum_of_this_month_transactions">Efectivo recibido</string>
     <string name="receivables_in_the_beginning">Por cobrar inicial</string>
     <string name="payables_in_the_beginning">Por pagar inicial</string>
-    <string name="montly_summary_stake">Resumen Mensual</string>
+    <string name="monthly_summary_stake">Resumen Mensual</string>
     <string name="not_delete_past_transactions">La transacción fue registrada en un mes anterior, por lo que no puede ser eliminada.</string>
     <string name="delete_transaction">Eliminar Transacción</string>
     <string name="sure_delete_transaction">¿Seguro que quieres eleminar la transacción?</string>

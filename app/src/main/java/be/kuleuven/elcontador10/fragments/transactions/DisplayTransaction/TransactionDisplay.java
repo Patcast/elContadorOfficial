@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
@@ -29,6 +30,7 @@ import android.view.ViewGroup;
 
 import android.widget.ImageView;
 
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +53,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class TransactionDisplay extends Fragment implements EasyPermissions.PermissionCallbacks {
     private MainActivity mainActivity;
-    TextView concerning, registeredBy,account, amount, category,emojiCategory, date,time, notes;
+    TextView concerning, registeredBy, account, type, amount, category,emojiCategory, date,time, notes;
+    LinearLayout background;
     ProcessedTransaction selectedTrans;
     NavController navController;
     ConstraintLayout layoutAddPhotoIcon;
@@ -93,7 +96,7 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
             displayInformation();
 
             mainActivity.setTitle(selectedTrans.getTitle());
-
+            mainActivity.displayStakeHolderDetails(false, "", "", "");
         }
         catch (Exception e) {
             Toast.makeText(mainActivity, "Error Loading the information.", Toast.LENGTH_SHORT).show();
@@ -196,6 +199,8 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
         layoutAddPhotoIcon = view.findViewById(R.id.layout_addPhoto);
         imViewPhotoIn = view.findViewById(R.id.image_transaction_photoDownloaded);
         progressIndicator = view.findViewById(R.id.progress_indicator_displayTrans);
+        background = view.findViewById(R.id.layoutTransactionHolder);
+        type = view.findViewById(R.id.textTransTypeDisplay);
     }
 
 
@@ -208,9 +213,14 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
             DateFormatter dateFormatter = new DateFormatter(selectedTrans.getDueDate(),"f");
             DateFormatter timeFormatter = new DateFormatter(selectedTrans.getDueDate(),"t");
             amount.setText(formatter.getFinalNumber());
-            String startPhrase=(formatter.isNegative())? getString(R.string.paid_to): getString(R.string.paid_by);
-            String concerningText= startPhrase+" "+Caching.INSTANCE.getStakeholderName(selectedTrans.getIdOfStakeInt());
+
+            String concerningText = getText(selectedTrans.transText()) + " " + Caching.INSTANCE.getStakeholderName(selectedTrans.getIdOfStakeInt());
+            if (selectedTrans.getIdOfProperty() != null && !selectedTrans.getIdOfProperty().equals(""))
+                concerningText += "\n" + Caching.INSTANCE.getPropertyNameFromID(selectedTrans.getIdOfProperty());
             concerning.setText(concerningText);
+
+            background.setBackgroundColor(ContextCompat.getColor(requireContext(), selectedTrans.getColorInt()));
+
             account.setText(Caching.INSTANCE.getAccountName());
 
             String emoji =Caching.INSTANCE.getCategoryEmoji(selectedTrans.getIdOfCategoryInt());
@@ -225,6 +235,29 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
             registeredBy.setText(selectedTrans.getRegisteredBy());
             notes.setText(selectedTrans.getNotes());
 
+            String typeText;
+            List<String> types = selectedTrans.getType();
+
+            if (types.contains(Caching.INSTANCE.TYPE_CASH)) {
+                typeText = Caching.INSTANCE.TYPE_CASH;
+
+                if (types.contains(Caching.INSTANCE.TYPE_PAYABLES))
+                    typeText += " / " + Caching.INSTANCE.TYPE_PAYABLES;
+                else if (types.contains(Caching.INSTANCE.TYPE_RECEIVABLES))
+                    typeText += " / " + Caching.INSTANCE.TYPE_RECEIVABLES;
+            } else if (types.contains(Caching.INSTANCE.TYPE_PENDING)) {
+                typeText = Caching.INSTANCE.TYPE_PENDING;
+
+                if (types.contains(Caching.INSTANCE.TYPE_PAYABLES))
+                    typeText += " / " + Caching.INSTANCE.TYPE_PAYABLES;
+                else if (types.contains(Caching.INSTANCE.TYPE_RECEIVABLES))
+                    typeText += " / " + Caching.INSTANCE.TYPE_RECEIVABLES;
+            } else if (types.contains(Caching.INSTANCE.TYPE_PAYABLES))
+                typeText = Caching.INSTANCE.TYPE_PAYABLES;
+            else
+                typeText = Caching.INSTANCE.TYPE_RECEIVABLES;
+
+            type.setText(typeText);
         }
     }
 
@@ -244,7 +277,7 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
     private void confirmDelete(){
         navController.popBackStack();
         Timestamp currentDate = Timestamp.now();
-        if( selectedTrans.getDueDate().toDate().getMonth()<=currentDate.toDate().getMonth()) {
+        if( selectedTrans.getDueDate().toDate().getMonth() < currentDate.toDate().getMonth()) {
             Toast.makeText(getContext(), R.string.not_delete_past_transactions, Toast.LENGTH_LONG).show();
         }
         else{

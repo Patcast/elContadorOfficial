@@ -147,7 +147,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:text="@string/montly_summary_stake"
+        android:text="@string/monthly_summary_stake"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/stakeHolderDetails"
         app:layout_constraintStart_toStartOf="parent"
