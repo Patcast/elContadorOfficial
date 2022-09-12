@@ -108,7 +108,7 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
                 parent = itemView.findViewById(R.id.parent_allMicros);
                 textName = itemView.findViewById(R.id.text_Account_name_Micros);
                 textName.setSelected(true);
-                textInfo = itemView.findViewById(R.id.text_micros_description);
+                textInfo = itemView.findViewById(R.id.text_micros_role);
                 textBalance = itemView.findViewById(R.id.text_micros_balance);
                 textBalance.setSelected(true);
             }

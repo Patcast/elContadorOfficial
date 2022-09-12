@@ -10,7 +10,7 @@
         <item name="colorOnSecondary">@color/black</item>
     </style>
 
-    <style name="Theme.ElContador10.NoActionBar">
+    <style name="Theme.ElContador10.NoActionBar" parent="Theme.AppCompat.DayNight">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

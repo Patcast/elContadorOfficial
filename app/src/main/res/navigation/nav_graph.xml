@@ -83,7 +83,12 @@
         android:id="@+id/newMicroAccount"
         android:name="be.kuleuven.elcontador10.fragments.stakeholders.common.NewStakeholder"
         android:label="fragment_add_new_microaccount"
-        tools:layout="@layout/fragment_add_new_microaccount" />
+        tools:layout="@layout/fragment_add_new_microaccount" >
+        <argument
+            android:name="idStakeholder"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
     <fragment
         android:id="@+id/stakeholderViewPagerHolder"
         android:name="be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolder"
@@ -107,6 +112,9 @@
         <action
             android:id="@+id/action_stakeholderViewPagerHolder_to_accountSettings"
             app:destination="@id/accountSettings" />
+        <action
+            android:id="@+id/action_stakeholderViewPagerHolder_to_newMicroAccount"
+            app:destination="@id/newMicroAccount" />
     </fragment>
     <fragment
         android:id="@+id/contractDisplay"

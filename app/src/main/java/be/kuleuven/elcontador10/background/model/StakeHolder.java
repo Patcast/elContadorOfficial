@@ -58,17 +58,28 @@ public class StakeHolder implements Parcelable {
         this.authorized = in.readBoolean();
     }
 
-    public StakeHolder(String name) {
+    public StakeHolder(String name, String role) {
         this.name = name;
+        this.role = role;
     }
 
     public StakeHolder() {    }
-    public void addAccount(StakeHolder account) {
+
+    public void addAccount() {
         String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders";
 
         db.collection(url)
-                .add(account)
+                .add(this)
                 .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId()))
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+    }
+
+    public void editAccount() {
+        String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + getId();
+
+        db.document(url)
+                .update("name", getName(), "role", getRole())
+                .addOnSuccessListener(documentReference -> Log.d(TAG, "Document edited with ID: " + getId()))
                 .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
     }
 
@@ -172,6 +183,11 @@ public class StakeHolder implements Parcelable {
         return sumOfReceivablesPending;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
-
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

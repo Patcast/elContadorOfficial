@@ -4,14 +4,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -37,6 +44,7 @@ import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.ViewModel
 
 
 public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTransformer.PageChangeListener {
+    private NavController navController;
     private ViewPagerAdapter mAdapter;
     private ViewPager2 viewPager;
     private MainActivity mainActivity;
@@ -75,12 +83,37 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
         mainActivity.setHeaderText(stakeHolder.getName());
         Caching.INSTANCE.setChosenStakeHolder(stakeHolder);
         viewModel.setSelectedStakeholder(stakeHolder);
         Caching.INSTANCE.openMicroAccount(stakeHolder.getId()); // set MicroAccount to caching
         viewModel.getListOfStakeHolderTrans().observe(getViewLifecycleOwner(), this::updateSummaryWithTransactions);
-        viewModelAllTransactions.getStakeholdersList().observe(getViewLifecycleOwner(),s->updateSummaryWithStakeholder(s));
+        viewModelAllTransactions.getStakeholdersList().observe(getViewLifecycleOwner(), this::updateSummaryWithStakeholder);
+        setTopMenu();
+    }
+
+    private void setTopMenu(){
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
+                menu.findItem(R.id.menu_edit).setVisible(true);
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                final int menu_edit = R.id.menu_edit;
+
+                switch (menuItem.getItemId()){
+                    case menu_edit:
+                        editStakeholder();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -117,7 +150,11 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         mainActivity.displayStakeHolderDetails(true,sumOfTransactions ,initialReceivables,initialPayables);
     }
 
-
+    private void editStakeholder() {
+        StakeholderViewPageHolderDirections.ActionStakeholderViewPagerHolderToNewMicroAccount action =
+                StakeholderViewPageHolderDirections.actionStakeholderViewPagerHolderToNewMicroAccount(stakeHolder.getId());
+        navController.navigate(action);
+    }
 
     private void addFragments() {
         mAdapter.addFragment(new StakeDetailsList(stakeHolder,null,Caching.INSTANCE.TYPE_CASH));
