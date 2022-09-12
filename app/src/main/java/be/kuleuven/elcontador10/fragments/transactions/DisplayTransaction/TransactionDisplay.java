@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,7 +54,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class TransactionDisplay extends Fragment implements EasyPermissions.PermissionCallbacks {
     private MainActivity mainActivity;
-    TextView concerning, registeredBy, account, type, amount, category,emojiCategory, date,time, notes;
+    TextView concerning, registeredBy, account, type, amount, category,emojiCategory, date,time, notes, deletedBy, deletedDate;
+    TableRow rowDeletedBy, rowDeletedDate;
     LinearLayout background;
     ProcessedTransaction selectedTrans;
     NavController navController;
@@ -63,7 +65,9 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
     View view;
     ViewModel_DisplayTransaction viewModel;
     CamaraSetUp camara;
+
     boolean isLoading;
+    boolean isDeleted;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,13 +110,13 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
         setTopMenu();
     }
 
-      private void setTopMenu(){
+    private void setTopMenu(){
        requireActivity().addMenuProvider(new MenuProvider() {
            @Override
-           public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-               menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
-               menu.findItem(R.id.menu_delete).setVisible(true);
-           }
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
+                if (!selectedTrans.getIsDeleted()) menu.findItem(R.id.menu_delete).setVisible(true);
+            }
 
            @RequiresApi(api = Build.VERSION_CODES.N)
            @Override
@@ -126,7 +130,8 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
                }
            }
        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
-   }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -201,6 +206,10 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
         progressIndicator = view.findViewById(R.id.progress_indicator_displayTrans);
         background = view.findViewById(R.id.layoutTransactionHolder);
         type = view.findViewById(R.id.textTransTypeDisplay);
+        rowDeletedBy = view.findViewById(R.id.rowDeletedBy);
+        rowDeletedDate = view.findViewById(R.id.rowDeletedDate);
+        deletedBy = view.findViewById(R.id.txtDeletedByDisplay);
+        deletedDate = view.findViewById(R.id.txtDeletedDateDisplay);
     }
 
 
@@ -258,6 +267,15 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
                 typeText = Caching.INSTANCE.TYPE_RECEIVABLES;
 
             type.setText(typeText);
+
+            if (selectedTrans.getIsDeleted()) {
+                rowDeletedDate.setVisibility(View.VISIBLE);
+                rowDeletedBy.setVisibility(View.VISIBLE);
+
+                dateFormatter = new DateFormatter(selectedTrans.getDeletedDate(), "f");
+                deletedDate.setText(dateFormatter.getFormattedDate());
+                deletedBy.setText(selectedTrans.getDeletedBy());
+            }
         }
     }
 
@@ -281,7 +299,7 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
             Toast.makeText(getContext(), R.string.not_delete_past_transactions, Toast.LENGTH_LONG).show();
         }
         else{
-            selectedTrans.deleteTransaction(getContext());
+            selectedTrans.deleteTransaction(getContext(), mainActivity.returnSavedLoggedEmail());
         }
     }
 

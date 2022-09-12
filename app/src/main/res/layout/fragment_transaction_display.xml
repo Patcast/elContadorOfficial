@@ -213,6 +213,7 @@
 
 
                         </TableRow>
+
                         <TableRow
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -229,6 +230,66 @@
                                 <TextView
 
                                     android:id="@+id/txtRegisteredByDisplay"
+                                    android:layout_marginLeft="30dp"
+                                    android:layout_marginStart="30dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    android:text="Patrici02983"/>
+
+
+                        </TableRow>
+
+                        <TableRow
+                            android:id="@+id/rowDeletedDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_marginVertical="7dp"
+                            android:visibility="gone"
+                            >
+
+                                <TextView
+                                    android:id="@+id/txtDeletedDate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/deleted_date" />
+
+                                <TextView
+
+                                    android:id="@+id/txtDeletedDateDisplay"
+                                    android:layout_marginLeft="30dp"
+                                    android:layout_marginStart="30dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    android:text="20/09/2022"/>
+
+
+                        </TableRow>
+
+                        <TableRow
+                            android:id="@+id/rowDeletedBy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_marginVertical="7dp"
+                            android:visibility="gone"
+                            >
+
+                                <TextView
+                                    android:id="@+id/txtDeletedBy"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/deleted_by" />
+
+                                <TextView
+
+                                    android:id="@+id/txtDeletedByDisplay"
                                     android:layout_marginLeft="30dp"
                                     android:layout_marginStart="30dp"
                                     android:layout_width="wrap_content"

@@ -5,8 +5,6 @@ import android.content.Context;
 
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 import com.google.firebase.Timestamp;
 
 
@@ -48,7 +46,8 @@ public class ProcessedTransaction implements TransactionInterface {
     private List <String>type = new ArrayList<>();
     private int collectionIndex;
     private int collectionSize;
-
+    private Timestamp deletedDate;
+    private String deletedBy;
 
     public ProcessedTransaction() {
     }
@@ -97,11 +96,13 @@ public class ProcessedTransaction implements TransactionInterface {
                 })
                 .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show());
     }
-    public void deleteTransaction(Context context){
+    public void deleteTransaction(Context context, String deletedBy){
         isDeleted = true;
+        deletedDate = Timestamp.now();
+        this.deletedBy = deletedBy;
         String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
         db.collection(urlNewTransactions).document(getIdOfTransactionInt())
-                .update("isDeleted", true)
+                .update("isDeleted", true, "deletedDate", deletedDate, "deletedBy", deletedBy)
                 .addOnSuccessListener(aVoid -> successfulDelete(context))
                 .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete transaction.", Toast.LENGTH_SHORT).show());
     }
@@ -283,7 +284,21 @@ public class ProcessedTransaction implements TransactionInterface {
         this.collectionSize = collectionSize;
     }
 
+    public Timestamp getDeletedDate() {
+        return deletedDate;
+    }
 
+    public void setDeletedDate(Timestamp deletedDate) {
+        this.deletedDate = deletedDate;
+    }
+
+    public String getDeletedBy() {
+        return deletedBy;
+    }
+
+    public void setDeletedBy(String deletedBy) {
+        this.deletedBy = deletedBy;
+    }
 }
 
 

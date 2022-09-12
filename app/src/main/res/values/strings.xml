@@ -328,5 +328,7 @@
     <string name="equity_excel">Equity</string>
     <string name="cash">Cash</string>
     <string name="type">Type:</string>
+    <string name="deleted_by">Deleted by:</string>
+    <string name="deleted_date">Deleted date:</string>
 
 </resources>
