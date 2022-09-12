@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:id="@+id/basic_menu_options">
+        <item android:id="@+id/menu_upload_future"
+            android:icon="@drawable/ic_baseline_calendar_month_24"
+            android:title="@string/execute_pending_transaction"
+            android:visible="false"
+            app:showAsAction="ifRoom"
+            />
 
         <item android:id="@+id/menu_delete"
             android:icon="@drawable/ic_baseline_delete_24"
@@ -58,6 +64,7 @@
             android:visible="false"
             app:showAsAction="ifRoom"
             />
+
     </group>
 
 
