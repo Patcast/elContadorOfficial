@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,7 +33,6 @@ public class StakeDetailsList extends Fragment {
     private TransactionsRecViewAdapter recyclerViewAdapter;
     RecyclerView recyclerView;
     StakeholderViewModel viewModel;
-    ViewModel_AllTransactions viewModelAllTransactions;
     View view;
 
     List<ProcessedTransaction> transactionList = new ArrayList<>();
@@ -63,7 +61,6 @@ public class StakeDetailsList extends Fragment {
         view = inflater.inflate(R.layout.fragment_all_properties, container, false);
         recyclerView = view.findViewById(R.id.rec_all_properties);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        viewModelAllTransactions = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
         viewModel = new ViewModelProvider(requireActivity()).get(StakeholderViewModel.class);
         recyclerViewAdapter = new TransactionsRecViewAdapter(view,getContext());
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -79,16 +76,15 @@ public class StakeDetailsList extends Fragment {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                Log.w("Details", "On scroll");
-                if (!isLoading) {
-                   Log.w("Details", "On scroll is not loading");
+//                Log.w("Details", "On scroll");
+//                if (!isLoading) {
+//                   Log.w("Details", "On scroll is not loading");
                     if (linearLayoutManager != null && linearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
                         Log.w("Details", "On scroll is TOP");
                         loadMore();
                         isLoading = true;
                     }
-                }
-
+                //}
             }
 
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -129,8 +125,8 @@ public class StakeDetailsList extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //viewModel.getListOfStakeHolderTrans().observe(getViewLifecycleOwner(), i->updateAdapter(i));
-        viewModelAllTransactions.getMonthlyListOfProcessedTransactions().observe(getViewLifecycleOwner(), this::updateAdapter);
+        viewModel.getListOfStakeHolderTrans().observe(getViewLifecycleOwner(), this::prepareListsForAdapter);
+        //viewModelAllTransactions.getMonthlyListOfProcessedTransactions().observe(getViewLifecycleOwner(), this::updateAdapter);
     }
 
 

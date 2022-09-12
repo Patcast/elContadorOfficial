@@ -4,13 +4,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -81,6 +86,35 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         Caching.INSTANCE.openMicroAccount(stakeHolder.getId()); // set MicroAccount to caching
         viewModel.getListOfStakeHolderTrans().observe(getViewLifecycleOwner(), this::updateSummaryWithTransactions);
         viewModelAllTransactions.getStakeholdersList().observe(getViewLifecycleOwner(),s->updateSummaryWithStakeholder(s));
+        setTopMenu();
+    }
+
+    private void setTopMenu(){
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
+
+                menu.findItem(R.id.menu_upload_future).setVisible(true);
+                menu.findItem(R.id.menu_bottom_sheet).setVisible(true);
+
+            }
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+
+                    case R.id.menu_bottom_sheet:
+
+                        return true;
+                    case R.id.menu_upload_future:
+
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
