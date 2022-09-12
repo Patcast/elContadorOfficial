@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
@@ -29,6 +30,8 @@ import android.view.ViewGroup;
 
 import android.widget.ImageView;
 
+import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +54,9 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class TransactionDisplay extends Fragment implements EasyPermissions.PermissionCallbacks {
     private MainActivity mainActivity;
-    TextView concerning, registeredBy,account, amount, category,emojiCategory, date,time, notes;
+    TextView concerning, registeredBy, account, type, amount, category,emojiCategory, date,time, notes, deletedBy, deletedDate;
+    TableRow rowDeletedBy, rowDeletedDate;
+    LinearLayout background;
     ProcessedTransaction selectedTrans;
     NavController navController;
     ConstraintLayout layoutAddPhotoIcon;
@@ -60,7 +65,9 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
     View view;
     ViewModel_DisplayTransaction viewModel;
     CamaraSetUp camara;
+
     boolean isLoading;
+    boolean isDeleted;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,7 +100,7 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
             displayInformation();
 
             mainActivity.setTitle(selectedTrans.getTitle());
-
+            mainActivity.displayStakeHolderDetails(false, "", "", "");
         }
         catch (Exception e) {
             Toast.makeText(mainActivity, "Error Loading the information.", Toast.LENGTH_SHORT).show();
@@ -103,27 +110,37 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
         setTopMenu();
     }
 
-      private void setTopMenu(){
+    private void setTopMenu(){
        requireActivity().addMenuProvider(new MenuProvider() {
            @Override
-           public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-               menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
-               menu.findItem(R.id.menu_delete).setVisible(true);
-           }
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
+               if (selectedTrans.getType().contains(Caching.INSTANCE.TYPE_PENDING))
+                   menu.findItem(R.id.menu_execute_transaction).setVisible(true);
+               if (!selectedTrans.getIsDeleted())
+                   menu.findItem(R.id.menu_delete).setVisible(true);
+            }
 
            @RequiresApi(api = Build.VERSION_CODES.N)
            @Override
            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+               final int menu_delete = R.id.menu_delete,
+                       menu_execute = R.id.menu_execute_transaction;
+
                switch (menuItem.getItemId()){
-                   case R.id.menu_delete:
+                   case menu_delete:
                        onDeleteClick();
+                       return true;
+                   case menu_execute:
+                       onExecuteClick();
                        return true;
                    default:
                        return false;
                }
            }
        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
-   }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -172,11 +189,11 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
 
 
     private void setUiForPhoto(boolean photoDownloaded) {
-        if(photoDownloaded){
+        if (photoDownloaded){
             imViewPhotoIn.setVisibility(View.VISIBLE);
             layoutAddPhotoIcon.setVisibility(View.GONE);
             progressIndicator.setVisibility(View.GONE);
-        }else{
+        } else {
             imViewPhotoIn.setVisibility(View.GONE);
             layoutAddPhotoIcon.setVisibility(View.VISIBLE);
         }
@@ -196,6 +213,12 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
         layoutAddPhotoIcon = view.findViewById(R.id.layout_addPhoto);
         imViewPhotoIn = view.findViewById(R.id.image_transaction_photoDownloaded);
         progressIndicator = view.findViewById(R.id.progress_indicator_displayTrans);
+        background = view.findViewById(R.id.layoutTransactionHolder);
+        type = view.findViewById(R.id.textTransTypeDisplay);
+        rowDeletedBy = view.findViewById(R.id.rowDeletedBy);
+        rowDeletedDate = view.findViewById(R.id.rowDeletedDate);
+        deletedBy = view.findViewById(R.id.txtDeletedByDisplay);
+        deletedDate = view.findViewById(R.id.txtDeletedDateDisplay);
     }
 
 
@@ -208,9 +231,14 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
             DateFormatter dateFormatter = new DateFormatter(selectedTrans.getDueDate(),"f");
             DateFormatter timeFormatter = new DateFormatter(selectedTrans.getDueDate(),"t");
             amount.setText(formatter.getFinalNumber());
-            String startPhrase=(formatter.isNegative())? getString(R.string.paid_to): getString(R.string.paid_by);
-            String concerningText= startPhrase+" "+Caching.INSTANCE.getStakeholderName(selectedTrans.getIdOfStakeInt());
+
+            String concerningText = getText(selectedTrans.transText()) + " " + Caching.INSTANCE.getStakeholderName(selectedTrans.getIdOfStakeInt());
+            if (selectedTrans.getIdOfProperty() != null && !selectedTrans.getIdOfProperty().equals(""))
+                concerningText += "\n" + Caching.INSTANCE.getPropertyNameFromID(selectedTrans.getIdOfProperty());
             concerning.setText(concerningText);
+
+            background.setBackgroundColor(ContextCompat.getColor(requireContext(), selectedTrans.getColorInt()));
+
             account.setText(Caching.INSTANCE.getAccountName());
 
             String emoji =Caching.INSTANCE.getCategoryEmoji(selectedTrans.getIdOfCategoryInt());
@@ -225,6 +253,38 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
             registeredBy.setText(selectedTrans.getRegisteredBy());
             notes.setText(selectedTrans.getNotes());
 
+            String typeText;
+            List<String> types = selectedTrans.getType();
+
+            if (types.contains(Caching.INSTANCE.TYPE_CASH)) {
+                typeText = Caching.INSTANCE.TYPE_CASH;
+
+                if (types.contains(Caching.INSTANCE.TYPE_PAYABLES))
+                    typeText += " / " + Caching.INSTANCE.TYPE_PAYABLES;
+                else if (types.contains(Caching.INSTANCE.TYPE_RECEIVABLES))
+                    typeText += " / " + Caching.INSTANCE.TYPE_RECEIVABLES;
+            } else if (types.contains(Caching.INSTANCE.TYPE_PENDING)) {
+                typeText = Caching.INSTANCE.TYPE_PENDING;
+
+                if (types.contains(Caching.INSTANCE.TYPE_PAYABLES))
+                    typeText += " / " + Caching.INSTANCE.TYPE_PAYABLES;
+                else if (types.contains(Caching.INSTANCE.TYPE_RECEIVABLES))
+                    typeText += " / " + Caching.INSTANCE.TYPE_RECEIVABLES;
+            } else if (types.contains(Caching.INSTANCE.TYPE_PAYABLES))
+                typeText = Caching.INSTANCE.TYPE_PAYABLES;
+            else
+                typeText = Caching.INSTANCE.TYPE_RECEIVABLES;
+
+            type.setText(typeText);
+
+            if (selectedTrans.getIsDeleted()) {
+                rowDeletedDate.setVisibility(View.VISIBLE);
+                rowDeletedBy.setVisibility(View.VISIBLE);
+
+                dateFormatter = new DateFormatter(selectedTrans.getDeletedDate(), "f");
+                deletedDate.setText(dateFormatter.getFormattedDate());
+                deletedBy.setText(selectedTrans.getDeletedBy());
+            }
         }
     }
 
@@ -244,11 +304,11 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
     private void confirmDelete(){
         navController.popBackStack();
         Timestamp currentDate = Timestamp.now();
-        if( selectedTrans.getDueDate().toDate().getMonth()<=currentDate.toDate().getMonth()) {
+        if( selectedTrans.getDueDate().toDate().getMonth() < currentDate.toDate().getMonth()) {
             Toast.makeText(getContext(), R.string.not_delete_past_transactions, Toast.LENGTH_LONG).show();
         }
         else{
-            selectedTrans.deleteTransaction(getContext());
+            selectedTrans.deleteTransaction(getContext(), mainActivity.returnSavedLoggedEmail());
         }
     }
 
@@ -259,11 +319,27 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getString(R.string.delete_transaction))
                 .setMessage(getString(R.string.sure_delete_transaction))
-                .setPositiveButton(getString(R.string.yes), (dialog, which) ->confirmDelete())
+                .setPositiveButton(getString(R.string.yes), (dialog, which) -> confirmDelete())
                 .setNegativeButton(getString(R.string.no), (dialog, which) -> dialog.dismiss())
                 .create()
                 .show();
     }
+
+    private void confirmExecute() {
+        navController.popBackStack();
+        selectedTrans.execute(getContext());
+    }
+
+    public void onExecuteClick() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(getString(R.string.execute_pending_transaction))
+                .setMessage(getString(R.string.sure_execute_transaction))
+                .setPositiveButton(getString(R.string.yes), (dialog, which) -> confirmExecute())
+                .setNegativeButton(getString(R.string.no), (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
+    }
+
     //
     ////// CAMARA
     /////

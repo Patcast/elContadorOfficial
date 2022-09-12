@@ -5,12 +5,11 @@ import android.content.Context;
 
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 import com.google.firebase.Timestamp;
 
 
 import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
@@ -48,7 +47,8 @@ public class ProcessedTransaction implements TransactionInterface {
     private List <String>type = new ArrayList<>();
     private int collectionIndex;
     private int collectionSize;
-
+    private Timestamp deletedDate;
+    private String deletedBy;
 
     public ProcessedTransaction() {
     }
@@ -97,17 +97,36 @@ public class ProcessedTransaction implements TransactionInterface {
                 })
                 .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show());
     }
-    public void deleteTransaction(Context context){
+    public void deleteTransaction(Context context, String deletedBy){
         isDeleted = true;
+        deletedDate = Timestamp.now();
+        this.deletedBy = deletedBy;
         String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
         db.collection(urlNewTransactions).document(getIdOfTransactionInt())
-                .update("isDeleted", true)
+                .update("isDeleted", true, "deletedDate", deletedDate, "deletedBy", deletedBy)
                 .addOnSuccessListener(aVoid -> successfulDelete(context))
-                .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete transaction.", Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> Toast.makeText(context, R.string.failed_delete_transaction, Toast.LENGTH_SHORT).show());
+    }
+
+    public void execute(Context context) {
+        if (type.contains(Caching.INSTANCE.TYPE_PENDING)) {
+            type.remove(Caching.INSTANCE.TYPE_PENDING);
+            String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
+
+            final Map<String, Object> removePending = new HashMap<>();
+            removePending.put("type", FieldValue.arrayRemove(Caching.INSTANCE.TYPE_PENDING));
+
+            db.collection(urlNewTransactions).document(getIdOfTransactionInt())
+                    .update(removePending)
+                    .addOnSuccessListener(e ->
+                            Toast.makeText(context, R.string.transaction_executed, Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e ->
+                            Toast.makeText(context, R.string.failed_execute_transaction, Toast.LENGTH_SHORT).show());
+        }
     }
 
     public void successfulDelete(Context context){
-        Toast.makeText(context, "Transaction deleted.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.transaction_deleted, Toast.LENGTH_SHORT).show();
         //TODO: delete picture too here
     }
     public void updateImageFromFireBase(ProcessedTransaction newTransactionInput,ImageFireBase ImageSelected,Context context) {
@@ -283,7 +302,21 @@ public class ProcessedTransaction implements TransactionInterface {
         this.collectionSize = collectionSize;
     }
 
+    public Timestamp getDeletedDate() {
+        return deletedDate;
+    }
 
+    public void setDeletedDate(Timestamp deletedDate) {
+        this.deletedDate = deletedDate;
+    }
+
+    public String getDeletedBy() {
+        return deletedBy;
+    }
+
+    public void setDeletedBy(String deletedBy) {
+        this.deletedBy = deletedBy;
+    }
 }
 
 
