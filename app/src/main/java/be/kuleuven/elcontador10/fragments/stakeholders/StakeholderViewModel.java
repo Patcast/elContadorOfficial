@@ -40,7 +40,6 @@ public class StakeholderViewModel extends ViewModel {
     }
 
     public void requestListOfStakeHolder() {
-
         String urlGetAccountTransactions = "/accounts/"+ Caching.INSTANCE.getChosenAccountId()+"/transactions";
         Query stakeTransQuery = db.collection(urlGetAccountTransactions).
                 whereEqualTo("idOfStakeInt",selectedStakeHolder.getId()).

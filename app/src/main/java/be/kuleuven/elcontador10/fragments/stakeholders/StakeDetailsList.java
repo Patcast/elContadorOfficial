@@ -26,21 +26,31 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
+import be.kuleuven.elcontador10.background.model.Property;
+import be.kuleuven.elcontador10.background.model.StakeHolder;
+import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.ViewModel_AllTransactions;
 
 public class StakeDetailsList extends Fragment {
     private TransactionsRecViewAdapter recyclerViewAdapter;
     RecyclerView recyclerView;
     StakeholderViewModel viewModel;
+    ViewModel_AllTransactions viewModelAllTransactions;
     View view;
-    private final String tabId;
+
     List<ProcessedTransaction> transactionList = new ArrayList<>();
     List<ProcessedTransaction> transactionListFuture = new ArrayList<>();
     List<ProcessedTransaction> transactionListDisplayed = new ArrayList<>();
     boolean isLoading = false;
+    private final StakeHolder selectedStakeHolder;
+    private final Property selectedProperty;
+    private final String tabId;
 
-    public StakeDetailsList(String tabId){
-        this.tabId=tabId;
+    public StakeDetailsList(StakeHolder selectedStakeHolder, Property selectedProperty, String tabId) {
+        this.selectedStakeHolder = selectedStakeHolder;
+        this.selectedProperty = selectedProperty;
+        this.tabId = tabId;
     }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +63,7 @@ public class StakeDetailsList extends Fragment {
         view = inflater.inflate(R.layout.fragment_all_properties, container, false);
         recyclerView = view.findViewById(R.id.rec_all_properties);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        viewModelAllTransactions = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
         viewModel = new ViewModelProvider(requireActivity()).get(StakeholderViewModel.class);
         recyclerViewAdapter = new TransactionsRecViewAdapter(view,getContext());
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -70,8 +81,7 @@ public class StakeDetailsList extends Fragment {
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 Log.w("Details", "On scroll");
                 if (!isLoading) {
-                    Log.w("Details", "On scroll is not loading");
-
+                   Log.w("Details", "On scroll is not loading");
                     if (linearLayoutManager != null && linearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
                         Log.w("Details", "On scroll is TOP");
                         loadMore();
@@ -99,7 +109,8 @@ public class StakeDetailsList extends Fragment {
 
     private void loadMore() {
         if(transactionListDisplayed.size()<transactionList.size()+transactionListFuture.size()){
-            Log.w("Details", "LLLLLLLoading");
+            Log.w("Details", "On scroll is not loading");
+
             transactionListDisplayed.add(0,null);
             recyclerViewAdapter.notifyItemInserted(0);
             Handler handler = new Handler();
@@ -118,15 +129,24 @@ public class StakeDetailsList extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel.getListOfStakeHolderTrans().observe(getViewLifecycleOwner(), i->updateAdapter(i));
+        //viewModel.getListOfStakeHolderTrans().observe(getViewLifecycleOwner(), i->updateAdapter(i));
+        viewModelAllTransactions.getMonthlyListOfProcessedTransactions().observe(getViewLifecycleOwner(), this::updateAdapter);
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateAdapter(List<ProcessedTransaction> i) {
         transactionListDisplayed.clear();
-        prepareListsForAdapter(i);
-        transactionListDisplayed.addAll(transactionList);
-        recyclerViewAdapter.setAllTransactions(transactionListDisplayed);
+
+        if(i!=null) {
+            if (selectedStakeHolder != null) {
+                prepareListsForAdapter(i.stream().filter(t -> t.getIdOfStakeInt().equals(selectedStakeHolder.getId())).collect(Collectors.toList()));
+            } else if (selectedProperty != null) {
+                prepareListsForAdapter(i.stream().filter(t->t.getIdOfProperty()!=null).filter(t -> t.getIdOfProperty().equals(selectedProperty.getId())).collect(Collectors.toList()));
+            }
+            transactionListDisplayed.addAll(transactionList);
+            recyclerViewAdapter.setAllTransactions(transactionListDisplayed);
+        }
 
     }
 

@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import be.kuleuven.elcontador10.background.database.Caching;
+
 
 public class SummaryHeader {
 
@@ -75,6 +77,7 @@ public class SummaryHeader {
                 closingCash = monthlyListOfProcessedTransactions
                         .stream()
                         .filter(i-> !i.getIsDeleted())
+                        .filter(i->i.getType().contains(Caching.INSTANCE.TYPE_CASH))
                         .map(ProcessedTransaction::getTotalAmount)
                         .reduce(startingCash, Integer::sum);
                 setCashInAndOut();// only called if valid

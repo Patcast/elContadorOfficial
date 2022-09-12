@@ -238,7 +238,7 @@ public class ContractNewSubContract extends Fragment {
 
         if(noInputErrors(title_text,amount_text)){
             List <String> type_input = (payablesButton.isChecked())? Arrays.asList(null,"PAYABLES", null,"PENDING"):Arrays.asList(null,null, "RECEIVABLES","PENDING");
-            String propertyId = (selectedProperty!=null)?selectedProperty.getId():null;
+            String propertyId = (selectedProperty!=null)?selectedProperty.getId():"";
             transactions.forEach(t->t.setFutureTransactionsFields(
                     title_text,
                     Integer.parseInt(amount_text),

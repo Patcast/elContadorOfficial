@@ -51,6 +51,8 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
             super.onCreate(savedInstanceState);
             mainActivity = (MainActivity) requireActivity();
             mainActivity.displayToolBar(true);
+            property = PropertyViewPageHolderArgs.fromBundle(getArguments()).getProperty();
+
         }
 
         @Nullable
@@ -62,7 +64,6 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
             viewPager.setPageTransformer(new ZoomOutPageTransformer(this));
             viewModel = new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);
             viewModelAllTransactions = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
-            addFragments();
 
             return view;
         }
@@ -71,8 +72,8 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            property = PropertyViewPageHolderArgs.fromBundle(getArguments()).getProperty();
             mainActivity.setHeaderText(property.getName());
+            addFragments();
 
             viewModel.getListOfProperties().observe(getViewLifecycleOwner(), this::updateSummaryWithProperty);
             viewModelAllTransactions.getMonthlyListOfProcessedTransactions().observe(getViewLifecycleOwner(), this::updateSummaryWithTransactions);
@@ -117,9 +118,9 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
 
 
         private void addFragments() {
-            mAdapter.addFragment(new StakeDetailsList(Caching.INSTANCE.TYPE_CASH));
-            mAdapter.addFragment(new StakeDetailsList(Caching.INSTANCE.TYPE_RECEIVABLES));
-            mAdapter.addFragment(new StakeDetailsList(Caching.INSTANCE.TYPE_PAYABLES));
+            mAdapter.addFragment(new StakeDetailsList(null,property,Caching.INSTANCE.TYPE_CASH));
+            mAdapter.addFragment(new StakeDetailsList(null,property,Caching.INSTANCE.TYPE_RECEIVABLES));
+            mAdapter.addFragment(new StakeDetailsList(null,property,Caching.INSTANCE.TYPE_PAYABLES));
             viewPager.setAdapter(mAdapter);
 
             new TabLayoutMediator(mainActivity.getTabLayout(), viewPager, (t, p) -> {

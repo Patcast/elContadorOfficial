@@ -59,7 +59,7 @@ public class ViewModel_AllTransactions extends ViewModel {
     private final MutableLiveData<List<ProcessedTransaction>> monthlyListOfProcessedTransactions = new MutableLiveData<>();
     /// Map of summary values
     public void resetListOfTransactions() {
-        monthlyListOfProcessedTransactions.setValue(null);
+        //monthlyListOfProcessedTransactions.setValue(null);
     }
 
     public LiveData<List<ProcessedTransaction>> getMonthlyListOfProcessedTransactions() {
@@ -95,9 +95,7 @@ public class ViewModel_AllTransactions extends ViewModel {
                 myTransaction.setId(doc.getId());
                 listTrans.add(myTransaction);
             }
-            monthlyListOfProcessedTransactions.setValue(null);
-            // IF WE WANT TO FILTER PENDING
-            //monthlyListOfProcessedTransactions.addAll(listTrans.stream().filter(i->!i.getType().contains("PENDING")).collect(Collectors.toList()));
+            if(monthlyListOfProcessedTransactions.getValue()!=null)monthlyListOfProcessedTransactions.getValue().clear();
             monthlyListOfProcessedTransactions.setValue(listTrans);
             setListOfTransactions();
         });

@@ -141,7 +141,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void displayStakeholderDetails(boolean display) {
         if (display) stakeholderDetails.setVisibility(View.VISIBLE);
-        else stakeholderDetails.setVisibility(View.GONE);
+        else {
+            stakeholderDetails.setVisibility(View.GONE);
+            txtMonthlySummary.setVisibility(View.GONE);
+        }
     }
 
     public void setHeaderText(String title) {

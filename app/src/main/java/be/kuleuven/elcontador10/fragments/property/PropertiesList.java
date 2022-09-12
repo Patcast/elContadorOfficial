@@ -80,7 +80,7 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
     public void onViewCreated(@NonNull  View view, @Nullable  Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (prevTAG == null || !prevTAG.equals(Caching.INSTANCE.PROPERTY_STAKEHOLDER)){
+        if (prevTAG == null || prevTAG.equals(Caching.INSTANCE.PROPERTY_NEW_T)){
             navController = Navigation.findNavController(view);
             viewModelPropertiesList.getListOfProperties().observe(getViewLifecycleOwner(), i->adapter.setPropertyListOnAdapter(i));
             setTopMenu();
@@ -124,11 +124,9 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
             if(prevTAG==null) {
                 mainActivity.displayBottomNavigationMenu(true);
             }
-
         }
 
     }
-
     @Override
     public void onStop() {
         super.onStop();
@@ -139,8 +137,6 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
             }
             if( menuItem != null) menuItem.collapseActionView();
         }
-
-
     }
     public void onSearchClick(MenuItem item) {
         this.menuItem = item;

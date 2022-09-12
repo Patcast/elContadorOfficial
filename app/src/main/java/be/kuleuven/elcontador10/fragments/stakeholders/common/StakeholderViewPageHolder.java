@@ -65,7 +65,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         viewPager.setPageTransformer(new ZoomOutPageTransformer(this));
         viewModel = new ViewModelProvider(requireActivity()).get(StakeholderViewModel.class);
         viewModelAllTransactions = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
-
+        stakeHolder = StakeholderViewPageHolderArgs.fromBundle(getArguments()).getStakeHolder();
         addFragments();
 
         return view;
@@ -75,7 +75,6 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        stakeHolder = StakeholderViewPageHolderArgs.fromBundle(getArguments()).getStakeHolder();
         mainActivity.setHeaderText(stakeHolder.getName());
         Caching.INSTANCE.setChosenStakeHolder(stakeHolder);
         viewModel.setSelectedStakeholder(stakeHolder);
@@ -121,9 +120,9 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
 
 
     private void addFragments() {
-        mAdapter.addFragment(new StakeDetailsList(Caching.INSTANCE.TYPE_CASH));
-        mAdapter.addFragment(new StakeDetailsList(Caching.INSTANCE.TYPE_RECEIVABLES));
-        mAdapter.addFragment(new StakeDetailsList(Caching.INSTANCE.TYPE_PAYABLES));
+        mAdapter.addFragment(new StakeDetailsList(stakeHolder,null,Caching.INSTANCE.TYPE_CASH));
+        mAdapter.addFragment(new StakeDetailsList(stakeHolder,null,Caching.INSTANCE.TYPE_RECEIVABLES));
+        mAdapter.addFragment(new StakeDetailsList(stakeHolder,null,Caching.INSTANCE.TYPE_PAYABLES));
         mAdapter.addFragment(new PropertiesList(Caching.INSTANCE.PROPERTY_STAKEHOLDER));
         viewPager.setAdapter(mAdapter);
 
