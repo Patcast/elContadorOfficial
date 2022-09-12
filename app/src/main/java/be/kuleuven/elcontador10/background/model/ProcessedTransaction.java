@@ -9,6 +9,7 @@ import com.google.firebase.Timestamp;
 
 
 import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
@@ -104,11 +105,28 @@ public class ProcessedTransaction implements TransactionInterface {
         db.collection(urlNewTransactions).document(getIdOfTransactionInt())
                 .update("isDeleted", true, "deletedDate", deletedDate, "deletedBy", deletedBy)
                 .addOnSuccessListener(aVoid -> successfulDelete(context))
-                .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete transaction.", Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> Toast.makeText(context, R.string.failed_delete_transaction, Toast.LENGTH_SHORT).show());
+    }
+
+    public void execute(Context context) {
+        if (type.contains(Caching.INSTANCE.TYPE_PENDING)) {
+            type.remove(Caching.INSTANCE.TYPE_PENDING);
+            String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
+
+            final Map<String, Object> removePending = new HashMap<>();
+            removePending.put("type", FieldValue.arrayRemove(Caching.INSTANCE.TYPE_PENDING));
+
+            db.collection(urlNewTransactions).document(getIdOfTransactionInt())
+                    .update(removePending)
+                    .addOnSuccessListener(e ->
+                            Toast.makeText(context, R.string.transaction_executed, Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e ->
+                            Toast.makeText(context, R.string.failed_execute_transaction, Toast.LENGTH_SHORT).show());
+        }
     }
 
     public void successfulDelete(Context context){
-        Toast.makeText(context, "Transaction deleted.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.transaction_deleted, Toast.LENGTH_SHORT).show();
         //TODO: delete picture too here
     }
     public void updateImageFromFireBase(ProcessedTransaction newTransactionInput,ImageFireBase ImageSelected,Context context) {

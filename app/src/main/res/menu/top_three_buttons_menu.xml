@@ -51,6 +51,13 @@
             android:title="add_property"
             android:visible="false"
             app:showAsAction="ifRoom"/>
+
+        <item android:id="@+id/menu_execute_transaction"
+            android:icon="@drawable/ic_baseline_edit_24"
+            android:title="@string/execute_pending_transaction"
+            android:visible="false"
+            app:showAsAction="ifRoom"
+            />
     </group>
 
 

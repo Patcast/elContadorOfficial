@@ -115,15 +115,24 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
            @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
-                if (!selectedTrans.getIsDeleted()) menu.findItem(R.id.menu_delete).setVisible(true);
+               if (selectedTrans.getType().contains(Caching.INSTANCE.TYPE_PENDING))
+                   menu.findItem(R.id.menu_execute_transaction).setVisible(true);
+               if (!selectedTrans.getIsDeleted())
+                   menu.findItem(R.id.menu_delete).setVisible(true);
             }
 
            @RequiresApi(api = Build.VERSION_CODES.N)
            @Override
            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+               final int menu_delete = R.id.menu_delete,
+                       menu_execute = R.id.menu_execute_transaction;
+
                switch (menuItem.getItemId()){
-                   case R.id.menu_delete:
+                   case menu_delete:
                        onDeleteClick();
+                       return true;
+                   case menu_execute:
+                       onExecuteClick();
                        return true;
                    default:
                        return false;
@@ -180,11 +189,11 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
 
 
     private void setUiForPhoto(boolean photoDownloaded) {
-        if(photoDownloaded){
+        if (photoDownloaded){
             imViewPhotoIn.setVisibility(View.VISIBLE);
             layoutAddPhotoIcon.setVisibility(View.GONE);
             progressIndicator.setVisibility(View.GONE);
-        }else{
+        } else {
             imViewPhotoIn.setVisibility(View.GONE);
             layoutAddPhotoIcon.setVisibility(View.VISIBLE);
         }
@@ -310,11 +319,27 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getString(R.string.delete_transaction))
                 .setMessage(getString(R.string.sure_delete_transaction))
-                .setPositiveButton(getString(R.string.yes), (dialog, which) ->confirmDelete())
+                .setPositiveButton(getString(R.string.yes), (dialog, which) -> confirmDelete())
                 .setNegativeButton(getString(R.string.no), (dialog, which) -> dialog.dismiss())
                 .create()
                 .show();
     }
+
+    private void confirmExecute() {
+        navController.popBackStack();
+        selectedTrans.execute(getContext());
+    }
+
+    public void onExecuteClick() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(getString(R.string.execute_pending_transaction))
+                .setMessage(getString(R.string.sure_execute_transaction))
+                .setPositiveButton(getString(R.string.yes), (dialog, which) -> confirmExecute())
+                .setNegativeButton(getString(R.string.no), (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
+    }
+
     //
     ////// CAMARA
     /////
