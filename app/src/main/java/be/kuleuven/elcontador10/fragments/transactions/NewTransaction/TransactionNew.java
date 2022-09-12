@@ -287,15 +287,15 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         if(i==0){
             trans_type.clear();
-            trans_type.addAll(Arrays.asList("CASH",null,null,null));
+            trans_type.addAll(Arrays.asList(Caching.INSTANCE.TYPE_CASH, null, null, null));
         }
         else if(i==1){
             trans_type.clear();
-            trans_type.addAll(Arrays.asList("CASH","PAYABLES",null,null));
+            trans_type.addAll(Arrays.asList(Caching.INSTANCE.TYPE_CASH, Caching.INSTANCE.TYPE_PAYABLES, null, null));
         }
         else{
             trans_type.clear();
-            trans_type.addAll(Arrays.asList("CASH",null,"RECEIVABLES",null));
+            trans_type.addAll(Arrays.asList(Caching.INSTANCE.TYPE_CASH, null, Caching.INSTANCE.TYPE_RECEIVABLES, null));
         }
     }
 
