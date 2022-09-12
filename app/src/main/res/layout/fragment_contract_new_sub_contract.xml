@@ -13,6 +13,34 @@
         android:orientation="vertical"
         android:padding="20dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/payment_new_frequency_label"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="15dp"
+                android:layout_marginRight="15dp"
+                android:gravity="center"
+                android:text="@string/account" />
+
+            <TextView
+                android:id="@+id/textView_currentAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_accounts_second"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Gonzales Ortega"
+                android:textColor="@color/white" />
+
+
+        </LinearLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -87,7 +115,6 @@
             android:hint="@string/amount"
             android:inputType="numberDecimal"
             android:maxLength="22"
-            android:textSize="25sp"
             android:minHeight="48dp" />
         <TextView
             android:id="@+id/textView_fillAmount"
@@ -100,31 +127,27 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:gravity="center" >
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/payment_new_in"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginEnd="140dp"
-                android:layout_marginRight="140dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:checked="true"
                 android:paddingVertical="10dp"
-                android:scaleX="1.7"
-                android:scaleY="1.7"
                 android:text="@string/receivables"
-                android:translationX="24dp" />
+                android:textSize="18sp" />
 
             <RadioButton
                 android:id="@+id/payment_new_out"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:paddingVertical="10dp"
-                android:scaleX="1.7"
-                android:scaleY="1.7"
                 android:text="@string/payables"
-                android:translationX="-30dp" />
+                android:textSize="18sp" />
 
         </RadioGroup>
         <TextView
@@ -198,13 +221,12 @@
             android:textSize="18sp" />
 
         <Button
-            android:layout_marginTop="5dp"
             android:id="@+id/payment_new_start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:background="@drawable/background_buttons"
-            android:text="@string/choose"
-            android:textSize="18sp" />
+            android:text="@string/choose" />
 
         <EditText
             android:id="@+id/payment_new_duration"

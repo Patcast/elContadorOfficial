@@ -87,9 +87,10 @@ public class TransactionsRecViewAdapter extends  RecyclerView.Adapter<RecyclerVi
             camaraIcon = itemView.findViewById(R.id.imageView_camara_icon);
             txtEmojiCategory = itemView.findViewById(R.id.textView_transaction_emoji);
             textTitle = itemView.findViewById(R.id.text_title_allTrans);
+            textTitle.setSelected(true);
             parent = itemView.findViewById(R.id.recVew_Item_AllTransactions);
-            textTitle = itemView.findViewById(R.id.text_title_allTrans);
             textAmount = itemView.findViewById(R.id.textAmount);
+            textAmount.setSelected(true);
             textDate = itemView.findViewById(R.id.text_date_allTrans);
             textPaidBy = itemView.findViewById(R.id.textPaidBy);
             textNameOfParticipant = itemView.findViewById(R.id.text_nameOfParticipant);

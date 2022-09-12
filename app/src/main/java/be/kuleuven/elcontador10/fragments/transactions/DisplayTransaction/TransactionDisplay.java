@@ -231,6 +231,7 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
             DateFormatter dateFormatter = new DateFormatter(selectedTrans.getDueDate(),"f");
             DateFormatter timeFormatter = new DateFormatter(selectedTrans.getDueDate(),"t");
             amount.setText(formatter.getFinalNumber());
+            amount.setSelected(true);
 
             String concerningText = getText(selectedTrans.transText()) + " " + Caching.INSTANCE.getStakeholderName(selectedTrans.getIdOfStakeInt());
             if (selectedTrans.getIdOfProperty() != null && !selectedTrans.getIdOfProperty().equals(""))

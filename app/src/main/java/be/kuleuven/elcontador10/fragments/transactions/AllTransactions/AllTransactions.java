@@ -103,13 +103,22 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
 
         mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
         selectMonth = view.findViewById(R.id.btn_selectMonth);
+
         txtSumOfCashOut = view.findViewById(R.id.text_sumCashOut);
+        txtSumOfCashOut.setSelected(true);
         txtSumOfCashIn = view.findViewById(R.id.text_sumCashIn);
+        txtSumOfCashIn.setSelected(true);
         txtStartingCash = view.findViewById(R.id.text_startingBalance);
+        txtStartingCash.setSelected(true);
         txCurrentCash = view.findViewById(R.id.text_currentBalance);
+        txCurrentCash.setSelected(true);
         txtSumOfReceivables = view.findViewById(R.id.text_receivables);
+        txtSumOfReceivables.setSelected(true);
         txtSumOfPayables = view.findViewById(R.id.text_payables);
+        txtSumOfPayables.setSelected(true);
         txtEquity = view.findViewById(R.id.text_futureBalance);
+        txtEquity.setSelected(true);
+
         viewModel.getCalendarFilter().observe(getViewLifecycleOwner(), i-> {
             try {
                 updateDateButtonAndListOfTransactions(i);

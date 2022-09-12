@@ -317,14 +317,13 @@
             motion:layout_constraintEnd_toEndOf="parent" />
         <Constraint
             android:layout_height="wrap_content"
-            motion:layout_constraintGuide_begin="230dp"
             android:layout_width="wrap_content"
             android:id="@+id/guideline12" />
         <Constraint
             android:id="@+id/guideline12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            motion:layout_constraintGuide_begin="230dp"
+            motion:layout_constraintGuide_begin="193dp"
             motion:layout_constraintStart_toEndOf="@+id/main_container" />
 
     </ConstraintSet>

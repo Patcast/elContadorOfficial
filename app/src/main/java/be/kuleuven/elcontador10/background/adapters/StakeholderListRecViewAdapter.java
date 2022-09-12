@@ -96,9 +96,12 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
             super(itemView);
             parent = itemView.findViewById(R.id.parent_allMicros);
             textName = itemView.findViewById(R.id.text_Account_name_Micros);
+            textName.setSelected(true);
             //textRole = itemView.findViewById(R.id.text_micros_role);
             textReceivables = itemView.findViewById(R.id.text_micros_balance);
+            textReceivables.setSelected(true);
             textViewPayables = itemView.findViewById(R.id.textViewPayables);
+            textViewPayables.setSelected(true);
         }
     }
     /////------------

@@ -46,40 +46,6 @@
 
     </LinearLayout>
 
-    <RadioGroup
-                android:id="@+id/radioGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal"
-
-                >
-                <RadioButton
-                    android:id="@+id/radio_CashIn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="140dp"
-                    android:layout_marginRight="140dp"
-                    android:checked="true"
-                    android:scaleX="1.7"
-                    android:scaleY="1.7"
-                    android:text="@string/cash_in"
-                    android:translationX="24dp"
-                    android:paddingVertical="10dp"
-                    />
-
-                <RadioButton
-                    android:id="@+id/radio_CashOut"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleX="1.7"
-                    android:scaleY="1.7"
-                    android:text="@string/cash_out"
-                    android:translationX="-30dp"
-                    android:paddingVertical="10dp"/>
-
-            </RadioGroup>
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -202,6 +168,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/light_red_warning"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+
+        >
+
+        <RadioButton
+            android:id="@+id/radio_CashIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:paddingVertical="10dp"
+            android:text="@string/cash_in" />
+
+        <RadioButton
+            android:id="@+id/radio_CashOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingVertical="10dp"
+            android:text="@string/cash_out" />
+
+    </RadioGroup>
 
     <TextView
         android:id="@+id/actv_property"
