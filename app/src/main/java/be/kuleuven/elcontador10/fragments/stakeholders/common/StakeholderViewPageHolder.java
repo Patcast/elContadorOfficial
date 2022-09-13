@@ -94,8 +94,6 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
-
-                menu.findItem(R.id.menu_upload_future).setVisible(true);
                 menu.findItem(R.id.menu_bottom_sheet).setVisible(true);
 
             }
@@ -106,10 +104,6 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
                     case R.id.menu_bottom_sheet:
 
                         return true;
-                    case R.id.menu_upload_future:
-
-                        return true;
-
                     default:
                         return false;
                 }
@@ -154,9 +148,9 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
 
 
     private void addFragments() {
-        mAdapter.addFragment(new StakeDetailsList(stakeHolder,null,Caching.INSTANCE.TYPE_CASH));
-        mAdapter.addFragment(new StakeDetailsList(stakeHolder,null,Caching.INSTANCE.TYPE_RECEIVABLES));
-        mAdapter.addFragment(new StakeDetailsList(stakeHolder,null,Caching.INSTANCE.TYPE_PAYABLES));
+        mAdapter.addFragment(new StakeDetailsList(stakeHolder,Caching.INSTANCE.TYPE_CASH));
+        mAdapter.addFragment(new StakeDetailsList(stakeHolder,Caching.INSTANCE.TYPE_RECEIVABLES));
+        mAdapter.addFragment(new StakeDetailsList(stakeHolder,Caching.INSTANCE.TYPE_PAYABLES));
         mAdapter.addFragment(new PropertiesList(Caching.INSTANCE.PROPERTY_STAKEHOLDER));
         viewPager.setAdapter(mAdapter);
 
@@ -192,9 +186,14 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     @Override
     public void onStop() {
         super.onStop();
-
         mainActivity.displayTabLayout(false);
         mainActivity.displayStakeholderDetails(false);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
     }
 
     @Override

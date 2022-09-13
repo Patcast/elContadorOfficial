@@ -118,10 +118,10 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
 
 
         private void addFragments() {
-            mAdapter.addFragment(new StakeDetailsList(null,property,Caching.INSTANCE.TYPE_CASH));
-            mAdapter.addFragment(new StakeDetailsList(null,property,Caching.INSTANCE.TYPE_RECEIVABLES));
-            mAdapter.addFragment(new StakeDetailsList(null,property,Caching.INSTANCE.TYPE_PAYABLES));
-            viewPager.setAdapter(mAdapter);
+            //mAdapter.addFragment(new StakeDetailsList(null,property,Caching.INSTANCE.TYPE_CASH));
+           // mAdapter.addFragment(new StakeDetailsList(null,property,Caching.INSTANCE.TYPE_RECEIVABLES));
+           // mAdapter.addFragment(new StakeDetailsList(null,property,Caching.INSTANCE.TYPE_PAYABLES));
+           // viewPager.setAdapter(mAdapter);
 
             new TabLayoutMediator(mainActivity.getTabLayout(), viewPager, (t, p) -> {
                 switch (p) {
