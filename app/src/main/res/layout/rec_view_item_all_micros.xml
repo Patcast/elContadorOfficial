@@ -16,13 +16,21 @@
             android:id="@+id/text_Account_name_Micros"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
+
+            android:layout_marginTop="8dp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+
+            android:singleLine="true"
             android:text="Juan Martinez"
             android:textColor="@color/title_rec_view_stake"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,29 +38,36 @@
             android:id="@+id/text_micros_balance"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:layout_marginRight="15dp"
-            android:ellipsize="end"
             android:gravity="start"
-            android:maxLines="1"
+
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:scrollHorizontally="true"
+
             android:text="$4,000.00"
             android:textColor="@color/transaction_Schedule_receivables"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/text_Account_name_Micros"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/text_Account_name_Micros"
-            app:layout_constraintTop_toTopOf="@+id/text_Account_name_Micros" />
+            app:layout_constraintTop_toTopOf="@+id/text_Account_name_Micros"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/text_micros_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Bodega 2 y 5"
             android:ellipsize="end"
             android:gravity="start"
-            android:maxLines="2"
+            android:maxLines="3"
+            android:text="Bodega 2 y 5"
             android:textSize="15sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_Account_name_Micros" />
 
@@ -61,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="245dp" />
+            app:layout_constraintGuide_percent="0.7" />
 
         <TextView
             android:layout_marginTop="10dp"
@@ -69,9 +84,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="$8,000.00"
-            android:ellipsize="end"
             android:gravity="start"
-            android:maxLines="1"
+
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:scrollHorizontally="true"
+
             android:textColor="@color/transaction_Schedule_payables"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"

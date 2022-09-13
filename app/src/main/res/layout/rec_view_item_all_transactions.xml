@@ -17,13 +17,22 @@
         android:layout_marginBottom="10dp"
         android:text="Renta de Noviembre"
         android:textColor="@color/rec_view_title"
-        android:ellipsize="end"
-        android:maxLines="1"
+        android:gravity="start"
+
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollHorizontally="true"
+
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/textPaidBy"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp" />
 
     <TextView
         android:id="@+id/textAmount"
@@ -31,16 +40,25 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
         android:layout_marginRight="15dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
         android:text="$4,000.00"
-        android:ellipsize="end"
-        android:maxLines="1"
+
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollHorizontally="true"
+
         android:textColor="@color/rec_view_title"
         android:textSize="20sp"
-        android:gravity="right"
+        android:gravity="end"
         app:layout_constraintBottom_toBottomOf="@+id/text_title_allTrans"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/text_title_allTrans"
-        app:layout_constraintTop_toTopOf="@+id/text_title_allTrans" />
+        app:layout_constraintTop_toTopOf="@+id/text_title_allTrans"
+        />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
@@ -116,6 +134,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="254dp" />
+        app:guidelineUseRtl="true"
+        app:layout_constraintGuide_percent="0.6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

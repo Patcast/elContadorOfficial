@@ -22,12 +22,11 @@
                     android:layout_height="match_parent"
                     android:background="@color/superDarkGrey"
                     android:orientation="horizontal"
-                    android:padding="25dp">
+                    android:padding="30dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="40dp"
                             android:background="@drawable/background_transaction_display"
                             android:gravity="center"
                             android:orientation="vertical"
@@ -42,7 +41,15 @@
                                     android:text="$50,000,000.00"
                                     android:textColor="@color/white"
                                     android:textSize="32sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+
+                                    android:ellipsize="marquee"
+                                    android:singleLine="true"
+                                    android:marqueeRepeatLimit="marquee_forever"
+                                    android:focusable="true"
+                                    android:focusableInTouchMode="true"
+                                    android:scrollHorizontally="true"
+                                    />
 
                                 <LinearLayout
                                     android:layout_width="match_parent"

@@ -46,8 +46,14 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:ellipsize="end"
-        android:maxLines="1"
+
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollHorizontally="true"
+
         android:text="$4,000.00"
         android:textColor="@color/white"
         android:textSize="20sp"
@@ -67,15 +73,20 @@
         app:layout_constraintTop_toBottomOf="@+id/text_selectedMonthFix"
 
         />
+
     <TextView
         android:id="@+id/text_sumCashIn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:ellipsize="end"
-        android:maxLines="1"
         android:alpha="0"
+
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+
         android:text="$400,000.00"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -101,8 +112,14 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:ellipsize="end"
-        android:maxLines="1"
+
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollHorizontally="true"
+
         android:alpha="0"
         android:text="$3,000,000.00"
         android:textSize="18sp"
@@ -141,12 +158,19 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:alpha="0"
-        android:ellipsize="end"
-        android:maxLines="1"
+
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollHorizontally="true"
+
         android:text="$2,000.00"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/text_startBalanceFix"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="@+id/text_startBalanceFix" />
 
@@ -165,8 +189,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:alpha="0"
-        android:ellipsize="end"
-        android:maxLines="1"
+
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollHorizontally="true"
+
         android:text="$9,000.00"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -189,8 +219,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:alpha="0"
-        android:ellipsize="end"
-        android:maxLines="1"
+
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollHorizontally="true"
+
         android:text="-$5,000.00"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -213,8 +249,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:alpha="0"
-        android:ellipsize="end"
-        android:maxLines="1"
+
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollHorizontally="true"
+
         android:text="$8,000.00"
         android:textColor="@color/white"
         android:textSize="18sp"
@@ -262,7 +304,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="230dp" />
+        app:layout_constraintGuide_percent="0.5" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHeaders"

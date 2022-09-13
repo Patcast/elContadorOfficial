@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.ViewModelCategory;
+import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.Property;
@@ -58,7 +59,7 @@ public class ContractNewSubContract extends Fragment {
     private NavController navController;
 
     //views
-    private TextView   numOfFutureTransTxt, summaryOfFutureTransactionsTxt, emojiTxt
+    private TextView accountText, numOfFutureTransTxt, summaryOfFutureTransactionsTxt, emojiTxt
     , stakeTxt,fillStakeTxt,propertyTxt,fillAmountTxt,wordCountNotesTxt,fillTitleTxt;
     EditText notesTxt,titleTxt,amountTxt;
     private Spinner frequency_spinner;
@@ -145,7 +146,11 @@ public class ContractNewSubContract extends Fragment {
         new MaxWordsCounter(100,notesTxt,wordCountNotesTxt,getContext());
         new MaxWordsCounter(8,amountTxt,fillAmountTxt,getContext());
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void startViews(View view) {
+        accountText = view.findViewById(R.id.textView_currentAccount);
+        accountText.setText(Caching.INSTANCE.getAccountName());
+
         stakeTxt = view.findViewById(R.id.text_stakeholderSelected);
         fillStakeTxt = view.findViewById(R.id.textView_fillStakeholder);
         propertyTxt = view.findViewById(R.id.text_propertySelected);
