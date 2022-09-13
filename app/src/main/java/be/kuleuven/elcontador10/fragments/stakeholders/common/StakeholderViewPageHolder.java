@@ -2,13 +2,13 @@ package be.kuleuven.elcontador10.fragments.stakeholders.common;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,8 +53,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     String sumOfTransactions, initialReceivables,initialPayables;
     List<ProcessedTransaction> processedTransactionList = new ArrayList<>();
     private ViewModel_AllTransactions viewModelAllTransactions;
-
-
+    private StakeDetailsList payables, receivables;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -100,18 +99,24 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
                 menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
                 menu.findItem(R.id.menu_edit).setVisible(true);
                 menu.findItem(R.id.menu_bottom_sheet).setVisible(true);
+                menu.findItem(R.id.menu_upload_future).setVisible(true);
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 final int menu_edit = R.id.menu_edit;
                 final int menu_bottom_sheet = R.id.menu_bottom_sheet;
+                final int menu_future = R.id.menu_upload_future;
 
                 switch (menuItem.getItemId()){
                     case menu_edit:
                         editStakeholder();
                         return true;
                     case menu_bottom_sheet:
+                        return true;
+                    case menu_future:
+                        loadMore();
                         return true;
                     default:
                         return false;
@@ -162,8 +167,10 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
 
     private void addFragments() {
         mAdapter.addFragment(new StakeDetailsList(stakeHolder,Caching.INSTANCE.TYPE_CASH));
-        mAdapter.addFragment(new StakeDetailsList(stakeHolder,Caching.INSTANCE.TYPE_RECEIVABLES));
-        mAdapter.addFragment(new StakeDetailsList(stakeHolder,Caching.INSTANCE.TYPE_PAYABLES));
+        receivables = new StakeDetailsList(stakeHolder,Caching.INSTANCE.TYPE_RECEIVABLES);
+        payables = new StakeDetailsList(stakeHolder,Caching.INSTANCE.TYPE_PAYABLES);
+        mAdapter.addFragment(receivables);
+        mAdapter.addFragment(payables);
         mAdapter.addFragment(new PropertiesList(Caching.INSTANCE.PROPERTY_STAKEHOLDER));
         viewPager.setAdapter(mAdapter);
 
@@ -204,7 +211,20 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         mainActivity.displayStakeholderDetails(false);
     }
 
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void loadMore() {
+        switch (viewPager.getCurrentItem()) {
+            case 1:     // receivable
+                receivables.loadMore();
+                break;
+            case 2:     // payable
+                payables.loadMore();
+                break;
+            default:
+                Toast.makeText(mainActivity, R.string.no_future, Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
 
     @Override
     public void onPageChange() {

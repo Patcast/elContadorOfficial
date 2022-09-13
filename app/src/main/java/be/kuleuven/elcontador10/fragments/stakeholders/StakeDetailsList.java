@@ -65,7 +65,6 @@ public class StakeDetailsList extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerViewAdapter = new TransactionsRecViewAdapter(view,getContext());
         viewModel.getListOfStakeHolderTrans().observe(getViewLifecycleOwner(), this::updateAdapter);
-        setTopMenu();
     }
 
     @Override
@@ -76,28 +75,9 @@ public class StakeDetailsList extends Fragment {
 
     }
 
-    private void setTopMenu(){
-        requireActivity().addMenuProvider(new MenuProvider() {
-            @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
-                menu.findItem(R.id.menu_upload_future).setVisible(true);
-            }
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                if (menuItem.getItemId() == R.id.menu_upload_future) {
-                    loadMore();
-                    return true;
-                }
-                return false;
-            }
-        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
-    }
-
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void loadMore() {
+    public void loadMore() {
         Log.w("Hello","Loading in progress");
         if(!isLoaded){
             Log.w("Hello","Loading in Future");

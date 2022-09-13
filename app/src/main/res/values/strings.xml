@@ -336,5 +336,6 @@
     <string name="failed_delete_transaction">Failed to delete transaction.</string>
     <string name="failed_execute_transaction">Failed execute transaction</string>
     <string name="description">Description:</string>
+    <string name="no_future">No future transactions here.</string>
 
 </resources>
