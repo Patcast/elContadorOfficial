@@ -258,5 +258,8 @@
         <argument
             android:name="property"
             app:argType="be.kuleuven.elcontador10.background.model.Property" />
+        <action
+            android:id="@+id/action_propertyViewPageHolder_to_transactionDisplay"
+            app:destination="@id/transactionDisplay" />
     </fragment>
 </navigation>

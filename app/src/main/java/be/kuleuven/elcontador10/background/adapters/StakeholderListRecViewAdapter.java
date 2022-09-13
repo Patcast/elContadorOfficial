@@ -51,8 +51,8 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
         StakeHolder stake = stakeholdersList.get(position);
         holder.textName.setText(stake.getName());
-        //holder.textRole.setText(String.valueOf(stake.getRole()));
         holder.textReceivables.setVisibility(View.VISIBLE);
+        holder.textViewPayables.setVisibility(View.VISIBLE);
         long receivables = stake.getSumOfReceivables();
 
         if (receivables != 0) {

@@ -49,6 +49,7 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
     public PropertiesList() {
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
         mainActivity = (MainActivity) requireActivity();
         viewModelPropertiesList = new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
+        viewModelPropertiesList.requestListOfProperties();
         try {
             prevTAG = PropertiesListArgs.fromBundle(getArguments()).getPreviousFragment();
         }

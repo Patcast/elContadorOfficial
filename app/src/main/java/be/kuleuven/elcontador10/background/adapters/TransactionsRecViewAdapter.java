@@ -28,6 +28,7 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.tools.DateFormatter;
+import be.kuleuven.elcontador10.fragments.property.PropertyViewPageHolderDirections;
 import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolderDirections;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.AllTransactionsDirections;
 
@@ -112,9 +113,15 @@ public class TransactionsRecViewAdapter extends  RecyclerView.Adapter<Transactio
                 navController.navigate(action);
             } catch (Exception e) { // there must be a better way
                 // from MicroAccount ItemViewHolder
-                StakeholderViewPageHolderDirections.ActionMicroAccountViewPagerHolderToTransactionDisplay action =
-                        StakeholderViewPageHolderDirections.actionMicroAccountViewPagerHolderToTransactionDisplay(transaction.getIdOfTransactionInt());
-                navController.navigate(action);
+                try{
+                    StakeholderViewPageHolderDirections.ActionMicroAccountViewPagerHolderToTransactionDisplay action =
+                            StakeholderViewPageHolderDirections.actionMicroAccountViewPagerHolderToTransactionDisplay(transaction.getIdOfTransactionInt());
+                    navController.navigate(action);
+                }catch (Exception t){
+                    PropertyViewPageHolderDirections.ActionPropertyViewPageHolderToTransactionDisplay action = PropertyViewPageHolderDirections.actionPropertyViewPageHolderToTransactionDisplay(transaction.getIdOfTransactionInt());
+                    navController.navigate(action);
+                }
+
             }
         });
 

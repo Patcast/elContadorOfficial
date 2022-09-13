@@ -1,25 +1,18 @@
-package be.kuleuven.elcontador10.fragments.stakeholders;
+package be.kuleuven.elcontador10.fragments.property;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,21 +22,21 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
-import be.kuleuven.elcontador10.background.model.StakeHolder;
+import be.kuleuven.elcontador10.background.model.Property;
 
-public class StakeDetailsList extends Fragment {
+public class PropertyDetails  extends Fragment {
     private TransactionsRecViewAdapter recyclerViewAdapter;
     RecyclerView recyclerView;
-    StakeholderViewModel viewModel;
+    PropertyViewModel viewModel;
     View view;
 
     List<ProcessedTransaction> transactionList = new ArrayList<>();
-    private final StakeHolder selectedStakeHolder;
+    private final Property selectedProperty;
     private boolean isLoaded =false;
     private final String tabId;
 
-    public StakeDetailsList(StakeHolder selectedStakeHolder, String tabId) {
-        this.selectedStakeHolder = selectedStakeHolder;
+    public PropertyDetails(Property property, String tabId) {
+        this.selectedProperty = property;
         this.tabId = tabId;
     }
 
@@ -53,25 +46,25 @@ public class StakeDetailsList extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_all_properties, container, false);
         recyclerView = view.findViewById(R.id.rec_all_properties);
-        viewModel = new ViewModelProvider(requireActivity()).get(StakeholderViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(PropertyViewModel.class);
 
         return view;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerViewAdapter = new TransactionsRecViewAdapter(view,getContext());
-        viewModel.getListOfStakeHolderTrans().observe(getViewLifecycleOwner(), this::updateAdapter);
+        viewModel.getListOfPropertiesTrans().observe(getViewLifecycleOwner(), this::updateAdapter);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         recyclerView.setAdapter(recyclerViewAdapter);
-        viewModel.setSelectedStakeholder(selectedStakeHolder);
+        viewModel.setSelectedProperty(selectedProperty);
 
     }
 
@@ -91,19 +84,19 @@ public class StakeDetailsList extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private List<ProcessedTransaction>  setAdapterNoFuture(){
-                 return   transactionList
-                            .stream()
-                            .filter(t->t.getType().contains(tabId))
-                            .filter(t->!t.getType().contains(Caching.INSTANCE.TYPE_PENDING))
-                            .collect(Collectors.toList());
+        return   transactionList
+                .stream()
+                .filter(t->t.getType().contains(tabId))
+                .filter(t->!t.getType().contains(Caching.INSTANCE.TYPE_PENDING))
+                .collect(Collectors.toList());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private List<ProcessedTransaction>  setAdapterFuture(){
-            return  transactionList
-                    .stream()
-                    .filter(t->t.getType().contains(tabId))
-                    .collect(Collectors.toList());
+        return  transactionList
+                .stream()
+                .filter(t->t.getType().contains(tabId))
+                .collect(Collectors.toList());
 
     }
 

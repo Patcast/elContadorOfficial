@@ -58,9 +58,15 @@ public class ContractNewSubContract extends Fragment {
     private final int ONE_TIME=0,  CUSTOM=6;
     private NavController navController;
 
-    //views
-    private TextView accountText, numOfFutureTransTxt, summaryOfFutureTransactionsTxt, emojiTxt
-    , stakeTxt,fillStakeTxt,propertyTxt,fillAmountTxt,wordCountNotesTxt,fillTitleTxt;
+    private TextView numOfFutureTransTxt;
+    private TextView summaryOfFutureTransactionsTxt;
+    private TextView emojiTxt;
+    private TextView stakeTxt;
+    private TextView fillStakeTxt;
+    private TextView propertyTxt;
+    private TextView fillAmountTxt;
+    private TextView wordCountNotesTxt;
+    private TextView fillTitleTxt;
     EditText notesTxt,titleTxt,amountTxt;
     private Spinner frequency_spinner;
     private RadioButton payablesButton;
@@ -73,7 +79,6 @@ public class ContractNewSubContract extends Fragment {
     //variables
     private MainActivity mainActivity;
     private String  idCatSelected;
-    private int  collectionSize;
     private ArrayList<ProcessedTransaction> transactions;
     private ViewModel_NewTransaction viewModel;
 
@@ -148,7 +153,8 @@ public class ContractNewSubContract extends Fragment {
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void startViews(View view) {
-        accountText = view.findViewById(R.id.textView_currentAccount);
+        //views
+        TextView accountText = view.findViewById(R.id.textView_currentAccount);
         accountText.setText(Caching.INSTANCE.getAccountName());
 
         stakeTxt = view.findViewById(R.id.text_stakeholderSelected);
@@ -176,7 +182,7 @@ public class ContractNewSubContract extends Fragment {
     }
 
     private void lookForProperty() {
-        ContractNewSubContractDirections.ActionContractNewPaymentToPropertiesList action = ContractNewSubContractDirections.actionContractNewPaymentToPropertiesList(TAG);
+        ContractNewSubContractDirections.ActionContractNewPaymentToPropertiesList action = ContractNewSubContractDirections.actionContractNewPaymentToPropertiesList(Caching.INSTANCE.PROPERTY_NEW_T);
         navController.navigate(action);
     }
 
@@ -284,9 +290,9 @@ public class ContractNewSubContract extends Fragment {
         int frequencyID = frequency_spinner.getSelectedItemPosition();
         String collectionSizeString =numOfFutureTransTxt.getText().toString();
         if ((frequencyID == ONE_TIME ||(frequencyID != CUSTOM && collectionSizeString.length()>0))&& date!=null) {
-            collectionSize = (collectionSizeString.length()>0)? Integer.parseInt(collectionSizeString):1;
+            int collectionSize = (collectionSizeString.length() > 0) ? Integer.parseInt(collectionSizeString) : 1;
 
-            transactions = DatabaseDatesFunctions.INSTANCE.makeFutureTransactions(date, frequencyID,collectionSize);//
+            transactions = DatabaseDatesFunctions.INSTANCE.makeFutureTransactions(date, frequencyID, collectionSize);//
 
             if (transactions != null) {
                 String summary =

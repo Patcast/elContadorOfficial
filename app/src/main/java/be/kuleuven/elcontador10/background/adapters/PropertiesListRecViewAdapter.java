@@ -62,20 +62,28 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Property property = propertyList.get(position);
         holder.textName.setText(property.getName());
-        holder.textInfo.setText("");
+        holder.textRole.setText("");
 
         if(prevTAG==null){
-            long balance = property.calculatePropertySummary();
-            if (balance != 0) {
-                holder.textBalance.setVisibility(View.VISIBLE);
-                NumberFormatter formatter = new NumberFormatter(balance);
+            holder.textReceivables.setVisibility(View.VISIBLE);
+            holder.textViewPayables.setVisibility(View.VISIBLE);
+            long receivables = property.getSumOfReceivables();
+            if (receivables != 0) {
+                NumberFormatter formatter = new NumberFormatter(receivables);
                 String formatted = formatter.getFinalNumber();
-                holder.textBalance.setText(formatted);
-                if (balance > 0) holder.textBalance.setTextColor(viewFromHostingClass.getContext().getColor(R.color.transaction_processed_positive));
-                else holder.textBalance.setTextColor(viewFromHostingClass.getContext().getColor(R.color.rec_view_negative_amount));
+                holder.textReceivables.setText(formatted);
+            }
+            else holder.textReceivables.setVisibility(View.GONE);
+
+            long payables = property.getSumOfPayables();
+            if (payables != 0) {
+                NumberFormatter formatter = new NumberFormatter(payables);
+                String formatted = formatter.getFinalNumber();
+                holder.textViewPayables.setText(formatted);
 
             }
-            else holder.textBalance.setVisibility(View.GONE); // hide 0 balance
+            else holder.textViewPayables.setVisibility(View.GONE);
+
             holder.parent.setOnClickListener(view -> {
                 PropertiesListDirections.ActionPropertiesListToPropertyViewPageHolder action = PropertiesListDirections.actionPropertiesListToPropertyViewPageHolder(property);
                 navController.navigate(action);
@@ -83,8 +91,8 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
 
         }
         else  {
-            Log.w(TAG,"Moving to transaction new");
-            holder.textBalance.setVisibility(View.GONE);
+            holder.textReceivables.setVisibility(View.GONE);
+            holder.textViewPayables.setVisibility(View.GONE);
             holder.parent.setOnClickListener(v -> {
                 viewModel.selectProperty(property);
                 navController.popBackStack();
@@ -98,19 +106,20 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
         return propertyList.size();
     }
     public class ViewHolder extends RecyclerView.ViewHolder{
-            private TextView textName;
-            private TextView textInfo;
-            private TextView textBalance;
-            private ConstraintLayout parent;
+        private final TextView textName, textReceivables,textViewPayables, textRole;
+
+        private final ConstraintLayout parent;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 parent = itemView.findViewById(R.id.parent_allMicros);
                 textName = itemView.findViewById(R.id.text_Account_name_Micros);
                 textName.setSelected(true);
-                textInfo = itemView.findViewById(R.id.text_micros_role);
-                textBalance = itemView.findViewById(R.id.text_micros_balance);
-                textBalance.setSelected(true);
+                textRole = itemView.findViewById(R.id.text_micros_role);
+                textReceivables = itemView.findViewById(R.id.text_micros_balance);
+                textReceivables.setSelected(true);
+                textViewPayables = itemView.findViewById(R.id.textViewPayables);
+                textViewPayables.setSelected(true);
             }
     }
         /////------------

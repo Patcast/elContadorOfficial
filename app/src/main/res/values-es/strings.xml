@@ -276,4 +276,25 @@
     <string name="delete_transaction">Eliminar Transacción</string>
     <string name="sure_delete_transaction">¿Seguro que quieres eleminar la transacción?</string>
     <string name="cannot_open_is_deleted">La transacción seleccionada esta eliminada. No se pueden ver los detalles.</string>
+    <string name="export_prompt">¿Deseas exportar la información de este mes?</string>
+    <string name="file_ready">El archivo esta listo</string>
+    <string name="send">Enviar</string>
+    <string name="open">Abrir</string>
+    <string name="failed_to_create_file">"Error al crear el archivo "</string>
+    <string name="ok">Okey</string>
+    <string name="expenses">Egresos</string>
+    <string name="income">Ingresos</string>
+    <string name="category_excel">Categoría</string>
+    <string name="registered_by">Registrado por</string>
+    <string name="notes_excel">Notas</string>
+    <string name="equity_excel">Patrimonio</string>
+    <string name="cash">Efectivo</string>
+    <string name="type">"Tipo de transacción: "</string>
+    <string name="deleted_by">Eliminado por:</string>
+    <string name="deleted_date">Eliminado el:</string>
+    <string name="sure_execute_transaction">¿Estas seguro que quieres devengar esta transacción futura?</string>
+    <string name="transaction_deleted">Transacción eliminada</string>
+    <string name="transaction_executed">Transacción futura devengada</string>
+    <string name="failed_delete_transaction">Error al eliminar transacción</string>
+    <string name="failed_execute_transaction">"Error al devengar la transacción "</string>
 </resources>

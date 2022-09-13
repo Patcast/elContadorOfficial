@@ -98,7 +98,6 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
                 menu.findItem(R.id.menu_edit).setVisible(true);
-                menu.findItem(R.id.menu_bottom_sheet).setVisible(true);
                 menu.findItem(R.id.menu_upload_future).setVisible(true);
             }
 
@@ -106,14 +105,11 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 final int menu_edit = R.id.menu_edit;
-                final int menu_bottom_sheet = R.id.menu_bottom_sheet;
                 final int menu_future = R.id.menu_upload_future;
 
                 switch (menuItem.getItemId()){
                     case menu_edit:
                         editStakeholder();
-                        return true;
-                    case menu_bottom_sheet:
                         return true;
                     case menu_future:
                         loadMore();
@@ -142,13 +138,13 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         int currentMonth = Timestamp.now().toDate().getMonth();
         NumberFormatter formatter = new NumberFormatter(0);
         formatter.setOriginalNumber(transactionList
-                        .stream()
-                        .filter(i-> !i.getIsDeleted())
-                        .filter(t->!t.getType().contains(Caching.INSTANCE.TYPE_PENDING))
-                        .filter(t->t.getType().contains(Caching.INSTANCE.TYPE_CASH))
-                        .filter(t->t.getDueDate().toDate().getMonth()==currentMonth)
-                        .map(ProcessedTransaction::getTotalAmount)
-                        .reduce(0, Integer::sum)
+                .stream()
+                .filter(i-> !i.getIsDeleted())
+                .filter(t->!t.getType().contains(Caching.INSTANCE.TYPE_PENDING))
+                .filter(t->t.getType().contains(Caching.INSTANCE.TYPE_CASH))
+                .filter(t->t.getDueDate().toDate().getMonth()==currentMonth)
+                .map(ProcessedTransaction::getTotalAmount)
+                .reduce(0, Integer::sum)
         );
         sumOfTransactions = formatter.getFinalNumber();
         formatter.setOriginalNumber(stakeHolder.getSumOfReceivables());
