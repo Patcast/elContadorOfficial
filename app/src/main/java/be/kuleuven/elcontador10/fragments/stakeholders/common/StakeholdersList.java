@@ -45,8 +45,7 @@ public class StakeholdersList extends Fragment implements  MainActivity.TopMenuH
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
-                mainActivity = (MainActivity) getActivity();
-                assert mainActivity != null;
+                mainActivity = (MainActivity) requireActivity();
                 mainActivity.setCurrentMenuClicker(this);
 
                 viewModel_allTransactions = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
@@ -82,11 +81,13 @@ public class StakeholdersList extends Fragment implements  MainActivity.TopMenuH
 
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                final int menu_search = R.id.menu_search, menu_add_stake = R.id.menu_add_stake;
+
                 switch (menuItem.getItemId()){
-                    case R.id.menu_search:
+                    case menu_search:
                         onSearchClick(menuItem);
                         return true;
-                    case R.id.menu_add_stake:
+                    case menu_add_stake:
                         addStakeholder();
                         return true;
                     default:

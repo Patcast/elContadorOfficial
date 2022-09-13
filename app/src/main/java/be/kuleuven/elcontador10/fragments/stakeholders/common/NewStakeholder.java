@@ -1,9 +1,11 @@
 package be.kuleuven.elcontador10.fragments.stakeholders.common;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,13 +22,29 @@ import org.jetbrains.annotations.NotNull;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
+import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
 
 public class NewStakeholder extends Fragment {
     private NavController navController;
+    private StakeHolder stakeHolder;
+    private EditText inputName, inputRole;
+    private TextView counterName, counterRole;
 
-    private TextView inputName;
-    private Button confirm;
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        try {
+            String stakeholderID = NewStakeholderArgs.fromBundle(getArguments()).getIdStakeholder();
+            if (stakeholderID != null) {
+                stakeHolder = Caching.INSTANCE.getStakeHolder(stakeholderID);
+            }
+        } catch (Exception e) {
+            stakeHolder = null;
+        }
+    }
 
     @Nullable
     @Override
@@ -42,25 +61,47 @@ public class NewStakeholder extends Fragment {
 
         // initialise view
         inputName = view.findViewById(R.id.ed_txt_name);
+        inputRole = view.findViewById(R.id.ed_txt_role);
+        counterName = view.findViewById(R.id.ed_txt_name_counter);
+        counterRole = view.findViewById(R.id.ed_txt_role_counter);
 
+        if (stakeHolder != null) {
+            inputName.setText(stakeHolder.getName());
+            if (stakeHolder.getRole() != null)
+                inputRole.setText(stakeHolder.getRole());
+        }
 
-        confirm = view.findViewById(R.id.btn_confirm_NewMicro);
+        setWordCounters();
+
+        Button confirm = view.findViewById(R.id.btn_confirm_NewMicro);
         confirm.setOnClickListener(this::onConfirm_Clicked);
-        MainActivity mainActivity = (MainActivity) getActivity();
+        MainActivity mainActivity = (MainActivity) requireActivity();
         mainActivity.setHeaderText(getString(R.string.new_stake));
     }
 
     public void onConfirm_Clicked(View view) {
         String name = inputName.getText().toString();
+        String role = inputRole.getText().toString();
 
         if (name.isEmpty()) {
             Toast.makeText(getActivity(), "The new stakeholder must have a name.", Toast.LENGTH_LONG).show();
         }
         else {
             navController.popBackStack();
-
-            StakeHolder account = new StakeHolder(name);
-            account.addAccount(account);
+            if (stakeHolder == null) {
+                StakeHolder account = new StakeHolder(name, role);
+                account.addAccount();
+            } else {
+                navController.popBackStack();
+                stakeHolder.setName(name);
+                stakeHolder.setRole(role);
+                stakeHolder.editAccount();
+            }
         }
+    }
+
+    public void setWordCounters() {
+        new MaxWordsCounter(20, inputName, counterName, getContext());
+        new MaxWordsCounter(100, inputRole, counterRole, getContext());
     }
 }

@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
@@ -71,6 +72,11 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
         }
         else holder.textViewPayables.setVisibility(View.GONE);
 
+        if (stake.getRole() != null && !stake.getRole().equals("")) {
+            holder.textRole.setVisibility(View.VISIBLE);
+            holder.textRole.setText(stake.getRole());
+        }
+
         holder.parent.setOnClickListener(v -> {
                     NavController navController = Navigation.findNavController(viewFromHostingClass);
                     StakeholdersListDirections.ActionStakeholdersToStakeholder action  = StakeholdersListDirections.actionStakeholdersToStakeholder(stakeholdersList.get(position));
@@ -85,19 +91,16 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
         return stakeholdersList.size();
     }
 
-
-
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView textName, textReceivables,textViewPayables;
-        private ConstraintLayout parent;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private final TextView textName, textReceivables,textViewPayables, textRole;
+        private final ConstraintLayout parent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             parent = itemView.findViewById(R.id.parent_allMicros);
             textName = itemView.findViewById(R.id.text_Account_name_Micros);
             textName.setSelected(true);
-            //textRole = itemView.findViewById(R.id.text_micros_role);
+            textRole = itemView.findViewById(R.id.text_micros_role);
             textReceivables = itemView.findViewById(R.id.text_micros_balance);
             textReceivables.setSelected(true);
             textViewPayables = itemView.findViewById(R.id.textViewPayables);
@@ -129,20 +132,25 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
                 collectionFiltered.addAll(stakeHoldersFull);
             }
             else {
-                collectionFiltered
-                        .addAll(stakeHoldersFull
+                collectionFiltered.addAll(
+                        stakeHoldersFull
                                 .stream()
-                                .filter(i -> i.getName().toLowerCase().contains(constraint.toString().toLowerCase()))
-                                .collect(Collectors.toList()));
+                                .filter(i -> i.getName().toLowerCase().contains(constraint.toString().toLowerCase()) ||
+                                        (i.getRole() != null &&
+                                                i.getRole().toLowerCase().contains(constraint.toString().toLowerCase())))
+                                .collect(Collectors.toList())
+                );
             }
             FilterResults filterResults = new FilterResults();
             filterResults.values = collectionFiltered;
             return filterResults;
         }
+
         @Override
         protected void publishResults (CharSequence constraint, FilterResults results){
             stakeholdersList.clear();
-            stakeholdersList.addAll((Collection<? extends StakeHolder>) results.values);
+            if (results.values != null)
+                stakeholdersList.addAll((Collection<? extends StakeHolder>) results.values);
             notifyDataSetChanged();
         }};
 }

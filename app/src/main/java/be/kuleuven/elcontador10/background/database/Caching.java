@@ -664,6 +664,17 @@ public enum Caching {
         return chosenStakeHolder;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public StakeHolder getStakeHolder(String id) {
+        if (id != null)
+            return stakeHolders
+                    .stream()
+                    .filter(s -> s.getId().equals(id))
+                    .findFirst()
+                    .orElse(null);
+        else return null;
+    }
+
     public Contract getChosenContract() {
         return chosenContract;
     }

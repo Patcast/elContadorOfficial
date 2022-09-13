@@ -335,5 +335,6 @@
     <string name="transaction_executed">Transaction executed</string>
     <string name="failed_delete_transaction">Failed to delete transaction.</string>
     <string name="failed_execute_transaction">Failed execute transaction</string>
+    <string name="description">Description:</string>
 
 </resources>
