@@ -38,8 +38,6 @@ public class StakeDetailsList extends Fragment {
     View view;
 
     List<ProcessedTransaction> transactionList = new ArrayList<>();
-    //List<ProcessedTransaction> transactionListFuture = new ArrayList<>();
-    //List<ProcessedTransaction> transactionListDisplayed = new ArrayList<>();
     private final StakeHolder selectedStakeHolder;
     private boolean isLoaded =false;
     private final String tabId;
@@ -55,7 +53,6 @@ public class StakeDetailsList extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_all_properties, container, false);
         recyclerView = view.findViewById(R.id.rec_all_properties);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         viewModel = new ViewModelProvider(requireActivity()).get(StakeholderViewModel.class);
 
         return view;
@@ -65,8 +62,8 @@ public class StakeDetailsList extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerViewAdapter = new TransactionsRecViewAdapter(view,getContext());
-        recyclerView.setAdapter(recyclerViewAdapter);
         viewModel.getListOfStakeHolderTrans().observe(getViewLifecycleOwner(), this::updateAdapter);
         setTopMenu();
     }
@@ -74,6 +71,7 @@ public class StakeDetailsList extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        recyclerView.setAdapter(recyclerViewAdapter);
         viewModel.setSelectedStakeholder(selectedStakeHolder);
 
     }

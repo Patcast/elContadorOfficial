@@ -28,6 +28,7 @@ public class StakeholderViewModel extends ViewModel {
         requestListOfStakeHolder();
 
     }
+
     private final MutableLiveData<List<ProcessedTransaction>> listOfStakeHolderTrans = new MutableLiveData<>();
     public LiveData<List<ProcessedTransaction>> getListOfStakeHolderTrans () {
         return listOfStakeHolderTrans ;

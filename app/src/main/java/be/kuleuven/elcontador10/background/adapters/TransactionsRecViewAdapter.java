@@ -32,7 +32,7 @@ import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPag
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.AllTransactionsDirections;
 
 
-public class TransactionsRecViewAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class TransactionsRecViewAdapter extends  RecyclerView.Adapter<TransactionsRecViewAdapter.ViewHolder> {
     private List<ProcessedTransaction> allTransactions = new ArrayList<>();
     NavController navController;
     View viewFromHostingClass;
@@ -48,17 +48,17 @@ public class TransactionsRecViewAdapter extends  RecyclerView.Adapter<RecyclerVi
 
     @NotNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         navController = Navigation.findNavController(viewFromHostingClass);
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_view_item_all_transactions, parent, false);
-        return new ItemViewHolder(view);
+        return new ViewHolder(view);
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            populateItemRows((ItemViewHolder) holder, position);
+    public void onBindViewHolder(@NonNull TransactionsRecViewAdapter.ViewHolder holder, int position) {
+            populateItemRows((ViewHolder) holder, position);
 
     }
 
@@ -66,12 +66,12 @@ public class TransactionsRecViewAdapter extends  RecyclerView.Adapter<RecyclerVi
     @Override
     public int getItemCount() { return  allTransactions.size(); }
 
-    public class ItemViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView textTitle,textAmount,textDate,textNameOfParticipant,textPaidBy,txtEmojiCategory;
         private ConstraintLayout parent;
         private ImageView camaraIcon;
 
-        public ItemViewHolder(@NonNull  View itemView) {
+        public ViewHolder(@NonNull  View itemView) {
             super(itemView);
             camaraIcon = itemView.findViewById(R.id.imageView_camara_icon);
             txtEmojiCategory = itemView.findViewById(R.id.textView_transaction_emoji);
@@ -86,7 +86,7 @@ public class TransactionsRecViewAdapter extends  RecyclerView.Adapter<RecyclerVi
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void populateItemRows(ItemViewHolder holder, int position) {
+    private void populateItemRows(ViewHolder holder, int position) {
 
         ProcessedTransaction transaction = allTransactions.get(position);
         holder.textPaidBy.setText(transaction.transText());
@@ -120,8 +120,9 @@ public class TransactionsRecViewAdapter extends  RecyclerView.Adapter<RecyclerVi
     }
 
     public void setAllTransactions (List<ProcessedTransaction> NewTransactions) {
+        this.allTransactions.clear();
         this.allTransactions = NewTransactions;
-        notifyDataSetChanged();
-        Log.w("hhh","jjj");
+        this.notifyDataSetChanged();
+
     }
 }

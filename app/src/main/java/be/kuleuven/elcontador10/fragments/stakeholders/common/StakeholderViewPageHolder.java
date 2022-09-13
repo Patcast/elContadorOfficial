@@ -190,11 +190,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         mainActivity.displayStakeholderDetails(false);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
 
-    }
 
     @Override
     public void onPageChange() {

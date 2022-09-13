@@ -83,6 +83,7 @@ public class AccountSettingsRecViewAdapter extends RecyclerView.Adapter<AccountS
     public int getItemCount() {
         return listOfUsers.size();
     }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView textEmail;
         private AutoCompleteTextView participantsMenu;
