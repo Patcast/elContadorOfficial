@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,11 +24,13 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
+import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
 
 public class NewStakeholder extends Fragment {
     private NavController navController;
     private StakeHolder stakeHolder;
-    private TextView inputName, inputRole;
+    private EditText inputName, inputRole;
+    private TextView counterName, counterRole;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -59,12 +62,16 @@ public class NewStakeholder extends Fragment {
         // initialise view
         inputName = view.findViewById(R.id.ed_txt_name);
         inputRole = view.findViewById(R.id.ed_txt_role);
+        counterName = view.findViewById(R.id.ed_txt_name_counter);
+        counterRole = view.findViewById(R.id.ed_txt_role_counter);
 
         if (stakeHolder != null) {
             inputName.setText(stakeHolder.getName());
             if (stakeHolder.getRole() != null)
                 inputRole.setText(stakeHolder.getRole());
         }
+
+        setWordCounters();
 
         Button confirm = view.findViewById(R.id.btn_confirm_NewMicro);
         confirm.setOnClickListener(this::onConfirm_Clicked);
@@ -85,10 +92,16 @@ public class NewStakeholder extends Fragment {
                 StakeHolder account = new StakeHolder(name, role);
                 account.addAccount();
             } else {
+                navController.popBackStack();
                 stakeHolder.setName(name);
                 stakeHolder.setRole(role);
                 stakeHolder.editAccount();
             }
         }
+    }
+
+    public void setWordCounters() {
+        new MaxWordsCounter(20, inputName, counterName, getContext());
+        new MaxWordsCounter(100, inputRole, counterRole, getContext());
     }
 }
