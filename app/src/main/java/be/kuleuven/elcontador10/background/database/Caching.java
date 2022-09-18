@@ -233,21 +233,22 @@ public enum Caching {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void requestCustomCategories() {
          db.collection("/accounts/"+chosenAccountId+"/customCategories")
-                 .whereEqualTo("isDeleted",false).
-                addSnapshotListener((value, e) -> {
+                 .addSnapshotListener((value, e) -> {
                     if (e != null) {
                         Log.w(TAG, "Listen failed.", e);
                         return;
                     }
-                    customCategories.clear();
-                    for (QueryDocumentSnapshot doc : value) {
-                        if (doc.get("title") != null) {
-                            EmojiCategory myCategory =  doc.toObject(EmojiCategory.class);
-                            myCategory.setId(doc.getId());
-                            customCategories.add(myCategory);
-                        }
-                    }
-                    catObservers.forEach(t->t.notifyCatObserver(customCategories));
+                     if (value != null) {
+                         customCategories.clear();
+                         for (QueryDocumentSnapshot doc : value) {
+                             if (doc.get("title") != null) {
+                                 EmojiCategory myCategory = doc.toObject(EmojiCategory.class);
+                                 myCategory.setId(doc.getId());
+                                 customCategories.add(myCategory);
+                             }
+                         }
+                         catObservers.forEach(t -> t.notifyCatObserver(customCategories));
+                     }
                 });
     }
 
