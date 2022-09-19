@@ -101,6 +101,7 @@ public enum Caching {
 
     /// ******** Authentication
     private String chosenAccountId;
+    private Account chosenAccount;
     private User logInUser;
     private String chosenMicroAccountId;
 
@@ -226,6 +227,7 @@ public enum Caching {
          roles.clear();
          logInUser = null;
          chosenAccountId = null;
+         chosenAccount = null;
     }
 
     //////// DATA BASE ****************
@@ -548,6 +550,11 @@ public enum Caching {
 
     // getters
 
+
+    public Account getChosenAccount() {
+        return chosenAccount;
+    }
+
     public void setChosenAccountId(String chosenAccountId) {
         this.chosenAccountId = chosenAccountId;
     }
@@ -694,6 +701,10 @@ public enum Caching {
 
     // setters
 
+    public void setChosenAccount(Account chosenAccount) {
+        this.chosenAccount = chosenAccount;
+    }
+
     public void setChosenStakeHolder(StakeHolder chosenStakeHolder) {
         this.chosenStakeHolder = chosenStakeHolder;
     }
@@ -756,5 +767,9 @@ public enum Caching {
             return propertyList.get(id);
         else
             return "N/A";
+    }
+
+    public boolean checkPermission(String loggedInEmail) {
+        return getChosenAccount().getOwner().equals(loggedInEmail);
     }
 }

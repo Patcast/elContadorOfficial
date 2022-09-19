@@ -1,5 +1,7 @@
 package be.kuleuven.elcontador10.background.model;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,6 +12,7 @@ import androidx.annotation.RequiresApi;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.database.Caching;
 
 public class StakeHolder implements Parcelable {
@@ -189,5 +192,31 @@ public class StakeHolder implements Parcelable {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public void delete(Context context) {
+        deleted = true;
+
+        String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/stakeHolders/" + getId();
+
+        db.document(url)
+                .update("deleted", deleted)
+                .addOnSuccessListener(documentReference ->
+                        new AlertDialog.Builder(context)
+                                .setTitle(R.string.delete_stakeholder_title)
+                                .setMessage(R.string.stakeholder_deleted)
+                                .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
+                                .create()
+                                .show())
+                .addOnFailureListener(e -> {
+                    Log.w(TAG, "Error adding document", e);
+                    new AlertDialog.Builder(context)
+                            .setTitle(R.string.delete_stakeholder_title)
+                            .setMessage(R.string.stakeholder_delete_fail)
+                            .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
+                            .create()
+                            .show();
+                });
+
     }
 }

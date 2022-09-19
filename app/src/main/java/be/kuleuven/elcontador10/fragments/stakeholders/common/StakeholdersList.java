@@ -63,6 +63,7 @@ public class StakeholdersList extends Fragment implements  MainActivity.TopMenuH
                 return view;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void onViewCreated(@NonNull  View view, @Nullable  Bundle savedInstanceState) {
                 super.onViewCreated(view, savedInstanceState);

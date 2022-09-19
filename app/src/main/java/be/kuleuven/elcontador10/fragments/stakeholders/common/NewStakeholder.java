@@ -1,5 +1,6 @@
 package be.kuleuven.elcontador10.fragments.stakeholders.common;
 
+import android.app.AlertDialog;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -32,10 +33,13 @@ public class NewStakeholder extends Fragment {
     private EditText inputName, inputRole;
     private TextView counterName, counterRole;
 
+    private MainActivity mainActivity;
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         try {
             String stakeholderID = NewStakeholderArgs.fromBundle(getArguments()).getIdStakeholder();
             if (stakeholderID != null) {
@@ -44,6 +48,8 @@ public class NewStakeholder extends Fragment {
         } catch (Exception e) {
             stakeHolder = null;
         }
+
+        mainActivity = (MainActivity) requireActivity();
     }
 
     @Nullable
@@ -69,6 +75,10 @@ public class NewStakeholder extends Fragment {
             inputName.setText(stakeHolder.getName());
             if (stakeHolder.getRole() != null)
                 inputRole.setText(stakeHolder.getRole());
+
+            Button delete = view.findViewById(R.id.btn_delete_NewMicro);
+            delete.setVisibility(View.VISIBLE);
+            delete.setOnClickListener(this::onDelete_Clicked);
         }
 
         setWordCounters();
@@ -79,7 +89,7 @@ public class NewStakeholder extends Fragment {
         mainActivity.setHeaderText(getString(R.string.new_stake));
     }
 
-    public void onConfirm_Clicked(View view) {
+    private void onConfirm_Clicked(View view) {
         String name = inputName.getText().toString();
         String role = inputRole.getText().toString();
 
@@ -98,6 +108,29 @@ public class NewStakeholder extends Fragment {
                 stakeHolder.editAccount();
             }
         }
+    }
+
+    private void onDelete_Clicked(View view) {
+        if (Caching.INSTANCE.checkPermission(mainActivity.returnSavedLoggedEmail()))
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.delete_stakeholder_title)
+                    .setMessage(R.string.delete_stakeholder_message)
+                    .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
+                        stakeHolder.delete(getContext());
+                        navController.popBackStack();
+                        navController.popBackStack();
+                        dialogInterface.dismiss();
+                    })
+                    .setNegativeButton(R.string.no, (dialogInterface, i) -> dialogInterface.dismiss())
+                    .create()
+                    .show();
+        else
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.delete_stakeholder_title)
+                    .setMessage(R.string.not_enough_permission_delete)
+                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
+                    .create()
+                    .show();
     }
 
     public void setWordCounters() {
