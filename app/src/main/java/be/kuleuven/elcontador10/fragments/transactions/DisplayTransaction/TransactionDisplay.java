@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.text.Layout;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import android.widget.LinearLayout;
@@ -302,14 +304,14 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void confirmDelete(){
+    private void confirmDelete(String reason){
         navController.popBackStack();
         Timestamp currentDate = Timestamp.now();
         if( selectedTrans.getDueDate().toDate().getMonth() < currentDate.toDate().getMonth()) {
             Toast.makeText(getContext(), R.string.not_delete_past_transactions, Toast.LENGTH_LONG).show();
         }
-        else{
-            selectedTrans.deleteTransaction(getContext(), mainActivity.returnSavedLoggedEmail());
+        else {
+            selectedTrans.deleteTransaction(getContext(), mainActivity.returnSavedLoggedEmail(), reason);
         }
     }
 
@@ -317,10 +319,24 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onDeleteClick() {
+        final LinearLayout layout = new LinearLayout(getContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        int dp = (int) (getResources().getDisplayMetrics().density * 24 + 0.5f);
+        layout.setPadding(dp, 0, dp, 0);
+
+        final TextView prompt = new TextView(getContext());
+        prompt.setText(R.string.reason_to_delete);
+
+        final EditText input = new EditText(getContext());
+
+        layout.addView(prompt);
+        layout.addView(input);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getString(R.string.delete_transaction))
                 .setMessage(getString(R.string.sure_delete_transaction))
-                .setPositiveButton(getString(R.string.yes), (dialog, which) -> confirmDelete())
+                .setView(layout)
+                .setPositiveButton(getString(R.string.yes), (dialog, which) -> confirmDelete(input.getText().toString()))
                 .setNegativeButton(getString(R.string.no), (dialog, which) -> dialog.dismiss())
                 .create()
                 .show();
