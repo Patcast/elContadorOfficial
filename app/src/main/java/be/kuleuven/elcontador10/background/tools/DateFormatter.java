@@ -3,6 +3,10 @@ package be.kuleuven.elcontador10.background.tools;
 
 import com.google.firebase.Timestamp;
 
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
+
 // TODO make it into static methods maybe
 public class DateFormatter {
    Timestamp inputDate;
@@ -33,11 +37,16 @@ public class DateFormatter {
     }
     // eg. 17 Ago
     private void getShortDate(){
-        String [] bitsOfDate = inputDate.toDate().toString().split(" ");
+        Date date = inputDate.toDate();
+        String [] bitsOfDate = date.toString().split(" ");
         StringBuilder shortDate = new StringBuilder();
         shortDate.append(bitsOfDate[2]);
         shortDate.append(" ");
         shortDate.append(bitsOfDate[1]);
+        if (Integer.parseInt(bitsOfDate[5]) != Calendar.getInstance().get(Calendar.YEAR)) {
+            shortDate.append(" ");
+            shortDate.append(bitsOfDate[5]);
+        }
         setFormattedDate(shortDate.toString());
     }
     // eg. 17 Ago 2021
