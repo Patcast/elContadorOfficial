@@ -254,6 +254,9 @@
         <action
             android:id="@+id/action_addProperty_to_chooseStakeHolderDialog"
             app:destination="@id/chooseStakeHolderDialog" />
+        <argument
+            android:name="property"
+            app:argType="be.kuleuven.elcontador10.background.model.Property" />
     </fragment>
     <fragment
         android:id="@+id/propertyViewPageHolder"
@@ -265,5 +268,8 @@
         <action
             android:id="@+id/action_propertyViewPageHolder_to_transactionDisplay"
             app:destination="@id/transactionDisplay" />
+        <action
+            android:id="@+id/action_propertyViewPageHolder_to_addProperty"
+            app:destination="@id/addProperty" />
     </fragment>
 </navigation>

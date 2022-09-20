@@ -343,5 +343,6 @@
     <string name="not_enough_permission_delete">You don\'t have the permission to delete.</string>
     <string name="stakeholder_deleted">Stakeholder deleted.</string>
     <string name="stakeholder_delete_fail">Failed to delete stakeholder.</string>
+    <string name="edit_property">Edit property</string>
 
 </resources>

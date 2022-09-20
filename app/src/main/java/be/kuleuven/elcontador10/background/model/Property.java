@@ -72,6 +72,16 @@ public class Property  implements Parcelable {
                 .addOnFailureListener(e -> Log.w(TAG, "Error adding property document", e));
     }
 
+    public static void editProperty(Property chosenProperty) {
+        String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/properties/" + chosenProperty.getId();
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.document(url)
+                .update("name", chosenProperty.getName(),
+                        "stakeholder", chosenProperty.getStakeholder())
+                .addOnSuccessListener(documentReference -> Log.d(TAG, "Document edited with ID: " + chosenProperty.getId()))
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+    }
 
 
     public String getName() {

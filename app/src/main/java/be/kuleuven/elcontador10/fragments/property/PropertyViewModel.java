@@ -25,7 +25,6 @@ public class PropertyViewModel extends ViewModel {
     public void setSelectedProperty(Property property){
         selectedProperty = property;
         requestListForProperty();
-
     }
 
     private final MutableLiveData<List<ProcessedTransaction>> listOfPropertiesTrans = new MutableLiveData<>();
@@ -36,7 +35,7 @@ public class PropertyViewModel extends ViewModel {
         listOfPropertiesTrans.setValue(input);
     }
     public void reset(){
-        listOfPropertiesTrans .setValue(null);
+        listOfPropertiesTrans.setValue(null);
     }
 
     public void requestListForProperty() {

@@ -127,32 +127,33 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateSummaryWithTransactions(List<ProcessedTransaction> transactionList) {
-        processedTransactionList.clear();
-        processedTransactionList.addAll(transactionList);
-        int currentMonth = Timestamp.now().toDate().getMonth();
         NumberFormatter formatter = new NumberFormatter(0);
-        formatter.setOriginalNumber(transactionList
-                .stream()
-                .filter(i-> !i.getIsDeleted())
-                .filter(t->!t.getType().contains(Caching.INSTANCE.TYPE_PENDING))
-                .filter(t->t.getType().contains(Caching.INSTANCE.TYPE_CASH))
-                .filter(t->t.getDueDate().toDate().getMonth()==currentMonth)
-                .map(ProcessedTransaction::getTotalAmount)
-                .reduce(0, Integer::sum)
-        );
-        sumOfTransactions = formatter.getFinalNumber();
-        formatter.setOriginalNumber(property.getSumOfReceivables());
-        initialReceivables = formatter.getFinalNumber();
-        formatter.setOriginalNumber(property.getSumOfPayables());
-        initialPayables = formatter.getFinalNumber();
-        initialPayables =formatter.getFinalNumber();
-        mainActivity.displayStakeHolderDetails(true,sumOfTransactions ,initialReceivables,initialPayables);
+        if (transactionList != null) {
+            processedTransactionList.clear();
+            processedTransactionList.addAll(transactionList);
+            int currentMonth = Timestamp.now().toDate().getMonth();
+            formatter.setOriginalNumber(transactionList
+                    .stream()
+                    .filter(i -> !i.getIsDeleted())
+                    .filter(t -> !t.getType().contains(Caching.INSTANCE.TYPE_PENDING))
+                    .filter(t -> t.getType().contains(Caching.INSTANCE.TYPE_CASH))
+                    .filter(t -> t.getDueDate().toDate().getMonth() == currentMonth)
+                    .map(ProcessedTransaction::getTotalAmount)
+                    .reduce(0, Integer::sum)
+            );
+            sumOfTransactions = formatter.getFinalNumber();
+            formatter.setOriginalNumber(property.getSumOfReceivables());
+            initialReceivables = formatter.getFinalNumber();
+            formatter.setOriginalNumber(property.getSumOfPayables());
+            initialPayables = formatter.getFinalNumber();
+            initialPayables = formatter.getFinalNumber();
+            mainActivity.displayStakeHolderDetails(true, sumOfTransactions, initialReceivables, initialPayables);
+        } else
+            mainActivity.displayStakeHolderDetails(true, formatter.getFinalNumber(),formatter.getFinalNumber(), formatter.getFinalNumber());
     }
 
     private void editProperty() {
-/*        StakeholderViewPageHolderDirections.ActionStakeholderViewPagerHolderToNewMicroAccount action =
-                StakeholderViewPageHolderDirections.actionStakeholderViewPagerHolderToNewMicroAccount(property.getId());
-        navController.navigate(action);*/
+        navController.navigate(PropertyViewPageHolderDirections.actionPropertyViewPageHolderToAddProperty(property));
     }
 
     private void addFragments() {
@@ -195,6 +196,7 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
 
         mainActivity.displayTabLayout(false);
         mainActivity.displayStakeholderDetails(false);
+        viewModel.reset();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

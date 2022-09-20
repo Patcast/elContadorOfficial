@@ -100,14 +100,12 @@ public class PropertyDetails  extends Fragment {
 
     }
 
-
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateAdapter(List<ProcessedTransaction> transactionListFull) {
-        transactionList.clear();
-        transactionList.addAll(transactionListFull);
-        recyclerViewAdapter.setAllTransactions(setAdapterNoFuture());
+        if (transactionListFull != null) {
+            transactionList.clear();
+            transactionList.addAll(transactionListFull);
+            recyclerViewAdapter.setAllTransactions(setAdapterNoFuture());
+        }
     }
-
-
 }

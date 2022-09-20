@@ -71,15 +71,17 @@ public class NewStakeholder extends Fragment {
         counterName = view.findViewById(R.id.ed_txt_name_counter);
         counterRole = view.findViewById(R.id.ed_txt_role_counter);
 
+        Button delete = view.findViewById(R.id.btn_delete_NewMicro);
+
         if (stakeHolder != null) {
             inputName.setText(stakeHolder.getName());
-            if (stakeHolder.getRole() != null)
+            if (stakeHolder.getRole() != null) {
                 inputRole.setText(stakeHolder.getRole());
+            }
 
-            Button delete = view.findViewById(R.id.btn_delete_NewMicro);
             delete.setVisibility(View.VISIBLE);
             delete.setOnClickListener(this::onDelete_Clicked);
-        }
+        } else delete.setVisibility(View.GONE);
 
         setWordCounters();
 

@@ -13,6 +13,19 @@ android:layout_height="match_parent">
     android:paddingBottom="20dp"
     tools:context=".fragments.transactions.NewTransaction.TransactionNew">
 
+    <Button
+        android:id="@+id/btn_delete_new_stakeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/background_buttons_red"
+        android:text="@string/delete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/btn_confirm"
+        app:layout_constraintTop_toBottomOf="@+id/btn_confirm"
+        tools:visibility="gone" />
+
     <TextView
         android:id="@+id/label_stakeholder_new_property"
         android:layout_width="match_parent"
