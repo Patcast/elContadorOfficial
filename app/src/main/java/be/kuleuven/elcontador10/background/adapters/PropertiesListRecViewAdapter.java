@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
+import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.fragments.property.PropertiesListDirections;
@@ -57,14 +58,18 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
         return new PropertiesListRecViewAdapter.ViewHolder(viewParent);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Property property = propertyList.get(position);
         holder.textName.setText(property.getName());
-        holder.textRole.setText("");
 
         if(prevTAG==null){
+            if (property.getStakeholder() != null) {
+                holder.textRole.setText(Caching.INSTANCE.getStakeholderName(property.getStakeholder()));
+                holder.textRole.setVisibility(View.VISIBLE);
+            }
+
             holder.textReceivables.setVisibility(View.VISIBLE);
             holder.textViewPayables.setVisibility(View.VISIBLE);
             long receivables = property.getSumOfReceivables();

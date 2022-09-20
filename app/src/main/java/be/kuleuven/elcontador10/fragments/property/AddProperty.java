@@ -52,9 +52,10 @@ public class AddProperty extends Fragment {
         viewModelTransaction = new ViewModelProvider(mainActivity).get(ViewModel_NewTransaction.class);
 
         try {
+            assert getArguments() != null;
             chosenProperty = AddPropertyArgs.fromBundle(getArguments()).getProperty();
-            if (viewModelTransaction.getChosenStakeholder().getValue() == null)
-                viewModelTransaction.selectStakeholder(Caching.INSTANCE.getStakeHolder(chosenProperty.getStakeholder()));
+            viewModelTransaction.selectStakeholder(Caching.INSTANCE.getStakeHolder(chosenProperty.getStakeholder()));
+            getArguments().clear();
         } catch (Exception ignore) { }
 
         return view;
@@ -87,10 +88,8 @@ public class AddProperty extends Fragment {
         super.onStart();
         viewModelTransaction.getChosenStakeholder().observe(getViewLifecycleOwner(), stakeHolder -> {
             if (stakeHolder == null) inputStakeholder.setText(R.string.none);
-            else {
-                inputStakeholder.setText(stakeHolder.getName());
-                chosenStakeholder = stakeHolder;
-            }
+            else inputStakeholder.setText(stakeHolder.getName());
+            chosenStakeholder = stakeHolder;
         });
     }
 
@@ -117,7 +116,10 @@ public class AddProperty extends Fragment {
                 navController.popBackStack();
                 navController.popBackStack();
                 chosenProperty.setName(name);
-                chosenProperty.setStakeholder(chosenStakeholder.getId());
+                if (chosenStakeholder != null)
+                    chosenProperty.setStakeholder(chosenStakeholder.getId());
+                else
+                    chosenProperty.setStakeholder(null);
                 Property.editProperty(chosenProperty);
             }
         }
