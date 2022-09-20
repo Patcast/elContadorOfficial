@@ -13,6 +13,29 @@ android:layout_height="match_parent">
     android:paddingBottom="20dp"
     tools:context=".fragments.transactions.NewTransaction.TransactionNew">
 
+    <TextView
+        android:id="@+id/label_stakeholder_new_property"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/stakeholder"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/ed_txt_name"
+        app:layout_constraintTop_toBottomOf="@+id/ed_txt_name" />
+
+    <TextView
+        android:id="@+id/text_stakeholder_new_property"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/rec_view_gray"
+        android:gravity="left"
+        android:padding="10dp"
+        android:text="@string/none"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/label_stakeholder_new_property"
+        app:layout_constraintTop_toBottomOf="@+id/label_stakeholder_new_property" />
+
     <EditText
         android:id="@+id/ed_txt_name"
         android:layout_width="match_parent"
@@ -33,12 +56,13 @@ android:layout_height="match_parent">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:background="@drawable/background_buttons"
 
+        android:background="@drawable/background_buttons"
         android:text="@string/confirm"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ed_txt_name" />
+        app:layout_constraintTop_toBottomOf="@+id/text_stakeholder_new_property" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

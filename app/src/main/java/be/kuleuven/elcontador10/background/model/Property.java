@@ -7,14 +7,13 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import be.kuleuven.elcontador10.background.database.Caching;
 
 public class Property  implements Parcelable {
     private static final String TAG = "Add property fragment";
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
 
     private long equity;
     private long cash;
@@ -24,9 +23,9 @@ public class Property  implements Parcelable {
     private long sumOfPayablesPending;
     private long sumOfReceivablesPending;
 
-
     private String name;
     private String id;
+    private String stakeholder;
 
     public Property(String name) {
         this.name = name;
@@ -43,9 +42,9 @@ public class Property  implements Parcelable {
         this.sumOfReceivablesPending = in.readLong();
         this.name = in.readString();
         this.id = in.readString();
+        this.stakeholder = in.readString();
     }
-    public Property() {
-    }
+    public Property() { }
 
     public static final Creator<Property> CREATOR = new Creator<Property>() {
         @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -60,12 +59,16 @@ public class Property  implements Parcelable {
         }
     };
 
-    public void addProperty(Property newProperty) {
+    public static void addProperty(Property newProperty) {
         String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/properties";
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection(url)
                 .add(newProperty)
-                .addOnSuccessListener(documentReference -> documentReference.update("id",documentReference.getId()))
+                .addOnSuccessListener(documentReference -> {
+                    documentReference.update("id", documentReference.getId());
+                    newProperty.setId(documentReference.getId());
+                })
                 .addOnFailureListener(e -> Log.w(TAG, "Error adding property document", e));
     }
 
@@ -75,6 +78,11 @@ public class Property  implements Parcelable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Exclude
     public String getId() {
         return id;
     }
@@ -114,6 +122,14 @@ public class Property  implements Parcelable {
         return (sumOfReceivables-sumOfPayables);
     }
 
+    public String getStakeholder() {
+        return stakeholder;
+    }
+
+    public void setStakeholder(String stakeholder) {
+        this.stakeholder = stakeholder;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -131,5 +147,6 @@ public class Property  implements Parcelable {
 
         parcel.writeString(name);
         parcel.writeString(id);
+        parcel.writeString(stakeholder);
     }
 }

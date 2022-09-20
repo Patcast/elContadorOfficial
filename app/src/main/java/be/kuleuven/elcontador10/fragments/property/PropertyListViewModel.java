@@ -53,14 +53,16 @@ public class PropertyListViewModel extends ViewModel {
                 Log.w(TAG, "Listen failed.", e);
                 return;
             }
-            List<Property> newListProperties = new ArrayList<>();
-            for (QueryDocumentSnapshot doc : value) {
-                Property myProperty =  doc.toObject(Property.class);
-                myProperty.setId(doc.getId());
-                newListProperties.add(myProperty);
+            if (value != null) {
+                List<Property> newListProperties = new ArrayList<>();
+                for (QueryDocumentSnapshot doc : value) {
+                    Property myProperty =  doc.toObject(Property.class);
+                    myProperty.setId(doc.getId());
+                    newListProperties.add(myProperty);
+                }
+                Caching.INSTANCE.setPropertyList(newListProperties);
+                selectSProperties(newListProperties);
             }
-            Caching.INSTANCE.setPropertyList(newListProperties);
-            selectSProperties(newListProperties);
         });
     }
 
