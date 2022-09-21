@@ -17,7 +17,6 @@
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/rec_view_item_accounts.xml" value="0.36666666666666664" />
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/menu/top_three_buttons_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/drawable/background_buttons.xml" value="0.3675" />
-        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/drawable/background_buttons_red.xml" value="0.347" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/drawable/ic_baseline_arrow_drop_up_24.xml" value="0.3675" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/drawable/ic_baseline_business_24.xml" value="0.3675" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/drawable/ic_baseline_camera_alt_24.xml" value="0.3675" />
@@ -29,10 +28,7 @@
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/bottom_menu_all_transactions.xml" value="0.24864130434782608" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/dialog_filter_scheduled_transactions.xml" value="0.30978260869565216" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/dialoge_category_editing.xml" value="0.30978260869565216" />
-        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_account_settings.xml" value="0.3776041666666667" />
-        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_add_new_account.xml" value="0.3776041666666667" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_add_new_microaccount.xml" value="0.5" />
-        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_add_new_property.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_all_micro_acounts.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_all_properties.xml" value="0.3776041666666667" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_all_transactions.xml" value="0.25" />
@@ -79,6 +75,7 @@
         <entry key="app/src/main/res/drawable/ic_edit_gray.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/ic_tag.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/logo.xml" value="0.1415" />
+        <entry key="app/src/main/res/drawable/missing_new_category.xml" value="0.2365" />
         <entry key="app/src/main/res/drawable/new_account_category_outline.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/rec_view_item_accounts_test.xml" value="0.22870370370370371" />
         <entry key="app/src/main/res/font/architects_daughter.xml" value="0.2835897435897436" />
