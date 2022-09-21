@@ -24,11 +24,12 @@ public class Property  implements Parcelable {
     private long sumOfPayablesPending;
     private long sumOfReceivablesPending;
 
-
+    private String idOfStakeholder;
     private String name;
     private String id;
 
-    public Property(String name) {
+    public Property(String name,String idOfStakeholder) {
+        this.idOfStakeholder = idOfStakeholder;
         this.name = name;
     }
 
@@ -128,8 +129,12 @@ public class Property  implements Parcelable {
         parcel.writeLong(sumOfPayablesPending);
         parcel.writeLong(sumOfPayablesPending);
         parcel.writeLong(equityPending);
-
+        if(idOfStakeholder.length()>0) parcel.writeString(idOfStakeholder);
         parcel.writeString(name);
         parcel.writeString(id);
+    }
+
+    public String getIdOfStakeholder() {
+        return idOfStakeholder;
     }
 }

@@ -91,14 +91,14 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
-                menu.findItem(R.id.menu_edit).setVisible(true);
+                menu.findItem(R.id.menu_bottom_sheet).setVisible(true);
                 menu.findItem(R.id.menu_upload_future).setVisible(true);
             }
 
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                final int menu_edit = R.id.menu_edit;
+                final int menu_edit = R.id.menu_bottom_sheet;
                 final int menu_future = R.id.menu_upload_future;
 
                 switch (menuItem.getItemId()){

@@ -320,4 +320,5 @@
     <string name="no_contracts">none</string>
     <string name="delete_category">"Eliminar Categoría "</string>
     <string name="are_you_sure_delete_category">Favor de confirmar si desea eliminar la categoría</string>
+    <string name="stakeholder_settings">Ajustes del participante</string>
 </resources>

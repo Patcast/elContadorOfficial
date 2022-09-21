@@ -250,7 +250,11 @@
     <fragment
         android:id="@+id/addProperty"
         android:name="be.kuleuven.elcontador10.fragments.property.AddProperty"
-        android:label="AddProperty" />
+        android:label="AddProperty" >
+        <action
+            android:id="@+id/action_addProperty_to_chooseStakeHolderDialog"
+            app:destination="@id/chooseStakeHolderDialog" />
+    </fragment>
     <fragment
         android:id="@+id/propertyViewPageHolder"
         android:name="be.kuleuven.elcontador10.fragments.property.PropertyViewPageHolder"
