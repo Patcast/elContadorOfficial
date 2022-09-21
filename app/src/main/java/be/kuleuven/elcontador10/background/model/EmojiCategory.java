@@ -65,12 +65,6 @@ public class EmojiCategory {
                 .update("isDeleted", true)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
-
-        /*String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/customCategories";
-        db.collection(urlNewTransactions).document(getId())
-                .delete()
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted!"))
-                .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));*/
     }
 
 

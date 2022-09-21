@@ -63,7 +63,7 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
                 if (holder.subcontracts.getVisibility() == View.GONE) {
                     closeOtherContracts(position);
 
-                    Caching.INSTANCE.setChosenContract(contract);
+                   // Caching.INSTANCE.setChosenContract(contract);
 
                     holder.expand.setBackground(context.getDrawable(R.drawable.icon_compress));
                     holder.subcontracts.setVisibility(View.VISIBLE);
@@ -77,7 +77,7 @@ public class ContractsRecViewAdapter extends RecyclerView.Adapter<ContractsRecVi
 
                     holder.divider.setVisibility(View.VISIBLE);
                 } else {
-                    Caching.INSTANCE.setChosenContract(null);
+                    //Caching.INSTANCE.setChosenContract(null);
 
                     holder.expand.setBackground(context.getDrawable(R.drawable.icon_expand));
                     holder.subcontracts.setVisibility(View.GONE);

@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 import be.kuleuven.elcontador10.R;
@@ -33,7 +34,7 @@ import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_
 
 public class ChooseCategory extends Fragment implements Caching.CategoriesObserver, CategoryDialog.DialogCategoriesListener {
 //Todo: Delete BottomSheet class and layout
-    private ConstraintLayout noCategoryItem,addCustomCat;
+    private ConstraintLayout addCustomCat;
     private ViewModelCategory viewModel;
     private RecyclerView recyclerCategories_custom;
     private CategoriesRecViewAdapter adapter_custom;
@@ -48,7 +49,6 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         View view = inflater.inflate(R.layout.fragment_choose_category, container, false);
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setHeaderText(getString(R.string.choose_category));
-        noCategoryItem = view.findViewById(R.id.choose_noCat);
         addCustomCat = view.findViewById(R.id.layout_addCategory);
 
         boolean isNewTransaction = ChooseCategoryArgs.fromBundle(getArguments()).getNewTransaction();
@@ -68,7 +68,6 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         recyclerCategories_default.setLayoutManager(new LinearLayoutManager(this.getContext()));
         CategoriesRecViewAdapter adapter_default = new CategoriesRecViewAdapter(view, viewModel, this);
         recyclerCategories_default.setAdapter(adapter_default);
-        adapter_default.setDefCategories(Caching.INSTANCE.getDefaultCategories());
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void startCustomRecycler(View view) {
@@ -83,7 +82,6 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         NavController navController = Navigation.findNavController(view);
-        noCategoryItem.setOnClickListener(v->closeWithNoCategory(navController));
         addCustomCat.setOnClickListener(v->startDialogForAdding());
     }
     private void startDialogForAdding() {
@@ -91,10 +89,6 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         dialog.show(getParentFragmentManager(),"Category Dialog");
     }
 
-    private void closeWithNoCategory(NavController navController ) {
-        viewModel.resetCategory();
-        navController.popBackStack();
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -112,10 +106,11 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void notifyCatObserver(List<EmojiCategory> customCategoriesInput) {
         customCategories.clear();
-        customCategories.addAll(customCategoriesInput);
+        customCategories.addAll(customCategoriesInput.stream().filter(c->!c.getIsDeleted()).collect(Collectors.toList()));
         adapter_custom.setDefCategories(customCategories);
     }
 
