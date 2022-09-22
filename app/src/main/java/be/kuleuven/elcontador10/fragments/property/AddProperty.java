@@ -28,8 +28,8 @@ import org.jetbrains.annotations.NotNull;
 
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.MainActivity;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;

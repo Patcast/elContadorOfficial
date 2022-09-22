@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.transactions.NewTransaction.Categories;
+package be.kuleuven.elcontador10.fragments.transactions.Categories;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.stakeholders.contracts;
+package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
 
 
 import android.app.DatePickerDialog;
@@ -16,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,7 +24,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -39,20 +37,18 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import be.kuleuven.elcontador10.MainActivity;
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.ViewModelCategory;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
-import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.TransactionNewDirections;
-import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
+import be.kuleuven.elcontador10.fragments.transactions.Categories.ViewModelCategory;
 
-public class ContractNewSubContract extends Fragment {
+public class FutureTransactionsNew extends Fragment {
 
     private static final String TAG = "NewFutureTransaction";
     private final int ONE_TIME=0,  CUSTOM=6;
@@ -85,7 +81,7 @@ public class ContractNewSubContract extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_contract_new_sub_contract, container, false);
+        View view = inflater.inflate(R.layout.fragment_transaction_future_new, container, false);
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setHeaderText(getString(R.string.new_future_transaction));
         idCatSelected = null;
@@ -182,7 +178,7 @@ public class ContractNewSubContract extends Fragment {
     }
 
     private void lookForProperty() {
-        ContractNewSubContractDirections.ActionContractNewPaymentToPropertiesList action = ContractNewSubContractDirections.actionContractNewPaymentToPropertiesList(Caching.INSTANCE.PROPERTY_NEW_T);
+        FutureTransactionsNewDirections.ActionContractNewPaymentToPropertiesList action = FutureTransactionsNewDirections.actionContractNewPaymentToPropertiesList(Caching.INSTANCE.PROPERTY_NEW_T);
         navController.navigate(action);
     }
 
@@ -196,8 +192,8 @@ public class ContractNewSubContract extends Fragment {
     }
 
     public void onSelectCategory_Clicked(View view) {
-        ContractNewSubContractDirections.ActionContractNewPaymentToChooseCategory action =
-                ContractNewSubContractDirections.actionContractNewPaymentToChooseCategory(false);
+        FutureTransactionsNewDirections.ActionContractNewPaymentToChooseCategory action =
+                FutureTransactionsNewDirections.actionContractNewPaymentToChooseCategory(false);
         navController.navigate(action);
     }
     public void setChosenCategory(EmojiCategory emojiCategory) {

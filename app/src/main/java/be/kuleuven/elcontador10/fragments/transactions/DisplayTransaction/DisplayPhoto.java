@@ -19,9 +19,8 @@ import android.widget.Button;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.MainActivity;
 import be.kuleuven.elcontador10.background.model.ImageFireBase;
-import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 
 
 public class DisplayPhoto extends Fragment {

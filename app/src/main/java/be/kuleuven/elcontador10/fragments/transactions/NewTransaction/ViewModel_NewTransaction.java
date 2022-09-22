@@ -2,10 +2,8 @@ package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import be.kuleuven.elcontador10.background.ViewModelCategory;
-import be.kuleuven.elcontador10.background.model.EmojiCategory;
+import be.kuleuven.elcontador10.fragments.transactions.Categories.ViewModelCategory;
 import be.kuleuven.elcontador10.background.model.ImageFireBase;
 import be.kuleuven.elcontador10.background.model.Interfaces.ViewModelCamaraInterface;
 import be.kuleuven.elcontador10.background.model.Property;

@@ -52,9 +52,9 @@ import java.util.List;
 import java.util.Map;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.tools.Exporter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;

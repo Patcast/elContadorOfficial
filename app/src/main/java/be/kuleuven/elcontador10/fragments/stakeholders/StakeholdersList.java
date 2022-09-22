@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.stakeholders.common;
+package be.kuleuven.elcontador10.fragments.stakeholders;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -27,9 +27,9 @@ import android.view.ViewGroup;
 
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.StakeholderListRecViewAdapter;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.ViewModel_AllTransactions;
 

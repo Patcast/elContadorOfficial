@@ -15,28 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
-
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.ViewModelCategory;
+import be.kuleuven.elcontador10.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.AccountSettingsRecViewAdapter;
-import be.kuleuven.elcontador10.background.adapters.CategoriesRecViewAdapter;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.Account;
-import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 
 public class accountSettings extends Fragment {

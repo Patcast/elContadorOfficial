@@ -13,17 +13,14 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
-import be.kuleuven.elcontador10.background.model.contract.ScheduledTransaction;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public enum DatabaseDatesFunctions {
     INSTANCE;
-    private final int ONE_TIME=0, DAILY=1, WEEKLY=2, TWO_WEEKS = 3, MONTHLY=4,YEARLY=5, CUSTOM=6;
+    public final int ONE_TIME=0, DAILY=1, WEEKLY=2, TWO_WEEKS = 3, MONTHLY=4,YEARLY=5, CUSTOM=6;
 
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -131,26 +128,6 @@ public enum DatabaseDatesFunctions {
         return result;
     }
 
-    /**
-     * Get the data from customPeriod to return a list of scheduled transactions
-     * @param data result from customPeriod
-     * @return returns a list of scheduled transactions
-     */
-    public ArrayList<ScheduledTransaction> textToTransaction(LinkedList<String> data) {
-        ArrayList<ScheduledTransaction> transactions = new ArrayList<>();
-        data.removeLast();
 
-        for (String current : data) {
-            if (current.contains("/")) { // its a date
-                String[] split = current.split(": ");
-                String date = split[1]; // get date
-                Timestamp timestamp = stringToTimestamp(date);
 
-                ScheduledTransaction transaction = new ScheduledTransaction(0, 0, timestamp, null);
-                transactions.add(transaction);
-            }
-        }
-
-        return transactions;
-    }
 }

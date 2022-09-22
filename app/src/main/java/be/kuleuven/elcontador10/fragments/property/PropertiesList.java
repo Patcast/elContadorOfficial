@@ -15,7 +15,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,12 +23,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-import java.util.concurrent.ExecutionException;
-
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.PropertiesListRecViewAdapter;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 public class PropertiesList extends Fragment implements  MainActivity.TopMenuHandler {

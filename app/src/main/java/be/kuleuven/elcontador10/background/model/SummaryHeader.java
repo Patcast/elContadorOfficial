@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 
 
 public class SummaryHeader {

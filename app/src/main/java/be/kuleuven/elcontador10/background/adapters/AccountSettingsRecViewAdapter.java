@@ -6,10 +6,8 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,9 +16,7 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.model.AccountSettingsModel;
-import be.kuleuven.elcontador10.fragments.accounts.ViewModel_AccountSettings;
 
 
 public class AccountSettingsRecViewAdapter extends RecyclerView.Adapter<AccountSettingsRecViewAdapter.ViewHolder> {

@@ -12,10 +12,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
-import java.util.ArrayList;
-
-
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.Account;
 
 

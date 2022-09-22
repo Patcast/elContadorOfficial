@@ -9,11 +9,10 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 
 public class StakeHolder implements Parcelable {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();

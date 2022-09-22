@@ -20,13 +20,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
-import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholdersListDirections;
+import be.kuleuven.elcontador10.fragments.stakeholders.StakeholdersListDirections;
 
 
 public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<StakeholderListRecViewAdapter.ViewHolder> implements Filterable {

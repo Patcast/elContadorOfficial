@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.stakeholders.common;
+package be.kuleuven.elcontador10.fragments.stakeholders;
 
 import android.app.AlertDialog;
 import android.os.Build;
@@ -25,8 +25,8 @@ import android.widget.TextView;
 import org.jetbrains.annotations.NotNull;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.MainActivity;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
 

@@ -20,10 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.MainActivity;
 import be.kuleuven.elcontador10.background.model.Account;
-import be.kuleuven.elcontador10.background.model.BalanceRecord;
 
 
 public class AddNewAccount extends Fragment {

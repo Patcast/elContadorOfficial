@@ -85,6 +85,7 @@
         <entry key="app/src/main/res/layout/bottom_menu_categories.xml" value="0.335" />
         <entry key="app/src/main/res/layout/bottom_menu_pick_gallery_or_camara.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/cardview_row.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/dialog_filter_scheduled_transactions.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/dialoge_category_editing.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_account_settings.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_accounts_bottom_menu.xml" value="0.2578125" />
@@ -96,6 +97,7 @@
         <entry key="app/src/main/res/layout/fragment_all_transactions.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_choose_category.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_choose_stake_holder.xml" value="0.3296398891966759" />
+        <entry key="app/src/main/res/layout/fragment_contract_display.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_contract_new.xml" value="0.1328125" />
         <entry key="app/src/main/res/layout/fragment_contract_new_payment.xml" value="0.1328125" />
         <entry key="app/src/main/res/layout/fragment_contract_new_sub_contract.xml" value="0.2578125" />
@@ -107,6 +109,7 @@
         <entry key="app/src/main/res/layout/fragment_properties.xml" value="0.2014388489208633" />
         <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_transaction_display.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/fragment_transaction_future_new.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_transaction_new.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_view_pager_holder.xml" value="0.18796296296296297" />
         <entry key="app/src/main/res/layout/item_loading.xml" value="0.2388888888888889" />
@@ -124,6 +127,8 @@
         <entry key="app/src/main/res/menu/all_transactions_menu.xml" value="0.2578125" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.2578125" />
         <entry key="app/src/main/res/menu/top_three_buttons_menu.xml" value="0.1" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1015" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1015" />
         <entry key="app/src/main/res/xml/file_paths.xml" value="0.1" />
       </map>
     </option>

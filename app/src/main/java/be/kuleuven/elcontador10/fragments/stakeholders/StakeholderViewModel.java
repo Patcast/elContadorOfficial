@@ -13,9 +13,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
-import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 
 public class StakeholderViewModel extends ViewModel {

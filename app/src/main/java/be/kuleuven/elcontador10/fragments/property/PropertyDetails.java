@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.Property;
 

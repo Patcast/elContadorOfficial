@@ -15,18 +15,15 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.switchmaterial.SwitchMaterial;
-
 import java.util.ArrayList;
 import java.util.List;
 
 
 import be.kuleuven.elcontador10.R;
 
-import be.kuleuven.elcontador10.background.ViewModelCategory;
+import be.kuleuven.elcontador10.fragments.transactions.Categories.ViewModelCategory;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
-import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.Categories.CategoryDialog;
-import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
+import be.kuleuven.elcontador10.fragments.transactions.Categories.CategoryDialog;
 
 public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRecViewAdapter.ViewHolder> {
 

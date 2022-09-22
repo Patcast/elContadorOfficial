@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.background;
+package be.kuleuven.elcontador10.fragments.transactions.Categories;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

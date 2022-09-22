@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.transactions.NewTransaction.Categories;
+package be.kuleuven.elcontador10.fragments.transactions.Categories;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -8,18 +8,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.vanniktech.emoji.EmojiUtils;
 import com.vdurmont.emoji.EmojiManager;
-import com.vdurmont.emoji.EmojiParser;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;

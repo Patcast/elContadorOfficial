@@ -24,11 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
-public class ProcessedTransaction implements TransactionInterface {
+public class ProcessedTransaction {
 
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -216,37 +215,28 @@ public class ProcessedTransaction implements TransactionInterface {
         return notes;
     }
 
-    @Override
+
     public int getTotalAmount() {
         return totalAmount;
     }
-    @Override
     public String getIdOfStakeInt() {
         return idOfStakeInt;
     }
-
-    @Override
     public String getIdOfCategoryInt() {
         return idOfCategoryInt;
     }
-
-    @Override
     public Timestamp getDueDate() {
         return dueDate;
     }
 
-    @Override
     public String getTitle() {
         return title;
     }
 
-    @Override
     public String getImageName() {
         return imageName;
     }
-
     @Exclude
-    @Override
     public int getColorInt() {
         if(getIsDeleted())return R.color.rec_view_scheduled_completed;
 
@@ -278,13 +268,11 @@ public class ProcessedTransaction implements TransactionInterface {
     }
 
     @Exclude
-    @Override
     public String getIdOfTransactionInt() {
         return id;
     }
 
     @Exclude
-    @Override
     public String getAmountToDisplay(){
         NumberFormatter formatter = new NumberFormatter(getTotalAmount());
         return formatter.getFinalNumber();

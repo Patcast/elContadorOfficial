@@ -1,9 +1,7 @@
 package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -39,17 +37,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.MainActivity;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.ImageFireBase;
-import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.tools.CamaraSetUp;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
-import be.kuleuven.elcontador10.fragments.property.PropertiesListDirections;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 

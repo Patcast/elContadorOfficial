@@ -1,7 +1,6 @@
 package be.kuleuven.elcontador10.background.adapters;
 
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.fragments.property.PropertiesListDirections;

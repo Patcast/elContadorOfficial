@@ -20,7 +20,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.text.Layout;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,8 +43,8 @@ import com.google.firebase.Timestamp;
 import java.util.List;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.MainActivity;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.ImageFireBase;
 import be.kuleuven.elcontador10.background.tools.CamaraSetUp;
 import be.kuleuven.elcontador10.background.tools.DateFormatter;

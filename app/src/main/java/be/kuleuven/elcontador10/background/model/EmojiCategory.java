@@ -1,17 +1,10 @@
 package be.kuleuven.elcontador10.background.model;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 
 public class EmojiCategory {
     private static final String TAG ="EmojiCategory" ;

@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.Account;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 

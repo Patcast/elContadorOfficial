@@ -1,4 +1,4 @@
-package be.kuleuven.elcontador10.fragments.transactions.NewTransaction.Categories;
+package be.kuleuven.elcontador10.fragments.transactions.Categories;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -25,10 +24,9 @@ import java.util.stream.Collectors;
 
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
-import be.kuleuven.elcontador10.background.ViewModelCategory;
+import be.kuleuven.elcontador10.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.CategoriesRecViewAdapter;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 

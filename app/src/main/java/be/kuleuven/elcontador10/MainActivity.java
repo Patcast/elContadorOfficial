@@ -1,7 +1,6 @@
-package be.kuleuven.elcontador10.activities;
+package be.kuleuven.elcontador10;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -11,12 +10,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,9 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
-import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.background.database.Caching;
-import be.kuleuven.elcontador10.background.tools.Exporter;
+import be.kuleuven.elcontador10.background.Caching;
 
 public class MainActivity extends AppCompatActivity {
     public interface TopMenuHandler {

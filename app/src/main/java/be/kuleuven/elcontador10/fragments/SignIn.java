@@ -43,7 +43,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import be.kuleuven.elcontador10.R;
-import be.kuleuven.elcontador10.activities.MainActivity;
+import be.kuleuven.elcontador10.MainActivity;
 
 
 public class SignIn extends Fragment {

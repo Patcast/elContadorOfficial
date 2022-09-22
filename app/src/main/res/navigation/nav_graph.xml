@@ -81,7 +81,7 @@
         tools:layout="@layout/fragment_add_new_account" />
     <fragment
         android:id="@+id/newMicroAccount"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.common.NewStakeholder"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.NewStakeholder"
         android:label="fragment_add_new_microaccount"
         tools:layout="@layout/fragment_add_new_microaccount" >
         <argument
@@ -91,7 +91,7 @@
     </fragment>
     <fragment
         android:id="@+id/stakeholderViewPagerHolder"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolder"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholderViewPageHolder"
         android:label="fragment_stakeholder_view_holder"
         tools:layout="@layout/fragment_micro_account_view_holder">
         <argument
@@ -104,12 +104,6 @@
             android:id="@+id/action_microAccountViewPagerHolder_to_newTransaction"
             app:destination="@id/newTransaction" />
         <action
-            android:id="@+id/action_microAccountViewPagerHolder_to_contractDisplay"
-            app:destination="@id/contractDisplay" />
-        <action
-            android:id="@+id/action_stakeholderViewPagerHolder_to_subContractDisplay"
-            app:destination="@id/subContractDisplay" />
-        <action
             android:id="@+id/action_stakeholderViewPagerHolder_to_accountSettings"
             app:destination="@id/accountSettings" />
         <action
@@ -117,27 +111,10 @@
             app:destination="@id/newMicroAccount" />
     </fragment>
     <fragment
-        android:id="@+id/contractDisplay"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.contracts.ContractDisplay"
-        android:label="fragment_contract_display"
-        tools:layout="@layout/fragment_contract_display" >
-        <argument
-            android:name="contractId"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_contractDisplay_to_contractNewPayment"
-            app:destination="@id/contractNewPayment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right" />
-        <action
-            android:id="@+id/action_contractDisplay_to_subContractDisplay"
-            app:destination="@id/subContractDisplay" />
-    </fragment>
-    <fragment
-        android:id="@+id/contractNewPayment"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.contracts.ContractNewSubContract"
-        android:label="fragment_contract_new_payment"
-        tools:layout="@layout/fragment_contract_new_sub_contract" >
+        android:id="@+id/transactionFutureNew"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.NewTransaction.FutureTransactionsNew"
+        android:label="fragment_transaction_future_new"
+        tools:layout="@layout/fragment_transaction_future_new">
         <argument
             android:name="contractId"
             app:argType="string" />
@@ -153,7 +130,7 @@
     </fragment>
     <fragment
         android:id="@+id/chooseCategory"
-        android:name="be.kuleuven.elcontador10.fragments.transactions.NewTransaction.Categories.ChooseCategory"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.Categories.ChooseCategory"
         android:label="fragment_choose_category"
         tools:layout="@layout/fragment_choose_category" >
         <argument
@@ -166,17 +143,6 @@
         android:label="fragment_display_photo"
         tools:layout="@layout/fragment_display_photo" />
     <fragment
-        android:id="@+id/subContractDisplay"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.contracts.SubContractDisplay"
-        android:label="SubContractDisplay" >
-        <argument
-            android:name="subcontractId"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_subContractDisplay_to_executeScheduledTransaction"
-            app:destination="@id/executeScheduledTransaction" />
-    </fragment>
-    <fragment
         android:id="@+id/allTransactions2"
         android:name="be.kuleuven.elcontador10.fragments.transactions.AllTransactions.AllTransactions"
         android:label="fragment_all_transactions"
@@ -188,18 +154,15 @@
             android:id="@+id/action_allTransactions2_to_transactionDisplay"
             app:destination="@id/transactionDisplay" />
         <action
-            android:id="@+id/action_allTransactions2_to_executeScheduledTransaction"
-            app:destination="@id/executeScheduledTransaction" />
-        <action
             android:id="@+id/action_allTransactions2_to_accountSettings"
             app:destination="@id/accountSettings" />
         <action
             android:id="@+id/action_allTransactions2_to_contractNewPayment"
-            app:destination="@id/contractNewPayment" />
+            app:destination="@id/transactionFutureNew" />
     </fragment>
     <fragment
         android:id="@+id/stakeholders"
-        android:name="be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholdersList"
+        android:name="be.kuleuven.elcontador10.fragments.stakeholders.StakeholdersList"
         android:label="fragment_all_micro_acounts"
         tools:layout="@layout/fragment_all_micro_acounts" >
         <action
@@ -211,18 +174,6 @@
         <action
             android:id="@+id/action_stakeholders_to_accountSettings"
             app:destination="@id/accountSettings" />
-    </fragment>
-    <fragment
-        android:id="@+id/executeScheduledTransaction"
-        android:name="be.kuleuven.elcontador10.fragments.transactions.scheduledTransaction.ExecuteScheduledTransaction"
-        android:label="fragment_execute_scheduled_transaction"
-        tools:layout="@layout/fragment_execute_scheduled_transaction" >
-        <action
-            android:id="@+id/action_executeScheduledTransaction_to_chooseStakeHolderDialog"
-            app:destination="@id/chooseStakeHolderDialog" />
-        <argument
-            android:name="id"
-            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/accountSettings"

@@ -28,10 +28,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.Account;
 import be.kuleuven.elcontador10.background.model.BalanceRecord;
-import be.kuleuven.elcontador10.background.model.Interfaces.TransactionInterface;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.SummaryHeader;
@@ -252,7 +251,7 @@ public class ViewModel_AllTransactions extends ViewModel {
             listAllTransactionsFiltered.addAll(Objects.requireNonNull(monthlyListOfProcessedTransactions.getValue()).stream().filter(ProcessedTransaction::getIsDeleted).collect(Collectors.toList()));
         }
        return listAllTransactionsFiltered.stream().
-                                                sorted(Comparator.comparing(TransactionInterface::getDueDate).reversed()).
+                                                sorted(Comparator.comparing(ProcessedTransaction::getDueDate).reversed()).
                                                 collect(Collectors.toList());
     }
 

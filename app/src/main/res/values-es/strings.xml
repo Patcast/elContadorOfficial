@@ -321,4 +321,8 @@
     <string name="delete_category">"Eliminar Categoría "</string>
     <string name="are_you_sure_delete_category">Favor de confirmar si desea eliminar la categoría</string>
     <string name="stakeholder_settings">Ajustes del participante</string>
+    <string name="edit_property">Editar Propiedades</string>
+    <string name="summary_of">Resumen de %1$s</string>
+    <string name="exported_by">Exportado por %1$s a las %2$s</string>
+    <string name="date_and_time_excel">"Date &amp; Hora "</string>
 </resources>

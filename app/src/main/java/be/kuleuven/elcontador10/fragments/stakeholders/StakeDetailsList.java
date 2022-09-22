@@ -2,20 +2,14 @@ package be.kuleuven.elcontador10.fragments.stakeholders;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,7 +21,7 @@ import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 

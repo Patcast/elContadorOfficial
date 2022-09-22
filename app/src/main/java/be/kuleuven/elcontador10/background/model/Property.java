@@ -10,12 +10,10 @@ import androidx.annotation.RequiresApi;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 
 public class Property  implements Parcelable {
     private static final String TAG = "Add property fragment";
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
 
     private long equity;
     private long cash;

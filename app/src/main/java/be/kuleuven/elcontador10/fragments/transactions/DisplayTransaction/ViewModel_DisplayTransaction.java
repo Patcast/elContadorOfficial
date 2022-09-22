@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-import be.kuleuven.elcontador10.background.database.Caching;
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.ImageFireBase;
 import be.kuleuven.elcontador10.background.model.Interfaces.ViewModelCamaraInterface;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
