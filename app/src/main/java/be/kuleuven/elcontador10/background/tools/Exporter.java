@@ -1,12 +1,10 @@
 package be.kuleuven.elcontador10.background.tools;
 
-import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
 
 import com.google.firebase.Timestamp;
 
@@ -19,6 +17,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import be.kuleuven.elcontador10.MainActivity;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
@@ -31,23 +30,23 @@ public enum Exporter {
     private HSSFCellStyle styleTitle;
     private HSSFCellStyle styleBold;
     private HSSFCellStyle styleCurrency;
-    private Fragment fragment;
+    private MainActivity mainActivity;
     private List<ProcessedTransaction> processed;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public File createFile(ContentResolver resolver, Uri uri, String monthYear, List<ProcessedTransaction> processed,
+    public File createFile(MainActivity mainActivity, Uri uri, String monthYear, List<ProcessedTransaction> processed,
                            long cashAtStart, long cashIn, long cashOut, long cashAtEnd, long receivables,
-                           long payables, long equity, Fragment fragment) {
-        this.fragment = fragment;
+                           long payables, long equity) {
+        this.mainActivity = mainActivity;
         this.processed = processed;
 
-        HSSFWorkbook workbook = formatExcel(monthYear, cashAtStart, cashIn, cashOut,
+        HSSFWorkbook workbook = formatExcel(mainActivity, monthYear, cashAtStart, cashIn, cashOut,
                 cashAtEnd, receivables, payables, equity);
         File file = new File(uri.getPath());
         FileOutputStream fileOutputStream = null;
 
         try {
-            fileOutputStream = (FileOutputStream) resolver.openOutputStream(uri);
+            fileOutputStream = (FileOutputStream) mainActivity.getContentResolver().openOutputStream(uri);
             workbook.write(fileOutputStream);
             Log.e(TAG, "Write successful! Path: " + file.getAbsolutePath());
         } catch (IOException e) {
@@ -68,7 +67,7 @@ public enum Exporter {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private HSSFWorkbook formatExcel(String monthYear, long startingBalance, long cashIn, long cashOut,
+    private HSSFWorkbook formatExcel(MainActivity mainActivity, String monthYear, long startingBalance, long cashIn, long cashOut,
                                      long currentBalance, long receivables, long payables, long scheduleBalance) {
         HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -86,7 +85,7 @@ public enum Exporter {
         font.setBoldweight(Font.BOLDWEIGHT_BOLD);
         styleBold.setFont(font);
 
-        summarySheet(workbook, monthYear, startingBalance, cashIn, cashOut,
+        summarySheet(mainActivity, workbook, monthYear, startingBalance, cashIn, cashOut,
                 currentBalance, receivables, payables, scheduleBalance);
         incomeSheet(workbook);
         expenseSheet(workbook);
@@ -97,10 +96,11 @@ public enum Exporter {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void summarySheet(HSSFWorkbook workbook, String monthYear, long startingBalance,
+    private void summarySheet(MainActivity mainActivity,
+                              HSSFWorkbook workbook, String monthYear, long startingBalance,
                               long cashIn, long cashOut, long currentBalance, long receivables,
                               long payables, long scheduleBalance) {
-        HSSFSheet sheet = workbook.createSheet(fragment.getString(R.string.summary));
+        HSSFSheet sheet = workbook.createSheet(mainActivity.getString(R.string.summary));
 
         sheet.setColumnWidth(0, (int) (30 * 1.14388) * 256);
         sheet.setColumnWidth(1, (int) (15 * 1.14388) * 256);
@@ -108,12 +108,12 @@ public enum Exporter {
         HSSFRow row = sheet.createRow(0);
         row.setHeight((short) -1);
         HSSFCell cell = row.createCell(0);
-        cell.setCellValue(fragment.getString(R.string.summary_of, monthYear));
+        cell.setCellValue(mainActivity.getString(R.string.summary_of, Caching.INSTANCE.getAccountName(), monthYear));
         cell.setCellStyle(styleTitle);
 
         row = sheet.createRow(2);
         cell = row.createCell(0);
-        cell.setCellValue(fragment.getString(R.string.cash_in_the_beginning));
+        cell.setCellValue(mainActivity.getString(R.string.cash_in_the_beginning));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(startingBalance);
@@ -121,7 +121,7 @@ public enum Exporter {
 
         row = sheet.createRow(3);
         cell = row.createCell(0);
-        cell.setCellValue(fragment.getString(R.string.sum_of_cash_in));
+        cell.setCellValue(mainActivity.getString(R.string.sum_of_cash_in));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(cashIn);
@@ -129,7 +129,7 @@ public enum Exporter {
 
         row = sheet.createRow(4);
         cell = row.createCell(0);
-        cell.setCellValue(fragment.getString(R.string.sum_of_cash_out));
+        cell.setCellValue(mainActivity.getString(R.string.sum_of_cash_out));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(cashOut);
@@ -137,7 +137,7 @@ public enum Exporter {
 
         row = sheet.createRow(5);
         cell = row.createCell(0);
-        cell.setCellValue(fragment.getString(R.string.cash_at_the_end));
+        cell.setCellValue(mainActivity.getString(R.string.cash_at_the_end));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(currentBalance);
@@ -145,7 +145,7 @@ public enum Exporter {
 
         row = sheet.createRow(6);
         cell = row.createCell(0);
-        cell.setCellValue(fragment.getString(R.string.sum_of_receivables));
+        cell.setCellValue(mainActivity.getString(R.string.sum_of_receivables));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(receivables);
@@ -153,7 +153,7 @@ public enum Exporter {
 
         row = sheet.createRow(7);
         cell = row.createCell(0);
-        cell.setCellValue(fragment.getString(R.string.sum_of_payables));
+        cell.setCellValue(mainActivity.getString(R.string.sum_of_payables));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(payables);
@@ -161,7 +161,7 @@ public enum Exporter {
 
         row = sheet.createRow(8);
         cell = row.createCell(0);
-        cell.setCellValue(fragment.getString(R.string.equity));
+        cell.setCellValue(mainActivity.getString(R.string.equity));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
         cell.setCellValue(scheduleBalance);
@@ -169,8 +169,8 @@ public enum Exporter {
 
         row = sheet.createRow(10);
         cell = row.createCell(0);
-        cell.setCellValue(fragment.getString(
-                R.string.exported_by, Caching.INSTANCE.getAccountName(),
+        cell.setCellValue(mainActivity.getString(
+                R.string.exported_by, mainActivity.returnSavedLoggedEmail(),
                 DatabaseDatesFunctions.INSTANCE.timestampToString(Timestamp.now()))
         );
     }
@@ -182,7 +182,7 @@ public enum Exporter {
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void incomeSheet(HSSFWorkbook workbook) {
-        HSSFSheet sheet = workbook.createSheet(fragment.getString(R.string.income));
+        HSSFSheet sheet = workbook.createSheet(mainActivity.getString(R.string.income));
 
         sheet.setColumnWidth(0,  (int) (15 * 1.14388) * 256);
         sheet.setColumnWidth(1,  (int) (15 * 1.14388) * 256);
@@ -197,28 +197,28 @@ public enum Exporter {
         HSSFRow row = sheet.createRow(0);
         row.setHeight((short) -1);
         HSSFCell cell = row.createCell(0);
-        cell.setCellValue(fragment.getString(R.string.date_and_time_excel));
+        cell.setCellValue(mainActivity.getString(R.string.date_and_time_excel));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
-        cell.setCellValue(fragment.getString(R.string.title));
+        cell.setCellValue(mainActivity.getString(R.string.title));
         cell.setCellStyle(styleBold);
         cell = row.createCell(2);
-        cell.setCellValue(fragment.getString(R.string.amount));
+        cell.setCellValue(mainActivity.getString(R.string.amount));
         cell.setCellStyle(styleBold);
         cell = row.createCell(3);
-        cell.setCellValue(fragment.getString(R.string.category_excel));
+        cell.setCellValue(mainActivity.getString(R.string.category_excel));
         cell.setCellStyle(styleBold);
         cell = row.createCell(4);
-        cell.setCellValue(fragment.getString(R.string.stakeholder));
+        cell.setCellValue(mainActivity.getString(R.string.stakeholder));
         cell.setCellStyle(styleBold);
         cell = row.createCell(5);
-        cell.setCellValue(fragment.getString(R.string.registered_by));
+        cell.setCellValue(mainActivity.getString(R.string.registered_by));
         cell.setCellStyle(styleBold);
         cell = row.createCell(6);
-        cell.setCellValue(fragment.getString(R.string.property));
+        cell.setCellValue(mainActivity.getString(R.string.property));
         cell.setCellStyle(styleBold);
         cell = row.createCell(7);
-        cell.setCellValue(fragment.getString(R.string.notes_excel));
+        cell.setCellValue(mainActivity.getString(R.string.notes_excel));
         cell.setCellStyle(styleBold);
 
         List<ProcessedTransaction> income = processed.stream()
@@ -263,7 +263,7 @@ public enum Exporter {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void expenseSheet(HSSFWorkbook workbook) {
-        HSSFSheet sheet = workbook.createSheet(fragment.getString(R.string.expenses));
+        HSSFSheet sheet = workbook.createSheet(mainActivity.getString(R.string.expenses));
 
         sheet.setColumnWidth(0, (int) (15 * 1.14388) * 256);
         sheet.setColumnWidth(1, (int) (15 * 1.14388) * 256);
@@ -277,28 +277,28 @@ public enum Exporter {
         HSSFRow row = sheet.createRow(0);
         row.setHeight((short) -1);
         HSSFCell cell = row.createCell(0);
-        cell.setCellValue(fragment.getString(R.string.date_and_time_excel));
+        cell.setCellValue(mainActivity.getString(R.string.date_and_time_excel));
         cell.setCellStyle(styleBold);
         cell = row.createCell(1);
-        cell.setCellValue(fragment.getString(R.string.title));
+        cell.setCellValue(mainActivity.getString(R.string.title));
         cell.setCellStyle(styleBold);
         cell = row.createCell(2);
-        cell.setCellValue(fragment.getString(R.string.amount));
+        cell.setCellValue(mainActivity.getString(R.string.amount));
         cell.setCellStyle(styleBold);
         cell = row.createCell(3);
-        cell.setCellValue(fragment.getString(R.string.category_excel));
+        cell.setCellValue(mainActivity.getString(R.string.category_excel));
         cell.setCellStyle(styleBold);
         cell = row.createCell(4);
-        cell.setCellValue(fragment.getString(R.string.stakeholder));
+        cell.setCellValue(mainActivity.getString(R.string.stakeholder));
         cell.setCellStyle(styleBold);
         cell = row.createCell(5);
-        cell.setCellValue(fragment.getString(R.string.registered_by));
+        cell.setCellValue(mainActivity.getString(R.string.registered_by));
         cell.setCellStyle(styleBold);
         cell = row.createCell(6);
-        cell.setCellValue(fragment.getString(R.string.property));
+        cell.setCellValue(mainActivity.getString(R.string.property));
         cell.setCellStyle(styleBold);
         cell = row.createCell(7);
-        cell.setCellValue(fragment.getString(R.string.notes_excel));
+        cell.setCellValue(mainActivity.getString(R.string.notes_excel));
         cell.setCellStyle(styleBold);
 
         List<ProcessedTransaction> expenses = processed.stream()
@@ -350,7 +350,7 @@ public enum Exporter {
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void stakeholderSheet(HSSFWorkbook workbook) {
-        HSSFSheet sheet = workbook.createSheet(fragment.getString(R.string.stakeholders));
+        HSSFSheet sheet = workbook.createSheet(mainActivity.getString(R.string.stakeholders));
 
         sheet.setColumnWidth(0, (int) (15 * 1.14388) * 256);
         sheet.setColumnWidth(1, (int) (15 * 1.14388) * 256);
@@ -363,27 +363,27 @@ public enum Exporter {
         row.setHeight((short) -1);
 
         HSSFCell cell = row.createCell(0);
-        cell.setCellValue(fragment.getString(R.string.stakeholder));
+        cell.setCellValue(mainActivity.getString(R.string.stakeholder));
         cell.setCellStyle(styleBold);
 
         cell = row.createCell(1);
-        cell.setCellValue(fragment.getString(R.string.payables));
+        cell.setCellValue(mainActivity.getString(R.string.payables));
         cell.setCellStyle(styleBold);
 
         cell = row.createCell(2);
-        cell.setCellValue(fragment.getString(R.string.receivables));
+        cell.setCellValue(mainActivity.getString(R.string.receivables));
         cell.setCellStyle(styleBold);
 
         cell = row.createCell(3);
-        cell.setCellValue(fragment.getString(R.string.cash_in));
+        cell.setCellValue(mainActivity.getString(R.string.cash_in));
         cell.setCellStyle(styleBold);
 
         cell = row.createCell(4);
-        cell.setCellValue(fragment.getString(R.string.cash_out));
+        cell.setCellValue(mainActivity.getString(R.string.cash_out));
         cell.setCellStyle(styleBold);
 
         cell = row.createCell(5);
-        cell.setCellValue(fragment.getString(R.string.cash));
+        cell.setCellValue(mainActivity.getString(R.string.cash));
         cell.setCellStyle(styleBold);
 
         int counter = 1;

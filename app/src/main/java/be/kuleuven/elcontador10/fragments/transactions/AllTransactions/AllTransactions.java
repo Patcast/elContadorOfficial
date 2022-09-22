@@ -374,9 +374,9 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
     public void export(Uri uri) {
         List<ProcessedTransaction> processed = viewModel.getMonthlyListOfProcessedTransactions().getValue();
 
-        File file = Exporter.INSTANCE.createFile(mainActivity.getContentResolver(), uri,
+        File file = Exporter.INSTANCE.createFile(mainActivity, uri,
                 selectedMonth + " " + selectedYear, processed, cashAtStart,
-                cashIn, cashOut, cashAtEnd, receivables, payables, equity, this);
+                cashIn, cashOut, cashAtEnd, receivables, payables, equity);
 
         if (file == null) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
