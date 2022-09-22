@@ -25,13 +25,12 @@ public class Property  implements Parcelable {
     private long sumOfPayablesPending;
     private long sumOfReceivablesPending;
 
-    private String idOfStakeholder;
     private String name;
     private String id;
     private String stakeholder;
 
     public Property(String name,String idOfStakeholder) {
-        this.idOfStakeholder = idOfStakeholder;
+        this.stakeholder = idOfStakeholder;
         this.name = name;
     }
 

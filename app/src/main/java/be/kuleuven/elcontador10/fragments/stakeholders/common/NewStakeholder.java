@@ -70,7 +70,7 @@ public class NewStakeholder extends Fragment {
         navController = Navigation.findNavController(view);
 
         // initialise view
-        inputName = view.findViewById(R.id.ed_txt_name);
+        inputName = view.findViewById(R.id.text_name_new_property);
         inputRole = view.findViewById(R.id.ed_txt_role);
         counterName = view.findViewById(R.id.ed_txt_name_counter);
         counterRole = view.findViewById(R.id.ed_txt_role_counter);

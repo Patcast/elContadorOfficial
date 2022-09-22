@@ -8,19 +8,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.annotation.RequiresApi;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -31,13 +33,10 @@ import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
-import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
-import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 public class AddProperty extends Fragment {
     private NavController navController;
-    private TextView inputName, inputStakeholder;
+    private TextView inputName, inputStakeholder, txtWordsCounterTitle;
 
     private ViewModel_NewTransaction viewModelTransaction;
     private StakeHolder chosenStakeholder;
@@ -51,7 +50,8 @@ public class AddProperty extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_new_property, container, false);
 
         mainActivity = (MainActivity) requireActivity();
-        inputName = view.findViewById(R.id.ed_txt_name);
+        inputName = view.findViewById(R.id.text_name_new_property);
+        txtWordsCounterTitle = view.findViewById(R.id.text_counter_new_property);
         inputStakeholder = view.findViewById(R.id.text_stakeholder_new_property);
         inputStakeholder.setOnClickListener(view1 ->
                 navController.navigate(R.id.action_addProperty_to_chooseStakeHolderDialog));
@@ -76,17 +76,34 @@ public class AddProperty extends Fragment {
         Button confirm = view.findViewById(R.id.btn_confirm);
         confirm.setOnClickListener(this::onConfirm_Clicked);
 
-        Button delete = view.findViewById(R.id.btn_delete_new_stakeholder);
-
         if (chosenProperty != null) {
             mainActivity.setHeaderText(getString(R.string.edit_property));
             inputName.setText(chosenProperty.getName());
-            delete.setVisibility(View.VISIBLE);
-            delete.setOnClickListener(this::onDelete_Clicked);
         } else {
-            delete.setVisibility(View.GONE);
             mainActivity.setHeaderText(getString(R.string.add_new_property));
         }
+
+        setTopMenu();
+    }
+
+    private void setTopMenu(){
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
+                if ((chosenProperty != null)) menu.findItem(R.id.menu_delete).setVisible(true);
+            }
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                final int menu_delete = R.id.menu_delete;
+                if (menuItem.getItemId() == menu_delete) {
+                    onDelete_Clicked();
+                    return true;
+                }
+                return false;
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
 
     @Override
@@ -115,9 +132,11 @@ public class AddProperty extends Fragment {
         else {
             if (chosenProperty == null) {
                 navController.popBackStack();
-                Property newProperty = new Property(name);
+                Property newProperty;
                 if (chosenStakeholder != null)
-                    newProperty.setStakeholder(chosenStakeholder.getId());
+                    newProperty = new Property(name, chosenStakeholder.getId());
+                else
+                    newProperty = new Property(name, null);
                 Property.addProperty(newProperty);
             } else {
                 navController.popBackStack();
@@ -132,7 +151,7 @@ public class AddProperty extends Fragment {
         }
     }
 
-    private void onDelete_Clicked(View view) {
+    private void onDelete_Clicked() {
 
     }
 
