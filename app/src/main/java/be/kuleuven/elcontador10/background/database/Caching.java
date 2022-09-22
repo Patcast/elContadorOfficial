@@ -216,7 +216,6 @@ public enum Caching {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public  void startApp(){
         requestStaticData();
-        requestDefaultCategories();
     }
     public void signOut(){
          customCategories.clear();
