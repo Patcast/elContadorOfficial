@@ -121,7 +121,7 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
                 findFirst();
         matchingObject.ifPresent(this::setProperty);
         if(processedTransactionList.size()>0)updateSummaryWithTransactions(processedTransactionList);
-        mainActivity.displayStakeHolderDetails(true, sumOfTransactions,initialReceivables,initialPayables);
+        mainActivity.displayStakeHolderDetails(true, sumOfTransactions,initialReceivables,initialPayables, property.getStakeholder());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -146,9 +146,9 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
             formatter.setOriginalNumber(property.getSumOfPayables());
             initialPayables = formatter.getFinalNumber();
             initialPayables = formatter.getFinalNumber();
-            mainActivity.displayStakeHolderDetails(true, sumOfTransactions, initialReceivables, initialPayables);
+            mainActivity.displayStakeHolderDetails(true, sumOfTransactions, initialReceivables, initialPayables, property.getStakeholder());
         } else
-            mainActivity.displayStakeHolderDetails(true, formatter.getFinalNumber(),formatter.getFinalNumber(), formatter.getFinalNumber());
+            mainActivity.displayStakeHolderDetails(true, formatter.getFinalNumber(),formatter.getFinalNumber(), formatter.getFinalNumber(), property.getStakeholder());
     }
 
     private void editProperty() {
@@ -184,7 +184,7 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
     @Override
     public void onStart() {
         super.onStart();
-        mainActivity.displayStakeHolderDetails(true, sumOfTransactions,initialReceivables,initialPayables);
+        mainActivity.displayStakeHolderDetails(true, sumOfTransactions,initialReceivables,initialPayables,property.getStakeholder());
         mainActivity.displayToolBar(true);
         mainActivity.displayTabLayout(true);
     }
@@ -194,7 +194,7 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
         super.onStop();
 
         mainActivity.displayTabLayout(false);
-        mainActivity.displayStakeholderDetails(false);
+        mainActivity.displayStakeHolderDetails(false);
         viewModel.reset();
     }
 

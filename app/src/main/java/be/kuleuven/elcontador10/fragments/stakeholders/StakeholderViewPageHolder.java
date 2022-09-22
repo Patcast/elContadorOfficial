@@ -126,7 +126,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
                 findFirst();
         matchingObject.ifPresent(this::setStakeHolder);
         if(processedTransactionList.size()>0)updateSummaryWithTransactions(processedTransactionList);
-        mainActivity.displayStakeHolderDetails(true, sumOfTransactions,initialReceivables,initialPayables);
+        mainActivity.displayStakeHolderDetails(true, sumOfTransactions,initialReceivables,initialPayables,null);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -150,7 +150,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         formatter.setOriginalNumber(stakeHolder.getSumOfPayables());
         initialPayables = formatter.getFinalNumber();
         initialPayables =formatter.getFinalNumber();
-        mainActivity.displayStakeHolderDetails(true,sumOfTransactions ,initialReceivables,initialPayables);
+        mainActivity.displayStakeHolderDetails(true,sumOfTransactions ,initialReceivables,initialPayables, null);
     }
 
     private void editStakeholder() {
@@ -192,7 +192,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     @Override
     public void onStart() {
         super.onStart();
-        mainActivity.displayStakeHolderDetails(true, sumOfTransactions,initialReceivables,initialPayables);
+        mainActivity.displayStakeHolderDetails(true, sumOfTransactions,initialReceivables,initialPayables,null);
         mainActivity.displayToolBar(true);
         mainActivity.displayTabLayout(true);
     }
@@ -202,7 +202,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         super.onStop();
 
         mainActivity.displayTabLayout(false);
-        mainActivity.displayStakeholderDetails(false);
+        mainActivity.displayStakeHolderDetails(false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

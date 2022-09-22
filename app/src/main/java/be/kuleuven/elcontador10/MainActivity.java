@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomMenu;
     private Toolbar toolbar;
     private SharedPreferences sharedPreferences;
-    private TextView  stakeHolderInitialReceivables,stakeHolderInitialPayables,stakeHolderSumOfTransactions,txtTitlePayables,txtTitleReceivables,txtMonthlySummary;
+    private TextView  stakeHolderInitialReceivables,stakeHolderInitialPayables,stakeHolderSumOfTransactions,txtTitlePayables,txtTitleReceivables,txtMonthlySummary, txtStakeholder, labelStakeholder;
     private ConstraintLayout stakeholderDetails;
     private SharedPreferences.Editor editor;
     private static final String SAVED_EMAIL_KEY = "email_key";
@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         txtMonthlySummary=findViewById(R.id.txt_montly_summary);
         txtTitlePayables =findViewById(R.id.textTitlePayables);
         txtTitleReceivables =findViewById(R.id.textTitleReceivables);
+        txtStakeholder = findViewById(R.id.textStakeholder);
+        labelStakeholder = findViewById(R.id.labelStakeholder);
         Caching.INSTANCE.setContext(this);
         setSupportActionBar(toolbar);
 
@@ -106,34 +108,42 @@ public class MainActivity extends AppCompatActivity {
         bottomMenu.setVisibility(visibility);
     }
 
-    public void displayStakeHolderDetails(boolean display,String sumOfTrans, String initialReceivables,String initialPayables) {
+    public void displayStakeHolderDetails(boolean display, String sumOfTrans, String initialReceivables, String initialPayables, String stakeholderID) {
         if (display) {
-            txtMonthlySummary.setVisibility(View.VISIBLE);
             stakeholderDetails.setVisibility(View.VISIBLE);
-            txtTitleReceivables.setVisibility(View.VISIBLE);
-            stakeHolderInitialReceivables.setVisibility(View.VISIBLE);
-            txtTitlePayables.setVisibility(View.VISIBLE);
-            stakeHolderInitialPayables.setVisibility(View.VISIBLE);
+            txtMonthlySummary.setVisibility(View.VISIBLE);
             stakeHolderSumOfTransactions.setText(sumOfTrans);
-            stakeHolderInitialReceivables.setText(initialReceivables);
-            stakeHolderInitialPayables.setText(initialPayables);
-            if(initialReceivables==null|| initialReceivables.equals("$0.00")){
+
+            if (initialReceivables==null || initialReceivables.equals("$0.00")) {
                 txtTitleReceivables.setVisibility(View.GONE);
                 stakeHolderInitialReceivables.setVisibility(View.GONE);
+            } else {
+                txtTitleReceivables.setVisibility(View.VISIBLE);
+                stakeHolderInitialReceivables.setVisibility(View.VISIBLE);
+                stakeHolderInitialReceivables.setText(initialReceivables);
             }
-            if(initialPayables==null||initialPayables.equals("$0.00")){
+
+            if (initialPayables==null||initialPayables.equals("$0.00")) {
                 txtTitlePayables.setVisibility(View.GONE);
                 stakeHolderInitialPayables.setVisibility(View.GONE);
+            } else {
+                txtTitlePayables.setVisibility(View.VISIBLE);
+                stakeHolderInitialPayables.setVisibility(View.VISIBLE);
+                stakeHolderInitialPayables.setText(initialPayables);
             }
 
-
-        } else {
-            stakeholderDetails.setVisibility(View.GONE);
-            txtMonthlySummary.setVisibility(View.GONE);
-        }
+            if (stakeholderID == null) {
+                labelStakeholder.setVisibility(View.GONE);
+                txtStakeholder.setVisibility(View.GONE);
+            } else {
+                labelStakeholder.setVisibility(View.VISIBLE);
+                txtStakeholder.setVisibility(View.VISIBLE);
+                txtStakeholder.setText(Caching.INSTANCE.getStakeholderName(stakeholderID));
+            }
+        } else displayStakeHolderDetails(false);
     }
 
-    public void displayStakeholderDetails(boolean display) {
+    public void displayStakeHolderDetails(boolean display) {
         if (display) stakeholderDetails.setVisibility(View.VISIBLE);
         else {
             stakeholderDetails.setVisibility(View.GONE);

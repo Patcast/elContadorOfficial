@@ -101,7 +101,7 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
             displayInformation();
 
             mainActivity.setTitle(selectedTrans.getTitle());
-            mainActivity.displayStakeHolderDetails(false, "", "", "");
+            mainActivity.displayStakeHolderDetails(false);
         }
         catch (Exception e) {
             Toast.makeText(mainActivity, "Error Loading the information.", Toast.LENGTH_SHORT).show();
