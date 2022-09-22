@@ -53,6 +53,7 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
         holder.parent.setOnClickListener(v -> {
             String chosenAccount = accounts.get(position).getId();
             Caching.INSTANCE.openAccountFully(chosenAccount);
+            Caching.INSTANCE.setChosenAccount(accounts.get(position));
             navController.navigate(R.id.action_accounts_to_allTransactions2);
             }
         );
@@ -60,6 +61,7 @@ public class AccountsRecViewAdapter extends RecyclerView.Adapter<AccountsRecView
         holder.buttonNewTransaction.setOnClickListener(v->{
             String chosenAccount = accounts.get(position).getId();
             Caching.INSTANCE.openQuickNewTransaction(chosenAccount);
+            Caching.INSTANCE.setChosenAccount(accounts.get(position));
             navController.navigate(R.id.action_accounts_to_newTransaction);
         });
     }

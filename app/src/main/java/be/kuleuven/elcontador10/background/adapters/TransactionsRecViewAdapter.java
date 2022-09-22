@@ -2,14 +2,11 @@ package be.kuleuven.elcontador10.background.adapters;
 
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -31,7 +28,6 @@ import be.kuleuven.elcontador10.background.tools.DateFormatter;
 import be.kuleuven.elcontador10.fragments.property.PropertyViewPageHolderDirections;
 import be.kuleuven.elcontador10.fragments.stakeholders.common.StakeholderViewPageHolderDirections;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.AllTransactionsDirections;
-
 
 public class TransactionsRecViewAdapter extends  RecyclerView.Adapter<TransactionsRecViewAdapter.ViewHolder> {
     private List<ProcessedTransaction> allTransactions = new ArrayList<>();
@@ -67,12 +63,13 @@ public class TransactionsRecViewAdapter extends  RecyclerView.Adapter<Transactio
     @Override
     public int getItemCount() { return  allTransactions.size(); }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView textTitle,textAmount,textDate,textNameOfParticipant,textPaidBy,txtEmojiCategory;
-        private ConstraintLayout parent;
-        private ImageView camaraIcon;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final TextView textTitle, textAmount, textDate, textNameOfParticipant,
+                textPaidBy, txtEmojiCategory;
+        private final ConstraintLayout parent;
+        private final ImageView camaraIcon;
 
-        public ViewHolder(@NonNull  View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             camaraIcon = itemView.findViewById(R.id.imageView_camara_icon);
             txtEmojiCategory = itemView.findViewById(R.id.textView_transaction_emoji);
@@ -131,6 +128,5 @@ public class TransactionsRecViewAdapter extends  RecyclerView.Adapter<Transactio
         this.allTransactions.clear();
         this.allTransactions = NewTransactions;
         this.notifyDataSetChanged();
-
     }
 }

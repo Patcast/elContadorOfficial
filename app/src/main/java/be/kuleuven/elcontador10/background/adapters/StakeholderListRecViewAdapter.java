@@ -109,11 +109,15 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
     }
     /////------------
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void setStakeListOnAdapter(List <StakeHolder> stakeholdersListInput) {
         stakeHoldersFull.clear();
         stakeholdersList.clear();
-        this.stakeholdersList.addAll(stakeholdersListInput);
-        stakeHoldersFull.addAll(stakeholdersListInput);
+        List<StakeHolder> stakeHolders = stakeholdersListInput.stream()
+                .filter(e -> !e.isDeleted())
+                .collect(Collectors.toList());
+        this.stakeholdersList.addAll(stakeHolders);
+        stakeHoldersFull.addAll(stakeHolders);
         notifyDataSetChanged();
 
     }

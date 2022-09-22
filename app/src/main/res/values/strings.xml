@@ -301,8 +301,8 @@
     <string name="cannot_open_is_deleted">This transaction is deleted. The details cannot be displayed</string>
     <string-array name="type_of_cash_transaction">
         <item>Any</item>
-        <item>Receivables</item>
         <item>Payables</item>
+        <item>Receivables</item>
     </string-array>
     <string-array name="type_of_transaction">
         <item>CASH</item>
@@ -337,5 +337,15 @@
     <string name="failed_execute_transaction">Failed execute transaction</string>
     <string name="description">Description:</string>
     <string name="no_future">No future transactions here.</string>
+    <string name="reason_to_delete">Reason to delete:</string>
+    <string name="delete_stakeholder_message">Are you sure you want to delete this stakeholder?</string>
+    <string name="delete_stakeholder_title">Delete stakeholder</string>
+    <string name="not_enough_permission_delete">You don\'t have the permission to delete.</string>
+    <string name="stakeholder_deleted">Stakeholder deleted.</string>
+    <string name="stakeholder_delete_fail">Failed to delete stakeholder.</string>
+    <string name="must_choose_ategory">You must choose a category</string>
+    <string name="delete_category">Delete Category</string>
+    <string name="are_you_sure_delete_category">Are you sure you want to delete this category?</string>
+    <string name="stakeholder_settings">Stakeholder\'s settings</string>
 
 </resources>

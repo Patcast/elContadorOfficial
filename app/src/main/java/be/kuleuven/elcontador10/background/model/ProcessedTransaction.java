@@ -1,5 +1,6 @@
 package be.kuleuven.elcontador10.background.model;
 
+import android.app.AlertDialog;
 import android.content.Context;
 
 
@@ -97,15 +98,25 @@ public class ProcessedTransaction implements TransactionInterface {
                 })
                 .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show());
     }
-    public void deleteTransaction(Context context, String deletedBy){
+    public void deleteTransaction(Context context, String deletedBy, String reason){
         isDeleted = true;
         deletedDate = Timestamp.now();
+        notes += (notes.equals(""))? "" : "\n" + context.getString(R.string.reason_to_delete) + " " + reason;
         this.deletedBy = deletedBy;
-        String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
+        String urlNewTransactions = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/transactions";
         db.collection(urlNewTransactions).document(getIdOfTransactionInt())
-                .update("isDeleted", true, "deletedDate", deletedDate, "deletedBy", deletedBy)
+                .update("isDeleted", true,
+                        "deletedDate", deletedDate,
+                        "deletedBy", deletedBy,
+                        "notes", notes)
                 .addOnSuccessListener(aVoid -> successfulDelete(context))
-                .addOnFailureListener(e -> Toast.makeText(context, R.string.failed_delete_transaction, Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e ->
+                    new AlertDialog.Builder(context)
+                        .setTitle(context.getString(R.string.delete_transaction))
+                        .setMessage(context.getString(R.string.failed_delete_transaction))
+                        .setPositiveButton(context.getString(R.string.ok), (dialog, which) -> dialog.dismiss())
+                        .create()
+                        .show());
     }
 
     public void execute(Context context) {
@@ -126,7 +137,12 @@ public class ProcessedTransaction implements TransactionInterface {
     }
 
     public void successfulDelete(Context context){
-        Toast.makeText(context, R.string.transaction_deleted, Toast.LENGTH_SHORT).show();
+        new AlertDialog.Builder(context)
+                .setTitle(context.getString(R.string.delete_transaction))
+                .setMessage(context.getString(R.string.transaction_deleted))
+                .setPositiveButton(context.getString(R.string.ok), (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
         //TODO: delete picture too here
     }
     public void updateImageFromFireBase(ProcessedTransaction newTransactionInput,ImageFireBase ImageSelected,Context context) {

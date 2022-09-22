@@ -66,10 +66,10 @@ public class CategoryDialog extends DialogFragment {
 
     private void deleteCategory() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Delete Category")
-                .setMessage("Are you sure you want to delete this category?")
-                .setPositiveButton("Yes", (dialog, which) ->confirmDelete())
-                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+        builder.setTitle(R.string.delete_category)
+                .setMessage(R.string.are_you_sure_delete_category)
+                .setPositiveButton(R.string.yes, (dialog, which) ->confirmDelete())
+                .setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss())
                 .create()
                 .show();
     }

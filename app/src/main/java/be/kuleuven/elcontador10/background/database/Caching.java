@@ -101,6 +101,7 @@ public enum Caching {
 
     /// ******** Authentication
     private String chosenAccountId;
+    private Account chosenAccount;
     private User logInUser;
     private String chosenMicroAccountId;
 
@@ -226,6 +227,7 @@ public enum Caching {
          roles.clear();
          logInUser = null;
          chosenAccountId = null;
+         chosenAccount = null;
     }
 
     //////// DATA BASE ****************
@@ -252,25 +254,7 @@ public enum Caching {
                 });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void requestDefaultCategories() {
-        db.collection("defaultCategories").
-                addSnapshotListener((value, e) -> {
-                    if (e != null) {
-                        Log.w(TAG, "Listen failed.", e);
-                        return;
-                    }
 
-                    defaultCategories.clear();
-                    for (QueryDocumentSnapshot doc : value) {
-                        if (doc.get("title") != null) {
-                            EmojiCategory myCategory =  doc.toObject(EmojiCategory.class);
-                            myCategory.setId(doc.getId());
-                            defaultCategories.add(myCategory);
-                        }
-                    }
-                });
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestAllUserAccounts(String email){
@@ -346,20 +330,6 @@ public enum Caching {
                 });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private int getBalanceOfStakeholder(List<ScheduledTransaction> transactions, String stakeholderId) {
-        int sum = transactions.stream()
-                .filter(t -> t.getIdOfStakeholder().equals(stakeholderId))
-                .mapToInt(ScheduledTransaction::getTotalAmount)
-                .sum();
-
-        int paid = transactions.stream()
-                .filter(t -> t.getIdOfStakeholder().equals(stakeholderId))
-                .mapToInt(ScheduledTransaction::getAmountPaid)
-                .sum();
-
-        return sum - paid;
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestAccountTransactions(String chosenAccountId){
@@ -518,36 +488,16 @@ public enum Caching {
                 });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setScheduledTransactions(List<ScheduledTransaction> transactions) {
-        scheduledTransactions.clear();
-        scheduledTransactions.addAll(transactions);
 
-        // update balance
-        if (stakeHolders != null && stakeHolders.size() != 0) {
-            for (StakeHolder stakeholder : stakeHolders) {
-                // get past / now scheduled transactions for the stakeholder
-                ArrayList<ScheduledTransaction> stakeholderScheduledTransactions = scheduledTransactions.stream()
-                        .filter(transaction -> transaction.getIdOfStakeholder().equals(stakeholder.getId()))
-                        .filter(transaction -> transaction.getDueDate().getSeconds() <= Timestamp.now().getSeconds())
-                        .collect(Collectors.toCollection(ArrayList::new));
-
-                int sum = stakeholderScheduledTransactions.stream()
-                        .mapToInt(ScheduledTransaction::getTotalAmount)
-                        .sum();
-
-                int paid = stakeholderScheduledTransactions.stream()
-                        .mapToInt(ScheduledTransaction::getAmountPaid)
-                        .sum();
-
-                stakeholder.setEquity(sum - paid);
-            }
-        }
-    }
 
 //////************** end of db
 
     // getters
+
+
+    public Account getChosenAccount() {
+        return chosenAccount;
+    }
 
     public void setChosenAccountId(String chosenAccountId) {
         this.chosenAccountId = chosenAccountId;
@@ -624,10 +574,7 @@ public enum Caching {
                 .findFirst();
         return possibleName.orElse(context.getString(R.string.not_recorded));
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public List<EmojiCategory> getDefaultCategories() {
-        return defaultCategories;
-    }
+
     public List<CategoriesObserver> getCatObservers() {
         return catObservers;
     }
@@ -643,7 +590,6 @@ public enum Caching {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public String getCategoryEmoji(String idCategory) {
         List<EmojiCategory> emojiCategoriesCombo = new ArrayList<>(customCategories);
-        emojiCategoriesCombo.addAll(defaultCategories);
         Optional<String> possibleEmoji = emojiCategoriesCombo.stream()
                 .filter(s -> s.getId().equals(idCategory))
                 .map(EmojiCategory::getIcon)
@@ -653,7 +599,6 @@ public enum Caching {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public String getCategoryTitle(String idCategory) {
         List<EmojiCategory> emojiCategoriesCombo = new ArrayList<>(customCategories);
-        emojiCategoriesCombo.addAll(defaultCategories);
         Optional<String> possibleEmoji = emojiCategoriesCombo.stream()
                 .filter(s -> s.getId().equals(idCategory))
                 .map(EmojiCategory::getTitle)
@@ -676,66 +621,22 @@ public enum Caching {
         else return null;
     }
 
-    public Contract getChosenContract() {
-        return chosenContract;
-    }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public SubContract getSubContractFromID(String id) {
-        Optional<SubContract> subContract = chosenContract.getSubContracts().stream()
-                .filter(s -> s.getId().equals(id))
-                .findFirst();
 
-        return subContract.orElse(null);
-    }
-
-    public SubContract getChosenSubContract() {
-        return chosenSubContract;
-    }
 
     // setters
+
+    public void setChosenAccount(Account chosenAccount) {
+        this.chosenAccount = chosenAccount;
+    }
 
     public void setChosenStakeHolder(StakeHolder chosenStakeHolder) {
         this.chosenStakeHolder = chosenStakeHolder;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setChosenStakeHolder(String chosenStakeHolderID) {
-        chosenStakeHolder = stakeHolders.stream()
-                .filter(t -> t.getId().equals(chosenStakeHolderID))
-                .findFirst().orElse(null);
-    }
 
-    public void setChosenContract(Contract chosenContract) {
-        this.chosenContract = chosenContract;
-    }
 
-    public void setChosenSubContract(SubContract chosenSubContract) {
-        this.chosenSubContract = chosenSubContract;
-    }
-   /* @RequiresApi(api = Build.VERSION_CODES.N)
-    public int getStartingBalances(int month, int year){
-        Optional<Map<String,Integer>> mapOptional = getAccounts().stream()
-                .filter(a->a.getId().equals(chosenAccountId))
-                .map(Account::getMapOfStaringBalances)
-                .findFirst();
-        if(mapOptional.isPresent()){
-          return  mapOptional.get().getOrDefault((""+month+"/"+year),0);
-        }
-        return 0;
-    }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public String getLatestStartingBalance(){
-        Optional<Map<String,Integer>> mapOptional = getAccounts().stream()
-                .filter(a->a.getId().equals(chosenAccountId))
-                .map(Account::getMapOfStaringBalances)
-                .findFirst();
-        if(mapOptional.isPresent()){
-            return  mapOptional.get().keySet().toArray(new String[0])[0];
-        }
-        return "[error loading latest period]";
 
-    }*/
 
     public ScheduledTransaction getScheduledTransactionFromId(String id) {
         for (ScheduledTransaction scheduledTransaction : scheduledTransactions) {
@@ -757,5 +658,9 @@ public enum Caching {
             return propertyList.get(id);
         else
             return "N/A";
+    }
+
+    public boolean checkPermission(String loggedInEmail) {
+        return getChosenAccount().getOwner().equals(loggedInEmail);
     }
 }

@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/title"
             android:inputType="text"
-            app:layout_constraintEnd_toStartOf="@+id/constraintLayout4"
+            app:layout_constraintEnd_toStartOf="@+id/layout_addCategory"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -114,7 +114,7 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout4"
+            android:id="@+id/layout_addCategory"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginRight="10dp"
