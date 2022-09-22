@@ -87,20 +87,21 @@ public class ProcessedTransaction {
 
     }
 
-    public void sendTransaction(ProcessedTransaction newTrans,Context context){
+    public void sendTransaction(ProcessedTransaction newTrans, Context context){
         String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
 
         db.collection(urlNewTransactions)
                 .add(newTrans)
-                .addOnSuccessListener(documentReference -> {
-                    documentReference.update("id",documentReference.getId());
-                })
+                .addOnSuccessListener(documentReference -> documentReference.update("id",documentReference.getId()))
                 .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show());
     }
     public void deleteTransaction(Context context, String deletedBy, String reason){
         isDeleted = true;
         deletedDate = Timestamp.now();
-        notes += (notes.equals(""))? "" : "\n" + context.getString(R.string.reason_to_delete) + " " + reason;
+        notes = notes +
+                ((notes.equals("")) ? "" : " \n") +
+                context.getString(R.string.reason_to_delete) + " \n" +
+                reason;
         this.deletedBy = deletedBy;
         String urlNewTransactions = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/transactions";
         db.collection(urlNewTransactions).document(getIdOfTransactionInt())

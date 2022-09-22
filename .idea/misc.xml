@@ -17,6 +17,7 @@
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/layout/rec_view_item_accounts.xml" value="0.36666666666666664" />
         <entry key="..\:/Uni Stuff Archive/Y2S2/Software Development/Labs/Software-with-ELYONNO/Acaray1.0/app/src/main/res/menu/top_three_buttons_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/drawable/background_buttons.xml" value="0.3675" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/drawable/background_buttons_red.xml" value="0.347" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/drawable/ic_baseline_arrow_drop_up_24.xml" value="0.3675" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/drawable/ic_baseline_business_24.xml" value="0.3675" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/drawable/ic_baseline_camera_alt_24.xml" value="0.3675" />
@@ -24,11 +25,14 @@
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/drawable/ic_export.xml" value="0.3675" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/drawable/icon_contracts.xml" value="0.35" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout-land/fragment_transactions.xml" value="0.17372134038800705" />
-        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/activity_main.xml" value="0.3532608695652174" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/activity_main.xml" value="0.67" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/bottom_menu_all_transactions.xml" value="0.24864130434782608" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/dialog_filter_scheduled_transactions.xml" value="0.30978260869565216" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/dialoge_category_editing.xml" value="0.30978260869565216" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_account_settings.xml" value="0.3776041666666667" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_add_new_account.xml" value="0.3776041666666667" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_add_new_microaccount.xml" value="0.5" />
+        <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_add_new_property.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_all_micro_acounts.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_all_properties.xml" value="0.3776041666666667" />
         <entry key="..\:/Users/yonat/Documents/A Caray/Acaray1.0/app/src/main/res/layout/fragment_all_transactions.xml" value="0.25" />
@@ -75,7 +79,6 @@
         <entry key="app/src/main/res/drawable/ic_edit_gray.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/ic_tag.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/logo.xml" value="0.1415" />
-        <entry key="app/src/main/res/drawable/missing_new_category.xml" value="0.2365" />
         <entry key="app/src/main/res/drawable/new_account_category_outline.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/rec_view_item_accounts_test.xml" value="0.22870370370370371" />
         <entry key="app/src/main/res/font/architects_daughter.xml" value="0.2835897435897436" />
@@ -85,7 +88,6 @@
         <entry key="app/src/main/res/layout/bottom_menu_categories.xml" value="0.335" />
         <entry key="app/src/main/res/layout/bottom_menu_pick_gallery_or_camara.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/cardview_row.xml" value="0.2578125" />
-        <entry key="app/src/main/res/layout/dialog_filter_scheduled_transactions.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/dialoge_category_editing.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_account_settings.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_accounts_bottom_menu.xml" value="0.2578125" />
@@ -97,7 +99,6 @@
         <entry key="app/src/main/res/layout/fragment_all_transactions.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_choose_category.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_choose_stake_holder.xml" value="0.3296398891966759" />
-        <entry key="app/src/main/res/layout/fragment_contract_display.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_contract_new.xml" value="0.1328125" />
         <entry key="app/src/main/res/layout/fragment_contract_new_payment.xml" value="0.1328125" />
         <entry key="app/src/main/res/layout/fragment_contract_new_sub_contract.xml" value="0.2578125" />
@@ -109,7 +110,6 @@
         <entry key="app/src/main/res/layout/fragment_properties.xml" value="0.2014388489208633" />
         <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_transaction_display.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/fragment_transaction_future_new.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_transaction_new.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_view_pager_holder.xml" value="0.18796296296296297" />
         <entry key="app/src/main/res/layout/item_loading.xml" value="0.2388888888888889" />
@@ -127,8 +127,6 @@
         <entry key="app/src/main/res/menu/all_transactions_menu.xml" value="0.2578125" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.2578125" />
         <entry key="app/src/main/res/menu/top_three_buttons_menu.xml" value="0.1" />
-        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1015" />
-        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1015" />
         <entry key="app/src/main/res/xml/file_paths.xml" value="0.1" />
       </map>
     </option>

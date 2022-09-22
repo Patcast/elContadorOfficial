@@ -108,7 +108,7 @@ public enum Exporter {
         HSSFRow row = sheet.createRow(0);
         row.setHeight((short) -1);
         HSSFCell cell = row.createCell(0);
-        cell.setCellValue(mainActivity.getString(R.string.summary_of, Caching.INSTANCE.getAccountName(), monthYear));
+        cell.setCellValue(mainActivity.getString(R.string.summary_of, Caching.INSTANCE.getAccountName().toUpperCase(), monthYear));
         cell.setCellStyle(styleTitle);
 
         row = sheet.createRow(2);
