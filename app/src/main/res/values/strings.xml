@@ -352,5 +352,6 @@
     <string name="delete_property_message">Are you sure you want to delete this property?</string>
     <string name="property_delete_fail">Failed to delete property.</string>
     <string name="property_deleted">Property deleted.</string>
+    <string name="vacant">Vacant</string>
 
 </resources>

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
@@ -39,9 +40,9 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
     private ViewModel_NewTransaction viewModel;
 
     public PropertiesListRecViewAdapter(View viewFromHostingClass, String TAG, ViewModel_NewTransaction viewModel) {
-            this.viewFromHostingClass = viewFromHostingClass;
-            this.viewModel= viewModel;
-            prevTAG = TAG;
+        this.viewFromHostingClass = viewFromHostingClass;
+        this.viewModel= viewModel;
+        prevTAG = TAG;
     }
 
     public PropertiesListRecViewAdapter(View viewFromHostingClass) {
@@ -64,11 +65,6 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
         holder.textName.setText(property.getName());
 
         if(prevTAG==null){
-            if (property.getStakeholder() != null) {
-                holder.textRole.setText(Caching.INSTANCE.getStakeholderName(property.getStakeholder()));
-                holder.textRole.setVisibility(View.VISIBLE);
-            }
-
             holder.textReceivables.setVisibility(View.VISIBLE);
             holder.textViewPayables.setVisibility(View.VISIBLE);
             long receivables = property.getSumOfReceivables();
@@ -89,7 +85,8 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
             else holder.textViewPayables.setVisibility(View.GONE);
 
             holder.parent.setOnClickListener(view -> {
-                PropertiesListDirections.ActionPropertiesListToPropertyViewPageHolder action = PropertiesListDirections.actionPropertiesListToPropertyViewPageHolder(property);
+                PropertiesListDirections.ActionPropertiesListToPropertyViewPageHolder action =
+                        PropertiesListDirections.actionPropertiesListToPropertyViewPageHolder(property);
                 navController.navigate(action);
             });
 
@@ -103,6 +100,12 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
             }
             );
         }
+
+        if (property.getStakeholder() == null)
+            holder.textRole.setText(R.string.vacant);
+        else
+            holder.textRole.setText(Caching.INSTANCE.getStakeholderName(property.getStakeholder()));
+        holder.textRole.setVisibility(View.VISIBLE);
 
     }
     @Override
@@ -152,29 +155,46 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
             return filter;
         }
 
-        Filter filter = new Filter() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                List<Property> collectionFiltered = new ArrayList<>();
-                if (constraint.toString().isEmpty()) {
-                    collectionFiltered.addAll(propertyListFull);
-                }
-                else {
-                    collectionFiltered
-                            .addAll(propertyListFull
-                                    .stream()
-                                    .filter(i -> i.getName().toLowerCase().contains(constraint.toString().toLowerCase()))
-                                    .collect(Collectors.toList()));
-                }
-                FilterResults filterResults = new FilterResults();
-                filterResults.values = collectionFiltered;
-                return filterResults;
+    private final PropertyFilter filter = new PropertyFilter();
+
+    public class PropertyFilter extends Filter {
+        String vacant;
+
+        public void setVacant(String vacant) {
+            this.vacant = vacant;
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Property> collectionFiltered = new ArrayList<>();
+            if (constraint.toString().isEmpty()) {
+                collectionFiltered.addAll(propertyListFull);
             }
-            @Override
-            protected void publishResults (CharSequence constraint, FilterResults results){
-                propertyList.clear();
+            else {
+                String search = constraint.toString().toLowerCase();
+
+
+                collectionFiltered.addAll(propertyListFull
+                        .stream()
+                        .filter(i -> i.getName().toLowerCase().contains(search) ||
+                                (i.getStakeholder() != null && Caching.INSTANCE.getStakeholderName(i.getStakeholder()).toLowerCase().contains(search)) ||
+                                (i.getStakeholder() == null && vacant.toLowerCase().contains(search))
+                        )
+                        .collect(Collectors.toList())
+                );
+            }
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = collectionFiltered;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults (CharSequence constraint, FilterResults results) {
+            propertyList.clear();
+            if (results.values != null)
                 propertyList.addAll((Collection<? extends Property>) results.values);
-                notifyDataSetChanged();
-            }};
+            notifyDataSetChanged();
+        }
+    };
 }

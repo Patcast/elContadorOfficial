@@ -150,7 +150,10 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
+                PropertiesListRecViewAdapter.PropertyFilter filter =
+                        (PropertiesListRecViewAdapter.PropertyFilter) adapter.getFilter();
+                filter.setVacant(getString(R.string.vacant));
+                filter.filter(newText);
                 return false;
             }
         });
