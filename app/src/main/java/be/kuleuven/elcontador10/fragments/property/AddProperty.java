@@ -1,6 +1,7 @@
 package be.kuleuven.elcontador10.fragments.property;
 
 
+import android.app.AlertDialog;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
@@ -32,11 +34,13 @@ import be.kuleuven.elcontador10.MainActivity;
 import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
+import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 public class AddProperty extends Fragment {
     private NavController navController;
-    private TextView inputName, inputStakeholder, txtWordsCounterTitle;
+    private EditText inputName;
+    private TextView inputStakeholder, counterName;
 
     private ViewModel_NewTransaction viewModelTransaction;
     private StakeHolder chosenStakeholder;
@@ -51,7 +55,7 @@ public class AddProperty extends Fragment {
 
         mainActivity = (MainActivity) requireActivity();
         inputName = view.findViewById(R.id.text_name_new_property);
-        txtWordsCounterTitle = view.findViewById(R.id.text_counter_new_property);
+        counterName = view.findViewById(R.id.text_counter_new_property);
         inputStakeholder = view.findViewById(R.id.text_stakeholder_new_property);
         inputStakeholder.setOnClickListener(view1 ->
                 navController.navigate(R.id.action_addProperty_to_chooseStakeHolderDialog));
@@ -84,6 +88,7 @@ public class AddProperty extends Fragment {
         }
 
         setTopMenu();
+        new MaxWordsCounter(20, inputName, counterName, getContext());
     }
 
     private void setTopMenu(){
@@ -126,8 +131,8 @@ public class AddProperty extends Fragment {
         String name = inputName.getText().toString();
 
         if (name.isEmpty()) {
-            txtWordsCounterTitle.setText(R.string.warning_new_properties);
-            txtWordsCounterTitle.setTextColor(ResourcesCompat.getColor(getResources(),R.color.light_red_warning,null));
+            counterName.setText(R.string.warning_new_properties);
+            counterName.setTextColor(ResourcesCompat.getColor(getResources(),R.color.light_red_warning,null));
         }
         else {
             if (chosenProperty == null) {
@@ -152,7 +157,26 @@ public class AddProperty extends Fragment {
     }
 
     private void onDelete_Clicked() {
-
+        if (Caching.INSTANCE.checkPermission(mainActivity.returnSavedLoggedEmail()))
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.delete_property_title)
+                    .setMessage(R.string.delete_property_message)
+                    .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
+                        Property.deleteProperty(chosenProperty, getContext());
+                        navController.popBackStack();
+                        navController.popBackStack();
+                        dialogInterface.dismiss();
+                    })
+                    .setNegativeButton(R.string.no, (dialogInterface, i) -> dialogInterface.dismiss())
+                    .create()
+                    .show();
+        else
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.delete_property_title)
+                    .setMessage(R.string.not_enough_permission_delete)
+                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
+                    .create()
+                    .show();
     }
 
 }

@@ -13,6 +13,8 @@ public class MaxWordsCounter {
 
     public MaxWordsCounter(int maxWord,EditText inputEdText, TextView wordCounterText,Context inputContext) {
         setWordCounter(maxWord,inputEdText,wordCounterText,inputContext);
+        String init = "0/" + maxWord;
+        wordCounterText.setText(init);
     }
 
     private void setWordCounter(int maxWords,EditText writingEdText, TextView displayText, Context context){

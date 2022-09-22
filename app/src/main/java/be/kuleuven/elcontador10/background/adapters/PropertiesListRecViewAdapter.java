@@ -132,8 +132,16 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
     public void setPropertyListOnAdapter(List <Property> propertiesListInput) {
             propertyListFull.clear();
             propertyList.clear();
-            this.propertyList.addAll(propertiesListInput.stream().sorted(Comparator.comparing(Property::getName)).collect(Collectors.toList()));
-            propertyListFull.addAll(propertiesListInput.stream().sorted(Comparator.comparing(Property::getName)).collect(Collectors.toList()));
+            this.propertyList.addAll(propertiesListInput
+                    .stream()
+                    .filter(property -> !property.isDeleted())
+                    .sorted(Comparator.comparing(Property::getName))
+                    .collect(Collectors.toList()));
+            propertyListFull.addAll(propertiesListInput
+                    .stream()
+                    .filter(property -> !property.isDeleted())
+                    .sorted(Comparator.comparing(Property::getName))
+                    .collect(Collectors.toList()));
 
             notifyDataSetChanged();
 

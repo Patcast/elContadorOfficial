@@ -1,5 +1,7 @@
 package be.kuleuven.elcontador10.background.model;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,6 +12,7 @@ import androidx.annotation.RequiresApi;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.Caching;
 
 public class Property  implements Parcelable {
@@ -26,6 +29,7 @@ public class Property  implements Parcelable {
     private String name;
     private String id;
     private String stakeholder;
+    private boolean deleted;
 
     public Property(String name,String idOfStakeholder) {
         this.stakeholder = idOfStakeholder;
@@ -84,6 +88,32 @@ public class Property  implements Parcelable {
                 .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
     }
 
+    public static void deleteProperty(Property chosenProperty, Context context) {
+        chosenProperty.setDeleted(true);
+
+        String url = "/accounts/" + Caching.INSTANCE.getChosenAccountId() + "/properties/" + chosenProperty.getId();
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.document(url)
+                .update("deleted", true)
+                .addOnSuccessListener(documentReference ->
+                        new AlertDialog.Builder(context)
+                                .setTitle(R.string.delete_property_title)
+                                .setMessage(R.string.property_deleted)
+                                .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
+                                .create()
+                                .show())
+                .addOnFailureListener(e -> {
+                    Log.w(TAG, "Error editing document", e);
+                    new AlertDialog.Builder(context)
+                            .setTitle(R.string.delete_property_title)
+                            .setMessage(R.string.property_delete_fail)
+                            .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
+                            .create()
+                            .show();
+                });
+    }
+
 
     public String getName() {
         return name;
@@ -139,6 +169,14 @@ public class Property  implements Parcelable {
 
     public void setStakeholder(String stakeholder) {
         this.stakeholder = stakeholder;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
     @Override

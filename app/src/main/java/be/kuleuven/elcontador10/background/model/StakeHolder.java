@@ -208,7 +208,7 @@ public class StakeHolder implements Parcelable {
                                 .create()
                                 .show())
                 .addOnFailureListener(e -> {
-                    Log.w(TAG, "Error adding document", e);
+                    Log.w(TAG, "Error editing document", e);
                     new AlertDialog.Builder(context)
                             .setTitle(R.string.delete_stakeholder_title)
                             .setMessage(R.string.stakeholder_delete_fail)
