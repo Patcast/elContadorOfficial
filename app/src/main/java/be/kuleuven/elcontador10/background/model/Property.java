@@ -14,6 +14,8 @@ import be.kuleuven.elcontador10.background.database.Caching;
 
 public class Property  implements Parcelable {
     private static final String TAG = "Add property fragment";
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
     private long equity;
     private long cash;
@@ -23,11 +25,13 @@ public class Property  implements Parcelable {
     private long sumOfPayablesPending;
     private long sumOfReceivablesPending;
 
+    private String idOfStakeholder;
     private String name;
     private String id;
     private String stakeholder;
 
-    public Property(String name) {
+    public Property(String name,String idOfStakeholder) {
+        this.idOfStakeholder = idOfStakeholder;
         this.name = name;
     }
 

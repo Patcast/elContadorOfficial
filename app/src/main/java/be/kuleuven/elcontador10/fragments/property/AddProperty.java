@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +30,9 @@ import be.kuleuven.elcontador10.activities.MainActivity;
 import be.kuleuven.elcontador10.background.database.Caching;
 import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
+import be.kuleuven.elcontador10.background.model.StakeHolder;
+import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 public class AddProperty extends Fragment {
@@ -103,7 +109,8 @@ public class AddProperty extends Fragment {
         String name = inputName.getText().toString();
 
         if (name.isEmpty()) {
-            Toast.makeText(getActivity(), getString(R.string.warning_new_properties), Toast.LENGTH_LONG).show();
+            txtWordsCounterTitle.setText(R.string.warning_new_properties);
+            txtWordsCounterTitle.setTextColor(ResourcesCompat.getColor(getResources(),R.color.light_red_warning,null));
         }
         else {
             if (chosenProperty == null) {

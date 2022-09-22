@@ -247,8 +247,8 @@
     <string name="Access_denied">Acceso denegado para </string>
     <string-array name="type_of_cash_transaction">
         <item>Otros</item>
-        <item>Cuenta por pagar</item>
-        <item>Cuenta por cobrar</item>
+        <item>Por pagar</item>
+        <item>Por cobrar</item>
     </string-array>
     <string-array name="frequency">
         <item>Una vez</item>
@@ -297,4 +297,28 @@
     <string name="transaction_executed">Transacción futura devengada</string>
     <string name="failed_delete_transaction">Error al eliminar transacción</string>
     <string name="failed_execute_transaction">"Error al devengar la transacción "</string>
+    <string name="must_choose_ategory">Favor de elegir una categoría</string>
+    <string name="stakeholder_delete_fail">Error al eliminar a un participante</string>
+    <string name="stakeholder_deleted">Participante eliminado.</string>
+    <string name="not_enough_permission_delete">"Su usuario no puede eliminar lo deseado. "</string>
+    <string name="delete_stakeholder_title">Eliminar Participante.</string>
+    <string name="delete_stakeholder_message">Estas seguro que quieres eliminar al participante.</string>
+    <string name="reason_to_delete">¿Por qué deseas eliminarla?</string>
+    <string name="no_future">No hay transacciones futuras</string>
+    <string name="description">"Descripción "</string>
+    <string name="starting_date">Fecha de inicio</string>
+    <string name="check_errors">Favor de revisar por errores.</string>
+    <string name="fully_paid">Pago completado</string>
+    <string name="input_amount_to_pay">none</string>
+    <string name="amount_left">none</string>
+    <string name="amount_paid">none</string>
+    <string name="total_amount_to_pay">none</string>
+    <string name="analytics">Analisis</string>
+    <string name="hello_blank_fragment">none</string>
+    <string name="error_period">none</string>
+    <string name="error_no_payments_can_be_made">none</string>
+    <string name="no_contracts">none</string>
+    <string name="delete_category">"Eliminar Categoría "</string>
+    <string name="are_you_sure_delete_category">Favor de confirmar si desea eliminar la categoría</string>
+    <string name="stakeholder_settings">Ajustes del participante</string>
 </resources>

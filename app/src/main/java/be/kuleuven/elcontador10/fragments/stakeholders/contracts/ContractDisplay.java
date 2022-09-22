@@ -48,7 +48,7 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
     private MainActivity mainActivity;
     private NavController navController;
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -111,7 +111,7 @@ public class ContractDisplay extends Fragment implements Caching.MicroAccountCon
     public void notifyMicroAccountContractsObserver(List<Contract> contracts) {
         contract = Caching.INSTANCE.getContractFromId(contractId);
         if (contract != null) {
-            Caching.INSTANCE.setChosenContract(contract);
+            //Caching.INSTANCE.setChosenContract(contract);
             String name = Caching.INSTANCE.getStakeholderName(contract.getMicroAccount());
 
             // set up header

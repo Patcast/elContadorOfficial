@@ -1,7 +1,9 @@
 package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,11 +20,14 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -61,15 +66,12 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
     ImageFireBase imageSelected;
     StakeHolder selectedStakeHolder;
     Property selectedProperty;
-    String idCatSelected;
-    String additional_transaction;
+    String idCatSelected,additional_transaction;
+    ConstraintLayout categoryLayout;
     List <String>trans_type = new ArrayList<>();
     private final String TAG  = "TransactionNew";
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -110,6 +112,7 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         txtWordsCounterNotes = view.findViewById(R.id.text_newTransaction_wordCounter_notes);
         txtMustHaveAmount = view.findViewById(R.id.textView_fillAmount);
         Button confirmButton = view.findViewById(R.id.btn_confirm_NewTransaction);
+        categoryLayout= view.findViewById(R.id.layout_addCategory);
         // listeners
         txtStakeHolder.setOnClickListener(v -> { navController.navigate(R.id.action_newTransaction_to_chooseStakeHolderDialog); });
         txt_property_selected.setOnClickListener(v->lookForProperty());
@@ -126,7 +129,6 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         navController.navigate(action);
     }
 
-
     public void onCategory_Clicked(View view) {
         TransactionNewDirections.ActionNewTransactionToChooseCategory action =
                 TransactionNewDirections.actionNewTransactionToChooseCategory(true);
@@ -140,7 +142,6 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         new MaxWordsCounter(8,txtAmount,txtMustHaveAmount,getContext());
 
     }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -151,11 +152,6 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
     }
 
 
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -202,6 +198,7 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         }
         else{
             if(emojiCategory.getIcon()!=null){
+                categoryLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.new_account_category_outline,null));
                 idCatSelected= emojiCategory.getId();
                 btnAddCategory.setVisibility(View.GONE);
                 txtEmojiCategory.setVisibility(View.VISIBLE);
@@ -211,21 +208,26 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
     }
 
     private void confirmTransaction(){
-
         String amount = txtAmount.getText().toString() ;
-        if ( amount.isEmpty()||Integer.parseInt(amount) == 0) {
-            txtMustHaveAmount.setVisibility(View.VISIBLE);
-            txtMustHaveAmount.setText(R.string.this_field_is_requiered);
-        }
-        else{
-            txtMustHaveAmount.setVisibility(View.GONE);
+
+
+        if ( (txtTitle.getText().toString().length()==0) || (amount.isEmpty()) || (Integer.parseInt(amount) == 0) || (idCatSelected==null) ){
             if (txtTitle.getText().toString().length()==0 ) {
                 txtWordsCounterTitle.setText(R.string.this_field_is_requiered);
                 txtWordsCounterTitle.setTextColor(getResources().getColor(R.color.light_red_warning));
+            }else txtMustHaveAmount.setVisibility(View.GONE);
+            if ( amount.isEmpty()||Integer.parseInt(amount) == 0) {
+                txtMustHaveAmount.setVisibility(View.VISIBLE);
+                txtWordsCounterTitle.setTextColor(getResources().getColor(R.color.light_red_warning));
+                txtMustHaveAmount.setText(R.string.this_field_is_requiered);
             }
-            else{
-                makeNewTrans();
+            if(idCatSelected==null){
+                categoryLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.missing_new_category,null));
+                Toast.makeText(mainActivity, R.string.must_choose_ategory, Toast.LENGTH_LONG).show();
             }
+        }
+        else{
+            makeNewTrans();
         }
     }
 

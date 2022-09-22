@@ -26,7 +26,7 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 
 public enum Exporter {
     INSTANCE;
-    String TAG = "Excel Export";
+    final String TAG = "Excel Export";
 
     private HSSFCellStyle styleTitle;
     private HSSFCellStyle styleBold;
@@ -224,7 +224,7 @@ public enum Exporter {
         List<ProcessedTransaction> income = processed.stream()
                 .filter(i -> !i.getIsDeleted())
                 .filter(i -> i.getTotalAmount() > 0)
-                .filter(i -> !i.getType().contains(Caching.INSTANCE.TYPE_PENDING))  // not completed
+                .filter(i -> i.getType().contains(Caching.INSTANCE.TYPE_CASH))
                 .collect(Collectors.toList());
 
         int counter = 1;    // start from row 1
@@ -304,7 +304,7 @@ public enum Exporter {
         List<ProcessedTransaction> expenses = processed.stream()
                 .filter(i -> !i.getIsDeleted())
                 .filter(i -> i.getTotalAmount() < 0)
-                .filter(i -> !i.getType().contains(Caching.INSTANCE.TYPE_PENDING))
+                .filter(i -> i.getType().contains(Caching.INSTANCE.TYPE_CASH))
                 .collect(Collectors.toList());
 
         int counter = 1;    // start from row 1
@@ -344,9 +344,9 @@ public enum Exporter {
     }
 
     /*
-     *  Stakeholder | Payables | Receivables | Equity | Cash in | Cash out
-     *  ------------|----------|-------------|--------|---------|---------
-     *              |          |             |        |         |
+     *  Stakeholder | Payables | Receivables | Cash in | Cash out | Net cash
+     *  ------------|----------|-------------|---------|----------|---------
+     *              |          |             |         |          |
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void stakeholderSheet(HSSFWorkbook workbook) {
@@ -375,22 +375,14 @@ public enum Exporter {
         cell.setCellStyle(styleBold);
 
         cell = row.createCell(3);
-        cell.setCellValue(fragment.getString(R.string.equity_excel));
-        cell.setCellStyle(styleBold);
-
-        cell = row.createCell(4);
         cell.setCellValue(fragment.getString(R.string.cash_in));
         cell.setCellStyle(styleBold);
 
-        cell = row.createCell(5);
+        cell = row.createCell(4);
         cell.setCellValue(fragment.getString(R.string.cash_out));
         cell.setCellStyle(styleBold);
 
-        cell = row.createCell(6);
-        cell.setCellValue(fragment.getString(R.string.cash));
-        cell.setCellStyle(styleBold);
-
-        cell = row.createCell(7);
+        cell = row.createCell(5);
         cell.setCellValue(fragment.getString(R.string.cash));
         cell.setCellStyle(styleBold);
 
@@ -409,10 +401,6 @@ public enum Exporter {
             cell.setCellValue(stakeHolder.getSumOfReceivables());
             cell.setCellStyle(styleCurrency);
 
-            cell = row.createCell(3);
-            cell.setCellValue(stakeHolder.getEquity());
-            cell.setCellStyle(styleCurrency);
-
             int sumIn = processed
                     .stream()
                     .filter(i -> i.getIdOfStakeInt().equals(stakeHolder.getId()))
@@ -423,7 +411,7 @@ public enum Exporter {
                     .filter(totalAmount -> totalAmount > 0)
                     .reduce(0, Integer::sum);
 
-            cell = row.createCell(4);
+            cell = row.createCell(3);
             cell.setCellValue(sumIn);
             cell.setCellStyle(styleCurrency);
 
@@ -437,13 +425,13 @@ public enum Exporter {
                     .filter(totalAmount -> totalAmount < 0)
                     .reduce(0, Integer::sum));
 
-            cell = row.createCell(5);
+            cell = row.createCell(4);
             cell.setCellValue(sumOut);
             cell.setCellStyle(styleCurrency);
 
             int sum = sumIn - sumOut;
 
-            cell = row.createCell(6);
+            cell = row.createCell(5);
             cell.setCellValue(sum);
             cell.setCellStyle(styleCurrency);
 
