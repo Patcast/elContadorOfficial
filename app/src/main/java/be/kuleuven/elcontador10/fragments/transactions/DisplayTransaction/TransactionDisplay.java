@@ -68,7 +68,6 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
     CamaraSetUp camara;
 
     boolean isLoading;
-    boolean isDeleted;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -310,7 +309,7 @@ public class TransactionDisplay extends Fragment implements EasyPermissions.Perm
             Toast.makeText(getContext(), R.string.not_delete_past_transactions, Toast.LENGTH_LONG).show();
         }
         else {
-            selectedTrans.deleteTransaction(getContext(), mainActivity.returnSavedLoggedEmail(), reason);
+            selectedTrans.deleteTransaction(requireContext(), mainActivity.returnSavedLoggedEmail(), reason);
         }
     }
 

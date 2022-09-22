@@ -7,8 +7,11 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.firestore.FieldValue;
@@ -28,21 +32,19 @@ import be.kuleuven.elcontador10.background.adapters.AccountSettingsRecViewAdapte
 import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.Account;
 
-
 public class accountSettings extends Fragment {
+    private EditText edTextNewEmail;
+    private TextView textEmailWarning;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private NavController navController;
 
-
-    EditText edTextNewEmail;
-    TextView textEmailWarning;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
     private AccountSettingsRecViewAdapter adapter_custom;
     private MainActivity mainActivity;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainActivity = (MainActivity) getActivity();
+        mainActivity = (MainActivity) requireActivity();
         mainActivity.setHeaderText(getString(R.string.account_settings));
     }
 
@@ -57,16 +59,16 @@ public class accountSettings extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        navController = Navigation.findNavController(view);
+
         edTextNewEmail = view.findViewById(R.id.edTextEmailPart);
         Button btnAddEmail = view.findViewById(R.id.butAddEmail);
         RecyclerView recUsersOfAccount = view.findViewById(R.id.recParticipants);
         TextView textAccountName = view.findViewById(R.id.textAccountName);
         textEmailWarning = view.findViewById(R.id.textEmailWarning);
 
-
-
         recUsersOfAccount.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        adapter_custom = new AccountSettingsRecViewAdapter(getContext(), mainActivity.returnSavedLoggedEmail());
+        adapter_custom = new AccountSettingsRecViewAdapter(requireContext(), mainActivity.returnSavedLoggedEmail());
         recUsersOfAccount.setAdapter(adapter_custom);
 
         textAccountName.setText(Caching.INSTANCE.getAccountName());
@@ -74,13 +76,99 @@ public class accountSettings extends Fragment {
 
         ViewModel_AccountSettings viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AccountSettings.class);
         viewModel.requestAccountUsers();
-        viewModel.getAccount().observe(getViewLifecycleOwner(), v->updateAccount(v));
+        viewModel.getAccount().observe(getViewLifecycleOwner(), this::updateAccount);
+
+        view.findViewById(R.id.delete_account).setOnClickListener(this::onDeleteClick);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void onDeleteClick(View view) {
+        if (Caching.INSTANCE.checkPermission(mainActivity.returnSavedLoggedEmail())) {
+            String accountName = Caching.INSTANCE.getAccountName();
+
+            final LinearLayout layout = new LinearLayout(requireContext());
+            layout.setOrientation(LinearLayout.VERTICAL);
+            int dp = (int) (getResources().getDisplayMetrics().density * 24 + 0.5f);
+            layout.setPadding(dp, 0, dp, 0);
+
+            final EditText confirmText = new EditText(requireContext());
+            confirmText.setHint(accountName);
+
+            final TextView failLabel = new TextView(requireContext());
+            failLabel.setVisibility(View.INVISIBLE);
+
+            layout.addView(confirmText);
+            layout.addView(failLabel);
+
+            final AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.delete_account)
+                    .setMessage(getString(R.string.delete_account_prompt, accountName))
+                    .setView(layout)
+                    .setPositiveButton(R.string.yes, null)
+                    .setNegativeButton(R.string.no, (dialogInterface, i) -> dialogInterface.dismiss())
+                    .create();
+
+            dialog.setOnShowListener(dialogInterface -> {
+                Button confirm = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                confirm.setOnClickListener(view1 -> {
+                    String prompt = confirmText.getText().toString();
+
+                    if (accountName.equals(prompt)) {
+                        failLabel.setVisibility(View.INVISIBLE);
+                        onDeleteLastWarning(accountName);
+                        dialog.dismiss();
+                    } else {
+                        failLabel.setVisibility(View.VISIBLE);
+                        failLabel.setTextColor(ResourcesCompat.getColor(getResources(), R.color.light_red_warning, null));
+                        failLabel.setText(R.string.delete_account_fail_mismatch);
+                    }
+                });
+            });
+
+            dialog.show();
+        } else new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.delete_account)
+                .setMessage(R.string.not_enough_permission_delete)
+                .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
+                .create()
+                .show();
+    }
+
+    private void onDeleteLastWarning(String accountName) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.delete_account)
+                .setMessage(getString(R.string.delete_accout_last_warning, accountName))
+                .setPositiveButton(R.string.yes, (dialogInterface, i) -> onDeleteConfirm())
+                .setNegativeButton(R.string.no, (dialogInterface, i) -> dialogInterface.dismiss())
+                .create()
+                .show();
+    }
+
+    private void onDeleteConfirm() {
+        db.document("accounts/" + Caching.INSTANCE.getChosenAccountId())
+                .delete()
+                .addOnSuccessListener(onSuccessListener -> {
+                    new AlertDialog.Builder(requireContext())
+                            .setTitle(R.string.delete_account)
+                            .setMessage(R.string.account_deleted)
+                            .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
+                            .create()
+                            .show();
+
+                    navController.navigate(R.id.action_accountSettings_to_accounts);
+                })
+                .addOnFailureListener(error ->
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle(R.string.delete_account)
+                                .setMessage(R.string.delete_account_fail)
+                                .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
+                                .create()
+                                .show());
     }
 
     private void updateAccount(Account account) {
         adapter_custom.setUsers(account.getUsers(),account.getOwner());
     }
-
 
     private void verifyEmailToAdd() {
         String emailToAdd = edTextNewEmail.getText().toString();
@@ -97,11 +185,10 @@ public class accountSettings extends Fragment {
                     .show();
         }
     }
+
     private void addEmail(String emailToAdd){
         textEmailWarning.setVisibility(View.GONE);
         db.collection("accounts").document(Caching.INSTANCE.getChosenAccountId()).update("users", FieldValue.arrayUnion(emailToAdd));
         edTextNewEmail.setText("");
     }
-
-
 }

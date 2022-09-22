@@ -179,7 +179,12 @@
         android:id="@+id/accountSettings"
         android:name="be.kuleuven.elcontador10.fragments.accounts.accountSettings"
         android:label="fragment_account_settings"
-        tools:layout="@layout/fragment_account_settings" />
+        tools:layout="@layout/fragment_account_settings" >
+        <action
+            android:id="@+id/action_accountSettings_to_accounts"
+            app:destination="@id/accounts"
+            app:popUpTo="@id/accounts" />
+    </fragment>
     <fragment
         android:id="@+id/propertiesList"
         android:name="be.kuleuven.elcontador10.fragments.property.PropertiesList"
