@@ -215,7 +215,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
                 payables.loadMore();
                 break;
             default:
-                Toast.makeText(mainActivity, R.string.no_future, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mainActivity, R.string.no_future, Toast.LENGTH_LONG).show();
                 break;
         }
     }

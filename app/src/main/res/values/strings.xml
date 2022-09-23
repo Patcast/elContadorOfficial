@@ -287,7 +287,7 @@
     <string name="add_future_transaction">Add future transaction</string>
     <string name="new_future_transaction">New Future Transaction</string>
     <string name="choose">Choose</string>
-    <string name="receivable_of">\"Rec. of \"</string>
+    <string name="receivable_of">Rec. of </string>
     <string name="payable_of">Pay. of</string>
     <string name="balance_stake">Balance:</string>
     <string name="f_transaction_for">\"Future transaction for \"</string>
@@ -359,5 +359,9 @@
     <string name="delete_accout_last_warning">Are you sure you want to delete %1$s? This action cannot be undone.</string>
     <string name="account_deleted">Account deleted.</string>
     <string name="delete_account_fail">Failed to delete account.</string>
+    <string name="photo_added">Photo added</string>
+    <string name="photo_delete_fail">Photo failed to delete, please try again</string>
+    <string name="delete_photo_title">Delete Photo</string>
+    <string name="image_upload">Image Upload</string>
 
 </resources>
