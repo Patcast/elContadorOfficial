@@ -41,7 +41,7 @@ public class AccountSettingsModel {
     }
     public boolean deleteAccountUser(){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Confirm delete user")
+        builder.setTitle(R.string.confirm_user_deletion)
                 .setMessage(context.getString(R.string.new_owner_1)+" "+subjectsEmail+" "+context.getString(R.string.delete_user2))
                 .setPositiveButton(R.string.yes, (dialog, which) ->executeDeleteAccountUser())
                 .setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss())

@@ -8,7 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -16,6 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -69,7 +74,7 @@ public class accountSettings extends Fragment {
         textEmailWarning = view.findViewById(R.id.textEmailWarning);
 
         recUsersOfAccount.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        adapter_custom = new AccountSettingsRecViewAdapter(requireContext(), mainActivity.returnSavedLoggedEmail());
+        adapter_custom = new AccountSettingsRecViewAdapter(mainActivity.returnSavedLoggedEmail());
         recUsersOfAccount.setAdapter(adapter_custom);
 
         textAccountName.setText(Caching.INSTANCE.getAccountName());
@@ -78,10 +83,30 @@ public class accountSettings extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AccountSettings.class);
         viewModel.requestAccountUsers();
         viewModel.getAccount().observe(getViewLifecycleOwner(), this::updateAccount);
-
-        view.findViewById(R.id.delete_account).setOnClickListener(this::onDeleteClick);
+        setTopMenu();
     }
 
+    private void setTopMenu(){
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
+                menu.findItem(R.id.menu_delete).setVisible(true);
+            }
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+
+                    case R.id.menu_delete:
+                        onDeleteClick();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -89,7 +114,7 @@ public class accountSettings extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void onDeleteClick(View view) {
+    private void onDeleteClick() {
         if (Caching.INSTANCE.checkPermission(mainActivity.returnSavedLoggedEmail())) {
             String accountName = Caching.INSTANCE.getAccountName();
 

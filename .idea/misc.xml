@@ -87,7 +87,7 @@
         <entry key="app/src/main/res/layout/cardview_row.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/dialog_filter_scheduled_transactions.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/dialoge_category_editing.xml" value="0.2578125" />
-        <entry key="app/src/main/res/layout/fragment_account_settings.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_account_settings.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_accounts_bottom_menu.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_add_new_account.xml" value="0.14907407407407408" />
         <entry key="app/src/main/res/layout/fragment_add_new_microaccount.xml" value="0.2578125" />

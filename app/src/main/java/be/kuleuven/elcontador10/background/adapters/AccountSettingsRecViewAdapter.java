@@ -23,15 +23,13 @@ import be.kuleuven.elcontador10.background.model.AccountSettingsModel;
 public class AccountSettingsRecViewAdapter extends RecyclerView.Adapter<AccountSettingsRecViewAdapter.ViewHolder> {
     private final ArrayList<String> listOfUsers = new ArrayList<>();
     private String owner = "";
-
-    private Context context;
-    private final String loggedInUser;
-    public AccountSettingsRecViewAdapter(Context context,String loggedInUser) {
-        this.context = context;
-        this.loggedInUser= loggedInUser;
-        sharingStatuses = context.getResources().getStringArray(R.array.sharing_status);
-    }
     String[] sharingStatuses;
+    private final String loggedInUser;
+
+    public AccountSettingsRecViewAdapter(String loggedInUser) {
+        this.loggedInUser= loggedInUser;
+    }
+
 
     @NonNull
     @Override
@@ -43,6 +41,7 @@ public class AccountSettingsRecViewAdapter extends RecyclerView.Adapter<AccountS
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void onBindViewHolder(@NonNull AccountSettingsRecViewAdapter.ViewHolder holder, int position) {
+        Context context = holder.itemView.getContext();
         String email = listOfUsers.get(position);
         String partLabel = (email.equals(owner))?sharingStatuses[0]:sharingStatuses[1];
         holder.textEmail.setText(email);
@@ -83,13 +82,15 @@ public class AccountSettingsRecViewAdapter extends RecyclerView.Adapter<AccountS
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView textEmail;
-        private AutoCompleteTextView participantsMenu;
+        private final TextView textEmail;
+        private final AutoCompleteTextView participantsMenu;
         ArrayAdapter<String> adapterItems ;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            sharingStatuses = itemView.getContext().getResources().getStringArray(R.array.sharing_status);
             textEmail = itemView.findViewById(R.id.textEmailUser);
             participantsMenu = itemView.findViewById(R.id.autMenuParticipant);
             participantsMenu.setInputType(InputType.TYPE_NULL);

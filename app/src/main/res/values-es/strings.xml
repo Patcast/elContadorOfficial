@@ -82,10 +82,10 @@
     <string name="future">Futuro</string>
     <string name="completed">Completado</string>
     <string name="deleted_transactions">"Eliminar transacción "</string>
-    <string name="Accounts_participants">"Participantes "</string>
+    <string name="Accounts_participants">Usuarios</string>
     <string name="starting_balanace_title">"Caja inicial "</string>
     <string name="name_of_account_title">"Nombre de la cuneta: "</string>
-    <string name="new_participant_s_email">Email del nuevo participante...</string>
+    <string name="new_participant_s_email">Email del nuevo usuario...</string>
     <string name="add">Añadir</string>
     <string name="account_settings">"Ajuste de la Cuenta "</string>
     <string name="please_insert_a_valid_email">Por favor, use un correo válido.</string>
@@ -96,9 +96,9 @@
     <string name="toast_for_wrong_input_from_owner">"Por favor elegir a otro admin. Antes de editar al admin. actual. "</string>
     <string name="no_owner_rights">Favor de contactar al admin. para hacer cambios.</string>
     <string name="confirm_change_owner">"Confirmar el cambio del admin. "</string>
-    <string name="new_owner_1">¿Confirmas lo siguiente:?</string>
-    <string name="new_owner2">¿Deseas añadirlo como admin. de la cuenta?</string>
-    <string name="delete_user2">¿Deseas eliminarlo?</string>
+    <string name="new_owner_1">Favor de confirmar que  </string>
+    <string name="new_owner2">sea assignado como Admin. de la cuenta.</string>
+    <string name="delete_user2">sea eliminado de la cuenta.</string>
     <string name="new_stake">"Añadir a un participante "</string>
     <string name="Also_consider_for">"Clasificación"</string>
     <string name="properties">Inmuebles</string>
@@ -332,4 +332,16 @@
         <item>Noviembre</item>
         <item>Diciembre</item>
     </string-array>
+    <string name="delete_property_title">Eliminar el titulo del inmueble</string>
+    <string name="delete_property_message">Eliminar el mensaje de la inmueble</string>
+    <string name="property_delete_fail">Error al eliminar la inmueble</string>
+    <string name="property_deleted">inmueble eliminado</string>
+    <string name="vacant">Desocupado</string>
+    <string name="delete_account">Eliminar cuenta</string>
+    <string name="delete_account_prompt">Si deseas eliminar la cuenta por favor confirmalo escribiendo lo siguiente: %1$s</string>
+    <string name="delete_account_fail_mismatch">Favor de escribe el nombre de la cuenta exactamnete como aparece para eliminarla.</string>
+    <string name="delete_accout_last_warning">Confirmas que quieres eliminar todos los datos de \" %1$s \".</string>
+    <string name="account_deleted">Cuenta eliminada.</string>
+    <string name="delete_account_fail">Error, la cuenta no fue eliminada.</string>
+    <string name="confirm_user_deletion">Eliminar usuario</string>
 </resources>

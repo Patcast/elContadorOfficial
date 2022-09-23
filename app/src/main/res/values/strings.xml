@@ -359,5 +359,6 @@
     <string name="delete_accout_last_warning">Are you sure you want to delete %1$s? This action cannot be undone.</string>
     <string name="account_deleted">Account deleted.</string>
     <string name="delete_account_fail">Failed to delete account.</string>
+    <string name="confirm_user_deletion">Confirm delete user</string>
 
 </resources>
