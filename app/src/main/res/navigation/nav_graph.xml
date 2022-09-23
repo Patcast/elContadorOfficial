@@ -109,6 +109,9 @@
         <action
             android:id="@+id/action_stakeholderViewPagerHolder_to_newMicroAccount"
             app:destination="@id/newMicroAccount" />
+        <action
+            android:id="@+id/action_stakeholderViewPagerHolder_to_propertyViewPageHolder"
+            app:destination="@id/propertyViewPageHolder" />
     </fragment>
     <fragment
         android:id="@+id/transactionFutureNew"

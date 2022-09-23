@@ -165,7 +165,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         payables = new StakeDetailsList(stakeHolder,Caching.INSTANCE.TYPE_PAYABLES);
         mAdapter.addFragment(receivables);
         mAdapter.addFragment(payables);
-        mAdapter.addFragment(new PropertiesList(Caching.INSTANCE.PROPERTY_STAKEHOLDER));
+        mAdapter.addFragment(new PropertiesList(Caching.INSTANCE.PROPERTY_STAKEHOLDER, stakeHolder));
         viewPager.setAdapter(mAdapter);
 
         new TabLayoutMediator(mainActivity.getTabLayout(), viewPager, (t, p) -> {

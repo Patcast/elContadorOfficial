@@ -27,24 +27,24 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.PropertiesListRecViewAdapter;
 import be.kuleuven.elcontador10.background.Caching;
+import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 public class PropertiesList extends Fragment implements  MainActivity.TopMenuHandler {
     private PropertiesListRecViewAdapter adapter;
     private MainActivity mainActivity;
     PropertyListViewModel viewModelPropertiesList;
-    private ViewModel_NewTransaction viewModel;
     private MenuItem menuItem;
     private NavController navController;
     private String prevTAG;
+    private StakeHolder stakeHolder;
 
-
-    public PropertiesList(String prevTAG) {
+    public PropertiesList(String prevTAG, StakeHolder stakeHolder) {
         this.prevTAG = prevTAG;
+        this.stakeHolder = stakeHolder;
     }
 
-    public PropertiesList() {
-    }
+    public PropertiesList() { }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -55,19 +55,15 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mainActivity = (MainActivity) requireActivity();
         viewModelPropertiesList = new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);
-        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
+        ViewModel_NewTransaction viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
         viewModelPropertiesList.requestListOfProperties();
         try {
             prevTAG = PropertiesListArgs.fromBundle(getArguments()).getPreviousFragment();
         }
-        catch(Exception e){}
+        catch(Exception ignore) { }
 
-         if(prevTAG==null)adapter = new PropertiesListRecViewAdapter(view);
-         else {
-            adapter = new PropertiesListRecViewAdapter(view,prevTAG,viewModel);
-         }
-
-
+        if(prevTAG == null) adapter = new PropertiesListRecViewAdapter(view);
+        else adapter = new PropertiesListRecViewAdapter(view, prevTAG, viewModel);
 
         recyclerView.setAdapter(adapter);
 
@@ -81,37 +77,42 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
 
         if (prevTAG == null || prevTAG.equals(Caching.INSTANCE.PROPERTY_NEW_T)){
             navController = Navigation.findNavController(view);
-            viewModelPropertiesList.getListOfProperties().observe(getViewLifecycleOwner(), i->adapter.setPropertyListOnAdapter(i));
+            viewModelPropertiesList.getListOfProperties().observe(getViewLifecycleOwner(),
+                    properties -> adapter.setPropertyListOnAdapter(properties));
             setTopMenu();
+        } else {
+            viewModelPropertiesList.requestStakeholderProperties(stakeHolder);
+            viewModelPropertiesList.getStakeholderProperties().observe(getViewLifecycleOwner(),
+                    properties -> adapter.setPropertyListOnAdapter(properties));
         }
     }
-       private void setTopMenu(){
-        requireActivity().addMenuProvider(new MenuProvider() {
-            @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
-                menu.findItem(R.id.menu_search).setVisible(true);
-                menu.findItem(R.id.menu_add_property).setVisible(true);
 
+    private void setTopMenu(){
+    requireActivity().addMenuProvider(new MenuProvider() {
+        @Override
+        public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+            menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
+            menu.findItem(R.id.menu_search).setVisible(true);
+            menu.findItem(R.id.menu_add_property).setVisible(true);
+
+        }
+        @Override
+        public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+            final int search = R.id.menu_search, add = R.id.menu_add_property;
+
+            switch (menuItem.getItemId()){
+                case search:
+                    onSearchClick(menuItem);
+                    return true;
+                case add:
+                    addProperty();
+                    return true;
+                default:
+                    return false;
             }
-            @Override
-            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()){
-
-                    case R.id.menu_search:
-                        onSearchClick(menuItem);
-                        return true;
-                    case R.id.menu_add_property:
-                        addProperty();
-                        return true;
-
-                    default:
-                        return false;
-                }
-            }
-        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+        }
+    }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -120,23 +121,25 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
         if (prevTAG == null || prevTAG.equals(Caching.INSTANCE.PROPERTY_NEW_T)){
             mainActivity.setCurrentMenuClicker(this);
             mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
-            if(prevTAG==null) {
+            if (prevTAG == null) {
                 mainActivity.displayBottomNavigationMenu(true);
             }
         }
 
     }
+
     @Override
     public void onStop() {
         super.onStop();
         if (prevTAG == null || prevTAG.equals(Caching.INSTANCE.PROPERTY_NEW_T)){
             mainActivity.setCurrentMenuClicker(null);
-            if(prevTAG==null) {
+            if (prevTAG == null) {
                 mainActivity.displayBottomNavigationMenu(false);
             }
-            if( menuItem != null) menuItem.collapseActionView();
+            if (menuItem != null) menuItem.collapseActionView();
         }
     }
+
     public void onSearchClick(MenuItem item) {
         this.menuItem = item;
         SearchView searchView = (SearchView)  item.getActionView();
@@ -164,9 +167,9 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
         navController.navigate(R.id.action_propertiesList_to_addProperty);
     }
 
-
     @Override
     public void onToolbarTitleClick() {
-        if(prevTAG==null)navController.navigate(R.id.action_propertiesList_to_accountSettings);
+        if (prevTAG == null)
+            navController.navigate(R.id.action_propertiesList_to_accountSettings);
     }
 }

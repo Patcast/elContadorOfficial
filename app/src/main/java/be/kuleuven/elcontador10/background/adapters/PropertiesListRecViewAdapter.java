@@ -28,15 +28,16 @@ import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.fragments.property.PropertiesListDirections;
+import be.kuleuven.elcontador10.fragments.stakeholders.StakeholderViewPageHolder;
+import be.kuleuven.elcontador10.fragments.stakeholders.StakeholderViewPageHolderDirections;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<PropertiesListRecViewAdapter.ViewHolder> implements Filterable {
-    private static final String TAG = "RV Properties List:" ;
     private final List<Property> propertyList = new ArrayList<>();
     private final List<Property> propertyListFull = new ArrayList<>();
     private final View viewFromHostingClass;
-    private String prevTAG;
-    NavController navController;
+    private final String prevTAG;
+    private NavController navController;
     private ViewModel_NewTransaction viewModel;
 
     public PropertiesListRecViewAdapter(View viewFromHostingClass, String TAG, ViewModel_NewTransaction viewModel) {
@@ -47,7 +48,7 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
 
     public PropertiesListRecViewAdapter(View viewFromHostingClass) {
         this.viewFromHostingClass = viewFromHostingClass;
-        prevTAG=null;
+        prevTAG = null;
     }
 
     @NonNull
@@ -64,7 +65,7 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
         Property property = propertyList.get(position);
         holder.textName.setText(property.getName());
 
-        if(prevTAG==null){
+        if (prevTAG == null || prevTAG.equals(Caching.INSTANCE.PROPERTY_STAKEHOLDER)){
             holder.textReceivables.setVisibility(View.VISIBLE);
             holder.textViewPayables.setVisibility(View.VISIBLE);
             long receivables = property.getSumOfReceivables();
@@ -80,18 +81,22 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
                 NumberFormatter formatter = new NumberFormatter(payables);
                 String formatted = formatter.getFinalNumber();
                 holder.textViewPayables.setText(formatted);
-
             }
             else holder.textViewPayables.setVisibility(View.GONE);
 
-            holder.parent.setOnClickListener(view -> {
-                PropertiesListDirections.ActionPropertiesListToPropertyViewPageHolder action =
-                        PropertiesListDirections.actionPropertiesListToPropertyViewPageHolder(property);
-                navController.navigate(action);
-            });
-
-        }
-        else  {
+            if (prevTAG == null)
+                holder.parent.setOnClickListener(view -> {
+                    PropertiesListDirections.ActionPropertiesListToPropertyViewPageHolder action =
+                            PropertiesListDirections.actionPropertiesListToPropertyViewPageHolder(property);
+                    navController.navigate(action);
+                });
+            else
+                holder.parent.setOnClickListener(view -> {
+                    StakeholderViewPageHolderDirections.ActionStakeholderViewPagerHolderToPropertyViewPageHolder action =
+                            StakeholderViewPageHolderDirections.actionStakeholderViewPagerHolderToPropertyViewPageHolder(property);
+                    navController.navigate(action);
+                });
+        } else  {
             holder.textReceivables.setVisibility(View.GONE);
             holder.textViewPayables.setVisibility(View.GONE);
             holder.parent.setOnClickListener(v -> {
@@ -112,7 +117,7 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
     public int getItemCount() {
         return propertyList.size();
     }
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         private final TextView textName, textReceivables,textViewPayables, textRole;
 
         private final ConstraintLayout parent;
