@@ -69,6 +69,7 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Acco
         handler.post(() -> mainActivity.displayToolBar(true));
         setTopMenu();
     }
+
        private void setTopMenu(){
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override

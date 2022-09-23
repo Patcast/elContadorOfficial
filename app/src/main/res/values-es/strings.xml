@@ -19,20 +19,7 @@
     <string name="increase_amount_paid">Increase amount paid</string>
     <string name="warning_amount_paid_will_be_larger_than_amount_to_pay">Warning! Amount paid will be larger than amount to pay.</string>
     <string name="execute_pending_transaction">Execute Scheduled Transaction</string>
-    <string-array name="months_list">
-        <item>January</item>
-        <item>February</item>
-        <item>March</item>
-        <item>April</item>
-        <item>May</item>
-        <item>June</item>
-        <item>July</item>
-        <item>August</item>
-        <item>September</item>
-        <item>October</item>
-        <item>November</item>
-        <item>December</item>
-    </string-array>
+
     <string name="minutes_ago">Hace unos minutos</string>
     <string name="askForPermission">Favor, de pedir autorización para aceder</string>
     <string name="askForValidCompanyId">"Por favor, ingrese un ID válido de la compañia "</string>
@@ -324,5 +311,25 @@
     <string name="edit_property">Editar Propiedades</string>
     <string name="summary_of">Resumen de %1$s de %2$s</string>
     <string name="exported_by">Exportado por %1$s a las %2$s</string>
-    <string name="date_and_time_excel">"Date &amp; Hora "</string>
+    <string name="date_and_time_excel">"Fecha &amp; Hora "</string>
+    <string-array name="sharing_status">
+        <item>Admin.</item>
+        <item>Editor</item>
+        <item>Remover</item>
+    </string-array>
+
+    <string-array name="months_list">
+        <item>Enero</item>
+        <item>Febrero</item>
+        <item>Marzo</item>
+        <item>Abril</item>
+        <item>Mayo</item>
+        <item>Junio</item>
+        <item>Julio</item>
+        <item>Agosto</item>
+        <item>Septiembre</item>
+        <item>Octubre</item>
+        <item>Noviembre</item>
+        <item>Diciembre</item>
+    </string-array>
 </resources>

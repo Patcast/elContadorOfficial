@@ -4,11 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parent_allMicros"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:layout_marginTop="3dp"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
     android:background="@color/rec_view_transactions"
-    android:paddingHorizontal="8dp"
-    android:paddingVertical="5dp"
     android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar">
 
 
@@ -23,52 +21,32 @@
         android:text="Juan Martinez"
         android:textColor="@color/title_rec_view_stake"
         android:textSize="15sp"
-
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/textInputLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textInputLayout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textInputLayout" />
-
-
-    <Button
-        android:id="@+id/buttonType"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:backgroundTint="@color/button"
-        android:drawableRight="@drawable/ic_baseline_arrow_drop_down_24"
-        android:text="Owner"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textEmailUser"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        app:boxBackgroundColor="@color/button"
-        app:counterTextColor="@color/white"
-        app:endIconTint="@color/white"
+        android:hint="Permission"
+        android:inputType="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <AutoCompleteTextView
             android:id="@+id/autMenuParticipant"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:inputType="none"
-            android:text="Owner"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:theme="@style/Autocomplete"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:layout_weight="1"
+            tools:text="Owner" />
 
     </com.google.android.material.textfield.TextInputLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

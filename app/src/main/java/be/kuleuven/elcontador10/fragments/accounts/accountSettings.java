@@ -37,6 +37,7 @@ public class accountSettings extends Fragment {
     private TextView textEmailWarning;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private NavController navController;
+    private ViewModel_AccountSettings viewModel;
 
     private AccountSettingsRecViewAdapter adapter_custom;
     private MainActivity mainActivity;
@@ -74,11 +75,17 @@ public class accountSettings extends Fragment {
         textAccountName.setText(Caching.INSTANCE.getAccountName());
         btnAddEmail.setOnClickListener(v->verifyEmailToAdd());
 
-        ViewModel_AccountSettings viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AccountSettings.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AccountSettings.class);
         viewModel.requestAccountUsers();
         viewModel.getAccount().observe(getViewLifecycleOwner(), this::updateAccount);
 
         view.findViewById(R.id.delete_account).setOnClickListener(this::onDeleteClick);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewModel.getAccount().observe(getViewLifecycleOwner(), this::updateAccount);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
