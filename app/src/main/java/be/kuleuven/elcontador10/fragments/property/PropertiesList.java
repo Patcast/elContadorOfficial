@@ -91,8 +91,7 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
                 menu.findItem(R.id.menu_search).setVisible(true);
-                menu.findItem(R.id.menu_add_property).setVisible(true);
-
+               if (prevTAG == null ) menu.findItem(R.id.menu_add_property).setVisible(true);
             }
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {

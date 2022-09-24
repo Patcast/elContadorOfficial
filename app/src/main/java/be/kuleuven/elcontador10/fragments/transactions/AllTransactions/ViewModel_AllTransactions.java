@@ -240,11 +240,11 @@ public class ViewModel_AllTransactions extends ViewModel {
         }
         if(booleanFilter.getValue().get("receivable"))
         {
-            listAllTransactionsFiltered.addAll(Objects.requireNonNull(monthlyListOfProcessedTransactions.getValue()).stream().filter(i->!i.getType().contains("CASH")).filter(i->i.getType().contains("RECEIVABLES")).collect(Collectors.toList()));
+            listAllTransactionsFiltered.addAll(Objects.requireNonNull(monthlyListOfProcessedTransactions.getValue()).stream().filter(i->i.getType().contains("RECEIVABLES")).collect(Collectors.toList()));
         }
         if(booleanFilter.getValue().get("payable"))
         {
-            listAllTransactionsFiltered.addAll(Objects.requireNonNull(monthlyListOfProcessedTransactions.getValue()).stream().filter(i->!i.getType().contains("CASH")).filter(i->i.getType().contains("PAYABLES")).collect(Collectors.toList()));
+            listAllTransactionsFiltered.addAll(Objects.requireNonNull(monthlyListOfProcessedTransactions.getValue()).stream().filter(i->i.getType().contains("PAYABLES")).collect(Collectors.toList()));
         }
         if(booleanFilter.getValue().get("deletedTrans"))
         {

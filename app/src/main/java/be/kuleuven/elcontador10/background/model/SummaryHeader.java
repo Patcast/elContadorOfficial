@@ -99,12 +99,14 @@ public class SummaryHeader {
         cashIn = monthlyListOfProcessedTransactions
                 .stream()
                 .filter(i-> !i.getIsDeleted())
+                .filter(i->i.getType().contains(Caching.INSTANCE.TYPE_CASH))
                 .map(ProcessedTransaction::getTotalAmount)
                 .filter(totalAmount -> totalAmount >=0)
                 .reduce(0, Integer::sum);
         cashOut = monthlyListOfProcessedTransactions
                 .stream()
                 .filter(i-> !i.getIsDeleted())
+                .filter(i->i.getType().contains(Caching.INSTANCE.TYPE_CASH))
                 .map(ProcessedTransaction::getTotalAmount)
                 .filter(totalAmount -> totalAmount <0)
                 .reduce(0, Integer::sum);
