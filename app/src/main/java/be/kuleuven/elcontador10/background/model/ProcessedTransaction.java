@@ -3,11 +3,7 @@ package be.kuleuven.elcontador10.background.model;
 import android.app.AlertDialog;
 import android.content.Context;
 
-
-import android.widget.Toast;
-
 import com.google.firebase.Timestamp;
-
 
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FieldValue;
@@ -15,7 +11,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,7 +39,7 @@ public class ProcessedTransaction {
     private String notes;
     private String imageName;
     private boolean isDeleted;
-    private List <String>type = new ArrayList<>();
+    private final List <String> type = new ArrayList<>();
     private int collectionIndex;
     private int collectionSize;
     private Timestamp deletedDate;
@@ -93,7 +88,14 @@ public class ProcessedTransaction {
         db.collection(urlNewTransactions)
                 .add(newTrans)
                 .addOnSuccessListener(documentReference -> documentReference.update("id",documentReference.getId()))
-                .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e ->
+                        new AlertDialog.Builder(context)
+                                .setTitle(R.string.add_transaction)
+                                .setMessage(R.string.Transaction_upload_failed)
+                                .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
+                                .create()
+                                .show()
+                );
     }
     public void deleteTransaction(Context context, String deletedBy, String reason){
         isDeleted = true;
@@ -109,14 +111,22 @@ public class ProcessedTransaction {
                         "deletedDate", deletedDate,
                         "deletedBy", deletedBy,
                         "notes", notes)
-                .addOnSuccessListener(aVoid -> successfulDelete(context))
+                .addOnSuccessListener(aVoid ->
+                        new AlertDialog.Builder(context)
+                                .setTitle(context.getString(R.string.delete_transaction))
+                                .setMessage(context.getString(R.string.transaction_deleted))
+                                .setPositiveButton(context.getString(R.string.ok), (dialog, which) -> dialog.dismiss())
+                                .create()
+                                .show()
+                )
                 .addOnFailureListener(e ->
-                    new AlertDialog.Builder(context)
-                        .setTitle(context.getString(R.string.delete_transaction))
-                        .setMessage(context.getString(R.string.failed_delete_transaction))
-                        .setPositiveButton(context.getString(R.string.ok), (dialog, which) -> dialog.dismiss())
-                        .create()
-                        .show());
+                        new AlertDialog.Builder(context)
+                                .setTitle(R.string.delete_transaction)
+                                .setMessage(R.string.failed_delete_transaction)
+                                .setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss())
+                                .create()
+                                .show()
+                );
     }
 
     public void execute(Context context) {
@@ -130,39 +140,54 @@ public class ProcessedTransaction {
             db.collection(urlNewTransactions).document(getIdOfTransactionInt())
                     .update(removePending)
                     .addOnSuccessListener(e ->
-                            Toast.makeText(context, R.string.transaction_executed, Toast.LENGTH_SHORT).show())
+                            new AlertDialog.Builder(context)
+                                    .setTitle(R.string.execute_pending_transaction)
+                                    .setMessage(R.string.transaction_executed)
+                                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
+                                    .create()
+                                    .show()
+                    )
                     .addOnFailureListener(e ->
-                            Toast.makeText(context, R.string.failed_execute_transaction, Toast.LENGTH_SHORT).show());
+                            new AlertDialog.Builder(context)
+                                    .setTitle(R.string.execute_pending_transaction)
+                                    .setMessage(R.string.failed_execute_transaction)
+                                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
+                                    .create()
+                                    .show()
+                    );
         }
     }
 
-    public void successfulDelete(Context context){
-        new AlertDialog.Builder(context)
-                .setTitle(context.getString(R.string.delete_transaction))
-                .setMessage(context.getString(R.string.transaction_deleted))
-                .setPositiveButton(context.getString(R.string.ok), (dialog, which) -> dialog.dismiss())
-                .create()
-                .show();
-        //TODO: delete picture too here
-    }
     public void updateImageFromFireBase(ProcessedTransaction newTransactionInput,ImageFireBase ImageSelected,Context context) {
         String urlNewTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
+
         Map<String, Object> data = new HashMap<>();
         data.put("imageName",ImageSelected.getNameOfImage());
+
         db.collection(urlNewTransactions).document(newTransactionInput.id)
                 .set(data, SetOptions.merge());
-        StringBuilder saveUrl = new StringBuilder();
-        saveUrl.append(Caching.INSTANCE.getChosenAccountId());
-        saveUrl.append("/");
-        saveUrl.append(ImageSelected.getNameOfImage());
-        StorageReference image = storageReference.child(saveUrl.toString());
-        image.putFile(ImageSelected.getContentUri()).addOnSuccessListener(taskSnapshot -> {
-            Toast.makeText(context,"photo added", Toast.LENGTH_SHORT).show();
-        }).addOnFailureListener(e -> {
-            Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show();
-            deleteImageFromFireBase(false,context);
-            Toast.makeText(context,"photo failed to upload, please try again", Toast.LENGTH_SHORT).show();
-        });
+
+        String saveUrl = Caching.INSTANCE.getChosenAccountId() +
+                "/" +
+                ImageSelected.getNameOfImage();
+
+        storageReference.child(saveUrl)
+                .putFile(ImageSelected.getContentUri())
+                .addOnSuccessListener(taskSnapshot ->
+                        new AlertDialog.Builder(context)
+                                .setTitle(R.string.photo_added)
+                                .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
+                                .create()
+                                .show())
+                .addOnFailureListener(e -> {
+                        new AlertDialog.Builder(context)
+                                .setTitle(context.getString(R.string.add_transaction))
+                                .setMessage(context.getString(R.string.Transaction_upload_failed))
+                                .setPositiveButton(context.getString(R.string.ok), (dialog, which) -> dialog.dismiss())
+                                .create()
+                                .show();
+                        deleteImageFromFireBase(false,context);
+                });
     }
 
     public void deleteImageFromFireBase(Boolean storedSuccessfully,Context context){
@@ -172,34 +197,43 @@ public class ProcessedTransaction {
         data.put("imageName","");
         db.collection(urlNewTransactions).document(getIdOfTransactionInt())
                 .set(data, SetOptions.merge());
-        if(storedSuccessfully) {
+        if (storedSuccessfully) {
             // remove ImageName file from storage
-            StringBuilder deleteUrl = new StringBuilder();
-            deleteUrl.append(Caching.INSTANCE.getChosenAccountId());
-            deleteUrl.append("/");
-            deleteUrl.append(getImageName());
-            StorageReference desertRef = storageReference.child(deleteUrl.toString());
-            desertRef.delete().addOnSuccessListener(aVoid -> {
-                Toast.makeText(context,"photo deleted", Toast.LENGTH_SHORT).show();
-            }).addOnFailureListener(exception -> {
-                Toast.makeText(context,"photo failed to delete, please try again", Toast.LENGTH_SHORT).show();
-            });
+            String deleteUrl = Caching.INSTANCE.getChosenAccountId() +
+                    "/" +
+                    getImageName();
+            storageReference.child(deleteUrl)
+                    .delete()
+                    .addOnFailureListener(exception ->
+                            new AlertDialog.Builder(context)
+                                    .setTitle(R.string.delete_photo_title)
+                                    .setMessage(R.string.photo_delete_fail)
+                                    .setPositiveButton(context.getString(R.string.ok), (dialog, which) -> dialog.dismiss())
+                                    .create()
+                                    .show()
+                    );
             imageName = null; // the idea is to remove all places where image name was stored.
         }
     }
     //Todo: Maybe use similar method to update after the transaction was created.
     public void uploadImageToFireBase(ProcessedTransaction newTransactionInput,ImageFireBase ImageSelected,Context context) {
-        StringBuilder saveUrl = new StringBuilder();
-        saveUrl.append(Caching.INSTANCE.getChosenAccountId());
-        saveUrl.append("/");
-        saveUrl.append(ImageSelected.getNameOfImage());
-        StorageReference image = storageReference.child(saveUrl.toString());
-        image.putFile(ImageSelected.getContentUri()).addOnSuccessListener(taskSnapshot -> {
-            if (newTransactionInput!=null) newTransactionInput.sendTransaction(newTransactionInput,context);
-            else Toast.makeText(context,"photo added", Toast.LENGTH_SHORT).show();
-        }).addOnFailureListener(e -> {
-            Toast.makeText(context, context.getString(R.string.Transaction_upload_failed), Toast.LENGTH_SHORT).show();
-        });
+        String saveUrl = Caching.INSTANCE.getChosenAccountId() +
+                "/" +
+                ImageSelected.getNameOfImage();
+        StorageReference image = storageReference.child(saveUrl);
+        image.putFile(ImageSelected.getContentUri())
+                .addOnSuccessListener(taskSnapshot -> {
+                    if (newTransactionInput != null)
+                        newTransactionInput.sendTransaction(newTransactionInput,context);
+                })
+                .addOnFailureListener(e ->
+                        new AlertDialog.Builder(context)
+                                .setTitle(R.string.image_upload)
+                                .setMessage(R.string.Transaction_upload_failed)
+                                .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
+                                .create()
+                                .show()
+                );
     }
 
 

@@ -16,10 +16,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.background.Caching;
 
 import be.kuleuven.elcontador10.background.model.Property;
+import be.kuleuven.elcontador10.background.model.StakeHolder;
 
 
 public class PropertyListViewModel extends ViewModel {
@@ -30,11 +32,18 @@ public class PropertyListViewModel extends ViewModel {
     public LiveData<List<Property>> getListOfProperties() {
         return listOfProperties;
     }
+
+    private final MutableLiveData<List<Property>> stakeholderProperties = new MutableLiveData<>();
+    public MutableLiveData<List<Property>> getStakeholderProperties() {
+        return stakeholderProperties;
+    }
+
     public void selectSProperties(List<Property> input){
         listOfProperties.setValue(input);
     }
     public void reset(){
         listOfProperties.setValue(null);
+        stakeholderProperties.setValue(null);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -44,7 +53,6 @@ public class PropertyListViewModel extends ViewModel {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestListOfProperties() {
-
         String urlGetAccountTransactions = "/accounts/"+ Caching.INSTANCE.getChosenAccountId()+"/properties";
         Query propertiesFromOneAccount = db.collection(urlGetAccountTransactions).orderBy("name", Query.Direction.ASCENDING);
 
@@ -66,5 +74,17 @@ public class PropertyListViewModel extends ViewModel {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void requestStakeholderProperties(StakeHolder stakeHolder) {
+        List<Property> properties = listOfProperties.getValue();
 
+        if (properties != null) {
+            List<Property> stakeholderProperties = properties.stream()
+                    .filter(property -> property.getStakeholder() != null &&
+                            property.getStakeholder().equals(stakeHolder.getId()))
+                    .collect(Collectors.toList());
+
+            this.stakeholderProperties.setValue(stakeholderProperties);
+        }
+    }
 }

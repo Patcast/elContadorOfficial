@@ -27,11 +27,10 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 
 public class StakeDetailsList extends Fragment {
     private TransactionsRecViewAdapter recyclerViewAdapter;
-    RecyclerView recyclerView;
-    StakeholderViewModel viewModel;
-    View view;
+    private RecyclerView recyclerView;
+    private StakeholderViewModel viewModel;
 
-    List<ProcessedTransaction> transactionList = new ArrayList<>();
+    private final List<ProcessedTransaction> transactionList = new ArrayList<>();
     private final StakeHolder selectedStakeHolder;
     private boolean isLoaded =false;
     private final String tabId;
@@ -41,11 +40,10 @@ public class StakeDetailsList extends Fragment {
         this.tabId = tabId;
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_all_properties, container, false);
+        View view = inflater.inflate(R.layout.fragment_all_properties, container, false);
         recyclerView = view.findViewById(R.id.rec_all_properties);
         viewModel = new ViewModelProvider(requireActivity()).get(StakeholderViewModel.class);
 
@@ -66,42 +64,34 @@ public class StakeDetailsList extends Fragment {
         super.onStart();
         recyclerView.setAdapter(recyclerViewAdapter);
         viewModel.setSelectedStakeholder(selectedStakeHolder);
-
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void loadMore() {
-        if(!isLoaded){
-            recyclerViewAdapter.setAllTransactions(setAdapterFuture());
-            isLoaded=true;
-
-        }
-        else{
-            recyclerViewAdapter.setAllTransactions(setAdapterNoFuture());
-            isLoaded=false;
+        if (recyclerView != null) {
+            if (!isLoaded) recyclerViewAdapter.setAllTransactions(setAdapterFuture());
+            else recyclerViewAdapter.setAllTransactions(setAdapterNoFuture());
+            isLoaded = !isLoaded;
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private List<ProcessedTransaction>  setAdapterNoFuture(){
-                 return   transactionList
-                            .stream()
-                            .filter(t->t.getType().contains(tabId))
-                            .filter(t->!t.getType().contains(Caching.INSTANCE.TYPE_PENDING))
-                            .collect(Collectors.toList());
+        return transactionList
+                .stream()
+                .filter(t->t.getType().contains(tabId))
+                .filter(t->!t.getType().contains(Caching.INSTANCE.TYPE_PENDING))
+                .collect(Collectors.toList());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private List<ProcessedTransaction>  setAdapterFuture(){
-            return  transactionList
-                    .stream()
-                    .filter(t->t.getType().contains(tabId))
-                    .collect(Collectors.toList());
+        return transactionList
+                .stream()
+                .filter(t->t.getType().contains(tabId))
+                .collect(Collectors.toList());
 
     }
-
-
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateAdapter(List<ProcessedTransaction> transactionListFull) {
@@ -109,6 +99,4 @@ public class StakeDetailsList extends Fragment {
         transactionList.addAll(transactionListFull);
         recyclerViewAdapter.setAllTransactions(setAdapterNoFuture());
     }
-
-
 }
