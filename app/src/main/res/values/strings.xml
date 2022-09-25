@@ -365,5 +365,6 @@
     <string name="image_upload">Failed to upload image</string>
     <string name="no_property">No property</string>
     <string name="no_stakeholder">No Stakeholder</string>
+    <string name="choose_property">Choose Property</string>
 
 </resources>

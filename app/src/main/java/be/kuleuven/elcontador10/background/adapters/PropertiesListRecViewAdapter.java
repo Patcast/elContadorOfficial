@@ -9,6 +9,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.NavController;
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.R;
@@ -28,7 +28,6 @@ import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.fragments.property.PropertiesListDirections;
-import be.kuleuven.elcontador10.fragments.stakeholders.StakeholderViewPageHolder;
 import be.kuleuven.elcontador10.fragments.stakeholders.StakeholderViewPageHolderDirections;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
@@ -38,7 +37,7 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
     private final View viewFromHostingClass;
     private final String prevTAG;
     private NavController navController;
-    private ViewModel_NewTransaction viewModel;
+    private final ViewModel_NewTransaction viewModel;
 
     public PropertiesListRecViewAdapter(View viewFromHostingClass, String TAG, ViewModel_NewTransaction viewModel) {
         this.viewFromHostingClass = viewFromHostingClass;
@@ -46,10 +45,6 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
         prevTAG = TAG;
     }
 
-    public PropertiesListRecViewAdapter(View viewFromHostingClass) {
-        this.viewFromHostingClass = viewFromHostingClass;
-        prevTAG = null;
-    }
 
     @NonNull
     @Override
@@ -65,40 +60,37 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
         Property property = propertyList.get(position);
         holder.textName.setText(property.getName());
 
-        if (prevTAG == null || prevTAG.equals(Caching.INSTANCE.PROPERTY_STAKEHOLDER)){
-            holder.textReceivables.setVisibility(View.VISIBLE);
-            holder.textViewPayables.setVisibility(View.VISIBLE);
-            long receivables = property.getSumOfReceivables();
-            if (receivables != 0) {
-                NumberFormatter formatter = new NumberFormatter(receivables);
-                String formatted = formatter.getFinalNumber();
-                holder.textReceivables.setText(formatted);
-            }
-            else holder.textReceivables.setVisibility(View.GONE);
+        long receivables = property.getSumOfReceivables();
+        if (receivables != 0) {
+            NumberFormatter formatter = new NumberFormatter(receivables);
+            String formatted = formatter.getFinalNumber();
+            holder.textReceivables.setText(formatted);
+        }
+        else holder.textReceivables.setVisibility(View.GONE);
 
-            long payables = property.getSumOfPayables();
-            if (payables != 0) {
-                NumberFormatter formatter = new NumberFormatter(payables);
-                String formatted = formatter.getFinalNumber();
-                holder.textViewPayables.setText(formatted);
-            }
-            else holder.textViewPayables.setVisibility(View.GONE);
+        long payables = property.getSumOfPayables();
+        if (payables != 0) {
+            NumberFormatter formatter = new NumberFormatter(payables);
+            String formatted = formatter.getFinalNumber();
+            holder.textViewPayables.setText(formatted);
+        }
+        else holder.textViewPayables.setVisibility(View.GONE);
 
-            if (prevTAG == null)
-                holder.parent.setOnClickListener(view -> {
-                    PropertiesListDirections.ActionPropertiesListToPropertyViewPageHolder action =
-                            PropertiesListDirections.actionPropertiesListToPropertyViewPageHolder(property);
-                    navController.navigate(action);
-                });
-            else
-                holder.parent.setOnClickListener(view -> {
-                    StakeholderViewPageHolderDirections.ActionStakeholderViewPagerHolderToPropertyViewPageHolder action =
-                            StakeholderViewPageHolderDirections.actionStakeholderViewPagerHolderToPropertyViewPageHolder(property);
-                    navController.navigate(action);
-                });
-        } else  {
-            holder.textReceivables.setVisibility(View.GONE);
-            holder.textViewPayables.setVisibility(View.GONE);
+
+        //NAVIGATION
+        if (prevTAG == null)
+            holder.parent.setOnClickListener(view -> {
+                PropertiesListDirections.ActionPropertiesListToPropertyViewPageHolder action =
+                        PropertiesListDirections.actionPropertiesListToPropertyViewPageHolder(property);
+                navController.navigate(action);
+            });
+        else if(prevTAG.equals(Caching.INSTANCE.PROPERTY_STAKEHOLDER))
+            holder.parent.setOnClickListener(view -> {
+                StakeholderViewPageHolderDirections.ActionStakeholderViewPagerHolderToPropertyViewPageHolder action =
+                        StakeholderViewPageHolderDirections.actionStakeholderViewPagerHolderToPropertyViewPageHolder(property);
+                navController.navigate(action);
+            });
+         else  {
             holder.parent.setOnClickListener(v -> {
                 viewModel.selectProperty(property);
                 navController.popBackStack();
@@ -110,8 +102,6 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
             holder.textRole.setText(R.string.vacant);
         else
             holder.textRole.setText(Caching.INSTANCE.getStakeholderName(property.getStakeholder()));
-        holder.textRole.setVisibility(View.VISIBLE);
-
     }
     @Override
     public int getItemCount() {
@@ -137,19 +127,21 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
         /////------------
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setPropertyListOnAdapter(List <Property> propertiesListInput) {
+    public void setPropertyListOnAdapter(@Nullable List <Property> propertiesListInput) {
             propertyListFull.clear();
             propertyList.clear();
-            this.propertyList.addAll(propertiesListInput
-                    .stream()
-                    .filter(property -> !property.isDeleted())
-                    .sorted(Comparator.comparing(Property::getName))
-                    .collect(Collectors.toList()));
-            propertyListFull.addAll(propertiesListInput
-                    .stream()
-                    .filter(property -> !property.isDeleted())
-                    .sorted(Comparator.comparing(Property::getName))
-                    .collect(Collectors.toList()));
+            if(propertiesListInput!=null) {
+                this.propertyList.addAll(propertiesListInput
+                        .stream()
+                        .filter(property -> !property.isDeleted())
+                        .sorted(Comparator.comparing(Property::getName))
+                        .collect(Collectors.toList()));
+                propertyListFull.addAll(propertiesListInput
+                        .stream()
+                        .filter(property -> !property.isDeleted())
+                        .sorted(Comparator.comparing(Property::getName))
+                        .collect(Collectors.toList()));
+            }
 
             notifyDataSetChanged();
 

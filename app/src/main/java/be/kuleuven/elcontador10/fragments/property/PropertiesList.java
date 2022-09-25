@@ -24,10 +24,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.PropertiesListRecViewAdapter;
 import be.kuleuven.elcontador10.background.Caching;
+import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
@@ -37,9 +41,10 @@ public class PropertiesList extends Fragment {
     PropertyListViewModel viewModelPropertiesList;
     private MenuItem menuItem;
     private NavController navController;
-    private String prevTAG;
+    private String prevTAG=null;
     private StakeHolder stakeHolder;
     private ViewModel_NewTransaction viewModel_newTransaction;
+    LinearLayout noPropertyItem;
 
     public PropertiesList(String prevTAG, StakeHolder stakeHolder) {
         this.prevTAG = prevTAG;
@@ -52,7 +57,7 @@ public class PropertiesList extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) requireActivity();
-        prevTAG =PropertiesListArgs.fromBundle(getArguments()).getPreviousFragment();
+        if(prevTAG==null)prevTAG =PropertiesListArgs.fromBundle(getArguments()).getPreviousFragment();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -61,15 +66,13 @@ public class PropertiesList extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_properties, container, false);
 
-
         viewModel_newTransaction = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
         viewModelPropertiesList = new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);
         viewModelPropertiesList.requestListOfProperties();
 
         RecyclerView recyclerView = view.findViewById(R.id.rec_all_properties);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        if(prevTAG == null) adapter = new PropertiesListRecViewAdapter(view);
-        else adapter = new PropertiesListRecViewAdapter(view, prevTAG, viewModel_newTransaction);
+        adapter = new PropertiesListRecViewAdapter(view, prevTAG, viewModel_newTransaction);
         recyclerView.setAdapter(adapter);
 
         return view;
@@ -79,23 +82,38 @@ public class PropertiesList extends Fragment {
     @Override
     public void onViewCreated(@NonNull  View view, @Nullable  Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        navController = Navigation.findNavController(view);
-        LinearLayout noPropertyItem = view.findViewById(R.id.layoutNoProperty);
-        noPropertyItem.setVisibility(View.GONE);
-        if(prevTAG==null||prevTAG.equals(Caching.INSTANCE.PROPERTY_NEW_T)){
-            viewModelPropertiesList.getListOfProperties().observe(getViewLifecycleOwner(), properties -> adapter.setPropertyListOnAdapter(properties));
-            setTopMenu();
-            if (prevTAG!=null){
-                noPropertyItem.setVisibility(View.VISIBLE);
-                noPropertyItem.setOnClickListener(c->onNoPropertySelected());
-            }
-        }
-        else{
-            viewModelPropertiesList.requestStakeholderProperties(stakeHolder);
-            viewModelPropertiesList.getStakeholderProperties().observe(getViewLifecycleOwner(), properties -> adapter.setPropertyListOnAdapter(properties));
-        }
+        if((prevTAG==null)||prevTAG.equals(Caching.INSTANCE.PROPERTY_NEW_T))navController = Navigation.findNavController(view);
+        noPropertyItem = view.findViewById(R.id.layoutNoProperty);
+        viewModelPropertiesList.getListOfProperties().observe(getViewLifecycleOwner(), this::setListForAdapter);
+        specificConfigurations();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void setListForAdapter(List<Property> p) {
+        if((prevTAG!=null)&&prevTAG.equals(Caching.INSTANCE.PROPERTY_STAKEHOLDER)){
+            if(stakeHolder!=null ) adapter.setPropertyListOnAdapter(p.stream().filter(pf->pf.getStakeholder()!=null).filter(pf->pf.getStakeholder().equals(stakeHolder.getId())).collect(Collectors.toList()));
+            else adapter.setPropertyListOnAdapter(null);
+        }
+        else adapter.setPropertyListOnAdapter(p);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void specificConfigurations(){
+        String header=null;
+        if(prevTAG==null){
+            header = Caching.INSTANCE.getAccountName();
+            mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
+            setTopMenu();
+            mainActivity.displayBottomNavigationMenu(true);
+        }
+        else if(prevTAG.equals(Caching.INSTANCE.PROPERTY_NEW_T)){
+            header =getResources().getString(R.string.choose_property);
+            setTopMenu();
+            noPropertyItem.setVisibility(View.VISIBLE);
+            noPropertyItem.setOnClickListener(c->onNoPropertySelected());
+        }
+        if(header!=null)mainActivity.setHeaderText(header);
+    }
     private void onNoPropertySelected() {
         viewModel_newTransaction.resetChosenProperty();
         navController.popBackStack();
@@ -109,8 +127,10 @@ public class PropertiesList extends Fragment {
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
                 menu.findItem(R.id.menu_search).setVisible(true);
-                menu.findItem(menu_share).setVisible(true);
-               if (prevTAG == null ) menu.findItem(menu_add_property).setVisible(true);
+               if (prevTAG == null ){
+                   menu.findItem(menu_add_property).setVisible(true);
+                   menu.findItem(menu_share).setVisible(true);
+               }
             }
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
@@ -133,28 +153,14 @@ public class PropertiesList extends Fragment {
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (prevTAG == null || prevTAG.equals(Caching.INSTANCE.PROPERTY_NEW_T)){
-            mainActivity.setHeaderText(Caching.INSTANCE.getAccountName());
-            if (prevTAG == null) {
-                mainActivity.displayBottomNavigationMenu(true);
-            }
-        }
 
-    }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (prevTAG == null || prevTAG.equals(Caching.INSTANCE.PROPERTY_NEW_T)){
-            if (prevTAG == null) {
-                mainActivity.displayBottomNavigationMenu(false);
-            }
-            if (menuItem != null) menuItem.collapseActionView();
-        }
+        mainActivity.displayBottomNavigationMenu(false);
+        noPropertyItem.setVisibility(View.GONE);
+        if (menuItem != null) menuItem.collapseActionView();
     }
 
     public void onSearchClick(MenuItem item) {

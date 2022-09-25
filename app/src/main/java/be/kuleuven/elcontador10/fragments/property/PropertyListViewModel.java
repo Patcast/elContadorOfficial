@@ -33,17 +33,13 @@ public class PropertyListViewModel extends ViewModel {
         return listOfProperties;
     }
 
-    private final MutableLiveData<List<Property>> stakeholderProperties = new MutableLiveData<>();
-    public MutableLiveData<List<Property>> getStakeholderProperties() {
-        return stakeholderProperties;
-    }
+
 
     public void selectSProperties(List<Property> input){
         listOfProperties.setValue(input);
     }
     public void reset(){
         listOfProperties.setValue(null);
-        stakeholderProperties.setValue(null);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -74,17 +70,5 @@ public class PropertyListViewModel extends ViewModel {
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void requestStakeholderProperties(StakeHolder stakeHolder) {
-        List<Property> properties = listOfProperties.getValue();
 
-        if (properties != null) {
-            List<Property> stakeholderProperties = properties.stream()
-                    .filter(property -> property.getStakeholder() != null &&
-                            property.getStakeholder().equals(stakeHolder.getId()))
-                    .collect(Collectors.toList());
-
-            this.stakeholderProperties.setValue(stakeholderProperties);
-        }
-    }
 }
