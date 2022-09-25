@@ -121,7 +121,8 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
     }
 
     private void lookForProperty() {
-        TransactionNewDirections.ActionNewTransactionToPropertiesList action = TransactionNewDirections.actionNewTransactionToPropertiesList(Caching.INSTANCE.PROPERTY_NEW_T);
+        TransactionNewDirections.ActionNewTransactionToPropertiesList action = TransactionNewDirections.actionNewTransactionToPropertiesList();
+        action.setPreviousFragment(Caching.INSTANCE.PROPERTY_NEW_T);
         navController.navigate(action);
     }
 

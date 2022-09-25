@@ -33,7 +33,7 @@ import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_
 public class ChooseCategory extends Fragment implements Caching.CategoriesObserver, CategoryDialog.DialogCategoriesListener {
 //Todo: Delete BottomSheet class and layout
     private ConstraintLayout addCustomCat;
-    private ViewModelCategory viewModel;
+    private ViewModel_NewTransaction viewModel;
     private RecyclerView recyclerCategories_custom;
     private CategoriesRecViewAdapter adapter_custom;
     private final List<EmojiCategory> customCategories = new ArrayList<>();
@@ -48,13 +48,8 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         mainActivity = (MainActivity) requireActivity();
         mainActivity.setHeaderText(getString(R.string.choose_category));
         addCustomCat = view.findViewById(R.id.layout_addCategory);
-
-        boolean isNewTransaction = ChooseCategoryArgs.fromBundle(getArguments()).getNewTransaction();
-
-        if (isNewTransaction)
-            viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
-        else
-            viewModel = new ViewModelProvider(requireActivity()).get(ViewModelCategory.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ViewModelCategory.class);
         startDefaultRecViews(view);
         startCustomRecycler(view);
         return view;
@@ -114,7 +109,7 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
 
     @Override
     public void closeDialog() {
-        adapter_custom.setEditMode(false);
+        adapter_custom.setEditMode();
     }
 
 

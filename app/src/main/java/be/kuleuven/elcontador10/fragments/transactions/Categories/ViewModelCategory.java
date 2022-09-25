@@ -18,4 +18,5 @@ public class ViewModelCategory extends ViewModel {
     public void resetCategory(){
         chosenCategory.setValue(null);
     }
+
 }

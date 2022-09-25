@@ -24,16 +24,17 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.fragments.transactions.Categories.ViewModelCategory;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.fragments.transactions.Categories.CategoryDialog;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRecViewAdapter.ViewHolder> {
 
     private final List<EmojiCategory> categories = new ArrayList<>();
     private final View viewFromHostingClass;
-    private final ViewModelCategory viewModel;
+    private final ViewModel_NewTransaction viewModel;
     //private boolean editMode;
     private Fragment hostFragment;
 
-    public CategoriesRecViewAdapter(View viewFromHostingClass, ViewModelCategory viewModel, Fragment hostFragment) {
+    public CategoriesRecViewAdapter(View viewFromHostingClass, ViewModel_NewTransaction viewModel, Fragment hostFragment) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.viewModel = viewModel;
         this.hostFragment = hostFragment;
@@ -49,12 +50,6 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-     /*   if (editMode) {
-            holder.editingSwitch.setChecked(false);
-            holder.editingSwitch.setVisibility(View.VISIBLE);
-            }
-
-        else holder.editingSwitch.setVisibility(View.GONE);*/
         holder.textNameCategory.setText(categories.get(position).getTitle());
         String icon = categories.get(position).getIcon();
         holder.imageIconCategory.setText(icon);
@@ -68,13 +63,6 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
                 dialog.setListener((CategoryDialog.DialogCategoriesListener) hostFragment);
                 dialog.show(hostFragment.getParentFragmentManager(),"Category Dialog");
             });
-      /*  holder.editingSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(isChecked){
-                CategoryDialog dialog =new CategoryDialog(categories.get(position));
-                dialog.setListener((CategoryDialog.DialogCategoriesListener) hostFragment);
-                dialog.show(hostFragment.getParentFragmentManager(),"Category Dialog");
-            }
-        });*/
     }
 
     @Override
@@ -84,7 +72,6 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
 
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        //private final SwitchMaterial editingSwitch;
         private final TextView textNameCategory;
         private final TextView imageIconCategory;
         private final ConstraintLayout parent;
@@ -93,7 +80,6 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            //editingSwitch = itemView.findViewById(R.id.switch_category);
             editButton = itemView.findViewById(R.id.btn_edit_category);
             parent = itemView.findViewById(R.id.recView_item_categories);
             textNameCategory = itemView.findViewById(R.id.textView_category_name);
@@ -107,8 +93,7 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
         notifyDataSetChanged();
     }
 
-    public void setEditMode(boolean editMode) {
-        //this.editMode = editMode;
+    public void setEditMode() {
         notifyDataSetChanged();
     }
 }

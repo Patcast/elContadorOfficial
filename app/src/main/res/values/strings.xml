@@ -360,5 +360,10 @@
     <string name="account_deleted">Account deleted.</string>
     <string name="delete_account_fail">Failed to delete account.</string>
     <string name="confirm_user_deletion">Confirm delete user</string>
+    <string name="delete_photo_title">Delete photo</string>
+    <string name="photo_delete_fail">Error deleting the photo</string>
+    <string name="image_upload">Failed to upload image</string>
+    <string name="no_property">No property</string>
+    <string name="no_stakeholder">No Stakeholder</string>
 
 </resources>

@@ -96,7 +96,9 @@ public class FutureTransactionsNew extends Fragment {
         setButtonsListeners();
         setSpinners();
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
+        viewModel.reset();
         ViewModelCategory viewModelCategory = new ViewModelProvider(requireActivity()).get(ViewModelCategory.class);
+        viewModelCategory.resetCategory();
         viewModelCategory.getChosenCategory().observe(getViewLifecycleOwner(), this::setChosenCategory);
         setWordCounters();
     }
@@ -178,7 +180,8 @@ public class FutureTransactionsNew extends Fragment {
     }
 
     private void lookForProperty() {
-        FutureTransactionsNewDirections.ActionContractNewPaymentToPropertiesList action = FutureTransactionsNewDirections.actionContractNewPaymentToPropertiesList(Caching.INSTANCE.PROPERTY_NEW_T);
+        FutureTransactionsNewDirections.ActionContractNewPaymentToPropertiesList action = FutureTransactionsNewDirections.actionContractNewPaymentToPropertiesList();
+        action.setPreviousFragment(Caching.INSTANCE.PROPERTY_NEW_T);
         navController.navigate(action);
     }
 

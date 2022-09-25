@@ -3,6 +3,7 @@ package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.fragments.transactions.Categories.ViewModelCategory;
 import be.kuleuven.elcontador10.background.model.ImageFireBase;
 import be.kuleuven.elcontador10.background.model.Interfaces.ViewModelCamaraInterface;
@@ -18,6 +19,8 @@ public class ViewModel_NewTransaction extends ViewModelCategory implements ViewM
     public void selectStakeholder(StakeHolder stakeholder){
         chosenStakeholder.setValue(stakeholder);
     }
+
+
     public void reset(){
         chosenStakeholder.setValue(null);
         chosenProperty.setValue(null);
@@ -47,5 +50,17 @@ public class ViewModel_NewTransaction extends ViewModelCategory implements ViewM
     }
     @Override
     public void resetImage(){ chosenImage.setValue(null); }
+
+    //ChosenCategory
+    private final MutableLiveData<EmojiCategory> chosenCategory = new MutableLiveData<>();
+    public LiveData<EmojiCategory> getChosenCategory() {
+        return chosenCategory;
+    }
+    public void selectCategory(EmojiCategory categoryInput){
+        chosenCategory.setValue(categoryInput);
+    }
+    public void resetCategory(){
+        chosenCategory.setValue(null);
+    }
 
 }

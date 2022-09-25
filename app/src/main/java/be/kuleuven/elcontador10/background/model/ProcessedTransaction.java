@@ -175,7 +175,7 @@ public class ProcessedTransaction {
                 .putFile(ImageSelected.getContentUri())
                 .addOnSuccessListener(taskSnapshot ->
                         new AlertDialog.Builder(context)
-                                .setTitle(R.string.photo_added)
+                                .setTitle(R.string.photo_captured)
                                 .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
                                 .create()
                                 .show())

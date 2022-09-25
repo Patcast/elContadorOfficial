@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 
 import be.kuleuven.elcontador10.R;
@@ -38,6 +39,7 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
     private NavController navController;
     private String prevTAG;
     private StakeHolder stakeHolder;
+    private ViewModel_NewTransaction viewModel_newTransaction;
 
     public PropertiesList(String prevTAG, StakeHolder stakeHolder) {
         this.prevTAG = prevTAG;
@@ -46,25 +48,28 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
 
     public PropertiesList() { }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mainActivity = (MainActivity) requireActivity();
+        prevTAG =PropertiesListArgs.fromBundle(getArguments()).getPreviousFragment();
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_properties, container, false);
+
+
+        viewModel_newTransaction = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
+        viewModelPropertiesList = new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);
+        viewModelPropertiesList.requestListOfProperties();
+
         RecyclerView recyclerView = view.findViewById(R.id.rec_all_properties);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        mainActivity = (MainActivity) requireActivity();
-        viewModelPropertiesList = new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);
-        ViewModel_NewTransaction viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
-        viewModelPropertiesList.requestListOfProperties();
-        try {
-            prevTAG = PropertiesListArgs.fromBundle(getArguments()).getPreviousFragment();
-        }
-        catch(Exception ignore) { }
-
         if(prevTAG == null) adapter = new PropertiesListRecViewAdapter(view);
-        else adapter = new PropertiesListRecViewAdapter(view, prevTAG, viewModel);
-
+        else adapter = new PropertiesListRecViewAdapter(view, prevTAG, viewModel_newTransaction);
         recyclerView.setAdapter(adapter);
 
         return view;
@@ -74,19 +79,29 @@ public class PropertiesList extends Fragment implements  MainActivity.TopMenuHan
     @Override
     public void onViewCreated(@NonNull  View view, @Nullable  Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        if (prevTAG == null || prevTAG.equals(Caching.INSTANCE.PROPERTY_NEW_T)){
-            navController = Navigation.findNavController(view);
-            viewModelPropertiesList.getListOfProperties().observe(getViewLifecycleOwner(),
-                    properties -> adapter.setPropertyListOnAdapter(properties));
+        navController = Navigation.findNavController(view);
+        LinearLayout noPropertyItem = view.findViewById(R.id.layoutNoProperty);
+        noPropertyItem.setVisibility(View.GONE);
+        if(prevTAG==null||prevTAG.equals(Caching.INSTANCE.PROPERTY_NEW_T)){
+            viewModelPropertiesList.getListOfProperties().observe(getViewLifecycleOwner(), properties -> adapter.setPropertyListOnAdapter(properties));
             setTopMenu();
-        } else {
+            if (prevTAG.equals(Caching.INSTANCE.PROPERTY_NEW_T)){
+                noPropertyItem.setVisibility(View.VISIBLE);
+                noPropertyItem.setOnClickListener(c->onNoPropertySelected());
+            }
+        }
+        else{
             viewModelPropertiesList.requestStakeholderProperties(stakeHolder);
-            viewModelPropertiesList.getStakeholderProperties().observe(getViewLifecycleOwner(),
-                    properties -> adapter.setPropertyListOnAdapter(properties));
+            viewModelPropertiesList.getStakeholderProperties().observe(getViewLifecycleOwner(), properties -> adapter.setPropertyListOnAdapter(properties));
         }
     }
-       private void setTopMenu(){
+
+    private void onNoPropertySelected() {
+        viewModel_newTransaction.resetChosenProperty();
+        navController.popBackStack();
+    }
+
+    private void setTopMenu(){
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
