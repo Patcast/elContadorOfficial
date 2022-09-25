@@ -33,7 +33,7 @@ import be.kuleuven.elcontador10.background.model.Account;
 
 
 
-public class Accounts extends Fragment implements Caching.AccountsObserver, AccountsBottomMenu.AccountsBottomSheetListener {
+public class Accounts extends Fragment implements Caching.AccountsObserver {
 
 
     private static final String TAG = "Accounts";
@@ -43,7 +43,6 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Acco
     ArrayList<Account> accountsList = new ArrayList<>();
     View view;
     NavController navController;
-    AccountsBottomMenu bottomSheet;
 
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -75,15 +74,15 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Acco
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
-                menu.findItem(R.id.menu_bottom_sheet).setVisible(true);
+                menu.findItem(R.id.menu_log_out).setVisible(true);
                 menu.findItem(R.id.menu_add).setVisible(true);
             }
 
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()){
-                    case R.id.menu_bottom_sheet:
-                        onBottomSheetClick();
+                    case R.id.menu_log_out:
+                        onLogOut();
                         return true;
                     case R.id.menu_add:
                         onAddClick();
@@ -140,23 +139,12 @@ public class Accounts extends Fragment implements Caching.AccountsObserver, Acco
 
 
 
-    @Override
-    public void onMySettingsClick() {
-        bottomSheet.dismiss();
-    }
-
-    @Override
     public void onLogOut() {
-        bottomSheet.dismiss();
         mainActivity.signOut();
         navController.navigate(R.id.signIn);
     }
     //Menu
 
-    public void onBottomSheetClick() {
-        bottomSheet = new AccountsBottomMenu(this);
-        bottomSheet.show(getParentFragmentManager(),"AccountsBottomSheet");
-    }
     public void onAddClick() {
         navController.navigate(R.id.action_accounts_to_addNewAccount);
     }

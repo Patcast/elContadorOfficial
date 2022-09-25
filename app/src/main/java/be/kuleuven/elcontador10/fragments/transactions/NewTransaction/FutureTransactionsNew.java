@@ -49,10 +49,7 @@ import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
 
 public class FutureTransactionsNew extends Fragment {
 
-    private static final String TAG = "NewFutureTransaction";
-    private final int ONE_TIME=0,  CUSTOM=6;
     private NavController navController;
-
     private TextView numOfFutureTransTxt,summaryOfFutureTransactionsTxt,propertyTxt,emojiTxt,stakeTxt,fillStakeTxt,fillAmountTxt,wordCountNotesTxt,fillTitleTxt;
     EditText notesTxt,titleTxt,amountTxt;
     private Spinner frequency_spinner;
@@ -161,10 +158,15 @@ public class FutureTransactionsNew extends Fragment {
         selectCategory = view.findViewById(R.id.imageButton_chooseCategory);
         emojiTxt = view.findViewById(R.id.text_emoji_category);
         propertyTxt.setOnClickListener(v->lookForProperty());
-        stakeTxt.setOnClickListener(v -> { navController.navigate(R.id.action_contractNewPayment_to_chooseStakeHolderDialog); });
+        stakeTxt.setOnClickListener(v -> goToStakeList());
 
     }
 
+    private void goToStakeList() {
+        FutureTransactionsNewDirections.ActionTransactionFutureNewToStakeholders action = FutureTransactionsNewDirections.actionTransactionFutureNewToStakeholders();
+        action.setPrevFragment(Caching.INSTANCE.PROPERTY_STAKEHOLDER);
+        navController.navigate(action);
+    }
     private void lookForProperty() {
         FutureTransactionsNewDirections.ActionContractNewPaymentToPropertiesList action = FutureTransactionsNewDirections.actionContractNewPaymentToPropertiesList();
         action.setPreviousFragment(Caching.INSTANCE.PROPERTY_NEW_T);
@@ -274,6 +276,8 @@ public class FutureTransactionsNew extends Fragment {
 
         int frequencyID = frequency_spinner.getSelectedItemPosition();
         String collectionSizeString =numOfFutureTransTxt.getText().toString();
+        int ONE_TIME = 0;
+        int CUSTOM = 6;
         if ((frequencyID == ONE_TIME ||(frequencyID != CUSTOM && collectionSizeString.length()>0))&& date!=null) {
             int collectionSize = (collectionSizeString.length() > 0) ? Integer.parseInt(collectionSizeString) : 1;
 

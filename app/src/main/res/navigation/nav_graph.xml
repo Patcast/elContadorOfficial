@@ -23,14 +23,14 @@
         android:label="fragment_new_transaction"
         tools:layout="@layout/fragment_transaction_new" >
         <action
-            android:id="@+id/action_newTransaction_to_chooseStakeHolderDialog"
-            app:destination="@id/chooseStakeHolderDialog" />
-        <action
             android:id="@+id/action_newTransaction_to_chooseCategory"
             app:destination="@id/chooseCategory" />
         <action
             android:id="@+id/action_newTransaction_to_propertiesList"
             app:destination="@id/propertiesList" />
+        <action
+            android:id="@+id/action_newTransaction_to_stakeholders"
+            app:destination="@id/stakeholders" />
     </fragment>
     <fragment
         android:id="@+id/signIn"
@@ -45,15 +45,6 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popUpTo="@id/accounts"
             app:popUpToInclusive="false" />
-    </fragment>
-    <fragment
-        android:id="@+id/chooseStakeHolderDialog"
-        android:name="be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ChooseStakeHolder"
-        android:label="fragment_choose_stake_holder"
-        tools:layout="@layout/fragment_choose_stake_holder" >
-        <action
-            android:id="@+id/action_chooseStakeHolderDialog_to_newTransaction"
-            app:popUpTo="@id/newTransaction"/>
     </fragment>
     <fragment
         android:id="@+id/accounts"
@@ -104,9 +95,6 @@
             android:id="@+id/action_microAccountViewPagerHolder_to_newTransaction"
             app:destination="@id/newTransaction" />
         <action
-            android:id="@+id/action_stakeholderViewPagerHolder_to_accountSettings"
-            app:destination="@id/accountSettings" />
-        <action
             android:id="@+id/action_stakeholderViewPagerHolder_to_newMicroAccount"
             app:destination="@id/newMicroAccount" />
         <action
@@ -125,11 +113,11 @@
             android:id="@+id/action_contractNewPayment_to_chooseCategory"
             app:destination="@id/chooseCategory" />
         <action
-            android:id="@+id/action_contractNewPayment_to_chooseStakeHolderDialog"
-            app:destination="@id/chooseStakeHolderDialog" />
-        <action
             android:id="@+id/action_contractNewPayment_to_propertiesList"
             app:destination="@id/propertiesList" />
+        <action
+            android:id="@+id/action_transactionFutureNew_to_stakeholders"
+            app:destination="@id/stakeholders" />
     </fragment>
     <fragment
         android:id="@+id/chooseCategory"
@@ -177,6 +165,11 @@
         <action
             android:id="@+id/action_stakeholders_to_accountSettings"
             app:destination="@id/accountSettings" />
+        <argument
+            android:name="prevFragment"
+            app:argType="string"
+            android:defaultValue="@null"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/accountSettings"
@@ -191,7 +184,8 @@
     <fragment
         android:id="@+id/propertiesList"
         android:name="be.kuleuven.elcontador10.fragments.property.PropertiesList"
-        android:label="PropertiesList" >
+        android:label="PropertiesList"
+        tools:layout="@layout/fragment_all_properties">
         <action
             android:id="@+id/action_propertiesList_to_addProperty"
             app:destination="@id/addProperty" />
@@ -210,18 +204,20 @@
     <fragment
         android:id="@+id/addProperty"
         android:name="be.kuleuven.elcontador10.fragments.property.AddProperty"
-        android:label="AddProperty" >
-        <action
-            android:id="@+id/action_addProperty_to_chooseStakeHolderDialog"
-            app:destination="@id/chooseStakeHolderDialog" />
+        android:label="AddProperty"
+        tools:layout="@layout/fragment_add_new_property">
         <argument
             android:name="property"
             app:argType="be.kuleuven.elcontador10.background.model.Property" />
+        <action
+            android:id="@+id/action_addProperty_to_stakeholders"
+            app:destination="@id/stakeholders" />
     </fragment>
     <fragment
         android:id="@+id/propertyViewPageHolder"
         android:name="be.kuleuven.elcontador10.fragments.property.PropertyViewPageHolder"
-        android:label="PropertyViewPageHolder" >
+        android:label="PropertyViewPageHolder"
+        tools:layout="@layout/fragment_micro_account_view_holder">
         <argument
             android:name="property"
             app:argType="be.kuleuven.elcontador10.background.model.Property" />

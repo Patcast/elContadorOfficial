@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private ConstraintLayout stakeholderDetails;
     private SharedPreferences.Editor editor;
     private static final String SAVED_EMAIL_KEY = "email_key";
-    public TopMenuHandler currentTopMenuHandler;
+    //public TopMenuHandler currentTopMenuHandler;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         bottomMenu = findViewById(R.id.bottomNavigationView);
         NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(bottomMenu,navController);
-        toolbar.setOnClickListener(view -> {if(currentTopMenuHandler!=null)currentTopMenuHandler.onToolbarTitleClick();});
+        //toolbar.setOnClickListener(view -> {if(currentTopMenuHandler!=null)currentTopMenuHandler.onToolbarTitleClick();});
         addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
@@ -78,9 +78,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void setCurrentMenuClicker(TopMenuHandler currentTopMenuHandler) {
+   /* public void setCurrentMenuClicker(TopMenuHandler currentTopMenuHandler) {
         this.currentTopMenuHandler = currentTopMenuHandler;
-    }
+    }*/
     public void saveLoggedInState(String email){
         editor.putString(SAVED_EMAIL_KEY,email);
         editor.commit();
@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         bottomMenu.setVisibility(visibility);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void displayStakeHolderDetails(boolean display, String sumOfTrans, String initialReceivables, String initialPayables, String stakeholderID) {
         if (display) {
             stakeholderDetails.setVisibility(View.VISIBLE);

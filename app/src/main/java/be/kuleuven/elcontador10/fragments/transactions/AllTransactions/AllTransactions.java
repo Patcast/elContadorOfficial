@@ -60,7 +60,7 @@ import be.kuleuven.elcontador10.background.tools.Exporter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.fragments.property.PropertyListViewModel;
 
-public class AllTransactions extends Fragment implements DatePickerDialog.OnDateSetListener, MainActivity.TopMenuHandler {
+public class AllTransactions extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     private RecyclerView recyclerView;
     private TransactionsRecViewAdapter recyclerViewAdapter;
@@ -175,20 +175,26 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
 
     private void setTopMenu(){
         requireActivity().addMenuProvider(new MenuProvider() {
+            final int menu_filter = R.id.menu_filter, menu_export = R.id.menu_export,menu_share = R.id.menu_share;
+
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
-                menu.findItem(R.id.menu_filter).setVisible(true);
-                menu.findItem(R.id.menu_export).setVisible(true);
+                menu.findItem(menu_filter).setVisible(true);
+                menu.findItem(menu_export).setVisible(true);
+                menu.findItem(R.id.menu_share).setVisible(true);
             }
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()){
-                    case R.id.menu_filter:
+                    case menu_filter:
                         onFilterClick();
                         return true;
-                    case R.id.menu_export:
+                    case menu_share:
+                        navController.navigate(R.id.action_allTransactions2_to_accountSettings);
+                        return true;
+                    case menu_export:
                         onExportClick();
                         return true;
                     default:
@@ -205,7 +211,6 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
     public void onStart() {
         super.onStart();
         mainActivity.displayBottomNavigationMenu(true);
-        mainActivity.setCurrentMenuClicker(this);
         recyclerView.setAdapter(recyclerViewAdapter);
 
     }
@@ -213,7 +218,6 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
     @Override
     public void onStop() {
         super.onStop();
-        mainActivity.setCurrentMenuClicker(null);
         mainActivity.displayBottomNavigationMenu(false);
 
     }
@@ -269,24 +273,6 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
         txtEquity.setText(formatter.getFinalNumber());
     }
 
-/*    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void onExport_Clicked(View view) {
-        HashMap<String, Boolean> filter = new HashMap<>();
-
-        filter.put("transaction",true);
-        filter.put("receivable",true);
-        filter.put("payable",true);
-        filter.put("deletedTrans",false);
-        viewModel.setBooleanFilter(filter);
-
-        String message = "Export the current month?\n" + selectedMonth + " " + selectedYear;
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(message)
-                .setPositiveButton("Yes", this::export)
-                .setNegativeButton("No", (dialogInterface, id) -> {})
-                .create().show();
-    }*/
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateDateButtonAndListOfTransactions(Map<String, Integer> calendarFilter) throws ParseException {
@@ -470,10 +456,6 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
         filterDialog.show(getParentFragmentManager(),"AccountsBottomSheet");
     }
 
-    @Override
-    public void onToolbarTitleClick() {
-        navController.navigate(R.id.action_allTransactions2_to_accountSettings);
-    }
     @RequiresApi(api = Build.VERSION_CODES.O)
 
     public void onExportClick() {

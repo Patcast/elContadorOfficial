@@ -26,16 +26,21 @@ import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.fragments.stakeholders.StakeholdersListDirections;
+import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 
 public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<StakeholderListRecViewAdapter.ViewHolder> implements Filterable {
 
     private final List<StakeHolder> stakeholdersList = new ArrayList<>();
     private final ArrayList<StakeHolder> stakeHoldersFull = new ArrayList<>();
+    private final ViewModel_NewTransaction viewModel;
     private final View viewFromHostingClass;
+    private String prevFrag;
 
-    public StakeholderListRecViewAdapter(View viewFromHostingClass) {
+    public StakeholderListRecViewAdapter(ViewModel_NewTransaction viewModel, View viewFromHostingClass, String prevFrag) {
+        this.viewModel = viewModel;
         this.viewFromHostingClass = viewFromHostingClass;
+        this.prevFrag = prevFrag;
     }
 
     @NonNull
@@ -77,11 +82,16 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
         }
 
         holder.parent.setOnClickListener(v -> {
-                    NavController navController = Navigation.findNavController(viewFromHostingClass);
-                    StakeholdersListDirections.ActionStakeholdersToStakeholder action  = StakeholdersListDirections.actionStakeholdersToStakeholder(stakeholdersList.get(position));
-                    navController.navigate(action);
-                }
-        );
+            NavController navController = Navigation.findNavController(viewFromHostingClass);
+
+            if(prevFrag==null){
+                        StakeholdersListDirections.ActionStakeholdersToStakeholder action  = StakeholdersListDirections.actionStakeholdersToStakeholder(stakeholdersList.get(position));
+                        navController.navigate(action);
+            }else{
+                viewModel.selectStakeholder(stake);
+                navController.popBackStack();
+            }
+        });
     }
 
 

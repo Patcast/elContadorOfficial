@@ -64,6 +64,24 @@
             android:visible="false"
             app:showAsAction="ifRoom"
             />
+        <item android:id="@+id/menu_settings"
+            android:icon="@drawable/icon_settings"
+            android:title="@string/execute_pending_transaction"
+            android:visible="false"
+            app:showAsAction="ifRoom"
+            />
+        <item android:id="@+id/menu_share"
+            android:icon="@drawable/ic_baseline_share_24"
+            android:title="@string/execute_pending_transaction"
+            android:visible="false"
+            app:showAsAction="ifRoom"
+            />
+        <item android:id="@+id/menu_log_out"
+            android:icon="@drawable/icon_logout"
+            android:title="@string/execute_pending_transaction"
+            android:visible="false"
+            app:showAsAction="ifRoom"
+            />
 
     </group>
 

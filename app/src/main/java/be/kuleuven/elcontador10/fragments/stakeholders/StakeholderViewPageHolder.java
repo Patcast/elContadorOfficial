@@ -95,14 +95,14 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
-                menu.findItem(R.id.menu_bottom_sheet).setVisible(true);
+                menu.findItem(R.id.menu_settings).setVisible(true);
                 menu.findItem(R.id.menu_upload_future).setVisible(true);
             }
 
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                final int menu_settings = R.id.menu_bottom_sheet;
+                final int menu_settings = R.id.menu_settings;
                 final int menu_future = R.id.menu_upload_future;
 
                 switch (menuItem.getItemId()){
@@ -189,6 +189,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         }).attach();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onStart() {
         super.onStart();

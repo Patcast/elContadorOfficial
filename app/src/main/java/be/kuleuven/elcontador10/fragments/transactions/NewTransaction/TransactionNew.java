@@ -46,6 +46,7 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.tools.CamaraSetUp;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
+import be.kuleuven.elcontador10.fragments.property.AddPropertyDirections;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -110,7 +111,7 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         Button confirmButton = view.findViewById(R.id.btn_confirm_NewTransaction);
         categoryLayout= view.findViewById(R.id.layout_addCategory);
         // listeners
-        txtStakeHolder.setOnClickListener(v -> { navController.navigate(R.id.action_newTransaction_to_chooseStakeHolderDialog); });
+        txtStakeHolder.setOnClickListener(v ->goToStakeList());
         txt_property_selected.setOnClickListener(v->lookForProperty());
         confirmButton.setOnClickListener(v -> confirmTransaction());
         btnAddCategory.setOnClickListener(this::onCategory_Clicked);
@@ -118,6 +119,12 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         txtEmojiCategory.setOnClickListener(this::onCategory_Clicked);
         setWordCounters();
         accountSelected.setText(Caching.INSTANCE.getAccountName());
+    }
+
+    private void goToStakeList() {
+        TransactionNewDirections.ActionNewTransactionToStakeholders action = TransactionNewDirections.actionNewTransactionToStakeholders();
+        action.setPrevFragment(Caching.INSTANCE.PROPERTY_STAKEHOLDER);
+        navController.navigate(action);
     }
 
     private void lookForProperty() {

@@ -57,8 +57,7 @@ public class AddProperty extends Fragment {
         inputName = view.findViewById(R.id.text_name_new_property);
         counterName = view.findViewById(R.id.text_counter_new_property);
         inputStakeholder = view.findViewById(R.id.text_stakeholder_new_property);
-        inputStakeholder.setOnClickListener(view1 ->
-                navController.navigate(R.id.action_addProperty_to_chooseStakeHolderDialog));
+        inputStakeholder.setOnClickListener(view1 -> goToStakeList());
         viewModelTransaction = new ViewModelProvider(mainActivity).get(ViewModel_NewTransaction.class);
 
         try {
@@ -69,6 +68,12 @@ public class AddProperty extends Fragment {
         } catch (Exception ignore) { }
 
         return view;
+    }
+
+    private void goToStakeList() {
+        AddPropertyDirections.ActionAddPropertyToStakeholders action = AddPropertyDirections.actionAddPropertyToStakeholders();
+        action.setPrevFragment(Caching.INSTANCE.PROPERTY_STAKEHOLDER);
+        navController.navigate(action);
     }
 
     @Override
