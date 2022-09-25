@@ -109,7 +109,7 @@
         <entry key="app/src/main/res/layout/fragment_properties.xml" value="0.2014388489208633" />
         <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_transaction_display.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/fragment_transaction_future_new.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_transaction_future_new.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_transaction_new.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_view_pager_holder.xml" value="0.18796296296296297" />
         <entry key="app/src/main/res/layout/item_loading.xml" value="0.2388888888888889" />

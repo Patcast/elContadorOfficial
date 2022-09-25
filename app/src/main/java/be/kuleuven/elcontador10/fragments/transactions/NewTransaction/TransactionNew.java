@@ -209,10 +209,10 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
             if (txtTitle.getText().toString().length()==0 ) {
                 txtWordsCounterTitle.setText(R.string.this_field_is_requiered);
                 txtWordsCounterTitle.setTextColor(getResources().getColor(R.color.light_red_warning));
-            }else txtMustHaveAmount.setVisibility(View.GONE);
+            }
             if ( amount.isEmpty()||Integer.parseInt(amount) == 0) {
                 txtMustHaveAmount.setVisibility(View.VISIBLE);
-                txtWordsCounterTitle.setTextColor(getResources().getColor(R.color.light_red_warning));
+                txtMustHaveAmount.setTextColor(getResources().getColor(R.color.light_red_warning));
                 txtMustHaveAmount.setText(R.string.this_field_is_requiered);
             }
             if(idCatSelected==null){

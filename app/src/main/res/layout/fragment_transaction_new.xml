@@ -167,7 +167,7 @@
         android:id="@+id/textView_fillAmount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/light_red_warning"/>
+        />
 
     <RadioGroup
         android:id="@+id/radioGroup"
