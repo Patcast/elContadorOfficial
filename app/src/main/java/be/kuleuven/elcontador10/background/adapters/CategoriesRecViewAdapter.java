@@ -21,7 +21,6 @@ import java.util.List;
 
 import be.kuleuven.elcontador10.R;
 
-import be.kuleuven.elcontador10.fragments.transactions.Categories.ViewModelCategory;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.fragments.transactions.Categories.CategoryDialog;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;

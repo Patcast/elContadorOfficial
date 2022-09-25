@@ -46,7 +46,6 @@ import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
-import be.kuleuven.elcontador10.fragments.transactions.Categories.ViewModelCategory;
 
 public class FutureTransactionsNew extends Fragment {
 
@@ -54,15 +53,7 @@ public class FutureTransactionsNew extends Fragment {
     private final int ONE_TIME=0,  CUSTOM=6;
     private NavController navController;
 
-    private TextView numOfFutureTransTxt;
-    private TextView summaryOfFutureTransactionsTxt;
-    private TextView emojiTxt;
-    private TextView stakeTxt;
-    private TextView fillStakeTxt;
-    private TextView propertyTxt;
-    private TextView fillAmountTxt;
-    private TextView wordCountNotesTxt;
-    private TextView fillTitleTxt;
+    private TextView numOfFutureTransTxt,summaryOfFutureTransactionsTxt,propertyTxt,emojiTxt,stakeTxt,fillStakeTxt,fillAmountTxt,wordCountNotesTxt,fillTitleTxt;
     EditText notesTxt,titleTxt,amountTxt;
     private Spinner frequency_spinner;
     private RadioButton payablesButton;
@@ -71,8 +62,6 @@ public class FutureTransactionsNew extends Fragment {
     StakeHolder selectedStakeHolder;
     Property selectedProperty;
     String date=null;
-
-    //variables
     private MainActivity mainActivity;
     private String  idCatSelected;
     private ArrayList<ProcessedTransaction> transactions;
@@ -96,15 +85,12 @@ public class FutureTransactionsNew extends Fragment {
         setButtonsListeners();
         setSpinners();
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
-        viewModel.reset();
-        ViewModelCategory viewModelCategory = new ViewModelProvider(requireActivity()).get(ViewModelCategory.class);
-        viewModelCategory.resetCategory();
-        viewModelCategory.getChosenCategory().observe(getViewLifecycleOwner(), this::setChosenCategory);
         setWordCounters();
     }
     @Override
     public void onStart() {
         super.onStart();
+        viewModel.getChosenCategory().observe(getViewLifecycleOwner(), this::setChosenCategory);
         viewModel.getChosenStakeholder().observe(getViewLifecycleOwner(), this::setStakeChosenText);
         viewModel.getChosenProperty().observe(getViewLifecycleOwner(),this::setPropertyChosen);
     }

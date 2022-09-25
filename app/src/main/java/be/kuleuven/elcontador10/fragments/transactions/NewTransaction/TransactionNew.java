@@ -153,9 +153,6 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
     public void onDestroy() {
         super.onDestroy();
         viewModel.reset();
-        viewModel.resetCategory();
-        viewModel.resetImage();
-        viewModel.resetChosenProperty();
     }
     private void setPropertyChosen(Property property) {
         if(property!=null){

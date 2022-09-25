@@ -49,7 +49,6 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         mainActivity.setHeaderText(getString(R.string.choose_category));
         addCustomCat = view.findViewById(R.id.layout_addCategory);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
-        viewModel = new ViewModelProvider(requireActivity()).get(ViewModelCategory.class);
         startDefaultRecViews(view);
         startCustomRecycler(view);
         return view;
@@ -74,7 +73,6 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        NavController navController = Navigation.findNavController(view);
         addCustomCat.setOnClickListener(v->startDialogForAdding());
     }
     private void startDialogForAdding() {
