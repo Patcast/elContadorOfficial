@@ -39,7 +39,7 @@ import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.tools.ZoomOutPageTransformer;
 import be.kuleuven.elcontador10.fragments.stakeholders.StakeDetailsList;
 
-public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTransformer.PageChangeListener, MainActivity.FABImplement {
+public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTransformer.PageChangeListener {
     private NavController navController;
     private ViewPagerAdapter mAdapter;
     private ViewPager2 viewPager;
@@ -49,7 +49,6 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
     String sumOfTransactions, initialReceivables,initialPayables;
     List<ProcessedTransaction> processedTransactionList = new ArrayList<>();
     private PropertyListViewModel propertyListViewModel;
-    private PropertyDetails payables, receivables;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -159,8 +158,8 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
 
     private void addFragments() {
         mAdapter.addFragment(new PropertyDetails(property,Caching.INSTANCE.TYPE_CASH));
-        receivables = new PropertyDetails(property,Caching.INSTANCE.TYPE_RECEIVABLES);
-        payables = new PropertyDetails(property,Caching.INSTANCE.TYPE_PAYABLES);
+        PropertyDetails receivables = new PropertyDetails(property, Caching.INSTANCE.TYPE_RECEIVABLES);
+        PropertyDetails payables = new PropertyDetails(property, Caching.INSTANCE.TYPE_PAYABLES);
         mAdapter.addFragment(receivables);
         mAdapter.addFragment(payables);
         viewPager.setAdapter(mAdapter);
@@ -190,13 +189,6 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
         mainActivity.displayStakeHolderDetails(true, sumOfTransactions,initialReceivables,initialPayables,property.getStakeholder());
         mainActivity.displayToolBar(true);
         mainActivity.displayTabLayout(true);
-        mainActivity.setFabImplement(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mainActivity.resetFAB();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -206,7 +198,6 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
         viewModel.reset();
         mainActivity.displayTabLayout(false);
         mainActivity.displayStakeHolderDetails(false);
-        mainActivity.setFabImplement(null);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -225,39 +216,5 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
 
     public void setProperty(Property property) {
         this.property = property;
-    }
-
-    @Override
-    public void onTransactionNewClicked() {
-        if (property.getStakeholder() == null) {
-            new AlertDialog.Builder(getContext())
-                    .setTitle(R.string.new_transaction_title)
-                    .setMessage(R.string.create_transaction_property_error)
-                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
-                    .create()
-                    .show();
-        } else {
-            PropertyViewPageHolderDirections.ActionPropertyViewPageHolderToNewTransaction action =
-                    PropertyViewPageHolderDirections.actionPropertyViewPageHolderToNewTransaction();
-            action.setIdProperty(property.getId());
-            navController.navigate(action);
-        }
-    }
-
-    @Override
-    public void onScheduledTransactionNewClicked() {
-        if (property.getStakeholder() == null) {
-            new AlertDialog.Builder(getContext())
-                    .setTitle(R.string.new_transaction_title)
-                    .setMessage(R.string.create_transaction_property_error)
-                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
-                    .create()
-                    .show();
-        } else {
-            PropertyViewPageHolderDirections.ActionPropertyViewPageHolderToTransactionFutureNew action =
-                    PropertyViewPageHolderDirections.actionPropertyViewPageHolderToTransactionFutureNew();
-            action.setIdProperty(property.getId());
-            navController.navigate(action);
-        }
     }
 }
