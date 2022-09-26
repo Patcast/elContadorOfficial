@@ -170,9 +170,9 @@ public class ViewModel_AllTransactions extends ViewModel {
                 list.add(myStakeHolder);
             }
             setStakeholdersList(list);
+            Caching.INSTANCE.setStakeholderList(list);
         });
     }
-
 
     /// Boolean filter
     private final MutableLiveData<Map<String,Boolean>> booleanFilter = new MutableLiveData<>();

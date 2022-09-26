@@ -31,6 +31,15 @@
         <action
             android:id="@+id/action_newTransaction_to_stakeholders"
             app:destination="@id/stakeholders" />
+        <argument
+            android:name="idStakeholder"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument android:name="idProperty"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/signIn"
@@ -100,6 +109,9 @@
         <action
             android:id="@+id/action_stakeholderViewPagerHolder_to_propertyViewPageHolder"
             app:destination="@id/propertyViewPageHolder" />
+        <action
+            android:id="@+id/action_stakeholderViewPagerHolder_to_transactionFutureNew"
+            app:destination="@id/transactionFutureNew" />
     </fragment>
     <fragment
         android:id="@+id/transactionFutureNew"
@@ -107,8 +119,10 @@
         android:label="fragment_transaction_future_new"
         tools:layout="@layout/fragment_transaction_future_new">
         <argument
-            android:name="contractId"
-            app:argType="string" />
+            android:name="idStakeholder"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/action_contractNewPayment_to_chooseCategory"
             app:destination="@id/chooseCategory" />
@@ -118,6 +132,10 @@
         <action
             android:id="@+id/action_transactionFutureNew_to_stakeholders"
             app:destination="@id/stakeholders" />
+        <argument android:name="idProperty"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/chooseCategory"

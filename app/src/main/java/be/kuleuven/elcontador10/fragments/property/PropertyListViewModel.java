@@ -70,5 +70,15 @@ public class PropertyListViewModel extends ViewModel {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public Property getPropertyFromID(String id) {
+        List<Property> properties = this.listOfProperties.getValue();
 
+        if (properties != null) {
+            return properties.stream()
+                    .filter(property -> property.getId().equals(id))
+                    .findFirst()
+                    .orElse(null);
+        } else return null;
+    }
 }

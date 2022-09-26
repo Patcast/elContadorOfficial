@@ -41,7 +41,7 @@ import be.kuleuven.elcontador10.fragments.property.PropertiesList;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.ViewModel_AllTransactions;
 
 
-public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTransformer.PageChangeListener {
+public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTransformer.PageChangeListener, MainActivity.FABImplement {
     private NavController navController;
     private ViewPagerAdapter mAdapter;
     private ViewPager2 viewPager;
@@ -196,7 +196,15 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         mainActivity.displayStakeHolderDetails(true, sumOfTransactions,initialReceivables,initialPayables,null);
         mainActivity.displayToolBar(true);
         mainActivity.displayTabLayout(true);
+        mainActivity.setFabImplement(this);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mainActivity.resetFAB();
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onStop() {
@@ -204,6 +212,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
 
         mainActivity.displayTabLayout(false);
         mainActivity.displayStakeHolderDetails(false);
+        mainActivity.setFabImplement(null);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -227,5 +236,21 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
 
     public void setStakeHolder(StakeHolder stakeHolder) {
         this.stakeHolder = stakeHolder;
+    }
+
+    @Override
+    public void onTransactionNewClicked() {
+        StakeholderViewPageHolderDirections.ActionMicroAccountViewPagerHolderToNewTransaction action =
+                StakeholderViewPageHolderDirections.actionMicroAccountViewPagerHolderToNewTransaction();
+        action.setIdStakeholder(stakeHolder.getId());
+        navController.navigate(action);
+    }
+
+    @Override
+    public void onScheduledTransactionNewClicked() {
+        StakeholderViewPageHolderDirections.ActionStakeholderViewPagerHolderToTransactionFutureNew action =
+                StakeholderViewPageHolderDirections.actionStakeholderViewPagerHolderToTransactionFutureNew();
+        action.setIdStakeholder(stakeHolder.getId());
+        navController.navigate(action);
     }
 }

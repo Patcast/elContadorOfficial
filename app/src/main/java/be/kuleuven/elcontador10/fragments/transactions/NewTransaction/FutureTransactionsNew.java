@@ -47,6 +47,9 @@ import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
+import be.kuleuven.elcontador10.fragments.property.PropertyListViewModel;
+import be.kuleuven.elcontador10.fragments.property.PropertyViewModel;
+import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.ViewModel_AllTransactions;
 
 public class FutureTransactionsNew extends Fragment {
 
@@ -85,6 +88,20 @@ public class FutureTransactionsNew extends Fragment {
         setButtonsListeners();
         setSpinners();
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
+
+        if (getArguments() != null) {
+            String stakeholderID = FutureTransactionsNewArgs.fromBundle(getArguments()).getIdStakeholder();
+            if (stakeholderID != null)
+                viewModel.selectStakeholder(Caching.INSTANCE.getStakeHolder(stakeholderID));
+            String propertyID = FutureTransactionsNewArgs.fromBundle(getArguments()).getIdProperty();
+            if (propertyID != null) {
+                PropertyListViewModel viewModelProperty = new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);
+                Property chosenProperty = viewModelProperty.getPropertyFromID(propertyID);
+                this.viewModel.selectProperty(chosenProperty);
+            }
+            getArguments().clear();
+        }
+
         setWordCounters();
     }
     @RequiresApi(api = Build.VERSION_CODES.N)

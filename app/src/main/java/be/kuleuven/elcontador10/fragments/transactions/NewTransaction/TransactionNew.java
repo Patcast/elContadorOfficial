@@ -46,6 +46,7 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.tools.CamaraSetUp;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
+import be.kuleuven.elcontador10.fragments.property.PropertyListViewModel;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -121,6 +122,20 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         btnAddCategory.setOnClickListener(this::onCategory_Clicked);
         btnAddPicture.setOnClickListener(v -> startCamara());
         txtEmojiCategory.setOnClickListener(this::onCategory_Clicked);
+
+        if (getArguments() != null) {
+            String stakeholderID = FutureTransactionsNewArgs.fromBundle(getArguments()).getIdStakeholder();
+            if (stakeholderID != null)
+                viewModel.selectStakeholder(Caching.INSTANCE.getStakeHolder(stakeholderID));
+            String propertyID = FutureTransactionsNewArgs.fromBundle(getArguments()).getIdProperty();
+            if (propertyID != null) {
+                PropertyListViewModel viewModel = new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);
+                Property chosenProperty = viewModel.getPropertyFromID(propertyID);
+                this.viewModel.selectProperty(chosenProperty);
+            }
+            getArguments().clear();
+        }
+
         setWordCounters();
         accountSelected.setText(Caching.INSTANCE.getAccountName());
     }

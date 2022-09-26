@@ -138,14 +138,12 @@ public enum Caching {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void openAccountFully(String chosenAccountId){
         setChosenAccountId(chosenAccountId);
-        requestGroupOFStakeHolders(chosenAccountId);
         requestAccountTransactions(chosenAccountId);
         requestCustomCategories();
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void openQuickNewTransaction(String chosenAccountId){
         setChosenAccountId(chosenAccountId);
-        requestGroupOFStakeHolders(chosenAccountId);
         requestCustomCategories();
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -247,28 +245,13 @@ public enum Caching {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void requestGroupOFStakeHolders(String chosenAccountId){
-        String stakeHoldersUrl = "/accounts/"+chosenAccountId+"/stakeHolders";
-        db.collection(stakeHoldersUrl)
-                .addSnapshotListener((value, e) -> {
-                    if (e != null) {
-                        Log.w(TAG, "Listen failed.", e);
-                        return;
-                    }
+    public void setStakeholderList(List<StakeHolder> stakeholderList){
+        if (stakeholderList != null) {
+            this.stakeHolders.clear();
+            this.stakeHolders.addAll(stakeholderList);
+        }
 
-                    stakeHolders.clear();
-                    assert value != null;
-                    for (QueryDocumentSnapshot doc : value) {
-                        StakeHolder myStakeHolder =  doc.toObject(StakeHolder.class);
-
-                        myStakeHolder.setId(doc.getId());
-
-                        stakeHolders.add(myStakeHolder);
-                    }
-                    stakeholdersObservers.forEach(s->s.notifyStakeholdersObserver(getStakeHolders()));
-                });
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void requestAccountTransactions(String chosenAccountId){
@@ -467,6 +450,8 @@ public enum Caching {
         else
             return "N/A";
     }
+
+
 
     public boolean checkPermission(String loggedInEmail) {
         return getChosenAccount().getOwner().equals(loggedInEmail);
