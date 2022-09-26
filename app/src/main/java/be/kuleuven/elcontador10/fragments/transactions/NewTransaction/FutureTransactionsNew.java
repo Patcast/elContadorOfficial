@@ -277,7 +277,7 @@ public class FutureTransactionsNew extends Fragment {
             valid = false;
         }
         if (selectedStakeHolder == null) {
-            fillStakeTxt.setText(R.string.this_field_is_requiered);
+            fillStakeTxt.setText(R.string.this_field_is_required);
             valid = false;
         }
         if (date == null) {

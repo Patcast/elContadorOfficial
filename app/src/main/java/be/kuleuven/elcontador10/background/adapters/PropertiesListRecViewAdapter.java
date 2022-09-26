@@ -1,5 +1,6 @@
 package be.kuleuven.elcontador10.background.adapters;
 
+import android.content.res.ColorStateList;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,7 +91,7 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
                         StakeholderViewPageHolderDirections.actionStakeholderViewPagerHolderToPropertyViewPageHolder(property);
                 navController.navigate(action);
             });
-         else {
+        else {
             holder.parent.setOnClickListener(v -> {
                 viewModel.selectProperty(property);
                 navController.popBackStack();

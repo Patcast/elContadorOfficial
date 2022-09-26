@@ -50,7 +50,7 @@
     <string name="category_name">"Nombre de la categoría "</string>
     <string name="category_icon">"Emoji de la categoría "</string>
     <string name="invalid_icon_please_enter_an_emoji">Icono invalido, favor de elegir un emoji.</string>
-    <string name="this_field_is_requiered">Este campo es mandatorio.</string>
+    <string name="this_field_is_required">Este campo es mandatorio.</string>
     <string name="editing_custom_category">"Editando Categoría "</string>
     <string name="add_new_cat">"Añadir categoría "</string>
     <string name="dismiss">Cancelar</string>

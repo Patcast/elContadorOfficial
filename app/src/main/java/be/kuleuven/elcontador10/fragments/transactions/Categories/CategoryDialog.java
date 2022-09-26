@@ -122,10 +122,10 @@ public class CategoryDialog extends DialogFragment {
                                                 }
                         }else{
                             textEmojiRequest.setVisibility(View.VISIBLE);
-                            textEmojiRequest.setText(R.string.this_field_is_requiered);
+                            textEmojiRequest.setText(R.string.this_field_is_required);
                         }
         }else{
-            textWordCounter.setText(R.string.this_field_is_requiered);
+            textWordCounter.setText(R.string.this_field_is_required);
             textWordCounter.setTextColor(getResources().getColor(R.color.light_red_warning));
         }
     }

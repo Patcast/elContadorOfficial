@@ -114,7 +114,7 @@ public class NewStakeholder extends Fragment {
         String role = inputRole.getText().toString();
 
         if (name.isEmpty()) {
-            counterName.setText(R.string.this_field_is_requiered);
+            counterName.setText(R.string.this_field_is_required);
             counterName.setTextColor(getResources().getColor(R.color.light_red_warning));
         }
         else {
