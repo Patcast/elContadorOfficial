@@ -70,12 +70,13 @@
                 android:id="@+id/constraintLayout2"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:background="@drawable/new_account_category_outline"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline5"
-                app:layout_constraintTop_toTopOf="@+id/payment_new_title">
+                app:layout_constraintTop_toTopOf="@+id/payment_new_title"
+                android:layout_marginLeft="10dp">
 
                 <TextView
                     android:id="@+id/text_emoji_category"

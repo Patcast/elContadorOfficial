@@ -35,7 +35,7 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
     private final ArrayList<StakeHolder> stakeHoldersFull = new ArrayList<>();
     private final ViewModel_NewTransaction viewModel;
     private final View viewFromHostingClass;
-    private String prevFrag;
+    private final String prevFrag;
 
     public StakeholderListRecViewAdapter(ViewModel_NewTransaction viewModel, View viewFromHostingClass, String prevFrag) {
         this.viewModel = viewModel;
@@ -84,10 +84,10 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
         holder.parent.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(viewFromHostingClass);
 
-            if(prevFrag==null){
+            if(prevFrag == null){
                         StakeholdersListDirections.ActionStakeholdersToStakeholder action  = StakeholdersListDirections.actionStakeholdersToStakeholder(stakeholdersList.get(position));
                         navController.navigate(action);
-            }else{
+            } else {
                 viewModel.selectStakeholder(stake);
                 navController.popBackStack();
             }
@@ -100,7 +100,7 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
         return stakeholdersList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textName, textReceivables,textViewPayables, textRole;
         private final ConstraintLayout parent;
 

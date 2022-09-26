@@ -284,7 +284,7 @@
     <string name="transaction_executed">Transacción futura devengada</string>
     <string name="failed_delete_transaction">Error al eliminar transacción</string>
     <string name="failed_execute_transaction">"Error al devengar la transacción "</string>
-    <string name="must_choose_ategory">Favor de elegir una categoría</string>
+    <string name="must_choose_category">Favor de elegir una categoría</string>
     <string name="stakeholder_delete_fail">Error al eliminar a un participante</string>
     <string name="stakeholder_deleted">Participante eliminado.</string>
     <string name="not_enough_permission_delete">"Su usuario no puede eliminar lo deseado. "</string>

@@ -344,7 +344,7 @@
     <string name="stakeholder_deleted">Stakeholder deleted.</string>
     <string name="stakeholder_delete_fail">Failed to delete stakeholder.</string>
     <string name="edit_property">Edit property</string>
-    <string name="must_choose_ategory">You must choose a category</string>
+    <string name="must_choose_category">You must choose a category</string>
     <string name="delete_category">Delete Category</string>
     <string name="are_you_sure_delete_category">Are you sure you want to delete this category?</string>
     <string name="stakeholder_settings">Stakeholder\'s settings</string>

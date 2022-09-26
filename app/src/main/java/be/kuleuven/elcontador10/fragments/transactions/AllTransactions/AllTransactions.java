@@ -175,14 +175,14 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
 
     private void setTopMenu(){
         requireActivity().addMenuProvider(new MenuProvider() {
-            final int menu_filter = R.id.menu_filter, menu_export = R.id.menu_export,menu_share = R.id.menu_share;
+            final int menu_filter = R.id.menu_filter, menu_export = R.id.menu_export, menu_settings = R.id.menu_settings;
 
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
                 menu.findItem(menu_filter).setVisible(true);
                 menu.findItem(menu_export).setVisible(true);
-                menu.findItem(R.id.menu_share).setVisible(true);
+                menu.findItem(menu_settings).setVisible(true);
             }
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -191,7 +191,7 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
                     case menu_filter:
                         onFilterClick();
                         return true;
-                    case menu_share:
+                    case menu_settings:
                         navController.navigate(R.id.action_allTransactions2_to_accountSettings);
                         return true;
                     case menu_export:

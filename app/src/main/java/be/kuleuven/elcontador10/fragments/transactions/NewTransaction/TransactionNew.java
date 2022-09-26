@@ -46,7 +46,6 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.tools.CamaraSetUp;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
-import be.kuleuven.elcontador10.fragments.property.AddPropertyDirections;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -66,8 +65,8 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
     String idCatSelected,additional_transaction;
     ConstraintLayout categoryLayout;
     List <String>trans_type = new ArrayList<>();
-    private final String TAG  = "TransactionNew";
 
+    public static final String TAG  = "TransactionNew";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -122,13 +121,15 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
     }
 
     private void goToStakeList() {
-        TransactionNewDirections.ActionNewTransactionToStakeholders action = TransactionNewDirections.actionNewTransactionToStakeholders();
-        action.setPrevFragment(Caching.INSTANCE.PROPERTY_STAKEHOLDER);
+        TransactionNewDirections.ActionNewTransactionToStakeholders action =
+                TransactionNewDirections.actionNewTransactionToStakeholders();
+        action.setPrevFragment(TAG);
         navController.navigate(action);
     }
 
     private void lookForProperty() {
-        TransactionNewDirections.ActionNewTransactionToPropertiesList action = TransactionNewDirections.actionNewTransactionToPropertiesList();
+        TransactionNewDirections.ActionNewTransactionToPropertiesList action =
+                TransactionNewDirections.actionNewTransactionToPropertiesList();
         action.setPreviousFragment(Caching.INSTANCE.PROPERTY_NEW_T);
         navController.navigate(action);
     }
@@ -224,7 +225,7 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
             }
             if(idCatSelected==null){
                 categoryLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.missing_new_category,null));
-                Toast.makeText(mainActivity, R.string.must_choose_ategory, Toast.LENGTH_LONG).show();
+                Toast.makeText(mainActivity, R.string.must_choose_category, Toast.LENGTH_LONG).show();
             }
         }
         else{

@@ -24,6 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -63,6 +64,8 @@ public class FutureTransactionsNew extends Fragment {
     private String  idCatSelected;
     private ArrayList<ProcessedTransaction> transactions;
     private ViewModel_NewTransaction viewModel;
+
+    public static final String TAG = "FutureTransactionsNew";
 
     @Nullable
     @Override
@@ -120,7 +123,6 @@ public class FutureTransactionsNew extends Fragment {
     }
 
     private void setSpinners() {
-
         ArrayAdapter<String> frequency_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.frequency));
         frequency_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         frequency_spinner.setAdapter(frequency_adapter);
@@ -159,16 +161,17 @@ public class FutureTransactionsNew extends Fragment {
         emojiTxt = view.findViewById(R.id.text_emoji_category);
         propertyTxt.setOnClickListener(v->lookForProperty());
         stakeTxt.setOnClickListener(v -> goToStakeList());
-
     }
 
     private void goToStakeList() {
-        FutureTransactionsNewDirections.ActionTransactionFutureNewToStakeholders action = FutureTransactionsNewDirections.actionTransactionFutureNewToStakeholders();
-        action.setPrevFragment(Caching.INSTANCE.PROPERTY_STAKEHOLDER);
+        FutureTransactionsNewDirections.ActionTransactionFutureNewToStakeholders action =
+                FutureTransactionsNewDirections.actionTransactionFutureNewToStakeholders();
+        action.setPrevFragment(TAG);
         navController.navigate(action);
     }
     private void lookForProperty() {
-        FutureTransactionsNewDirections.ActionContractNewPaymentToPropertiesList action = FutureTransactionsNewDirections.actionContractNewPaymentToPropertiesList();
+        FutureTransactionsNewDirections.ActionContractNewPaymentToPropertiesList action =
+                FutureTransactionsNewDirections.actionContractNewPaymentToPropertiesList();
         action.setPreviousFragment(Caching.INSTANCE.PROPERTY_NEW_T);
         navController.navigate(action);
     }
@@ -235,7 +238,9 @@ public class FutureTransactionsNew extends Fragment {
         String amount_text = amountTxt.getText().toString();
 
         if(noInputErrors(title_text,amount_text)){
-            List <String> type_input = (payablesButton.isChecked())? Arrays.asList(null,"PAYABLES", null,"PENDING"):Arrays.asList(null,null, "RECEIVABLES","PENDING");
+            List <String> type_input = (payablesButton.isChecked())?
+                    Arrays.asList(null, Caching.INSTANCE.TYPE_PAYABLES, null, Caching.INSTANCE.TYPE_PENDING) :
+                    Arrays.asList(null,null, Caching.INSTANCE.TYPE_RECEIVABLES, Caching.INSTANCE.TYPE_PENDING);
             String propertyId = (selectedProperty!=null)?selectedProperty.getId():"";
             transactions.forEach(t->t.setFutureTransactionsFields(
                     title_text,
@@ -254,21 +259,37 @@ public class FutureTransactionsNew extends Fragment {
     }
 
     private boolean noInputErrors(String title_text,String amount_text) {
+        boolean valid = true;
 
         if (title_text.equals("")) {
             fillTitleTxt.setText(R.string.add_title);
-            fillTitleTxt.setTextColor(getContext().getResources().getColor(R.color.light_red_warning));
+            fillTitleTxt.setTextColor(requireContext().getResources().getColor(R.color.light_red_warning));
+            valid = false;
         }
-        else if (amount_text.equals("")) {
+        if (amount_text.equals("")) {
             fillAmountTxt.setText(R.string.zero_amount);
-            fillAmountTxt.setTextColor(getContext().getResources().getColor(R.color.light_red_warning));
+            fillAmountTxt.setTextColor(requireContext().getResources().getColor(R.color.light_red_warning));
+            valid = false;
         }
-        else if (selectedStakeHolder==null) fillStakeTxt.setText(R.string.this_field_is_requiered);
-        else if (date==null) errorOnDates(getString(R.string.select_starting_date));
-        else if ( transactions==null||transactions.size()==0 )errorOnDates(getString(R.string.please_fill_in_duration));
-        else return true;
+        if (selectedStakeHolder == null) {
+            fillStakeTxt.setText(R.string.this_field_is_requiered);
+            valid = false;
+        }
+        if (date == null) {
+            errorOnDates(getString(R.string.select_starting_date));
+            valid = false;
+        }
+        if ( transactions == null || transactions.size() == 0 ) {
+            errorOnDates(getString(R.string.please_fill_in_duration));
+            valid = false;
+        }
+        if (idCatSelected == null) {
+            selectCategory.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.missing_new_category,null));
+            Toast.makeText(mainActivity, R.string.must_choose_category, Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
 
-        return false;
+        return valid;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -301,7 +322,7 @@ public class FutureTransactionsNew extends Fragment {
     }
     private void errorOnDates(String errorMsg){
         summaryOfFutureTransactionsTxt.setText(errorMsg);
-        summaryOfFutureTransactionsTxt.setTextColor(getContext().getResources().getColor(R.color.light_red_warning));
+        summaryOfFutureTransactionsTxt.setTextColor(requireContext().getResources().getColor(R.color.light_red_warning));
     }
 
     private class TextChangeWatcher implements TextWatcher{
@@ -344,9 +365,4 @@ public class FutureTransactionsNew extends Fragment {
             Toast.makeText(mainActivity, R.string.select_frequency, Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
-
-
 }
