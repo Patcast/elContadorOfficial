@@ -17,9 +17,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -37,6 +42,16 @@ public class MainActivity extends AppCompatActivity {
     private ConstraintLayout stakeholderDetails;
     private SharedPreferences.Editor editor;
     private static final String SAVED_EMAIL_KEY = "email_key";
+
+    private boolean isClicked;
+
+    private FloatingActionButton fabNewTransaction, fabNewFutureTransaction,fabNew;
+    private TextView textFabNewTransaction,textFabReceivable;
+    private LinearLayout coverLayout;
+    private RelativeLayout relativeLayout;
+
+    private Animation rotateOpen,rotateClose,popOpen,popClose;
+
     //public TopMenuHandler currentTopMenuHandler;
 
 
@@ -76,6 +91,25 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        textFabNewTransaction = findViewById(R.id.text_fabNewTransaction);
+        textFabReceivable = findViewById(R.id.text_fabReceivable);
+        fabNewTransaction = findViewById(R.id.btn_new_TransactionFAB);
+        fabNewFutureTransaction = findViewById(R.id.btn_new_ReceivableOrPayable);
+        fabNew = findViewById(R.id.btn_newFAB);
+        coverLayout = findViewById(R.id.coverLayout);
+        relativeLayout = findViewById(R.id.relativeLayout);
+
+        coverLayout.setOnClickListener(v->closeCover());
+        fabNew.setOnClickListener(v->fabOpenAnimation());
+        fabNewTransaction.setOnClickListener(v -> fabImplement.onTransactionNewClicked());
+        fabNewFutureTransaction.setOnClickListener(v -> fabImplement.onScheduledTransactionNewClicked());
+
+        rotateOpen = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_open);
+        rotateClose = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_close);
+        popOpen= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.pop_up_fabs);
+        popClose = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.pop_down_fabs);
+        isClicked= false;
     }
 
    /* public void setCurrentMenuClicker(TopMenuHandler currentTopMenuHandler) {
@@ -157,5 +191,79 @@ public class MainActivity extends AppCompatActivity {
     }
     public TabLayout getTabLayout() {
         return tabLayout;
+    }
+
+    // FAB Button
+
+    private FABImplement fabImplement;
+
+    public interface FABImplement {
+        void onTransactionNewClicked();
+        void onScheduledTransactionNewClicked();
+    }
+
+    public void setFabImplement(FABImplement fabImplement) {
+        this.fabImplement = fabImplement;
+        relativeLayout.setVisibility(fabImplement == null? View.GONE : View.VISIBLE);
+        setVisibility(true);
+        isClicked = false;
+    }
+
+    public void resetFAB() {
+        setVisibility(true);
+        setAnimation(true);
+        isClicked = false;
+    }
+
+    private void fabOpenAnimation() {
+        setVisibility(isClicked);
+        setAnimation(isClicked);
+        isClicked = !isClicked;
+    }
+
+    private void setAnimation(boolean addButtonClicked) {
+        if(!addButtonClicked){
+            coverLayout.setVisibility(View.VISIBLE);
+            textFabNewTransaction.startAnimation(popOpen);
+            textFabReceivable.startAnimation(popOpen);
+            fabNewTransaction.startAnimation(popOpen);
+            fabNewFutureTransaction.startAnimation(popOpen);
+            fabNew.startAnimation(rotateOpen);
+        }
+        else{
+            coverLayout.setVisibility(View.GONE);
+            textFabNewTransaction.startAnimation(popClose);
+            textFabReceivable.startAnimation(popClose);
+            fabNewTransaction.startAnimation(popClose);
+            fabNewFutureTransaction.startAnimation(popClose);
+            fabNew.startAnimation(rotateClose);
+        }
+    }
+
+    public void closeCover() {
+        if (isClicked) {
+            setAnimation(true);
+            setVisibility(true);
+            isClicked = false;
+        }
+    }
+
+    private void setVisibility(boolean addButtonClicked) {
+        if(!addButtonClicked){
+            textFabReceivable.setVisibility(View.VISIBLE);
+            textFabNewTransaction.setVisibility(View.VISIBLE);
+            fabNewTransaction.setVisibility(View.VISIBLE);
+            fabNewFutureTransaction.setVisibility(View.VISIBLE);
+        }
+        else{
+            textFabNewTransaction.setVisibility(View.GONE);
+            textFabReceivable.setVisibility(View.GONE);
+            fabNewTransaction.setVisibility(View.GONE);
+            fabNewFutureTransaction.setVisibility(View.GONE);
+        }
+    }
+
+    public void setFABVisibility(boolean visible) {
+        fabNew.setVisibility((visible)? View.VISIBLE : View.GONE);
     }
 }

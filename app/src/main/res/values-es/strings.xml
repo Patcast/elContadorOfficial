@@ -263,7 +263,7 @@
     <string name="delete_transaction">Eliminar Transacción</string>
     <string name="sure_delete_transaction">¿Seguro que quieres eleminar la transacción?</string>
     <string name="cannot_open_is_deleted">La transacción seleccionada esta eliminada. No se pueden ver los detalles.</string>
-    <string name="export_prompt">¿Deseas exportar la información de este mes?</string>
+    <string name="export_prompt">¿Deseas exportar la información de este mes?\n%1$s %2$d</string>
     <string name="file_ready">El archivo esta listo</string>
     <string name="send">Enviar</string>
     <string name="open">Abrir</string>

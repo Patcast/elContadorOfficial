@@ -60,15 +60,10 @@ import be.kuleuven.elcontador10.background.tools.Exporter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.fragments.property.PropertyListViewModel;
 
-public class AllTransactions extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class AllTransactions extends Fragment implements DatePickerDialog.OnDateSetListener, MainActivity.FABImplement {
 
     private RecyclerView recyclerView;
     private TransactionsRecViewAdapter recyclerViewAdapter;
-    private FloatingActionButton fabNewTransaction, fabNewFutureTransaction,fabNew;
-    private TextView textFabNewTransaction,textFabReceivable;
-    private Animation rotateOpen,rotateClose,popOpen,popClose;
-    private LinearLayout coverLayout;
-
 
     private TextView txtStartingCash, txCurrentCash,txtSumOfReceivables,txtSumOfPayables, txtEquity,txtSumOfCashOut, txtSumOfCashIn;
     private Button selectMonth;
@@ -79,7 +74,6 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
     private String selectedMonth;
     private int selectedYear;
     private long cashAtStart, cashIn, cashOut, cashAtEnd, receivables, payables, equity;
-    private boolean isClicked;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -131,14 +125,6 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
         viewModel.getMapOfMonthlySummaryValues().observe(getViewLifecycleOwner(), this::updateSummaryUi);
         startRecycler(view);
 
-
-        textFabNewTransaction = view.findViewById(R.id.text_fabNewTransaction);
-        textFabReceivable = view.findViewById(R.id.text_fabReceivable);
-        fabNewTransaction = view.findViewById(R.id.btn_new_TransactionFAB);
-        fabNewFutureTransaction = view.findViewById(R.id.btn_new_ReceivableOrPayable);
-        fabNew = view.findViewById(R.id.btn_newFAB);
-        coverLayout = view.findViewById(R.id.coverLayout);
-
         return view;
     }
 
@@ -150,24 +136,11 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
         selectMonth.setOnClickListener(v -> pickDate());
         //fabNew.setOnClickListener(v->navController.navigate(R.id.action_allTransactions2_to_newTransaction));
 
-        coverLayout.setOnClickListener(v->closeCover());
-        fabNew.setOnClickListener(v->fabOpenAnimation());
-        fabNewTransaction.setOnClickListener(v->navController.navigate(R.id.action_allTransactions2_to_newTransaction));
-        fabNewFutureTransaction.setOnClickListener(v -> navController.navigate(R.id.action_allTransactions2_to_contractNewPayment));
-        rotateOpen = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_open);
-        rotateClose = AnimationUtils.loadAnimation(getContext(),R.anim.rotate_close);
-        popOpen= AnimationUtils.loadAnimation(getContext(),R.anim.pop_up_fabs);
-        popClose = AnimationUtils.loadAnimation(getContext(),R.anim.pop_down_fabs);
-        isClicked= false;
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                    fabNew.setVisibility(View.INVISIBLE);
-                }
-                else fabNew.setVisibility(View.VISIBLE);
+                mainActivity.setFABVisibility(newState != RecyclerView.SCROLL_STATE_DRAGGING);
             }
         });
         setTopMenu();
@@ -212,14 +185,20 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
         super.onStart();
         mainActivity.displayBottomNavigationMenu(true);
         recyclerView.setAdapter(recyclerViewAdapter);
+        mainActivity.setFabImplement(this);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mainActivity.resetFAB();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mainActivity.displayBottomNavigationMenu(false);
-
+        mainActivity.setFabImplement(null);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -249,9 +228,6 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
             inputCO = formatter.getFinalNumber();
         }
         txtSumOfCashOut.setText(inputCO);
-
-
-
 
         String inputCB = "NA";
         if(inputsForSummary.get("currentBalance")!=null){
@@ -395,61 +371,6 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
                 .show();
     }
 
-    ///******  ANIMATIONS METHODS
-
-
-    public void closeCover() {
-        if(isClicked){
-            setAnimation(true);
-            setVisibility(true);
-            isClicked = false;
-        }
-    }
-
-    private void fabOpenAnimation() {
-        setVisibility(isClicked);
-        setAnimation(isClicked);
-        isClicked = !isClicked;
-    }
-
-    private void setAnimation(boolean addButtonClicked) {
-        if(!addButtonClicked){
-            coverLayout.setVisibility(View.VISIBLE);
-            textFabNewTransaction.startAnimation(popOpen);
-            textFabReceivable.startAnimation(popOpen);
-            fabNewTransaction.startAnimation(popOpen);
-            fabNewFutureTransaction.startAnimation(popOpen);
-            fabNew.startAnimation(rotateOpen);
-        }
-        else{
-            coverLayout.setVisibility(View.INVISIBLE);
-            textFabNewTransaction.startAnimation(popClose);
-            textFabReceivable.startAnimation(popClose);
-            fabNewTransaction.startAnimation(popClose);
-            fabNewFutureTransaction.startAnimation(popClose);
-            fabNew.startAnimation(rotateClose);
-        }
-
-    }
-
-    private void setVisibility(boolean addButtonClicked) {
-        if(!addButtonClicked){
-            textFabReceivable.setVisibility(View.VISIBLE);
-            textFabNewTransaction.setVisibility(View.VISIBLE);
-            fabNewTransaction.setVisibility(View.VISIBLE);
-            fabNewFutureTransaction.setVisibility(View.VISIBLE);
-        }
-        else{
-            textFabNewTransaction.setVisibility(View.INVISIBLE);
-            textFabReceivable.setVisibility(View.INVISIBLE);
-            fabNewTransaction.setVisibility(View.INVISIBLE);
-            fabNewFutureTransaction.setVisibility(View.INVISIBLE);
-        }
-
-    }
-
-    ///////*******
-
 
     public void onFilterClick() {
         DialogFilterAllTransactions filterDialog = new DialogFilterAllTransactions(getViewLifecycleOwner());
@@ -471,5 +392,15 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
                 export(uri);
             }
         }
+    }
+
+    @Override
+    public void onTransactionNewClicked() {
+        navController.navigate(R.id.action_allTransactions2_to_newTransaction);
+    }
+
+    @Override
+    public void onScheduledTransactionNewClicked() {
+        navController.navigate(R.id.action_allTransactions2_to_contractNewPayment);
     }
 }
