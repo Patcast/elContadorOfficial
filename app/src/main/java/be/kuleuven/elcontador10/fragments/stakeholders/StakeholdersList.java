@@ -79,7 +79,7 @@ public class StakeholdersList extends Fragment {
 
     private void setTopMenu(){
         requireActivity().addMenuProvider(new MenuProvider() {
-            final int menu_search = R.id.menu_search, menu_add_stake = R.id.menu_add_stake,menu_share = R.id.menu_share;
+            final int menu_search = R.id.menu_search, menu_add_stake = R.id.menu_add_stake, menu_settings = R.id.menu_settings;
 
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
@@ -87,7 +87,7 @@ public class StakeholdersList extends Fragment {
                 menu.findItem(menu_search).setVisible(true);
                 if (prevFrag == null) {
                     menu.findItem(menu_add_stake).setVisible(true);
-                    menu.findItem(menu_share).setVisible(true);
+                    menu.findItem(menu_settings).setVisible(true);
                 }
             }
 
@@ -97,7 +97,7 @@ public class StakeholdersList extends Fragment {
                     case menu_search:
                         onSearchClick(menuItem);
                         return true;
-                    case menu_share:
+                    case menu_settings:
                         navController.navigate(R.id.action_stakeholders_to_accountSettings);
                         return true;
                     case menu_add_stake:

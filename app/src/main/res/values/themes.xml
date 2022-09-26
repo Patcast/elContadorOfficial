@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.ElContador10" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.ElContador10" parent="Theme.Material3.Dark">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryVariant">@color/black</item>
@@ -10,8 +10,9 @@
         <item name="colorOnSecondary">@color/black</item>
     </style>
 
-    <style name="Theme.ElContador10.NoActionBar" parent="Theme.AppCompat.DayNight">
+    <style name="Theme.ElContador10.NoActionBar" parent="Theme.Material3.Dark.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:textColorHighlight">@color/fb_color</item>
     </style>
 </resources>

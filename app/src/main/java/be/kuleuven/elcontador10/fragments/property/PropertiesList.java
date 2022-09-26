@@ -121,7 +121,7 @@ public class PropertiesList extends Fragment {
 
     private void setTopMenu(){
         requireActivity().addMenuProvider(new MenuProvider() {
-            final int menu_search = R.id.menu_search,menu_share = R.id.menu_share,menu_add_property = R.id.menu_add_property;
+            final int menu_search = R.id.menu_search, menu_settings = R.id.menu_settings, menu_add_property = R.id.menu_add_property;
 
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
@@ -129,7 +129,7 @@ public class PropertiesList extends Fragment {
                 menu.findItem(R.id.menu_search).setVisible(true);
                if (prevTAG == null ){
                    menu.findItem(menu_add_property).setVisible(true);
-                   menu.findItem(menu_share).setVisible(true);
+                   menu.findItem(menu_settings).setVisible(true);
                }
             }
             @Override
@@ -139,7 +139,7 @@ public class PropertiesList extends Fragment {
                     case menu_search:
                         onSearchClick(menuItem);
                         return true;
-                    case menu_share:
+                    case menu_settings:
                         navController.navigate(R.id.action_propertiesList_to_accountSettings);
                         return true;
                     case menu_add_property:
