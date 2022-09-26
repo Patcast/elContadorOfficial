@@ -156,21 +156,25 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         viewModel.getChosenProperty().observe(getViewLifecycleOwner(),this::setPropertyChosen);
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         viewModel.reset();
     }
     private void setPropertyChosen(Property property) {
-        if(property!=null){
+        selectedProperty = property;
+
+        if (property != null) {
             txt_property_selected.setText(property.getName());
-            selectedProperty = property;
-        }
-        else{
+            txtStakeHolder.setBackground(null);
+            txtStakeHolder.setEnabled(false);
+        } else {
             txt_property_selected.setText(R.string.none);
+            txtStakeHolder.setBackground(ResourcesCompat.getDrawable(getResources(), R.color.rec_view_gray, null));
+            txtStakeHolder.setEnabled(true);
         }
     }
+
     private void setStakeChosenText(StakeHolder stakeHolder) {
         if(stakeHolder!=null){
             txtStakeHolder.setText(stakeHolder.getName());

@@ -84,18 +84,17 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
                         PropertiesListDirections.actionPropertiesListToPropertyViewPageHolder(property);
                 navController.navigate(action);
             });
-        else if(prevTAG.equals(Caching.INSTANCE.PROPERTY_STAKEHOLDER))
+        else if (prevTAG.equals(Caching.INSTANCE.PROPERTY_STAKEHOLDER))
             holder.parent.setOnClickListener(view -> {
                 StakeholderViewPageHolderDirections.ActionStakeholderViewPagerHolderToPropertyViewPageHolder action =
                         StakeholderViewPageHolderDirections.actionStakeholderViewPagerHolderToPropertyViewPageHolder(property);
                 navController.navigate(action);
             });
-         else  {
+         else {
             holder.parent.setOnClickListener(v -> {
                 viewModel.selectProperty(property);
                 navController.popBackStack();
-            }
-            );
+            });
         }
 
         if (property.getStakeholder() == null)
@@ -128,23 +127,37 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void setPropertyListOnAdapter(@Nullable List <Property> propertiesListInput) {
-            propertyListFull.clear();
-            propertyList.clear();
-            if(propertiesListInput!=null) {
+        propertyListFull.clear();
+        propertyList.clear();
+        if (propertiesListInput != null) {
+            if (prevTAG != null && prevTAG.equals(Caching.INSTANCE.PROPERTY_NEW_T)) {
+                this.propertyList.addAll(propertiesListInput
+                        .stream()
+                        .filter(property -> !property.isDeleted())
+                        .filter(property -> property.getStakeholder() != null)
+                        .sorted(Comparator.comparing(Property::getName))
+                        .collect(Collectors.toList()));
+                this.propertyListFull.addAll(propertiesListInput
+                        .stream()
+                        .filter(property -> !property.isDeleted())
+                        .filter(property -> property.getStakeholder() != null)
+                        .sorted(Comparator.comparing(Property::getName))
+                        .collect(Collectors.toList()));
+            } else {
                 this.propertyList.addAll(propertiesListInput
                         .stream()
                         .filter(property -> !property.isDeleted())
                         .sorted(Comparator.comparing(Property::getName))
                         .collect(Collectors.toList()));
-                propertyListFull.addAll(propertiesListInput
+                this.propertyListFull.addAll(propertiesListInput
                         .stream()
                         .filter(property -> !property.isDeleted())
                         .sorted(Comparator.comparing(Property::getName))
                         .collect(Collectors.toList()));
             }
+        }
 
-            notifyDataSetChanged();
-
+        notifyDataSetChanged();
     }
 
     @Override

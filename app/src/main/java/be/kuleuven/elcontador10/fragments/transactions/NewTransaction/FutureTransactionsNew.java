@@ -87,12 +87,13 @@ public class FutureTransactionsNew extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
         setWordCounters();
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onStart() {
         super.onStart();
         viewModel.getChosenCategory().observe(getViewLifecycleOwner(), this::setChosenCategory);
         viewModel.getChosenStakeholder().observe(getViewLifecycleOwner(), this::setStakeChosenText);
-        viewModel.getChosenProperty().observe(getViewLifecycleOwner(),this::setPropertyChosen);
+        viewModel.getChosenProperty().observe(getViewLifecycleOwner(), this::setPropertyChosen);
     }
 
     @Override
@@ -101,22 +102,26 @@ public class FutureTransactionsNew extends Fragment {
         viewModel.reset();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void setPropertyChosen(Property property) {
-        if(property!=null){
+        selectedProperty = property;
+        if (property != null) {
             propertyTxt.setText(property.getName());
-            selectedProperty = property;
-        }
-        else{
-            selectedProperty=null;
+            stakeTxt.setBackground(null);
+            stakeTxt.setEnabled(false);
+        } else {
             propertyTxt.setText(R.string.none);
+            stakeTxt.setBackground(ResourcesCompat.getDrawable(getResources(), R.color.rec_view_gray, null));
+            stakeTxt.setEnabled(true);
         }
     }
+
     private void setStakeChosenText(StakeHolder stakeHolder) {
-        if(stakeHolder!=null){
+        if (stakeHolder != null){
             stakeTxt.setText(stakeHolder.getName());
             selectedStakeHolder = stakeHolder;
         }
-        else{
+        else {
             selectedStakeHolder = null;
             stakeTxt.setText(R.string.none);
         }

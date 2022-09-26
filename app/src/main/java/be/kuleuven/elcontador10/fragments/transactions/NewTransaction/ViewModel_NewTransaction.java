@@ -1,9 +1,13 @@
 package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
 import be.kuleuven.elcontador10.background.model.ImageFireBase;
 import be.kuleuven.elcontador10.background.model.Interfaces.ViewModelCamaraInterface;
@@ -16,10 +20,10 @@ public class ViewModel_NewTransaction extends ViewModel implements ViewModelCama
     public LiveData<StakeHolder> getChosenStakeholder() {
         return chosenStakeholder;
     }
+
     public void selectStakeholder(StakeHolder stakeholder){
         chosenStakeholder.setValue(stakeholder);
     }
-
 
     public void reset(){
         chosenStakeholder.setValue(null);
@@ -33,11 +37,18 @@ public class ViewModel_NewTransaction extends ViewModel implements ViewModelCama
     public LiveData<Property> getChosenProperty() {
         return chosenProperty;
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void selectProperty(Property input_property){
         chosenProperty.setValue(input_property);
+        if (input_property != null)
+            chosenStakeholder.setValue(Caching.INSTANCE.getStakeHolder(input_property.getStakeholder()));
+        else
+            chosenStakeholder.setValue(null);
     }
+
     public void resetChosenProperty(){
         chosenProperty.setValue(null);
+        chosenStakeholder.setValue(null);
     }
 
     //ChosenImage
