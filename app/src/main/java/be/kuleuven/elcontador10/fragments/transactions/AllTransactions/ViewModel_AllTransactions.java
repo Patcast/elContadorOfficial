@@ -234,25 +234,47 @@ public class ViewModel_AllTransactions extends ViewModel {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private List<ProcessedTransaction> filterTransactions() {
         List<ProcessedTransaction> listAllTransactionsFiltered = new ArrayList<>();
-        if(booleanFilter.getValue().get("transaction"))
-        {
-            listAllTransactionsFiltered.addAll(Objects.requireNonNull(monthlyListOfProcessedTransactions.getValue()).stream().filter(i-> !i.getIsDeleted()).filter(i->i.getType().contains("CASH")).collect(Collectors.toList()));
+        if (booleanFilter.getValue() != null) {
+            if (Boolean.TRUE.equals(booleanFilter.getValue().get("transaction")))
+                listAllTransactionsFiltered.addAll(
+                        Objects.requireNonNull(
+                                        monthlyListOfProcessedTransactions.getValue())
+                                .stream()
+                                .filter(i -> !i.getIsDeleted())
+                                .filter(i -> i.getType().contains(Caching.INSTANCE.TYPE_CASH))
+                                .collect(Collectors.toList())
+                );
+            if (Boolean.TRUE.equals(booleanFilter.getValue().get("receivable")))
+                listAllTransactionsFiltered.addAll(
+                        Objects.requireNonNull(
+                                        monthlyListOfProcessedTransactions.getValue())
+                                .stream()
+                                .filter(i -> !i.getIsDeleted())
+                                .filter(i -> i.getType().contains(Caching.INSTANCE.TYPE_RECEIVABLES))
+                                .collect(Collectors.toList())
+                );
+            if (Boolean.TRUE.equals(booleanFilter.getValue().get("payable")))
+                listAllTransactionsFiltered.addAll(
+                        Objects.requireNonNull(
+                                monthlyListOfProcessedTransactions.getValue())
+                                .stream()
+                                .filter(i -> !i.getIsDeleted())
+                                .filter(i -> i.getType().contains(Caching.INSTANCE.TYPE_PAYABLES))
+                                .collect(Collectors.toList())
+                );
+            if (Boolean.TRUE.equals(booleanFilter.getValue().get("deletedTrans")))
+                listAllTransactionsFiltered.addAll(
+                        Objects.requireNonNull(
+                                        monthlyListOfProcessedTransactions.getValue())
+                                .stream()
+                                .filter(ProcessedTransaction::getIsDeleted)
+                                .collect(Collectors.toList())
+                );
         }
-        if(booleanFilter.getValue().get("receivable"))
-        {
-            listAllTransactionsFiltered.addAll(Objects.requireNonNull(monthlyListOfProcessedTransactions.getValue()).stream().filter(i->i.getType().contains("RECEIVABLES")).collect(Collectors.toList()));
-        }
-        if(booleanFilter.getValue().get("payable"))
-        {
-            listAllTransactionsFiltered.addAll(Objects.requireNonNull(monthlyListOfProcessedTransactions.getValue()).stream().filter(i->i.getType().contains("PAYABLES")).collect(Collectors.toList()));
-        }
-        if(booleanFilter.getValue().get("deletedTrans"))
-        {
-            listAllTransactionsFiltered.addAll(Objects.requireNonNull(monthlyListOfProcessedTransactions.getValue()).stream().filter(ProcessedTransaction::getIsDeleted).collect(Collectors.toList()));
-        }
-       return listAllTransactionsFiltered.stream().
-                                                sorted(Comparator.comparing(ProcessedTransaction::getDueDate).reversed()).
-                                                collect(Collectors.toList());
+        return listAllTransactionsFiltered
+                .stream()
+                .sorted(Comparator.comparing(ProcessedTransaction::getDueDate).reversed())
+                .collect(Collectors.toList());
     }
 
     private void initialiseCalendarFilter() {
