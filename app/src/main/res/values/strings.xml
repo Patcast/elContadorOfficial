@@ -366,5 +366,6 @@
     <string name="no_property">No property</string>
     <string name="no_stakeholder">No Stakeholder</string>
     <string name="choose_property">Choose Property</string>
+    <string name="create_transaction_property_error">Property does not have a stakeholder, cannot create transaction.</string>
 
 </resources>

@@ -245,5 +245,11 @@
         <action
             android:id="@+id/action_propertyViewPageHolder_to_addProperty"
             app:destination="@id/addProperty" />
+        <action
+            android:id="@+id/action_propertyViewPageHolder_to_newTransaction"
+            app:destination="@id/newTransaction" />
+        <action
+            android:id="@+id/action_propertyViewPageHolder_to_transactionFutureNew"
+            app:destination="@id/transactionFutureNew" />
     </fragment>
 </navigation>

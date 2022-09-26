@@ -210,8 +210,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void resetFAB() {
-        setVisibility(true);
         setAnimation(true);
+        setVisibility(true);
         isClicked = false;
     }
 

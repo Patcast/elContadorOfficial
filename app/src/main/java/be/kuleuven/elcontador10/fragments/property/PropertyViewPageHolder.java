@@ -1,5 +1,6 @@
 package be.kuleuven.elcontador10.fragments.property;
 
+import android.app.AlertDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -37,7 +38,7 @@ import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.tools.ZoomOutPageTransformer;
 
-public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTransformer.PageChangeListener {
+public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTransformer.PageChangeListener, MainActivity.FABImplement {
     private NavController navController;
     private ViewPagerAdapter mAdapter;
     private ViewPager2 viewPager;
@@ -188,15 +189,23 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
         mainActivity.displayStakeHolderDetails(true, sumOfTransactions,initialReceivables,initialPayables,property.getStakeholder());
         mainActivity.displayToolBar(true);
         mainActivity.displayTabLayout(true);
+        mainActivity.setFabImplement(this);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mainActivity.resetFAB();
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onStop() {
         super.onStop();
-
+        viewModel.reset();
         mainActivity.displayTabLayout(false);
         mainActivity.displayStakeHolderDetails(false);
-        viewModel.reset();
+        mainActivity.setFabImplement(null);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -220,5 +229,39 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
 
     public void setProperty(Property property) {
         this.property = property;
+    }
+
+    @Override
+    public void onTransactionNewClicked() {
+        if (property.getStakeholder() == null) {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.new_transaction_title)
+                    .setMessage(R.string.create_transaction_property_error)
+                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
+                    .create()
+                    .show();
+        } else {
+            PropertyViewPageHolderDirections.ActionPropertyViewPageHolderToNewTransaction action =
+                    PropertyViewPageHolderDirections.actionPropertyViewPageHolderToNewTransaction();
+            action.setIdProperty(property.getId());
+            navController.navigate(action);
+        }
+    }
+
+    @Override
+    public void onScheduledTransactionNewClicked() {
+        if (property.getStakeholder() == null) {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.new_transaction_title)
+                    .setMessage(R.string.create_transaction_property_error)
+                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss())
+                    .create()
+                    .show();
+        } else {
+            PropertyViewPageHolderDirections.ActionPropertyViewPageHolderToTransactionFutureNew action =
+                    PropertyViewPageHolderDirections.actionPropertyViewPageHolderToTransactionFutureNew();
+            action.setIdProperty(property.getId());
+            navController.navigate(action);
+        }
     }
 }
