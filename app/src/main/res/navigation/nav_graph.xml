@@ -191,7 +191,7 @@
     </fragment>
     <fragment
         android:id="@+id/accountSettings"
-        android:name="be.kuleuven.elcontador10.fragments.accounts.accountSettings"
+        android:name="be.kuleuven.elcontador10.fragments.accounts.AccountSettings"
         android:label="fragment_account_settings"
         tools:layout="@layout/fragment_account_settings" >
         <action

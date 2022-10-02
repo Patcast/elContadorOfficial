@@ -46,7 +46,7 @@ public class PropertiesList extends Fragment {
     private ViewModel_NewTransaction viewModel_newTransaction;
     LinearLayout noPropertyItem;
 
-    public PropertiesList(String prevTAG, StakeHolder stakeHolder) {
+    public PropertiesList(StakeHolder stakeHolder, String prevTAG) {
         this.prevTAG = prevTAG;
         this.stakeHolder = stakeHolder;
     }

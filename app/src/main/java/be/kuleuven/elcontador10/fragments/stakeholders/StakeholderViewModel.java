@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.elcontador10.background.Caching;
+import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
 
@@ -50,12 +51,14 @@ public class StakeholderViewModel extends ViewModel {
                 return;
             }
             List<ProcessedTransaction> newListStakeHolderTrans = new ArrayList<>();
-            for (QueryDocumentSnapshot doc : value) {
-                ProcessedTransaction transaction =  doc.toObject(ProcessedTransaction.class);
-                newListStakeHolderTrans.add(transaction);
+
+            if (value != null) {
+                for (QueryDocumentSnapshot doc : value) {
+                    ProcessedTransaction transaction = doc.toObject(ProcessedTransaction.class);
+                    newListStakeHolderTrans.add(transaction);
+                }
+                selectListOfStakeHolderTrans(newListStakeHolderTrans);
             }
-            selectListOfStakeHolderTrans(newListStakeHolderTrans);
         });
     }
-
 }

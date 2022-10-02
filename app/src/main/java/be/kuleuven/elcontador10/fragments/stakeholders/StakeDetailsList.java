@@ -32,7 +32,7 @@ public class StakeDetailsList extends Fragment {
 
     private final List<ProcessedTransaction> transactionList = new ArrayList<>();
     private final StakeHolder selectedStakeHolder;
-    private boolean isLoaded =false;
+    private boolean isLoaded = false;
     private final String tabId;
 
     public StakeDetailsList(StakeHolder selectedStakeHolder, String tabId) {
@@ -43,17 +43,16 @@ public class StakeDetailsList extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_all_properties, container, false);
-        recyclerView = view.findViewById(R.id.rec_all_properties);
-        viewModel = new ViewModelProvider(requireActivity()).get(StakeholderViewModel.class);
-
-        return view;
+        return inflater.inflate(R.layout.fragment_all_properties, container, false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        recyclerView = view.findViewById(R.id.rec_all_properties);
+        viewModel = new ViewModelProvider(requireActivity()).get(StakeholderViewModel.class);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerViewAdapter = new TransactionsRecViewAdapter(view,getContext());
         viewModel.getListOfStakeHolderTrans().observe(getViewLifecycleOwner(), this::updateAdapter);
@@ -68,11 +67,9 @@ public class StakeDetailsList extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void loadMore() {
-        if (recyclerView != null) {
-            if (!isLoaded) recyclerViewAdapter.setAllTransactions(setAdapterFuture());
-            else recyclerViewAdapter.setAllTransactions(setAdapterNoFuture());
-            isLoaded = !isLoaded;
-        }
+        if (!isLoaded) recyclerViewAdapter.setAllTransactions(setAdapterFuture());
+        else recyclerViewAdapter.setAllTransactions(setAdapterNoFuture());
+        isLoaded = !isLoaded;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

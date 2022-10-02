@@ -37,6 +37,7 @@ import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.Property;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.tools.ZoomOutPageTransformer;
+import be.kuleuven.elcontador10.fragments.stakeholders.StakeDetailsList;
 
 public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTransformer.PageChangeListener, MainActivity.FABImplement {
     private NavController navController;
@@ -63,7 +64,7 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_micro_account_view_holder, container, false);
         viewPager = view.findViewById(R.id.viewPagerHolder);
-        mAdapter = new ViewPagerAdapter(mainActivity.getSupportFragmentManager(), getLifecycle());
+        mAdapter = new ViewPagerAdapter(getChildFragmentManager(), getLifecycle());
         viewPager.setPageTransformer(new ZoomOutPageTransformer(this));
         viewModel = new ViewModelProvider(requireActivity()).get(PropertyViewModel.class);
         propertyListViewModel = new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);
@@ -210,17 +211,12 @@ public class PropertyViewPageHolder extends Fragment implements ZoomOutPageTrans
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void loadMore() {
-        switch (viewPager.getCurrentItem()) {
-            case 1:     // receivable
-                receivables.loadMore();
-                break;
-            case 2:     // payable
-                payables.loadMore();
-                break;
-            default:
-                Toast.makeText(mainActivity, R.string.no_future, Toast.LENGTH_LONG).show();
-                break;
-        }
+        List<Fragment> fragments = getChildFragmentManager().getFragments();
+
+        if ((viewPager.getCurrentItem() == 1 || viewPager.getCurrentItem() == 2) &&
+                fragments.get(viewPager.getCurrentItem()) instanceof PropertyDetails) {
+            ((PropertyDetails) fragments.get(viewPager.getCurrentItem())).loadMore();
+        } else Toast.makeText(mainActivity, R.string.no_future, Toast.LENGTH_LONG).show();
     }
 
     @Override

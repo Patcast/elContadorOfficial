@@ -37,7 +37,7 @@ import be.kuleuven.elcontador10.background.adapters.AccountSettingsRecViewAdapte
 import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.Account;
 
-public class accountSettings extends Fragment {
+public class AccountSettings extends Fragment {
     private EditText edTextNewEmail;
     private TextView textEmailWarning;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
