@@ -367,5 +367,7 @@
     <string name="no_stakeholder">No Stakeholder</string>
     <string name="choose_property">Choose Property</string>
     <string name="create_transaction_property_error">Property does not have a stakeholder, cannot create transaction.</string>
+    <string name="account_name_missing">Please type down a name for the account</string>
+    <string name="no_logged_in_email">No Logged In email found</string>
 
 </resources>

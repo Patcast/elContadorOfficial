@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
@@ -22,19 +23,21 @@ import java.util.ArrayList;
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.MainActivity;
 import be.kuleuven.elcontador10.background.model.Account;
+import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
 
 
 public class AddNewAccount extends Fragment {
     //Todo: Add Notes for the account (for example to add the address)
-    Button confirmButton;
-    EditText edTextName;
-    EditText edTextBalance;
-    MainActivity mainActivity;
-    NavController navController;
+    private Button confirmButton;
+    private EditText edTextName, edTextBalance;
+    private TextView counterName;
+    private MainActivity mainActivity;
+    private NavController navController;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainActivity =(MainActivity) getActivity();
+        mainActivity = (MainActivity) requireActivity();
         mainActivity.setHeaderText(getString(R.string.add_account));
     }
 
@@ -42,9 +45,18 @@ public class AddNewAccount extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_add_new_account, container, false);
+
         confirmButton = view.findViewById(R.id.btn_confirm_NewAccount);
-        edTextBalance = view.findViewById(R.id.ed_txt_starting_balance);
+
         edTextName = view.findViewById(R.id.ed_txt_name_Account);
+        edTextBalance = view.findViewById(R.id.ed_txt_starting_balance);
+
+        counterName = view.findViewById(R.id.txt_account_counter);
+        TextView counterBalance = view.findViewById(R.id.txt_balance_counter);
+
+        new MaxWordsCounter(20, edTextName, counterName, requireContext());
+        new MaxWordsCounter(8, edTextBalance, counterBalance, requireContext());
+
         return view;
     }
 
@@ -57,7 +69,7 @@ public class AddNewAccount extends Fragment {
 
     private void registerAccount() {
         String loggedInEmail = mainActivity.returnSavedLoggedEmail();
-        if(loggedInEmail!=null){
+        if (loggedInEmail != null) {
             ArrayList<String> users= new ArrayList<>();
             users.add(loggedInEmail);
             String nameOfAccount =edTextName.getText().toString();
@@ -67,15 +79,13 @@ public class AddNewAccount extends Fragment {
                 if(!(amountText.isEmpty())) amount = Long.parseLong(amountText);
                 Account newAccount = new Account(nameOfAccount,amount,users, mainActivity.returnSavedLoggedEmail());
                 newAccount.sendNewAccount(newAccount,getContext());
-            }
-            else{
-                Toast.makeText(getContext(),"Please type down a name for the account",Toast.LENGTH_SHORT).show();
+                navController.popBackStack();
+            } else {
+                counterName.setTextColor(getResources().getColor(R.color.light_red_warning));
+                counterName.setText(R.string.account_name_missing);
             }
         }
-        else{
-            Toast.makeText(getContext(),"No Logged In email found",Toast.LENGTH_SHORT).show();
-        }
-        navController.popBackStack();
+        else Toast.makeText(getContext(), R.string.no_logged_in_email, Toast.LENGTH_SHORT).show();
     }
 
 
