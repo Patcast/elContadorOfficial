@@ -344,4 +344,13 @@
     <string name="account_deleted">Cuenta eliminada.</string>
     <string name="delete_account_fail">Error, la cuenta no fue eliminada.</string>
     <string name="confirm_user_deletion">Eliminar usuario</string>
+    <string name="delete_photo_title">Eliminar fot</string>
+    <string name="photo_delete_fail">La foto no fue eliminada debido a un error.</string>
+    <string name="image_upload">Error al intentar guardar foto</string>
+    <string name="no_property">Sin inmeuble</string>
+    <string name="no_stakeholder">Sin participante</string>
+    <string name="choose_property">Elegir Propiedad</string>
+    <string name="create_transaction_property_error">El inmueble no tiene un participante, favor de elegir otra propiedad o añadir un participante al inmueble.</string>
+    <string name="invalid_date_for_summary">Me invalido</string>
+    <string name="select_month">Elegir un mes</string>
 </resources>
