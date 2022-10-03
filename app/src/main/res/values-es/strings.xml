@@ -353,4 +353,5 @@
     <string name="create_transaction_property_error">El inmueble no tiene un participante, favor de elegir otra propiedad o añadir un participante al inmueble.</string>
     <string name="invalid_date_for_summary">Me invalido</string>
     <string name="select_month">Elegir un mes</string>
+    <string name="loading">Cargando...</string>
 </resources>

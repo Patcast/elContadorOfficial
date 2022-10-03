@@ -369,5 +369,6 @@
     <string name="create_transaction_property_error">Property does not have a stakeholder, cannot create transaction.</string>
     <string name="invalid_date_for_summary">Invalid date! The latest Monthly Summary available is for </string>
     <string name="select_month">Select a Month</string>
+    <string name="loading">loading...</string>
 
 </resources>

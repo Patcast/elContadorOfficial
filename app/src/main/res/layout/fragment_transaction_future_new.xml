@@ -119,6 +119,7 @@
             android:id="@+id/textView_fillAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/light_grey"
             />
 
         <RadioGroup
@@ -162,7 +163,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:gravity="left"
             android:layout_marginTop="5dp"
             android:background="@color/rec_view_gray"
             android:text="@string/none"
@@ -224,7 +224,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:background="@drawable/background_buttons"
+            android:padding="10dp"
+            android:backgroundTint="@color/rec_view_gray"
+            android:textColor="@color/white"
             android:text="@string/choose" />
 
         <EditText
