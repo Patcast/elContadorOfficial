@@ -17,11 +17,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,25 +37,21 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.Timestamp;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.text.ParseException;
-import java.util.HashMap;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.MainActivity;
 import be.kuleuven.elcontador10.background.adapters.TransactionsRecViewAdapter;
 import be.kuleuven.elcontador10.background.Caching;
+import be.kuleuven.elcontador10.background.model.MonthlyRecords;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.tools.Exporter;
 import be.kuleuven.elcontador10.background.tools.NumberFormatter;
-import be.kuleuven.elcontador10.fragments.property.PropertyListViewModel;
 
 public class AllTransactions extends Fragment implements DatePickerDialog.OnDateSetListener, MainActivity.FABImplement {
 
@@ -68,21 +61,17 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
     private TextView txtStartingCash, txCurrentCash,txtSumOfReceivables,txtSumOfPayables, txtEquity,txtSumOfCashOut, txtSumOfCashIn;
     private Button selectMonth;
     private MainActivity mainActivity;
-    private ViewModel_AllTransactions viewModel;
+    private ViewModel_AllTransactions viewModelAllTransactions;
     NavController navController;
-
-    private String selectedMonth;
-    private int selectedYear;
-    private long cashAtStart, cashIn, cashOut, cashAtEnd, receivables, payables, equity;
+    private  MonthlyRecords currentMonthlyRecord;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
-        new ViewModelProvider(requireActivity()).get(PropertyListViewModel.class);  // query properties
+        viewModelAllTransactions = new ViewModelProvider(requireActivity()).get(ViewModel_AllTransactions.class);
         try {
-            viewModel.setInitialData();
+            viewModelAllTransactions.setInitialData();
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -113,20 +102,14 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
         txtEquity = view.findViewById(R.id.text_futureBalance);
         txtEquity.setSelected(true);
 
-        viewModel.getCalendarFilter().observe(getViewLifecycleOwner(), i-> {
-            try {
-                updateDateButtonAndListOfTransactions(i);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        });
 
-        viewModel.getAllChosenTransactions().observe(getViewLifecycleOwner(), i-> recyclerViewAdapter.setAllTransactions(i));
-        viewModel.getMapOfMonthlySummaryValues().observe(getViewLifecycleOwner(), this::updateSummaryUi);
+
         startRecycler(view);
 
         return view;
     }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -134,8 +117,8 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
         selectMonth.setOnClickListener(v -> pickDate());
-        //fabNew.setOnClickListener(v->navController.navigate(R.id.action_allTransactions2_to_newTransaction));
-
+        viewModelAllTransactions.getAllChosenTransactions().observe(getViewLifecycleOwner(), i-> recyclerViewAdapter.setAllTransactions(i));
+        viewModelAllTransactions.getSelectedMonthlyRecord().observe(getViewLifecycleOwner(), this::updateMonthlyRecordUi);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -202,73 +185,49 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void updateSummaryUi(Map<String, Integer> inputsForSummary) {
-
-        NumberFormatter formatter = new NumberFormatter(0);
-        String inputSB = "NA";
-        if(inputsForSummary.get("startingBalance")!=null){
-            cashAtStart = inputsForSummary.get("startingBalance");
-            formatter.setOriginalNumber(cashAtStart);
-            inputSB = formatter.getFinalNumber();
+    private void updateMonthlyRecordUi(MonthlyRecords inputsForSummary) {
+        if (inputsForSummary!=null ){
+            currentMonthlyRecord =inputsForSummary;
+            NumberFormatter formatter = new NumberFormatter(0);
+            formatter.setOriginalNumber(inputsForSummary.getStartingCash());
+            txtStartingCash.setText(formatter.getFinalNumber());
+            formatter.setOriginalNumber(inputsForSummary.getCash());
+            txCurrentCash.setText(formatter.getFinalNumber());
+            formatter.setOriginalNumber(inputsForSummary.getSumOfReceivables());
+            txtSumOfReceivables.setText(formatter.getFinalNumber());
+            formatter.setOriginalNumber(inputsForSummary.getSumOfPayables());
+            txtSumOfPayables.setText(formatter.getFinalNumber());
+            formatter.setOriginalNumber(inputsForSummary.getEquity());
+            txtEquity.setText(formatter.getFinalNumber());
+            formatter.setOriginalNumber(inputsForSummary.getCashIn());
+            txtSumOfCashIn.setText(formatter.getFinalNumber());
+            formatter.setOriginalNumber(inputsForSummary.getCashOut());
+            txtSumOfCashOut.setText(formatter.getFinalNumber());
+            Calendar cal = inputsForSummary.getDate();
+            String currentDate = ""+(getResources().getStringArray(R.array.months_list))[cal.get(Calendar.MONTH)]+" "+cal.get(Calendar.YEAR);
+            selectMonth.setText(currentDate);
         }
-        txtStartingCash.setText(inputSB);
-
-        String inputCI = "NA";
-        if(inputsForSummary.get("cashIn")!=null){
-            cashIn = inputsForSummary.get("cashIn");
-            formatter.setOriginalNumber(cashIn);
-            inputCI = formatter.getFinalNumber();
+        else{
+            String NAString = "NA";
+            txtStartingCash.setText(NAString);
+            txtSumOfCashIn.setText(NAString);
+            txtSumOfCashOut.setText(NAString);
+            txCurrentCash.setText(NAString);
+            txtSumOfReceivables.setText(NAString);
+            txtSumOfPayables.setText(NAString);
+            txtEquity.setText(NAString);
         }
-        txtSumOfCashIn.setText(inputCI);
-
-        String inputCO = "NA";
-        if(inputsForSummary.get("cashOut")!=null){
-            cashOut =(-inputsForSummary.get("cashOut")) ;
-            formatter.setOriginalNumber(cashOut);
-            inputCO = formatter.getFinalNumber();
-        }
-        txtSumOfCashOut.setText(inputCO);
-
-        String inputCB = "NA";
-        if(inputsForSummary.get("currentBalance")!=null){
-            cashAtEnd = inputsForSummary.get("currentBalance");
-            formatter.setOriginalNumber(cashAtEnd);
-            inputCB = formatter.getFinalNumber();
-        }
-
-        receivables = inputsForSummary.get("receivables");
-        payables = inputsForSummary.get("payables");
-        equity = inputsForSummary.get("scheduleBalance");
-
-        txCurrentCash.setText(inputCB);
-        formatter.setOriginalNumber(inputsForSummary.get("receivables"));
-        txtSumOfReceivables.setText(formatter.getFinalNumber());
-        formatter.setOriginalNumber(inputsForSummary.get("payables"));
-        txtSumOfPayables.setText(formatter.getFinalNumber());
-        formatter.setOriginalNumber(inputsForSummary.get("scheduleBalance"));
-        txtEquity.setText(formatter.getFinalNumber());
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void updateDateButtonAndListOfTransactions(Map<String, Integer> calendarFilter) throws ParseException {
-        String monthSelected = (getResources().getStringArray(R.array.months_list))[calendarFilter.get("month")-1];
-        String monthYear = ""+monthSelected+" "+calendarFilter.get("year");
-        selectMonth.setText(monthYear);
-        viewModel.resetListOfTransactions();
-        viewModel.selectListOfProcessedTransactions();
-
-        selectedMonth = monthSelected;
-        selectedYear = calendarFilter.get("year");
-    }
 
 
     private void pickDate() {
-        int month = viewModel.getCalendarFilter().getValue().get("month");
-        int year = viewModel.getCalendarFilter().getValue().get("year");
-        MonthYearPickerDialog pd = new MonthYearPickerDialog(month,year);
-        pd.setListener(this);
-        pd.show(getParentFragmentManager(), "MonthYearPickerDialog");
+        if(currentMonthlyRecord!=null){
+            MonthYearPickerDialog pd = new MonthYearPickerDialog(currentMonthlyRecord.getDate().get(Calendar.MONTH),currentMonthlyRecord.getDate().get(Calendar.YEAR),viewModelAllTransactions.listOfMonthlyRecords);
+            pd.setListener(this);
+            pd.show(getParentFragmentManager(), "MonthYearPickerDialog");
+        }
     }
 
     private void startRecycler(View view) {
@@ -282,29 +241,20 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Timestamp latestStartingBalance = viewModel.getFirstStartingBalanceTimeStamp();
-        if (latestStartingBalance !=null){
-            int lastMonth = latestStartingBalance.toDate().getMonth()+1;
-            int lastYear = latestStartingBalance.toDate().getYear()+1900;
-            if(year <lastYear || (year == lastYear) && month < lastMonth){
-                Toast.makeText(getContext(), "Invalid date! The latest Balance Summary available is for "+(getResources().getStringArray(R.array.months_list))[lastMonth-1]+" / "+lastYear, Toast.LENGTH_LONG).show();
-            }
 
-            else {
-                Map<String,Integer> chosenDateMap = new HashMap<>();
-                chosenDateMap.put("month",month);
-                chosenDateMap.put("year",year);
-                viewModel.setCalendarFilter(chosenDateMap);
+        if(viewModelAllTransactions.findMonthlyRecord(month,year)!=null){
+            try {
+                viewModelAllTransactions.requestListOfProcessedTransactions(viewModelAllTransactions.findMonthlyRecord(month,year));
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }
-        else {
-            Toast.makeText(getContext(), "Error Loading Transactions, please try again.", Toast.LENGTH_LONG).show();
-        }
+        else Toast.makeText(mainActivity, "The month is not existing", Toast.LENGTH_SHORT).show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void onExport_Clicked() {
-        String message = getString(R.string.export_prompt, selectedMonth, selectedYear);
+        String message = getString(R.string.export_prompt, ""+(currentMonthlyRecord.getDate().get(Calendar.MONTH)+1), (currentMonthlyRecord.getDate().get(Calendar.YEAR)));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(message)
@@ -323,7 +273,7 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
         intent.setType("application/vnd.ms-excel");
         intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI,
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS));
-        intent.putExtra(Intent.EXTRA_TITLE, selectedMonth + "_" + selectedYear + ".xls");
+        intent.putExtra(Intent.EXTRA_TITLE, (currentMonthlyRecord.getDate().get(Calendar.MONTH)+1) + "_" + (currentMonthlyRecord.getDate().get(Calendar.YEAR)) + ".xls");
         saveIntentLauncher.launch(intent);
     }
 
@@ -334,11 +284,11 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void export(Uri uri) {
-        List<ProcessedTransaction> processed = viewModel.getMonthlyListOfProcessedTransactions().getValue();
+        List<ProcessedTransaction> processed = viewModelAllTransactions.getMonthlyListOfProcessedTransactions().getValue();
 
         File file = Exporter.INSTANCE.createFile(mainActivity, uri,
-                selectedMonth + " " + selectedYear, processed, cashAtStart,
-                cashIn, cashOut, cashAtEnd, receivables, payables, equity);
+                (currentMonthlyRecord.getDate().get(Calendar.MONTH)+1)  + " " + (currentMonthlyRecord.getDate().get(Calendar.YEAR)), processed, currentMonthlyRecord.getStartingCash(),
+                currentMonthlyRecord.getCashIn(), currentMonthlyRecord.getCashOut(), currentMonthlyRecord.getCash(), currentMonthlyRecord.getSumOfReceivables(), currentMonthlyRecord.getSumOfPayables(), currentMonthlyRecord.getEquity());
 
         if (file == null) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());

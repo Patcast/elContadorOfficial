@@ -80,7 +80,7 @@ public class DialogFilterAllTransactions extends DialogFragment {
     private void onConfirmSelection() {
         typeOfTransactions.forEach(this::updateList);
         viewModel.setBooleanFilter(typeOfTransactions);
-        viewModel.setListOfTransactions();
+        viewModel.setAllChosenTransactions();
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateList(String s, Boolean aBoolean) {

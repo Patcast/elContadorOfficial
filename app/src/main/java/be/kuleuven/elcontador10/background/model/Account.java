@@ -45,8 +45,6 @@ public class Account {
                 .addOnSuccessListener(doc -> {
                     Log.d(TAG, "DocumentSnapshot written with ID: " + doc.getId());
                     Toast.makeText(context,"Account registered",Toast.LENGTH_SHORT).show();
-                    BalanceRecord record = new BalanceRecord(cash,new Timestamp(new Date()));
-                    record.sendNewRecord(record, doc.getId());
                 })
                 .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
     }

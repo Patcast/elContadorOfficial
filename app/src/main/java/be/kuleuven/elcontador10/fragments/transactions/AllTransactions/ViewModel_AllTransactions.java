@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -29,26 +28,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import be.kuleuven.elcontador10.background.Caching;
-import be.kuleuven.elcontador10.background.model.Account;
-import be.kuleuven.elcontador10.background.model.BalanceRecord;
+import be.kuleuven.elcontador10.background.model.MonthlyRecords;
 import be.kuleuven.elcontador10.background.model.ProcessedTransaction;
 import be.kuleuven.elcontador10.background.model.StakeHolder;
-import be.kuleuven.elcontador10.background.model.SummaryHeader;
 
 public class ViewModel_AllTransactions extends ViewModel {
     private static final String TAG = "All Transactions VM";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private Account currentAccounts;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void setInitialData() throws ParseException {
-        currentAccounts = new Account();
-        currentAccounts.setEquityPayablesAndReceivables(0,0,0);
-        requestBalanceRecords();
         initialiseCalendarFilter();
         initialiseBooleanFilter();
-        selectListOfProcessedTransactions();
-        requestCurrentAccount();
         requestGroupOFStakeHolders(Caching.INSTANCE.getChosenAccountId());
     }
 
@@ -56,126 +47,76 @@ public class ViewModel_AllTransactions extends ViewModel {
 
     /// Querying lists of transactions
     private final MutableLiveData<List<ProcessedTransaction>> monthlyListOfProcessedTransactions = new MutableLiveData<>();
-    /// Map of summary values
-    public void resetListOfTransactions() {
-        //monthlyListOfProcessedTransactions.setValue(null);
+    public void resetListOfTransactions(){
+        monthlyListOfProcessedTransactions.setValue(null);
     }
-
     public LiveData<List<ProcessedTransaction>> getMonthlyListOfProcessedTransactions() {
         return monthlyListOfProcessedTransactions;
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void selectListOfProcessedTransactions() throws ParseException {
+    public void requestListOfProcessedTransactions(MonthlyRecords inputMonthlyRecord) throws ParseException {
 
-        int month = getCalendarFilter().getValue().get("month");
-        int year = getCalendarFilter().getValue().get("year");// this will cause trouble
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date dateEnd = dateFormat.parse("01/"+(month+1)+"/"+year);
-        assert dateEnd != null;
-        Timestamp dateSelectedTop = new Timestamp(dateEnd);
-        Date dateBottom = dateFormat.parse("01/"+month+"/"+year);
-        assert dateBottom != null;
-        Timestamp dateSelectedBottom = new Timestamp(dateBottom);
+        if(inputMonthlyRecord!=null){
+            Calendar cal = inputMonthlyRecord.getDate();
 
-        String urlGetAccountTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
-        Query transactionsFromOneAccount = db.
-                collection(urlGetAccountTransactions).
-                whereGreaterThanOrEqualTo("dueDate", dateSelectedBottom).
-                whereLessThan("dueDate", dateSelectedTop);
-        transactionsFromOneAccount.addSnapshotListener((value, e) -> {
-            if (e != null) {
-                Log.w(TAG, "Listen failed.", e);
-                return;
-            }
-            List<ProcessedTransaction> listTrans = new ArrayList<>();
-            assert value != null;
-            for (QueryDocumentSnapshot doc : value) {
-                ProcessedTransaction myTransaction =  doc.toObject(ProcessedTransaction.class);
-                myTransaction.setId(doc.getId());
-                listTrans.add(myTransaction);
-            }
-            if(monthlyListOfProcessedTransactions.getValue()!=null)monthlyListOfProcessedTransactions.getValue().clear();
-            monthlyListOfProcessedTransactions.setValue(listTrans);
-            setListOfTransactions();
-        });
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+            Date dateBottom = dateFormat.parse("01/"+(cal.get(Calendar.MONTH)+1)+"/"+(cal.get(Calendar.YEAR)));
+            assert dateBottom != null;
+            Timestamp dateSelectedBottom = new Timestamp(dateBottom);
+            cal.add(Calendar.MONTH,1);
+            Date dateEnd = dateFormat.parse("01/"+(cal.get(Calendar.MONTH)+1)+"/"+(cal.get(Calendar.YEAR)));
+            assert dateEnd != null;
+            Timestamp dateSelectedTop = new Timestamp(dateEnd);
+            String urlGetAccountTransactions = "/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/transactions";
+            Query transactionsFromOneAccount = db.
+                    collection(urlGetAccountTransactions).
+                    whereGreaterThanOrEqualTo("dueDate", dateSelectedBottom).
+                    whereLessThan("dueDate", dateSelectedTop);
+            transactionsFromOneAccount.addSnapshotListener((value, e) -> {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
+                List<ProcessedTransaction> listTrans = new ArrayList<>();
+                assert value != null;
+                for (QueryDocumentSnapshot doc : value) {
+                    ProcessedTransaction myTransaction =  doc.toObject(ProcessedTransaction.class);
+                    myTransaction.setId(doc.getId());
+                    listTrans.add(myTransaction);
+                }
+                if(monthlyListOfProcessedTransactions.getValue()!=null)monthlyListOfProcessedTransactions.getValue().clear();
+                monthlyListOfProcessedTransactions.setValue(listTrans);
+                inputMonthlyRecord.setCashInAndOut(listTrans);
+                cal.add(Calendar.MONTH,-1);
+                try {
+                    setSelectedMonthlyRecord(inputMonthlyRecord);
+                } catch (ParseException parseException) {
+                    parseException.printStackTrace();
+                }
+                setAllChosenTransactions();
+            });
+        }
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setListOfTransactions(){
-        allChosenTransactions.setValue(filterTransactions());
-        setMapOfSummary(currentAccounts.getSumOfPayables(),currentAccounts.getSumOfReceivables(),currentAccounts.getEquity());
-    }
+
     /// List of transactions displayed
     private final MutableLiveData<List<ProcessedTransaction>> allChosenTransactions = new MutableLiveData<>();
     public LiveData<List<ProcessedTransaction>> getAllChosenTransactions() {
         return allChosenTransactions;
     }
-
-
-
-    /// Calendar filter
-    private final MutableLiveData<Map<String, Integer>> calendarFilter = new MutableLiveData<>();
-    public LiveData<Map<String, Integer>> getCalendarFilter() {
-        return calendarFilter;
-    }
-    public void setCalendarFilter(Map<String, Integer> selectedDate){
-        calendarFilter.setValue(selectedDate);
-    }
-
-    private final List<BalanceRecord> listOfBalanceRecords = new ArrayList<>();
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void requestBalanceRecords(){
-        Query transactionsFromOneAccount = db
-                .collection("/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/balanceRecords");
-        transactionsFromOneAccount.addSnapshotListener((value, e) -> {
-            if (e != null) {
-                Log.w(TAG, "Listen failed.", e);
-                return;
-            }
-            List<BalanceRecord> listRec = new ArrayList<>();
-            for (QueryDocumentSnapshot doc : value) {
-                Map<String, Object> myRecordMap =  doc.getData();
-                listRec.add(new BalanceRecord((Long)myRecordMap.get("startingBalance"),(Timestamp) myRecordMap.get("date")));
-            }
-            listOfBalanceRecords.clear();
-            listOfBalanceRecords.addAll(listRec);
-            if(monthlyListOfProcessedTransactions.getValue()!=null)setMapOfSummary(currentAccounts.getSumOfPayables(),currentAccounts.getSumOfReceivables(),currentAccounts.getEquity());
-        });
+    public void setAllChosenTransactions(){
+        allChosenTransactions.setValue(filterTransactions());
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public Timestamp getFirstStartingBalanceTimeStamp(){
-        Optional<Timestamp> time =  listOfBalanceRecords
-                .stream()
-                .sorted(Comparator.comparing(BalanceRecord::getDate))
-                .map(i -> i.getDate())
-                .findFirst();
-        return time.orElse(null);
-    }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void requestGroupOFStakeHolders(String chosenAccountId){
-        String stakeHoldersUrl = "/accounts/"+chosenAccountId+"/stakeHolders";
-        Query getStakeHolders = db.collection(stakeHoldersUrl)
-                .orderBy("name", Query.Direction.ASCENDING);
 
-        getStakeHolders.addSnapshotListener((value, e) -> {
-            if (e != null) {
-                return;
-            }
-            List<StakeHolder> list = new ArrayList<>();
-            assert value != null;
-            for (QueryDocumentSnapshot doc : value) {
-                StakeHolder myStakeHolder =  doc.toObject(StakeHolder.class);
-                myStakeHolder.setId(doc.getId());
-                list.add(myStakeHolder);
-            }
-            setStakeholdersList(list);
-            Caching.INSTANCE.setStakeholderList(list);
-        });
-    }
+
 
     /// Boolean filter
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private final MutableLiveData<Map<String,Boolean>> booleanFilter = new MutableLiveData<>();
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public LiveData<Map<String,Boolean>> getBooleanFilter() {
         return booleanFilter;
     }
@@ -183,54 +124,15 @@ public class ViewModel_AllTransactions extends ViewModel {
     public void setBooleanFilter(Map<String,Boolean> selectedTypes){
         booleanFilter.setValue(selectedTypes);
     }
-
-
-
-
-
-
-    private final MutableLiveData<Map<String, Integer>> mapOfMonthlySummaryValues = new MutableLiveData<>();
-    public LiveData<Map<String, Integer>> getMapOfMonthlySummaryValues() {
-        return mapOfMonthlySummaryValues;
-    }
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void setMapOfSummary(long payables,long receivables,long equity) {
-            SummaryHeader header = new SummaryHeader(
-                    listOfBalanceRecords,
-                    monthlyListOfProcessedTransactions.getValue(),
-                    calendarFilter.getValue().get("month"),
-                    calendarFilter.getValue().get("year"),
-                    (int)payables,
-                    (int)receivables,
-                    (int)equity
-                    );
-            mapOfMonthlySummaryValues.setValue(header.getSummaryMap());
+    private void initialiseBooleanFilter() {
+        HashMap<String, Boolean> transTypes = new HashMap<>();
+        transTypes.put("transaction",true);
+        transTypes.put("receivable",false);
+        transTypes.put("payable",false);
+        transTypes.put("deletedTrans",false);
+        setBooleanFilter(transTypes);
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void requestCurrentAccount(){
-        String accountUrl = "accounts";
-        DocumentReference docRef = db.collection(accountUrl)
-                .document(Caching.INSTANCE.getChosenAccountId());
-
-        docRef.addSnapshotListener((value, e) -> {
-                if (e != null) {
-                    Log.w(TAG, "Listen failed.", e);
-                    return;
-                }
-
-                if (value != null && value.exists()) {
-                    Account updatedAccount = value.toObject(Account.class);
-                    currentAccounts.setEquityPayablesAndReceivables(updatedAccount.getSumOfPayables(),updatedAccount.getSumOfReceivables(),updatedAccount.getEquity());
-                    setMapOfSummary(currentAccounts.getSumOfPayables(),currentAccounts.getSumOfReceivables(),currentAccounts.getEquity());
-
-                } else {
-                    Log.d(TAG, "Current data: null");
-                }
-
-
-        });
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     private List<ProcessedTransaction> filterTransactions() {
         List<ProcessedTransaction> listAllTransactionsFiltered = new ArrayList<>();
@@ -277,27 +179,7 @@ public class ViewModel_AllTransactions extends ViewModel {
                 .collect(Collectors.toList());
     }
 
-    private void initialiseCalendarFilter() {
-        Calendar cal = Calendar.getInstance();
-        Map<String,Integer> chosenDateMap = new HashMap<>();
-        chosenDateMap.put("month",cal.get(Calendar.MONTH)+1);
-        chosenDateMap.put("year",cal.get(Calendar.YEAR));
-        setCalendarFilter(chosenDateMap);
-    }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void initialiseBooleanFilter() {
-        HashMap<String, Boolean> transTypes = new HashMap<>();
-        transTypes.put("transaction",true);
-        transTypes.put("receivable",false);
-        transTypes.put("payable",false);
-        transTypes.put("deletedTrans",false);
-        setBooleanFilter(transTypes);
-    }
-
-
-
-
-
+    // STAKEHOLDERS
     private final MutableLiveData<List<StakeHolder>> stakeholderList = new MutableLiveData<>();
     public LiveData<List<StakeHolder>> getStakeholdersList() {
         return stakeholderList;
@@ -305,17 +187,98 @@ public class ViewModel_AllTransactions extends ViewModel {
     public void setStakeholdersList(List<StakeHolder> inputStakeholders){
         stakeholderList.setValue(inputStakeholders);
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void requestGroupOFStakeHolders(String chosenAccountId){
+        String stakeHoldersUrl = "/accounts/"+chosenAccountId+"/stakeHolders";
+        Query getStakeHolders = db.collection(stakeHoldersUrl)
+                .orderBy("name", Query.Direction.ASCENDING);
 
-
-
-
-/*    private final MutableLiveData<Account> currentAccount = new MutableLiveData<>();
-    public LiveData<Account> getCurrentAccount() {
-        return currentAccount;
+        getStakeHolders.addSnapshotListener((value, e) -> {
+            if (e != null) {
+                return;
+            }
+            List<StakeHolder> list = new ArrayList<>();
+            assert value != null;
+            for (QueryDocumentSnapshot doc : value) {
+                StakeHolder myStakeHolder =  doc.toObject(StakeHolder.class);
+                myStakeHolder.setId(doc.getId());
+                list.add(myStakeHolder);
+            }
+            setStakeholdersList(list);
+            Caching.INSTANCE.setStakeholderList(list);
+        });
     }
-    public void setCurrentAccount(Account inputCurrentAccount){
-        currentAccount.setValue(inputCurrentAccount);
-    }*/
+
+    ///////// CALENDAR RELATED ////////////***************
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void initialiseCalendarFilter() {
+       resetSelectedMonthlyRecord();
+       requestMonthlyRecords();
+    }
+    public final List<MonthlyRecords> listOfMonthlyRecords = new ArrayList<>();
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void requestMonthlyRecords(){
+        Query monthlyRecordsFromOneAccount = db
+                .collection("/accounts/"+Caching.INSTANCE.getChosenAccountId()+"/monthlyRecords");
+        monthlyRecordsFromOneAccount.addSnapshotListener((value, e) -> {
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e);
+                return;
+            }
+            assert value != null;
+            listOfMonthlyRecords.clear();
+            for (QueryDocumentSnapshot doc : value) {
+                MonthlyRecords record = doc.toObject(MonthlyRecords.class);
+                record.setDate();
+                listOfMonthlyRecords.add(record);
+            }
+            try {
+                if(selectedMonthlyRecord.getValue()!=null) setSelectedMonthlyRecord(listOfMonthlyRecords.stream().filter(m->m.getId().equals((selectedMonthlyRecord.getValue()).getId())).findFirst().orElse(null));
+                else requestListOfProcessedTransactions(getLatestMonthlyRecord());
+            } catch (ParseException parseException) {
+                parseException.printStackTrace();
+            }
+        });
+    }
+
+    private final MutableLiveData<MonthlyRecords> selectedMonthlyRecord = new MutableLiveData<>();
+    public LiveData<MonthlyRecords> getSelectedMonthlyRecord() {
+        return selectedMonthlyRecord;
+    }
+    public void resetSelectedMonthlyRecord(){
+        selectedMonthlyRecord.setValue(null);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private MonthlyRecords getLatestMonthlyRecord(){
+        Optional<MonthlyRecords> monthlyRecordsOptional = listOfMonthlyRecords.stream().max(Comparator.comparing(MonthlyRecords::getDate));
+        return monthlyRecordsOptional.orElse(null);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setSelectedMonthlyRecord(MonthlyRecords monthlyRecord) throws ParseException { ///
+        if(monthlyListOfProcessedTransactions.getValue()!=null){
+           selectedMonthlyRecord.setValue(monthlyRecord);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public MonthlyRecords findMonthlyRecord(int month, int year){
+        Optional<MonthlyRecords> selectedRecord = listOfMonthlyRecords
+                .stream()
+                .filter(i-> i.getDate().get(Calendar.MONTH) == month)
+                .filter(i-> i.getDate().get(Calendar.YEAR) == year)
+                .findFirst();
+        return selectedRecord.orElse(null);
+
+    }
+
+
+
+
+
 
 
 
