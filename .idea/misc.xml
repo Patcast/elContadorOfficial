@@ -94,7 +94,7 @@
         <entry key="app/src/main/res/layout/fragment_add_new_property.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_all_micro_acounts.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_all_properties.xml" value="0.2578125" />
-        <entry key="app/src/main/res/layout/fragment_all_transactions.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_all_transactions.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_choose_category.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_choose_stake_holder.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_contract_display.xml" value="0.2578125" />
