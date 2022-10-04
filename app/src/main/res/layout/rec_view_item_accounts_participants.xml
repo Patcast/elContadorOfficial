@@ -34,6 +34,10 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:hint="Permission"
+        android:textColorHint="@color/white"
+        app:boxBackgroundColor="@color/rec_view_gray"
+        app:boxStrokeColor="#66cc99"
+        app:hintTextColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -42,8 +46,9 @@
             android:id="@+id/autMenuParticipant"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="none"
             android:layout_weight="1"
+            android:inputType="none"
+            android:textColor="#FFFFFF"
             tools:text="Owner" />
 
     </com.google.android.material.textfield.TextInputLayout>

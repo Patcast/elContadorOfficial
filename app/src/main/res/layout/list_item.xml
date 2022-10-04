@@ -6,6 +6,8 @@
     android:padding="16dp"
     android:ellipsize="end"
     android:maxLines="1"
+    android:textColor="@color/white"
+    android:background="@color/rec_view_gray"
     android:textAppearance="?attr/textAppearanceSubtitle1"
     >
 

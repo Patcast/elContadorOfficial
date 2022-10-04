@@ -166,6 +166,7 @@
     <TextView
         android:id="@+id/textView_fillAmount"
         android:layout_width="match_parent"
+        android:textColor="@color/light_grey"
         android:layout_height="wrap_content"
         />
 

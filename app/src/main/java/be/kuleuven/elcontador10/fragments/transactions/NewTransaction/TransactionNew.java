@@ -147,6 +147,7 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         navController.navigate(action);
     }
 
+
     private void lookForProperty() {
         TransactionNewDirections.ActionNewTransactionToPropertiesList action =
                 TransactionNewDirections.actionNewTransactionToPropertiesList();
@@ -167,6 +168,8 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         new MaxWordsCounter(8,txtAmount,txtMustHaveAmount,getContext());
 
     }
+
+
     @Override
     public void onStart() {
         super.onStart();
