@@ -5,10 +5,10 @@
     </style>
     <style name="dropMenu" parent="Theme.MaterialComponents.NoActionBar">
         <item name="android:textColor">@color/white</item>
-        <item name="colorPrimary">#cc9966</item>
-        <item name="colorPrimaryVariant">#3700B3</item>
+        <item name="colorPrimary">#d19f3f</item>
+        <item name="colorPrimaryVariant">#3fd17b</item>
         <item name="colorOnPrimary">#000000</item>
-        <item name="colorSecondary">#cc6699</item>
+        <item name="colorSecondary">#d1563f</item>
         <item name="colorSecondaryVariant">#000000</item>
         <item name="colorOnSecondary">#000000</item>
         <item name="colorAccent">#66cc99</item>
