@@ -352,7 +352,6 @@
             android:layout_marginBottom="30dp"
             android:alpha="1"
             android:contentDescription="@string/settings"
-            app:backgroundTint="@color/fb_color"
             app:fabCustomSize="60dp"
             app:maxImageSize="40dp"
             app:srcCompat="@drawable/ic_baseline_add_24" />
@@ -369,7 +368,6 @@
             android:contentDescription="@string/settings"
             android:tint="#F4F4F4"
             android:visibility="invisible"
-            app:backgroundTint="@color/fb_color"
             app:fabCustomSize="60dp"
             app:maxImageSize="40dp"
             app:srcCompat="@drawable/ic_baseline_add_24" />
@@ -386,7 +384,6 @@
             android:contentDescription="@string/settings"
             android:tint="#F4F4F4"
             android:visibility="invisible"
-            app:backgroundTint="@color/fb_color"
             app:fabCustomSize="60dp"
             app:maxImageSize="40dp"
             app:srcCompat="@drawable/ic_baseline_add_24" />
@@ -429,45 +426,5 @@
 
     </RelativeLayout>
 
-
-    <!--<androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/relativeLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_container">
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/RecViewTransactionsHolder"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="2dp" />
-
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btn_newFAB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-           app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="30dp"
-            android:alpha="1"
-            android:contentDescription="@string/settings"
-            app:backgroundTint="@color/fb_color"
-            app:fabCustomSize="60dp"
-            app:maxImageSize="40dp"
-            app:srcCompat="@drawable/ic_baseline_add_24" />
-
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
--->
 
 </androidx.constraintlayout.motion.widget.MotionLayout>
