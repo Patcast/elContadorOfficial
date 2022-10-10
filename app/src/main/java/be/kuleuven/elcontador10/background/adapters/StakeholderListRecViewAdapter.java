@@ -79,7 +79,8 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
         if (stake.getRole() != null && !stake.getRole().equals("")) {
             holder.textRole.setVisibility(View.VISIBLE);
             holder.textRole.setText(stake.getRole());
-        }
+        } else
+            holder.textRole.setVisibility(View.GONE);
 
         holder.parent.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(viewFromHostingClass);
