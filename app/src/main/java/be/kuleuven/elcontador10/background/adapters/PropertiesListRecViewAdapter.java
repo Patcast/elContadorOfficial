@@ -98,6 +98,7 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
             });
         }
 
+        holder.textRole.setVisibility(View.VISIBLE);
         if (property.getStakeholder() == null)
             holder.textRole.setText(R.string.vacant);
         else
