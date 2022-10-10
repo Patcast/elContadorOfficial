@@ -17,6 +17,8 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -68,6 +70,22 @@ public class AccountSettings extends Fragment {
         navController = Navigation.findNavController(view);
 
         edTextNewEmail = view.findViewById(R.id.edTextEmailPart);
+        edTextNewEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                textEmailWarning.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         Button btnAddEmail = view.findViewById(R.id.butAddEmail);
         RecyclerView recUsersOfAccount = view.findViewById(R.id.recParticipants);
         TextView textAccountName = view.findViewById(R.id.textAccountName);
@@ -93,17 +111,15 @@ public class AccountSettings extends Fragment {
                 menuInflater.inflate(R.menu.top_three_buttons_menu, menu);
                 menu.findItem(R.id.menu_delete).setVisible(true);
             }
+
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()){
-
-                    case R.id.menu_delete:
-                        onDeleteClick();
-                        return true;
-                    default:
-                        return false;
-                }
+                if (menuItem.getItemId() == R.id.menu_delete) {
+                    onDeleteClick();
+                    return true;
+                } else
+                    return false;
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
@@ -204,14 +220,15 @@ public class AccountSettings extends Fragment {
 
     private void verifyEmailToAdd() {
         String emailToAdd = edTextNewEmail.getText().toString();
-        if(emailToAdd.isEmpty()){
+        if (emailToAdd.isEmpty() ||
+                !emailToAdd.contains("@") || emailToAdd.endsWith("@") ||
+                !emailToAdd.contains(".") || emailToAdd.endsWith(".")) {
             textEmailWarning.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(getString(R.string.confirm_email))
                     .setMessage(getString(R.string.add_email_question)+"\n\n" + emailToAdd)
-                    .setPositiveButton(getString(R.string.yes), (dialog, which) ->addEmail(emailToAdd))
+                    .setPositiveButton(getString(R.string.yes), (dialog, which) -> addEmail(emailToAdd))
                     .setNegativeButton(getString(R.string.no), (dialog, which) -> dialog.dismiss())
                     .create()
                     .show();

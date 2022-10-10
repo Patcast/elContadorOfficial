@@ -14,8 +14,8 @@ import be.kuleuven.elcontador10.background.Caching;
 public class AccountSettingsModel {
     private static final String TAG = "accountSettingsItem";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private String subjectsEmail;
-    private Context context;
+    private final String subjectsEmail;
+    private final Context context;
     boolean executed=false;
 
     public AccountSettingsModel(String subjectsEmail, Context context) {
@@ -33,12 +33,14 @@ public class AccountSettingsModel {
                 .show();
        return executed;
     }
+
     private void executeChangeOfOwner(){
         setExecuted(true);
         db.collection("accounts").document(Caching.INSTANCE.getChosenAccountId()).update("owner", subjectsEmail)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully updated!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
     }
+
     public boolean deleteAccountUser(){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.confirm_user_deletion)
@@ -50,7 +52,6 @@ public class AccountSettingsModel {
         
         return isExecuted();
     }
-
 
     private void executeDeleteAccountUser(){
         setExecuted(true);
