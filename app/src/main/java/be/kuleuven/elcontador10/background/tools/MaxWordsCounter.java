@@ -11,9 +11,10 @@ import be.kuleuven.elcontador10.R;
 
 public class MaxWordsCounter {
 
-    public MaxWordsCounter(int maxWord,EditText inputEdText, TextView wordCounterText,Context inputContext) {
-        setWordCounter(maxWord,inputEdText,wordCounterText,inputContext);
-        String init = "0/" + maxWord;
+    public MaxWordsCounter(int maxWord, EditText inputEdText, TextView wordCounterText,Context inputContext) {
+        setWordCounter(maxWord, inputEdText, wordCounterText, inputContext);
+        int count = inputEdText.getText().toString().length();
+        String init = count + "/" + maxWord;
         wordCounterText.setText(init);
     }
 
@@ -27,10 +28,10 @@ public class MaxWordsCounter {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String text = writingEdText.getText().toString();
-                writingEdText.setFilters(new InputFilter[] { new InputFilter.LengthFilter(maxWords+1) });
+                writingEdText.setFilters(new InputFilter[] { new InputFilter.LengthFilter(maxWords) });
                 String counter = text.length()+"/"+ maxWords;
                 displayText.setText(counter);
-                if (text.length()>maxWords){
+                if (text.length() >= maxWords){
                     displayText.setTextColor(context.getResources().getColor(R.color.light_red_warning));
                 } else{
                     displayText.setTextColor(context.getResources().getColor(R.color.light_grey));
