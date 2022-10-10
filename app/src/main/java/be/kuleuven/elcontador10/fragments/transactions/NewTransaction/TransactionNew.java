@@ -169,7 +169,6 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
 
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -184,6 +183,7 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         super.onDestroy();
         viewModel.reset();
     }
+
     private void setPropertyChosen(Property property) {
         selectedProperty = property;
 
@@ -199,12 +199,11 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
     }
 
     private void setStakeChosenText(StakeHolder stakeHolder) {
-        if(stakeHolder != null) {
+        selectedStakeHolder = stakeHolder;
+        if (stakeHolder != null) {
             txtStakeholderNotSelected.setVisibility(View.GONE);
             txtStakeHolder.setText(stakeHolder.getName());
-            selectedStakeHolder = stakeHolder;
-        }
-        else{
+        } else {
             txtStakeHolder.setText(R.string.none);
         }
     }
@@ -258,7 +257,9 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
             valid = false;
         }
 
-        if (trans_type.contains(Caching.INSTANCE.TYPE_PAYABLES) || trans_type.contains(Caching.INSTANCE.TYPE_RECEIVABLES)) {
+        if ((trans_type.contains(Caching.INSTANCE.TYPE_PAYABLES) ||
+                trans_type.contains(Caching.INSTANCE.TYPE_RECEIVABLES)) &&
+                selectedStakeHolder == null) {
             txtStakeholderNotSelected.setVisibility(View.VISIBLE);
             txtStakeholderNotSelected.setTextColor(getResources().getColor(R.color.light_red_warning));
             txtStakeholderNotSelected.setText(R.string.this_field_is_required);

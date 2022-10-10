@@ -9,8 +9,6 @@ import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -76,7 +74,7 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         addCustomCat.setOnClickListener(v->startDialogForAdding());
     }
     private void startDialogForAdding() {
-        CategoryDialog dialog =new CategoryDialog();
+        CategoryDialog dialog = new CategoryDialog();
         dialog.show(getParentFragmentManager(),"Category Dialog");
     }
 

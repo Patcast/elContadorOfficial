@@ -49,6 +49,8 @@
             android:layout_weight="1"
             android:inputType="none"
             android:textColor="#FFFFFF"
+            android:textColorHighlight="@color/FabColor2"
+            android:textColorLink="@color/FabColor2"
             tools:text="Owner" />
 
     </com.google.android.material.textfield.TextInputLayout>

@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.ListPopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,11 +52,10 @@ public class AccountSettingsRecViewAdapter extends RecyclerView.Adapter<AccountS
                 if(position1 != 0) Toast.makeText(context, context.getString(R.string.toast_for_wrong_input_from_owner) , Toast.LENGTH_LONG).show();
                 holder.participantsMenu.setText(sharingStatuses[0] ,false);
 
-            }
-            else if(loggedInUser.equals(owner)){
+            } else if (loggedInUser.equals(owner)) {
                 if(position1 != 1){
                     boolean executed = false;
-                    AccountSettingsModel ac = new AccountSettingsModel(email,context);
+                    AccountSettingsModel ac = new AccountSettingsModel(email, context);
                     if(position1 == 2){
                         executed = ac.deleteAccountUser();
                     }
@@ -66,8 +64,7 @@ public class AccountSettingsRecViewAdapter extends RecyclerView.Adapter<AccountS
                     }
                     if (!executed ) holder.participantsMenu.setText(adapterView.getItemAtPosition(1).toString(),false);//holder.participantsMenu.setText(adapterView.getItemAtPosition(position).toString(),false);
                 }
-            }
-            else {
+            } else {
                 int pos  = (email.equals(owner))?0:1;
                 holder.participantsMenu.setText(adapterView.getItemAtPosition(pos).toString(),false);
                 Toast.makeText(context, context.getString(R.string.no_owner_rights) , Toast.LENGTH_LONG).show();
