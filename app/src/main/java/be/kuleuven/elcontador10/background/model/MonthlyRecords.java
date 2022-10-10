@@ -103,10 +103,6 @@ public class MonthlyRecords {
                     .filter(totalAmount -> totalAmount <0)
                     .reduce(0, Integer::sum);
         }
-        else{
-            cashIn=0;
-            cashOut=0;
-        }
 
     }
 

@@ -57,9 +57,10 @@ public class ViewModel_AllTransactions extends ViewModel {
     public void requestListOfProcessedTransactions(MonthlyRecords inputMonthlyRecord) throws ParseException {
 
         if(inputMonthlyRecord!=null){
-            Calendar cal = inputMonthlyRecord.getDate();
-
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(inputMonthlyRecord.getDate().get(Calendar.YEAR),inputMonthlyRecord.getDate().get(Calendar.MONTH),1);
 
             Date dateBottom = dateFormat.parse("01/"+(cal.get(Calendar.MONTH)+1)+"/"+(cal.get(Calendar.YEAR)));
             assert dateBottom != null;
@@ -87,13 +88,13 @@ public class ViewModel_AllTransactions extends ViewModel {
                 }
                 if(monthlyListOfProcessedTransactions.getValue()!=null)monthlyListOfProcessedTransactions.getValue().clear();
                 monthlyListOfProcessedTransactions.setValue(listTrans);
-                inputMonthlyRecord.setCashInAndOut(listTrans);
-                cal.add(Calendar.MONTH,-1);
+                inputMonthlyRecord.setCashInAndOut(monthlyListOfProcessedTransactions.getValue());
                 try {
                     setSelectedMonthlyRecord(inputMonthlyRecord);
                 } catch (ParseException parseException) {
                     parseException.printStackTrace();
                 }
+
                 setAllChosenTransactions();
             });
         }

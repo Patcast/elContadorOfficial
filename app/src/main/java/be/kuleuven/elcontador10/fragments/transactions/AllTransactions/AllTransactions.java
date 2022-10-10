@@ -50,6 +50,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.MainActivity;
@@ -136,7 +137,13 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
         selectMonth.setOnClickListener(v -> pickDate());
-        viewModelAllTransactions.getAllChosenTransactions().observe(getViewLifecycleOwner(), i-> recyclerViewAdapter.setAllTransactions(i));
+        viewModelAllTransactions.getAllChosenTransactions().observe(getViewLifecycleOwner(), i-> {
+            try {
+                onTransactionsListUpdated(i);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        });
         viewModelAllTransactions.getSelectedMonthlyRecord().observe(getViewLifecycleOwner(), this::updateMonthlyRecordUi);
         coverLayout.setOnClickListener(v->closeCover());
         fabNew.setOnClickListener(v->fabOpenAnimation());
@@ -204,6 +211,15 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
         super.onStop();
         mainActivity.displayBottomNavigationMenu(false);
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void onTransactionsListUpdated(List<ProcessedTransaction> list) throws ParseException {
+        recyclerViewAdapter.setAllTransactions(list);
+       /* if(viewModelAllTransactions.getSelectedMonthlyRecord().getValue()!=null ){
+            viewModelAllTransactions.getSelectedMonthlyRecord().getValue().setCashInAndOut(list);
+            viewModelAllTransactions.setSelectedMonthlyRecord(viewModelAllTransactions.getSelectedMonthlyRecord().getValue());
+        }*/
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateMonthlyRecordUi(MonthlyRecords inputsForSummary) {
@@ -220,10 +236,16 @@ public class AllTransactions extends Fragment implements DatePickerDialog.OnDate
             txtSumOfPayables.setText(formatter.getFinalNumber());
             formatter.setOriginalNumber(inputsForSummary.getEquity());
             txtEquity.setText(formatter.getFinalNumber());
-            formatter.setOriginalNumber(inputsForSummary.getCashIn());
-            txtSumOfCashIn.setText(formatter.getFinalNumber());
-            formatter.setOriginalNumber(inputsForSummary.getCashOut());
-            txtSumOfCashOut.setText(formatter.getFinalNumber());
+
+            if(inputsForSummary.getCashIn()!=null){
+                formatter.setOriginalNumber(inputsForSummary.getCashIn());
+                txtSumOfCashIn.setText(formatter.getFinalNumber());
+                formatter.setOriginalNumber(inputsForSummary.getCashOut());
+                txtSumOfCashOut.setText(formatter.getFinalNumber());
+            }
+
+
+
             Calendar cal = inputsForSummary.getDate();
             String currentDate = ""+(getResources().getStringArray(R.array.months_list))[cal.get(Calendar.MONTH)]+" "+cal.get(Calendar.YEAR);
             selectMonth.setText(currentDate);
