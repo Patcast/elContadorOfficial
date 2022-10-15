@@ -55,8 +55,7 @@ public class TransactionsRecViewAdapter extends  RecyclerView.Adapter<Transactio
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull TransactionsRecViewAdapter.ViewHolder holder, int position) {
-            populateItemRows((ViewHolder) holder, position);
-
+            populateItemRows(holder, position);
     }
 
 
@@ -124,9 +123,9 @@ public class TransactionsRecViewAdapter extends  RecyclerView.Adapter<Transactio
 
     }
 
-    public void setAllTransactions (List<ProcessedTransaction> NewTransactions) {
+    public void setAllTransactions (List<ProcessedTransaction> newTransactions) {
         this.allTransactions.clear();
-        this.allTransactions = NewTransactions;
+        this.allTransactions = newTransactions;
         this.notifyDataSetChanged();
     }
 }

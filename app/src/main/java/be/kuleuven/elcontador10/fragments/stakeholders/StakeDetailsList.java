@@ -55,7 +55,6 @@ public class StakeDetailsList extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerViewAdapter = new TransactionsRecViewAdapter(view,getContext());
-        viewModel.getListOfStakeHolderTrans().observe(getViewLifecycleOwner(), this::updateAdapter);
     }
 
     @Override
@@ -63,6 +62,14 @@ public class StakeDetailsList extends Fragment {
         super.onStart();
         recyclerView.setAdapter(recyclerViewAdapter);
         viewModel.setSelectedStakeholder(selectedStakeHolder);
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewModel.getListOfStakeHolderTrans().observe(getViewLifecycleOwner(), this::updateAdapter);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

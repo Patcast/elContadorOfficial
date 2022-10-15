@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -28,7 +27,6 @@ import com.google.firebase.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.zip.Inflater;
 
 import be.kuleuven.elcontador10.R;
 import be.kuleuven.elcontador10.MainActivity;
@@ -41,7 +39,6 @@ import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 import be.kuleuven.elcontador10.background.tools.ZoomOutPageTransformer;
 import be.kuleuven.elcontador10.fragments.property.PropertiesList;
 import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.ViewModel_AllTransactions;
-
 
 public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTransformer.PageChangeListener {
     private NavController navController;
@@ -213,7 +210,11 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
 
         mainActivity.displayTabLayout(false);
         mainActivity.displayStakeHolderDetails(false);
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         viewPager.removeAllViews();
         mAdapter.deleteFragments();
     }
