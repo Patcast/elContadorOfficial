@@ -124,7 +124,7 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
                 Property chosenProperty = viewModel.getPropertyFromID(propertyID);
                 this.viewModel.selectProperty(chosenProperty);
             }
-            getArguments().clear();
+            getArguments().clear(); //
         }
 
         setWordCounters();
