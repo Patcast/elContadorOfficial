@@ -282,7 +282,7 @@
 
     <string name="add_title">Please add  a title</string>
     <string name="starting_date">Starting Date</string>
-    <string name="future_dates">\n\nFuture transactions\' dates:\n</string>
+    <string name="future_dates">Future transactions dates:\n</string>
     <string name="add_transaction">Add Transaction</string>
     <string name="add_future_transaction">Add future transaction</string>
     <string name="new_future_transaction">New Future Transaction</string>
@@ -290,7 +290,7 @@
     <string name="receivable_of">Receivable of </string>
     <string name="payable_of">Payable of</string>
     <string name="balance_stake">Balance:</string>
-    <string name="f_transaction_for">\"Future transaction for \"</string>
+    <string name="f_transaction_for">Future transaction for </string>
     <string name="sum_of_this_month_transactions">Sum of this month transactions</string>
     <string name="receivables_in_the_beginning">Receivables(In the beginning)</string>
     <string name="payables_in_the_beginning">Payables in the beginning</string>
@@ -371,6 +371,6 @@
     <string name="no_logged_in_email">No Logged In email found</string>
     <string name="invalid_date_for_summary">Invalid date! The latest Monthly Summary available is for </string>
     <string name="select_month">Select a Month</string>
-    <string name="loading">loading...</string>
+    <string name="loading">loading…</string>
 
 </resources>

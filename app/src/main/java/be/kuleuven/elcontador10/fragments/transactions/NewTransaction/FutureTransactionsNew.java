@@ -1,6 +1,7 @@
 package be.kuleuven.elcontador10.fragments.transactions.NewTransaction;
 
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,14 +51,13 @@ import be.kuleuven.elcontador10.background.model.StakeHolder;
 import be.kuleuven.elcontador10.background.tools.DatabaseDatesFunctions;
 import be.kuleuven.elcontador10.background.tools.MaxWordsCounter;
 import be.kuleuven.elcontador10.fragments.property.PropertyListViewModel;
-import be.kuleuven.elcontador10.fragments.property.PropertyViewModel;
-import be.kuleuven.elcontador10.fragments.transactions.AllTransactions.ViewModel_AllTransactions;
 
 public class FutureTransactionsNew extends Fragment {
 
     private NavController navController;
-    private TextView numOfFutureTransTxt,summaryOfFutureTransactionsTxt,propertyTxt,emojiTxt,stakeTxt,fillStakeTxt,fillAmountTxt,wordCountNotesTxt,fillTitleTxt;
-    EditText notesTxt,titleTxt,amountTxt;
+    private TextView summaryOfFutureTransactionsTxt, propertyTxt, emojiTxt, stakeTxt, fillStakeTxt,
+            fillAmountTxt, wordCountNotesTxt, fillTitleTxt, fillAmountOfFuture;
+    EditText numOfFutureTransTxt, notesTxt, titleTxt, amountTxt;
     private Spinner frequency_spinner;
     private RadioButton payablesButton;
     private Button btnChooseStartingDate, btnConfirm;
@@ -152,13 +154,17 @@ public class FutureTransactionsNew extends Fragment {
     }
 
     private void setWordCounters() {
-        new MaxWordsCounter(30,titleTxt,fillTitleTxt,getContext());
-        new MaxWordsCounter(100,notesTxt,wordCountNotesTxt,getContext());
-        new MaxWordsCounter(8,amountTxt,fillAmountTxt,getContext());
+        new MaxWordsCounter(30, titleTxt, fillTitleTxt, getContext());
+        new MaxWordsCounter(100, notesTxt, wordCountNotesTxt, getContext());
+        new MaxWordsCounter(8, amountTxt, fillAmountTxt, getContext());
+        new MaxWordsCounter(4, numOfFutureTransTxt, fillAmountOfFuture, getContext());
     }
+    @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void startViews(View view) {
         //views
+        ScrollView scrollView = view.findViewById(R.id.scrollViewFutureNew);
+
         TextView accountText = view.findViewById(R.id.textView_currentAccount);
         accountText.setText(Caching.INSTANCE.getAccountName());
 
@@ -173,7 +179,20 @@ public class FutureTransactionsNew extends Fragment {
         amountTxt = view.findViewById(R.id.payment_new_amount);
         numOfFutureTransTxt = view.findViewById(R.id.payment_new_duration);
         numOfFutureTransTxt.addTextChangedListener(new TextChangeWatcher());
+
         summaryOfFutureTransactionsTxt = view.findViewById(R.id.payment_new_info);
+        summaryOfFutureTransactionsTxt.setMovementMethod(new ScrollingMovementMethod());
+
+        scrollView.setOnTouchListener((v, event) -> {
+            summaryOfFutureTransactionsTxt.getParent().requestDisallowInterceptTouchEvent(false);
+            return false;
+        });
+
+        summaryOfFutureTransactionsTxt.setOnTouchListener((v, event) -> {
+            summaryOfFutureTransactionsTxt.getParent().requestDisallowInterceptTouchEvent(true);
+            return false;
+        });
+
         notesTxt = view.findViewById(R.id.payment_new_notes);
         payablesButton = view.findViewById(R.id.payment_new_out);
         btnChooseStartingDate = view.findViewById(R.id.payment_new_start);
@@ -183,6 +202,8 @@ public class FutureTransactionsNew extends Fragment {
         emojiTxt = view.findViewById(R.id.text_emoji_category);
         propertyTxt.setOnClickListener(v->lookForProperty());
         stakeTxt.setOnClickListener(v -> goToStakeList());
+
+        fillAmountOfFuture = view.findViewById(R.id.textView_fillDuration);
     }
 
     private void goToStakeList() {
@@ -212,6 +233,7 @@ public class FutureTransactionsNew extends Fragment {
                 FutureTransactionsNewDirections.actionContractNewPaymentToChooseCategory(false);
         navController.navigate(action);
     }
+
     public void setChosenCategory(EmojiCategory emojiCategory) {
         if (emojiCategory == null) {
             idCatSelected = null;
@@ -253,8 +275,8 @@ public class FutureTransactionsNew extends Fragment {
         datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         datePickerDialog.show();
     }
-    @RequiresApi(api = Build.VERSION_CODES.O)
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void onConfirm_Clicked(View view) {
         String title_text = titleTxt.getText().toString();
         String amount_text = amountTxt.getText().toString();
@@ -263,7 +285,7 @@ public class FutureTransactionsNew extends Fragment {
             List <String> type_input = (payablesButton.isChecked())?
                     Arrays.asList(null, Caching.INSTANCE.TYPE_PAYABLES, null, Caching.INSTANCE.TYPE_PENDING) :
                     Arrays.asList(null,null, Caching.INSTANCE.TYPE_RECEIVABLES, Caching.INSTANCE.TYPE_PENDING);
-            String propertyId = (selectedProperty!=null)?selectedProperty.getId():"";
+            String propertyId = (selectedProperty!=null)? selectedProperty.getId() : "";
             transactions.forEach(t->t.setFutureTransactionsFields(
                     title_text,
                     Integer.parseInt(amount_text),
@@ -315,32 +337,30 @@ public class FutureTransactionsNew extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private boolean calculateMultipleFutureTransaction(){
-
+    private void calculateMultipleFutureTransaction(){
         int frequencyID = frequency_spinner.getSelectedItemPosition();
-        String collectionSizeString =numOfFutureTransTxt.getText().toString();
+        String collectionSizeString = numOfFutureTransTxt.getText().toString();
         int ONE_TIME = 0;
         int CUSTOM = 6;
-        if ((frequencyID == ONE_TIME ||(frequencyID != CUSTOM && collectionSizeString.length()>0))&& date!=null) {
+        if ((frequencyID == ONE_TIME ||(frequencyID != CUSTOM && collectionSizeString.length() > 0))
+                && date != null) {
             int collectionSize = (collectionSizeString.length() > 0) ? Integer.parseInt(collectionSizeString) : 1;
 
-            transactions = DatabaseDatesFunctions.INSTANCE.makeFutureTransactions(date, frequencyID, collectionSize);//
+            transactions = DatabaseDatesFunctions.INSTANCE.makeFutureTransactions(date, frequencyID, collectionSize);
 
             if (transactions != null) {
                 String summary =
                         getString(R.string.future_dates)+"\n\n"
-                        + transactions  .stream()
+                        + transactions.stream()
                         .map(e -> DatabaseDatesFunctions.INSTANCE.timestampToString(e.getDueDate()))
                         .collect(Collectors.joining("\n"));
+
                 summaryOfFutureTransactionsTxt.setText(summary);
-                summaryOfFutureTransactionsTxt.setTextColor(Color.WHITE);// move for later
-                return true;
+                summaryOfFutureTransactionsTxt.setTextColor(Color.WHITE);
             } else {
                 errorOnDates(getString(R.string.error_period));
-                return false;
             }
         }
-        return false;
     }
     private void errorOnDates(String errorMsg){
         summaryOfFutureTransactionsTxt.setText(errorMsg);
@@ -362,7 +382,13 @@ public class FutureTransactionsNew extends Fragment {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void afterTextChanged(Editable editable) {
-            calculateMultipleFutureTransaction();
+            int length = numOfFutureTransTxt.getText().toString().length();
+            if (length == 0) {
+                if (transactions != null)
+                    transactions.clear();
+                errorOnDates(getString(R.string.please_fill_in_duration));
+            } else
+                calculateMultipleFutureTransaction();
         }
     }
 
@@ -373,10 +399,12 @@ public class FutureTransactionsNew extends Fragment {
             if(transactions!=null)transactions.clear();
             if (i == 0) { // one time
                 numOfFutureTransTxt.setVisibility(View.GONE);
+                fillAmountOfFuture.setVisibility(View.GONE);
                 calculateMultipleFutureTransaction();
             }
             else {
                 numOfFutureTransTxt.setVisibility(View.VISIBLE);
+                fillAmountOfFuture.setVisibility(View.VISIBLE);
                 calculateMultipleFutureTransaction();
                 numOfFutureTransTxt.setHint(R.string.duration);
             }
