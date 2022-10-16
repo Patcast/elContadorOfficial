@@ -76,7 +76,7 @@ public class ViewModel_AllTransactions extends ViewModel {
                     whereLessThan("dueDate", dateSelectedTop);
             transactionsFromOneAccount.addSnapshotListener((value, e) -> {
                 if (e != null) {
-                    Log.w(TAG, "Listen of thisfailed.", e);
+                    Log.w(TAG, "Listen of this failed.", e);
                     return;
                 }
                 List<ProcessedTransaction> listTrans = new ArrayList<>();
