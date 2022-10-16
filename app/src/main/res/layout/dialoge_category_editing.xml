@@ -5,26 +5,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    >
-
-    <TextView
-        android:id="@+id/text_categoryDialog_title"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:text="@string/custom_category"
-        android:gravity="center"
-        android:background="#525252"
-        />
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="20dp">
+    android:padding="30dp"
+    tools:context=".fragments.transactions.Categories.CategorySettings">
         <TextView
             android:id="@+id/text_categoryDialog_name"
             android:layout_width="match_parent"
@@ -84,36 +66,66 @@
             android:layout_marginStart="5dp"
             android:visibility="gone"/>
 
-    </LinearLayout>
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal"
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:padding="8dp">
+            >
 
-        <Button
-            android:id="@+id/button_category_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_weight="1"
-            android:background="@drawable/background_buttons"
-            android:text="@string/delete"
-            tools:ignore="TouchTargetSizeCheck" />
+                <RadioButton
+                    android:id="@+id/radioButtonCashIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:paddingVertical="10dp"
+                    android:text="@string/cash_in"
+                    android:textSize="18sp"
+                    />
 
+                <RadioButton
+                    android:id="@+id/radio_CashOut"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingVertical="10dp"
+                    android:text="@string/cash_out"
+                    android:textSize="18sp"/>
+
+        </RadioGroup>
+        <TextView
+            android:id="@+id/actv_stakeholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="@string/Also_consider_for"
+            android:textSize="18sp" />
+
+
+        <Spinner
+            android:layout_marginTop="5dp"
+            android:id="@+id/type_of_cash_transaction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:gravity="center"
+            android:spinnerMode="dropdown"
+            android:background="@color/rec_view_gray"
+            android:popupBackground="@color/rec_view_gray"
+            />
         <Button
             android:id="@+id/button_category_confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="50dp"
             android:layout_weight="1"
             android:background="@drawable/background_buttons"
             android:text="@string/confirm"
-            tools:ignore="TouchTargetSizeCheck" />
-    </LinearLayout>
+            />
+
 
 
 </LinearLayout>

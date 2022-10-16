@@ -372,5 +372,6 @@
     <string name="invalid_date_for_summary">Invalid date! The latest Monthly Summary available is for </string>
     <string name="select_month">Select a Month</string>
     <string name="loading">loading…</string>
+    <string name="category_needs_stakeholder">You must select an stakeholder with this category</string>
 
 </resources>

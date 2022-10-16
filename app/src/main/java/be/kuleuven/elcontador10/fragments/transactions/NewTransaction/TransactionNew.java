@@ -51,8 +51,8 @@ import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 //Todo: Remove mandatory Stakeholder.
-public class TransactionNew extends Fragment implements  EasyPermissions.PermissionCallbacks, AdapterView.OnItemSelectedListener {
-    private RadioGroup radGroup;
+public class TransactionNew extends Fragment implements  EasyPermissions.PermissionCallbacks {
+
     private TextView txtWordsCounterTitle, txtEmojiCategory, txtWordsCounterNotes,
             txtMustHaveAmount, txtPropertySelected, txtStakeHolder, txtStakeholderNotSelected;
     private ImageButton btnAddCategory, btnAddPicture;
@@ -68,7 +68,6 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
     private StakeHolder selectedStakeHolder;
     private Property selectedProperty;
     private String idCatSelected;
-    private final List<String> trans_type = new ArrayList<>();
 
     public static final String TAG  = "TransactionNew";
 
@@ -88,20 +87,12 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
         navController = Navigation.findNavController(view);
 
-        String additional_transaction = mainActivity.getResources().getStringArray(R.array.type_of_cash_transaction)[0];
-        Spinner spinner =  view.findViewById(R.id.type_of_cash_transaction);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.type_of_cash_transaction,
-                android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+
 
         ///      Initialize views
         imageFinal =view.findViewById(R.id.imageView_final);
         btnAddPicture =view.findViewById(R.id.imageButton_addPicture);
         TextView accountSelected = view.findViewById(R.id.textView_currentAccount);
-        radGroup = view.findViewById(R.id.radioGroup);
         btnAddCategory = view.findViewById(R.id.imageButton_chooseCategory);
         txtEmojiCategory = view.findViewById(R.id.text_emoji_category);
         txtTitle = view.findViewById(R.id.text_newTransaction_title);
@@ -232,10 +223,12 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
                 btnAddCategory.setVisibility(View.GONE);
                 txtEmojiCategory.setVisibility(View.VISIBLE);
                 txtEmojiCategory.setText(emojiCategory.getIcon());
+                if(!emojiCategory.requiresStakeHolderChosen() || emojiCategory.requiresStakeHolderChosen()&&selectedStakeHolder!=null) txtStakeholderNotSelected.setVisibility(View.GONE);
             }
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void confirmTransaction(){
         String amount = txtAmount.getText().toString() ;
         boolean valid = true;
@@ -255,31 +248,34 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
             categoryLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.missing_new_category,null));
             Toast.makeText(mainActivity, R.string.must_choose_category, Toast.LENGTH_LONG).show();
             valid = false;
+
+        }
+        else {
+            EmojiCategory emojiCategory = Caching.INSTANCE.getEmojiCategory(idCatSelected);
+            if(emojiCategory.requiresStakeHolderChosen() && (emojiCategory.requiresStakeHolderChosen()&&selectedStakeHolder==null)) {
+                txtStakeholderNotSelected.setVisibility(View.VISIBLE);
+                txtStakeholderNotSelected.setTextColor(getResources().getColor(R.color.light_red_warning));
+                txtStakeholderNotSelected.setText(R.string.this_field_is_required);
+                Toast.makeText(mainActivity, getText(R.string.category_needs_stakeholder), Toast.LENGTH_SHORT).show();
+                valid = false;
+            }
         }
 
-        if ((trans_type.contains(Caching.INSTANCE.TYPE_PAYABLES) ||
-                trans_type.contains(Caching.INSTANCE.TYPE_RECEIVABLES)) &&
-                selectedStakeHolder == null) {
-            txtStakeholderNotSelected.setVisibility(View.VISIBLE);
-            txtStakeholderNotSelected.setTextColor(getResources().getColor(R.color.light_red_warning));
-            txtStakeholderNotSelected.setText(R.string.this_field_is_required);
-            valid = false;
-        }
-
-        if (valid)
-            makeNewTrans();
+        if (valid) makeNewTrans();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void makeNewTrans(){
+        EmojiCategory category = Caching.INSTANCE.getEmojiCategory(idCatSelected);
         ProcessedTransaction newTransaction = new ProcessedTransaction(
                 txtTitle.getText().toString(),
-                (radGroup.getCheckedRadioButtonId() == R.id.radio_CashOut)?Integer.parseInt(txtAmount.getText().toString())*-1:Integer.parseInt(txtAmount.getText().toString()),
+                (category.isCashIn())?Integer.parseInt(txtAmount.getText().toString()):Integer.parseInt(txtAmount.getText().toString())*-1,
                 mainActivity.returnSavedLoggedEmail(),
                 (selectedStakeHolder!=null)?selectedStakeHolder.getId():"",
-                (idCatSelected!=null)?idCatSelected:"",
+                idCatSelected,
                 txtNotes.getText().toString(),
                 (imageSelected!=null)?imageSelected.getNameOfImage():"",
-                trans_type,
+                category.getType(),
                 1,
                 1,
                 (selectedProperty!=null)?selectedProperty.getId():""
@@ -324,24 +320,6 @@ public class TransactionNew extends Fragment implements  EasyPermissions.Permiss
         }
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        txtStakeholderNotSelected.setVisibility(View.GONE);
 
-        if (i == 0) {
-            trans_type.clear();
-            trans_type.addAll(Arrays.asList(Caching.INSTANCE.TYPE_CASH, null, null, null));
-        } else if (i == 1) {
-            trans_type.clear();
-            trans_type.addAll(Arrays.asList(Caching.INSTANCE.TYPE_CASH, Caching.INSTANCE.TYPE_PAYABLES, null, null));
-        } else {
-            trans_type.clear();
-            trans_type.addAll(Arrays.asList(Caching.INSTANCE.TYPE_CASH, null, Caching.INSTANCE.TYPE_RECEIVABLES, null));
-        }
-    }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
 }

@@ -145,6 +145,9 @@
         <argument
             android:name="newTransaction"
             app:argType="boolean" />
+        <action
+            android:id="@+id/action_chooseCategory_to_categorySettings"
+            app:destination="@id/categorySettings" />
     </fragment>
     <fragment
         android:id="@+id/displayPhoto2"
@@ -251,5 +254,14 @@
         <action
             android:id="@+id/action_propertyViewPageHolder_to_transactionFutureNew"
             app:destination="@id/transactionFutureNew" />
+    </fragment>
+    <fragment
+        android:id="@+id/categorySettings"
+        android:name="be.kuleuven.elcontador10.fragments.transactions.Categories.CategorySettings"
+        android:label="CategorySettings" >
+        <argument
+            android:name="idOfCategory"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>

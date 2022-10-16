@@ -32,9 +32,6 @@ public class PropertyListViewModel extends ViewModel {
     public LiveData<List<Property>> getListOfProperties() {
         return listOfProperties;
     }
-
-
-
     public void selectSProperties(List<Property> input){
         listOfProperties.setValue(input);
     }

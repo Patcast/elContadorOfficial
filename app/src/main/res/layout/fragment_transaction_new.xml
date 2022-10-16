@@ -46,11 +46,16 @@
 
     </LinearLayout>
 
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/title"
+        android:textSize="18sp" />
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="5dp">
 
         <EditText
             android:id="@+id/text_newTransaction_title"
@@ -154,14 +159,20 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/amount"
+        android:textSize="18sp" />
     <EditText
         android:id="@+id/ed_txt_amount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/amount"
+        android:textStyle="bold"
         android:inputType="number"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         />
     <TextView
         android:id="@+id/textView_fillAmount"
@@ -170,42 +181,12 @@
         android:layout_height="wrap_content"
         />
 
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal"
-
-        >
-
-        <RadioButton
-            android:id="@+id/radio_CashIn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:checked="true"
-            android:paddingVertical="10dp"
-            android:text="@string/cash_in"
-            android:textSize="18sp"
-            />
-
-        <RadioButton
-            android:id="@+id/radio_CashOut"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingVertical="10dp"
-            android:text="@string/cash_out"
-            android:textSize="18sp"/>
-
-    </RadioGroup>
 
     <TextView
         android:id="@+id/actv_property"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:text="@string/property"
         android:textSize="18sp" />
 
@@ -225,7 +206,7 @@
         android:id="@+id/actv_stakeholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:text="@string/stakeholder"
         android:textSize="18sp" />
 
@@ -247,26 +228,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/actv_stakeholder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/Also_consider_for"
-        android:textSize="18sp" />
 
-
-    <Spinner
-        android:layout_marginTop="5dp"
-        android:id="@+id/type_of_cash_transaction"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingVertical="10dp"
-        android:gravity="center"
-        android:spinnerMode="dropdown"
-        android:background="@color/rec_view_gray"
-        android:popupBackground="@color/rec_view_gray"
-        />
 
 
     <EditText

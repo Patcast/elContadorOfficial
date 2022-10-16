@@ -409,7 +409,14 @@ public enum Caching {
                 .findFirst();
         return possibleEmoji.orElse("");
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public EmojiCategory getEmojiCategory(String idCategory){
+        Optional<EmojiCategory> possibleEmoji = customCategories
+                .stream()
+                .filter(s -> s.getId().equals(idCategory))
+                .findFirst();
+        return possibleEmoji.orElse(null);
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public StakeHolder getStakeHolder(String id) {

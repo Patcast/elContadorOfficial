@@ -22,7 +22,8 @@ import java.util.List;
 import be.kuleuven.elcontador10.R;
 
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
-import be.kuleuven.elcontador10.fragments.transactions.Categories.CategoryDialog;
+import be.kuleuven.elcontador10.fragments.transactions.Categories.CategorySettings;
+import be.kuleuven.elcontador10.fragments.transactions.Categories.ChooseCategoryDirections;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
 public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRecViewAdapter.ViewHolder> {
@@ -30,14 +31,12 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
     private final List<EmojiCategory> categories = new ArrayList<>();
     private final View viewFromHostingClass;
     private final ViewModel_NewTransaction viewModel;
-    //private boolean editMode;
     private Fragment hostFragment;
 
     public CategoriesRecViewAdapter(View viewFromHostingClass, ViewModel_NewTransaction viewModel, Fragment hostFragment) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.viewModel = viewModel;
         this.hostFragment = hostFragment;
-        //editMode = false;
     }
 
     @NonNull
@@ -58,9 +57,9 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
             navController.popBackStack();
         });
         holder.editButton.setOnClickListener(v -> {
-                CategoryDialog dialog =new CategoryDialog(categories.get(position));
-                dialog.setListener((CategoryDialog.DialogCategoriesListener) hostFragment);
-                dialog.show(hostFragment.getParentFragmentManager(),"Category Dialog");
+            NavController nav = Navigation.findNavController(viewFromHostingClass);
+            ChooseCategoryDirections.ActionChooseCategoryToCategorySettings act = ChooseCategoryDirections.actionChooseCategoryToCategorySettings(categories.get(position).getId());
+            nav.navigate(act);
             });
     }
 
