@@ -23,14 +23,19 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Locale;
+
 import be.kuleuven.elcontador10.background.Caching;
+import be.kuleuven.elcontador10.background.tools.NumberFormatter;
 
 public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private BottomNavigationView bottomMenu;
     private Toolbar toolbar;
     private SharedPreferences sharedPreferences;
-    private TextView  stakeHolderInitialReceivables,stakeHolderInitialPayables,stakeHolderSumOfTransactions,txtTitlePayables,txtTitleReceivables,txtMonthlySummary, txtStakeholder, labelStakeholder;
+    private TextView stakeHolderInitialReceivables, stakeHolderInitialPayables,
+            stakeHolderSumOfTransactions, txtTitlePayables,txtTitleReceivables, txtMonthlySummary,
+            txtStakeholder, labelStakeholder, txtSumOfPayablesReceivables, labelSumOfPayablesReceivables;
     private ConstraintLayout stakeholderDetails;
     private SharedPreferences.Editor editor;
     private static final String SAVED_EMAIL_KEY = "email_key";
@@ -57,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         txtTitleReceivables =findViewById(R.id.textTitleReceivables);
         txtStakeholder = findViewById(R.id.textStakeholder);
         labelStakeholder = findViewById(R.id.labelStakeholder);
+        txtSumOfPayablesReceivables = findViewById(R.id.textSumOfPayablesReceivables);
+        labelSumOfPayablesReceivables = findViewById(R.id.textTitleSum);
         Caching.INSTANCE.setContext(this);
         setSupportActionBar(toolbar);
 
@@ -107,29 +114,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void displayStakeHolderDetails(boolean display, String sumOfTrans, String initialReceivables, String initialPayables, String stakeholderID) {
+    public void displayStakeHolderDetails(boolean display, String sumOfTrans, String initialReceivables, String initialPayables, String sum, String stakeholderID) {
         if (display) {
             stakeholderDetails.setVisibility(View.VISIBLE);
             txtMonthlySummary.setVisibility(View.VISIBLE);
             stakeHolderSumOfTransactions.setText(sumOfTrans);
+            stakeHolderInitialReceivables.setText(initialReceivables);
+            stakeHolderInitialPayables.setText(initialPayables);
+            txtSumOfPayablesReceivables.setText(sum);
 
-            if (initialReceivables==null || initialReceivables.equals("$0.00")) {
-                txtTitleReceivables.setVisibility(View.GONE);
-                stakeHolderInitialReceivables.setVisibility(View.GONE);
-            } else {
-                txtTitleReceivables.setVisibility(View.VISIBLE);
-                stakeHolderInitialReceivables.setVisibility(View.VISIBLE);
-                stakeHolderInitialReceivables.setText(initialReceivables);
-            }
-
-            if (initialPayables==null||initialPayables.equals("$0.00")) {
-                txtTitlePayables.setVisibility(View.GONE);
-                stakeHolderInitialPayables.setVisibility(View.GONE);
-            } else {
-                txtTitlePayables.setVisibility(View.VISIBLE);
-                stakeHolderInitialPayables.setVisibility(View.VISIBLE);
-                stakeHolderInitialPayables.setText(initialPayables);
-            }
 
             if (stakeholderID == null) {
                 labelStakeholder.setVisibility(View.GONE);

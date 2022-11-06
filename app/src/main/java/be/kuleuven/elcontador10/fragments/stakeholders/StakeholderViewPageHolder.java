@@ -48,7 +48,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     private StakeholderViewModel viewModel;
 
     StakeHolder stakeHolder;
-    String sumOfTransactions, initialReceivables,initialPayables;
+    String sumOfTransactions, initialReceivables, initialPayables, sum;
     List<ProcessedTransaction> processedTransactionList = new ArrayList<>();
     private ViewModel_AllTransactions viewModelAllTransactions;
 
@@ -127,7 +127,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
                 findFirst();
         matchingObject.ifPresent(this::setStakeHolder);
         if(processedTransactionList.size()>0)updateSummaryWithTransactions(processedTransactionList);
-        mainActivity.displayStakeHolderDetails(true, sumOfTransactions,initialReceivables,initialPayables,null);
+        mainActivity.displayStakeHolderDetails(true, sumOfTransactions, initialReceivables, initialPayables, sum, null);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -150,8 +150,9 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
         initialReceivables = formatter.getFinalNumber();
         formatter.setOriginalNumber(stakeHolder.getSumOfPayables());
         initialPayables = formatter.getFinalNumber();
-        initialPayables =formatter.getFinalNumber();
-        mainActivity.displayStakeHolderDetails(true,sumOfTransactions ,initialReceivables,initialPayables, null);
+        formatter.setOriginalNumber(stakeHolder.getSumOfReceivables() - stakeHolder.getSumOfPayables());
+        sum = formatter.getFinalNumber();
+        mainActivity.displayStakeHolderDetails(true, sumOfTransactions, initialReceivables, initialPayables, sum, null);
     }
 
     private void editStakeholder() {
@@ -198,7 +199,7 @@ public class StakeholderViewPageHolder extends Fragment implements ZoomOutPageTr
     @Override
     public void onStart() {
         super.onStart();
-        mainActivity.displayStakeHolderDetails(true, sumOfTransactions,initialReceivables,initialPayables,null);
+        mainActivity.displayStakeHolderDetails(true, sumOfTransactions, initialReceivables, initialPayables, sum, null);
         mainActivity.displayToolBar(true);
         mainActivity.displayTabLayout(true);
     }
