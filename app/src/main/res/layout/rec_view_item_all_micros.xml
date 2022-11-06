@@ -7,9 +7,8 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="3dp"
     android:background="@color/rec_view_transactions"
-    android:paddingHorizontal="10dp"
-    android:padding="10dp"
-    >
+    android:padding="16dp"
+    android:paddingHorizontal="10dp">
 
 
         <TextView
@@ -17,7 +16,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 
-            android:layout_marginTop="8dp"
             android:ellipsize="marquee"
             android:focusable="true"
             android:focusableInTouchMode="true"
@@ -38,17 +36,16 @@
             android:id="@+id/text_micros_balance"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="start"
-
             android:ellipsize="marquee"
-            android:singleLine="true"
-            android:marqueeRepeatLimit="marquee_forever"
+
             android:focusable="true"
             android:focusableInTouchMode="true"
+            android:gravity="start"
+            android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
+            android:singleLine="true"
 
             android:text="$4,000.00"
-            android:textColor="@color/transaction_Schedule_receivables"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/text_Account_name_Micros"
             app:layout_constraintEnd_toEndOf="parent"
@@ -57,7 +54,7 @@
             app:layout_constraintTop_toTopOf="@+id/text_Account_name_Micros"
             app:layout_constraintVertical_bias="0.0" />
 
-<!--        role also means description         -->
+        <!--        role also means description         -->
         <TextView
             android:id="@+id/text_micros_role"
             android:layout_width="0dp"
@@ -65,8 +62,8 @@
             android:ellipsize="end"
             android:gravity="start"
             android:maxLines="3"
-            android:visibility="gone"
             android:textSize="15sp"
+            android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -78,26 +75,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.65" />
-
-        <TextView
-            android:layout_marginTop="10dp"
-            android:id="@+id/textViewPayables"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="$8,000.00"
-            android:gravity="start"
-            android:ellipsize="marquee"
-            android:singleLine="true"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:scrollHorizontally="true"
-
-            android:textColor="@color/transaction_Schedule_payables"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@+id/text_micros_balance" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

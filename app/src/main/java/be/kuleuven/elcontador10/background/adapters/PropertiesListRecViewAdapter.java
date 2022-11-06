@@ -1,6 +1,5 @@
 package be.kuleuven.elcontador10.background.adapters;
 
-import android.content.res.ColorStateList;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,22 +60,14 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
         Property property = propertyList.get(position);
         holder.textName.setText(property.getName());
 
-        long receivables = property.getSumOfReceivables();
-        if (receivables != 0) {
-            NumberFormatter formatter = new NumberFormatter(receivables);
+        long balance = property.getSumOfReceivables() -  property.getSumOfPayables();
+        if (balance != 0) {
+            holder.textBalance.setVisibility(View.VISIBLE);
+            NumberFormatter formatter = new NumberFormatter(balance);
             String formatted = formatter.getFinalNumber();
-            holder.textReceivables.setText(formatted);
+            holder.textBalance.setText(formatted);
         }
-        else holder.textReceivables.setVisibility(View.GONE);
-
-        long payables = property.getSumOfPayables();
-        if (payables != 0) {
-            NumberFormatter formatter = new NumberFormatter(payables);
-            String formatted = formatter.getFinalNumber();
-            holder.textViewPayables.setText(formatted);
-        }
-        else holder.textViewPayables.setVisibility(View.GONE);
-
+        else holder.textBalance.setVisibility(View.GONE);
 
         //NAVIGATION
         if (prevTAG == null)
@@ -109,7 +100,7 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
         return propertyList.size();
     }
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        private final TextView textName, textReceivables,textViewPayables, textRole;
+        private final TextView textName, textBalance, textRole;
 
         private final ConstraintLayout parent;
 
@@ -119,10 +110,8 @@ public class PropertiesListRecViewAdapter extends RecyclerView.Adapter<Propertie
                 textName = itemView.findViewById(R.id.text_Account_name_Micros);
                 textName.setSelected(true);
                 textRole = itemView.findViewById(R.id.text_micros_role);
-                textReceivables = itemView.findViewById(R.id.text_micros_balance);
-                textReceivables.setSelected(true);
-                textViewPayables = itemView.findViewById(R.id.textViewPayables);
-                textViewPayables.setSelected(true);
+                textBalance = itemView.findViewById(R.id.text_micros_balance);
+                textBalance.setSelected(true);
             }
     }
         /////------------

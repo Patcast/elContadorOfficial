@@ -55,26 +55,15 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
         StakeHolder stake = stakeholdersList.get(position);
         holder.textName.setText(stake.getName());
-        holder.textReceivables.setVisibility(View.VISIBLE);
-        holder.textViewPayables.setVisibility(View.VISIBLE);
-        long receivables = stake.getSumOfReceivables();
 
-        if (receivables != 0) {
-            NumberFormatter formatter = new NumberFormatter(receivables);
+        long balance = stake.getSumOfReceivables() - stake.getSumOfPayables();
+        if (balance != 0) {
+            holder.textBalance.setVisibility(View.VISIBLE);
+            NumberFormatter formatter = new NumberFormatter(balance);
             String formatted = formatter.getFinalNumber();
-            holder.textReceivables.setText(formatted);
-
-        }
-        else holder.textReceivables.setVisibility(View.GONE);
-
-        long payables = stake.getSumOfPayables();
-        if (payables != 0) {
-            NumberFormatter formatter = new NumberFormatter(payables);
-            String formatted = formatter.getFinalNumber();
-            holder.textViewPayables.setText(formatted);
-
-        }
-        else holder.textViewPayables.setVisibility(View.GONE);
+            holder.textBalance.setText(formatted);
+        } else
+            holder.textBalance.setVisibility(View.GONE);
 
         if (stake.getRole() != null && !stake.getRole().equals("")) {
             holder.textRole.setVisibility(View.VISIBLE);
@@ -102,7 +91,7 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textName, textReceivables,textViewPayables, textRole;
+        private final TextView textName, textBalance, textRole;
         private final ConstraintLayout parent;
 
         public ViewHolder(@NonNull View itemView) {
@@ -111,10 +100,8 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
             textName = itemView.findViewById(R.id.text_Account_name_Micros);
             textName.setSelected(true);
             textRole = itemView.findViewById(R.id.text_micros_role);
-            textReceivables = itemView.findViewById(R.id.text_micros_balance);
-            textReceivables.setSelected(true);
-            textViewPayables = itemView.findViewById(R.id.textViewPayables);
-            textViewPayables.setSelected(true);
+            textBalance = itemView.findViewById(R.id.text_micros_balance);
+            textBalance.setSelected(true);
         }
     }
     /////------------
@@ -129,7 +116,6 @@ public class StakeholderListRecViewAdapter extends RecyclerView.Adapter<Stakehol
         this.stakeholdersList.addAll(stakeHolders);
         stakeHoldersFull.addAll(stakeHolders);
         notifyDataSetChanged();
-
     }
 
     @Override
