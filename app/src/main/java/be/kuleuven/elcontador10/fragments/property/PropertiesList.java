@@ -153,7 +153,11 @@ public class PropertiesList extends Fragment {
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
 
-
+    @Override
+    public void onStart() {
+        mainActivity.displayBottomNavigationMenu(true);
+        super.onStart();
+    }
 
     @Override
     public void onStop() {
