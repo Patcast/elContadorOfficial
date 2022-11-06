@@ -76,7 +76,7 @@
             >
 
                 <RadioButton
-                    android:id="@+id/radioButtonCashIn"
+                    android:id="@+id/radio_CashIn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

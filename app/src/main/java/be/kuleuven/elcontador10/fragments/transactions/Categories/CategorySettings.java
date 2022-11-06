@@ -45,7 +45,7 @@ public class CategorySettings extends Fragment implements AdapterView.OnItemSele
     private EditText edTextName,edTextIcon;
     private TextView textWordCounter,textEmojiRequest;
     private Button  btnConfirm;
-    private RadioButton radCashIn, radCashOut;
+    private RadioButton radCashIn;
     private RadioGroup radioGroup;
     private NavController navController;
     private final List<String> trans_type = new ArrayList<>();
@@ -65,7 +65,7 @@ public class CategorySettings extends Fragment implements AdapterView.OnItemSele
         textWordCounter = view.findViewById(R.id.text_categories_wordCounter);
         textEmojiRequest = view.findViewById(R.id.text_categories_verify_emoji);
         btnConfirm = view.findViewById(R.id.button_category_confirm);
-        radCashIn = view.findViewById(R.id.radioButtonCashIn);
+        radCashIn = view.findViewById(R.id.radio_CashIn);
         radioGroup= view.findViewById(R.id.radioGroup);
         CategorySettingsArgs args = CategorySettingsArgs.fromBundle(getArguments());
         spinner =  view.findViewById(R.id.type_of_cash_transaction);
@@ -127,7 +127,7 @@ public class CategorySettings extends Fragment implements AdapterView.OnItemSele
     }
 
     private void confirmDelete() {
-        if (editingEmoji != null) editingEmoji.deleteCategory();
+        if (editingEmoji != null) EmojiCategory.deleteCategory(editingEmoji);
         navController.popBackStack();
 
     }
@@ -137,12 +137,13 @@ public class CategorySettings extends Fragment implements AdapterView.OnItemSele
         MainActivity mainActivity = (MainActivity) requireActivity();
         if (id != null){
             editingEmoji = Caching.INSTANCE.getEmojiCategory(id);
-            if(editingEmoji!=null){
+            if (editingEmoji != null){
                 edTextName.setText(editingEmoji.getTitle());
                 edTextIcon.setText(editingEmoji.getIcon());
-                if((radCashIn.isChecked()&&!editingEmoji.isCashIn())||(!radCashIn.isChecked()&&!editingEmoji.isCashIn())){
+                if (!editingEmoji.isCashIn()){
                     radioGroup.check(R.id.radio_CashOut);
-                }
+                } else
+                    radioGroup.check(R.id.radio_CashIn);
                 mainActivity.setHeaderText(getString(R.string.editing_custom_category));
                 if(editingEmoji.getType().contains(Caching.INSTANCE.TYPE_PAYABLES))  spinner.setSelection(1);
                 else if(editingEmoji.getType().contains(Caching.INSTANCE.TYPE_RECEIVABLES)) spinner.setSelection(2);
@@ -161,13 +162,13 @@ public class CategorySettings extends Fragment implements AdapterView.OnItemSele
     }
 
     private void confirmCategory() {
-        Boolean isValid = true;
+        boolean isValid = true;
         String title = edTextName.getText().toString();
         String emoji = edTextIcon.getText().toString();
         if(title.length()==0){
             textWordCounter.setText(R.string.this_field_is_required);
             textWordCounter.setTextColor(getResources().getColor(R.color.light_red_warning));
-            isValid=true;
+            isValid = false;
         }
         if(emoji.length()==0) {
             textEmojiRequest.setVisibility(View.VISIBLE);
@@ -180,21 +181,21 @@ public class CategorySettings extends Fragment implements AdapterView.OnItemSele
             textEmojiRequest.setText(R.string.invalid_icon_please_enter_an_emoji);
             isValid = false;
         }
+
         if(isValid){
           makeCategory(title,emoji);
         }
     }
     public void makeCategory(String title, String emoji){
-        EmojiCategory newEmoji = new EmojiCategory(emoji,title,radCashIn.isChecked(),trans_type);
+        EmojiCategory newEmoji = new EmojiCategory(emoji, title, radCashIn.isChecked(), trans_type);
         if (editingEmoji == null) {
-            newEmoji.saveNewCategory(newEmoji);
+            EmojiCategory.saveNewCategory(newEmoji);
         } else {
             newEmoji.setId(editingEmoji.getId());
-            newEmoji.updateCategory(newEmoji);
-            editingEmoji=null;
+            EmojiCategory.updateCategory(newEmoji);
+            editingEmoji = null;
         }
         navController.popBackStack();
-
     }
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
