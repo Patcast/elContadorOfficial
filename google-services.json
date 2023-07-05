@@ -1,0 +1,79 @@
+{
+  "project_info": {
+    "project_number": "345966862315",
+    "project_id": "elcontador-47da1",
+    "storage_bucket": "elcontador-47da1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:345966862315:android:152834e89dc40335ecc3ae",
+        "android_client_info": {
+          "package_name": "be.kuleuven.elcontador10"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "345966862315-2gc864tjean56lva3ccatk7c4nlk6gdp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "be.kuleuven.elcontador10",
+            "certificate_hash": "d81cf93b1604171cf76a24da6ec2302f71ce9cd6"
+          }
+        },
+        {
+          "client_id": "345966862315-74nlkvq6c54945nn95irs2cqpvm9v9ha.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "be.kuleuven.elcontador10",
+            "certificate_hash": "a13e39902fa7cb637cffc6a0598978a3bc8769e9"
+          }
+        },
+        {
+          "client_id": "345966862315-g7ltq79dc462euelj4r37omf69oibnud.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "be.kuleuven.elcontador10",
+            "certificate_hash": "7668564fd3bcdc43cf09e546f55f257701e79594"
+          }
+        },
+        {
+          "client_id": "345966862315-ianbpm7qd3ofa6s1t1mv3kcnl9vo8via.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "be.kuleuven.elcontador10",
+            "certificate_hash": "f2c9a1e82797f845b0c61bf7f71f8e37a761e825"
+          }
+        },
+        {
+          "client_id": "345966862315-vl3uqtufofq1fc4f44hokbs0eu0ospur.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "be.kuleuven.elcontador10",
+            "certificate_hash": "1e677bd3c1e278b80de019c1c2ffc898253be843"
+          }
+        },
+        {
+          "client_id": "345966862315-cdfn2l56h55tqr1c1fbhvj668vpl0t00.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyYIkokeVfhTjfyamNyf-jdQ_zZZ7a5sQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "345966862315-cdfn2l56h55tqr1c1fbhvj668vpl0t00.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
