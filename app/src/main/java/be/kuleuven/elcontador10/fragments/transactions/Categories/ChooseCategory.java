@@ -64,10 +64,17 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         if(customCategories.size()>0) adapter_custom.setDefCategories(customCategories);
         recyclerCategories_custom.setAdapter(adapter_custom);
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        addCustomCat.setOnClickListener(v->startDialogForAdding());
+
+        // only allow owners to add
+        if (Caching.INSTANCE.getChosenAccount().getOwner().equals(Caching.INSTANCE.getAccountName()))
+            addCustomCat.setOnClickListener(v->startDialogForAdding());
+        else
+            addCustomCat.setVisibility(View.GONE);
     }
     private void startDialogForAdding() {
         NavController nav = Navigation.findNavController(view);

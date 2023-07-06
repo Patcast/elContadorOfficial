@@ -80,11 +80,16 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
             navController.popBackStack();
         });
 
-        holder.editButton.setOnClickListener(v -> {
-            NavController nav = Navigation.findNavController(viewFromHostingClass);
-            ChooseCategoryDirections.ActionChooseCategoryToCategorySettings act = ChooseCategoryDirections.actionChooseCategoryToCategorySettings(category.getId());
-            nav.navigate(act);
-        });
+        if (Caching.INSTANCE.getChosenAccount().getOwner().equals(Caching.INSTANCE.getAccountName())) {
+            holder.editButton.setOnClickListener(v -> {
+                NavController nav = Navigation.findNavController(viewFromHostingClass);
+                ChooseCategoryDirections.ActionChooseCategoryToCategorySettings act = ChooseCategoryDirections.actionChooseCategoryToCategorySettings(category.getId());
+                nav.navigate(act);
+            });
+        }
+        else {
+            holder.editButton.setVisibility(View.GONE);
+        }
     }
 
     @Override
