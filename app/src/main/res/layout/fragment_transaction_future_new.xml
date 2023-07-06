@@ -124,35 +124,6 @@
             android:layout_height="wrap_content"
             android:textColor="@color/light_grey" />
 
-        <RadioGroup
-            android:id="@+id/radioGroup"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/payment_new_in"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="true"
-                android:paddingVertical="10dp"
-                android:text="@string/receivables"
-                android:textSize="18sp" />
-
-            <RadioButton
-                android:id="@+id/payment_new_out"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingVertical="10dp"
-                android:text="@string/payables"
-                android:textSize="18sp" />
-
-        </RadioGroup>
-
         <TextView
             android:id="@+id/actv_property"
             android:layout_width="match_parent"

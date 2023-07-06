@@ -59,7 +59,6 @@ public class FutureTransactionsNew extends Fragment {
             fillAmountTxt, wordCountNotesTxt, fillTitleTxt, fillAmountOfFuture;
     EditText numOfFutureTransTxt, notesTxt, titleTxt, amountTxt;
     private Spinner frequency_spinner;
-    private RadioButton payablesButton;
     private Button btnChooseStartingDate, btnConfirm;
     private ImageButton selectCategory;
     StakeHolder selectedStakeHolder;
@@ -194,7 +193,6 @@ public class FutureTransactionsNew extends Fragment {
         });
 
         notesTxt = view.findViewById(R.id.payment_new_notes);
-        payablesButton = view.findViewById(R.id.payment_new_out);
         btnChooseStartingDate = view.findViewById(R.id.payment_new_start);
         frequency_spinner = view.findViewById(R.id.payment_new_frequency);
         btnConfirm = view.findViewById(R.id.payment_new_confirm);
@@ -282,9 +280,9 @@ public class FutureTransactionsNew extends Fragment {
         String amount_text = amountTxt.getText().toString();
 
         if(noInputErrors(title_text,amount_text)){
-            List <String> type_input = (payablesButton.isChecked())?
-                    Arrays.asList(null, Caching.INSTANCE.TYPE_PAYABLES, null, Caching.INSTANCE.TYPE_PENDING) :
-                    Arrays.asList(null,null, Caching.INSTANCE.TYPE_RECEIVABLES, Caching.INSTANCE.TYPE_PENDING);
+            EmojiCategory selectedCat = Caching.INSTANCE.getEmojiCategory(idCatSelected);
+
+            List <String> type_input = (selectedCat.getType());
             String propertyId = (selectedProperty!=null)? selectedProperty.getId() : "";
             transactions.forEach(t->t.setFutureTransactionsFields(
                     title_text,
