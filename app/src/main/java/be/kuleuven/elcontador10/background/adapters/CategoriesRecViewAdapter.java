@@ -1,6 +1,7 @@
 package be.kuleuven.elcontador10.background.adapters;
 
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import be.kuleuven.elcontador10.MainActivity;
 import be.kuleuven.elcontador10.R;
 
 import be.kuleuven.elcontador10.background.Caching;
@@ -35,12 +37,14 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
     private final List<EmojiCategory> categories = new ArrayList<>();
     private final View viewFromHostingClass;
     private final ViewModel_NewTransaction viewModel;
-    private Fragment hostFragment;
+    private final Fragment hostFragment;
+    private final boolean isOwner;
 
-    public CategoriesRecViewAdapter(View viewFromHostingClass, ViewModel_NewTransaction viewModel, Fragment hostFragment) {
+    public CategoriesRecViewAdapter(View viewFromHostingClass, ViewModel_NewTransaction viewModel, Fragment hostFragment, boolean isOwner) {
         this.viewFromHostingClass = viewFromHostingClass;
         this.viewModel = viewModel;
         this.hostFragment = hostFragment;
+        this.isOwner = isOwner;
     }
 
     @NonNull
@@ -59,14 +63,22 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
 
         StringBuilder desc = new StringBuilder();
 
-        if (category.isCashIn()) desc.append(Resources.getSystem().getString(R.string.in));
-        else desc.append(Resources.getSystem().getString(R.string.out));
+        Context context = hostFragment.getContext();
+        assert (context != null);
+
+        if (category.isCashIn()) desc.append(context.getString(R.string.in));
+        else desc.append(context.getString(R.string.out));
 
         category.getType().forEach(string -> {
-            desc.append(" - ");
-            if (string.equals(Caching.INSTANCE.TYPE_CASH)) desc.append(Resources.getSystem().getString(R.string.cash));
-            else if (string.equals(Caching.INSTANCE.TYPE_PAYABLES)) desc.append(Resources.getSystem().getString(R.string.payables));
-            else if (string.equals(Caching.INSTANCE.TYPE_RECEIVABLES)) desc.append(Resources.getSystem().getString(R.string.receivables));
+            if (string != null) {
+                desc.append(" - ");
+                if (string.equals(Caching.INSTANCE.TYPE_CASH))
+                    desc.append(context.getString(R.string.cash));
+                else if (string.equals(Caching.INSTANCE.TYPE_PAYABLES))
+                    desc.append(context.getString(R.string.payables));
+                else if (string.equals(Caching.INSTANCE.TYPE_RECEIVABLES))
+                    desc.append(context.getString(R.string.receivables));
+            }
         });
 
         holder.textDescriptionCategory.setText(desc.toString());
@@ -80,7 +92,7 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
             navController.popBackStack();
         });
 
-        if (Caching.INSTANCE.getChosenAccount().getOwner().equals(Caching.INSTANCE.getAccountName())) {
+        if (isOwner) {
             holder.editButton.setOnClickListener(v -> {
                 NavController nav = Navigation.findNavController(viewFromHostingClass);
                 ChooseCategoryDirections.ActionChooseCategoryToCategorySettings act = ChooseCategoryDirections.actionChooseCategoryToCategorySettings(category.getId());

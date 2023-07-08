@@ -341,10 +341,6 @@ public enum Caching {
         return chosenAccountId;
     }
 
-    public String getLogInUserId() {
-        return logInUser.getEmail();
-    }
-
     public String getChosenMicroAccountId() {
         return chosenMicroAccountId;
     }

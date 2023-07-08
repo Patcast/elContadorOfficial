@@ -39,6 +39,7 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
     private final List<EmojiCategory> customCategories = new ArrayList<>();
     MainActivity mainActivity;
     View view;
+    private boolean isOwner;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -51,15 +52,17 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         addCustomCat = view.findViewById(R.id.layout_addCategory);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
         startCustomRecycler(view);
-        return view;
 
+        isOwner = mainActivity.returnSavedLoggedEmail().equals(Caching.INSTANCE.getChosenAccount().getOwner());
+
+        return view;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void startCustomRecycler(View view) {
         recyclerCategories_custom = view.findViewById(R.id.recView_categories_custom);
         recyclerCategories_custom.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        adapter_custom = new CategoriesRecViewAdapter(view,viewModel,this);
+        adapter_custom = new CategoriesRecViewAdapter(view, viewModel, this, isOwner);
         Caching.INSTANCE.attachCatObserver(this);
         if(customCategories.size()>0) adapter_custom.setDefCategories(customCategories);
         recyclerCategories_custom.setAdapter(adapter_custom);
@@ -71,7 +74,7 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         super.onViewCreated(view, savedInstanceState);
 
         // only allow owners to add
-        if (Caching.INSTANCE.getChosenAccount().getOwner().equals(Caching.INSTANCE.getAccountName()))
+        if (isOwner)
             addCustomCat.setOnClickListener(v->startDialogForAdding());
         else
             addCustomCat.setVisibility(View.GONE);
@@ -82,7 +85,6 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         nav.navigate(act);
 
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -98,7 +100,6 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         super.onStop();
         Caching.INSTANCE.deAttachCatObserver(this);
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
