@@ -2,7 +2,6 @@ package be.kuleuven.elcontador10.background.adapters;
 
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,13 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import be.kuleuven.elcontador10.MainActivity;
 import be.kuleuven.elcontador10.R;
 
 import be.kuleuven.elcontador10.background.Caching;
 import be.kuleuven.elcontador10.background.model.EmojiCategory;
-import be.kuleuven.elcontador10.fragments.transactions.Categories.CategorySettings;
 import be.kuleuven.elcontador10.fragments.transactions.Categories.ChooseCategoryDirections;
 import be.kuleuven.elcontador10.fragments.transactions.NewTransaction.ViewModel_NewTransaction;
 
@@ -93,6 +89,8 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
         });
 
         if (isOwner) {
+            holder.editButton.setVisibility(View.VISIBLE);
+
             holder.editButton.setOnClickListener(v -> {
                 NavController nav = Navigation.findNavController(viewFromHostingClass);
                 ChooseCategoryDirections.ActionChooseCategoryToCategorySettings act = ChooseCategoryDirections.actionChooseCategoryToCategorySettings(category.getId());
@@ -100,7 +98,7 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
             });
         }
         else {
-            holder.editButton.setVisibility(View.GONE);
+            holder.editButton.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -110,7 +108,7 @@ public class CategoriesRecViewAdapter extends RecyclerView.Adapter<CategoriesRec
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         private final TextView textNameCategory;
         private final TextView textDescriptionCategory;
         private final TextView imageIconCategory;

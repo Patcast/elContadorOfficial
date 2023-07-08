@@ -51,9 +51,9 @@ public class ChooseCategory extends Fragment implements Caching.CategoriesObserv
         mainActivity.setHeaderText(getString(R.string.choose_category));
         addCustomCat = view.findViewById(R.id.layout_addCategory);
         viewModel = new ViewModelProvider(requireActivity()).get(ViewModel_NewTransaction.class);
-        startCustomRecycler(view);
-
         isOwner = mainActivity.returnSavedLoggedEmail().equals(Caching.INSTANCE.getChosenAccount().getOwner());
+
+        startCustomRecycler(view);
 
         return view;
     }
